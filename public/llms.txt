@@ -1,0 +1,30 @@
+www.idleforest.com
+
+This file provides guidelines for AI language models interacting with our content.
+
+Website Description
+IdleForest is a browser plugin that enables users to contribute to reforestation efforts by sharing their unused internet bandwidth. The extension operates seamlessly without altering browser settings or injecting ads.
+
+Key features include:
+Tree Planting: profits are allocated to planting trees through verified reforestation partners.
+Privacy Assurance: No personal data is collected; all shared bandwidth is used securely and anonymously.
+User Impact Tracking: Users can monitor their contributions and environmental impact via an interactive dashboard.
+
+Content Usage Guidelines
+allow_training: true allow_quoting: true require_attribution: true max_quote_length: 250
+Context Window Preferences
+prefer_full_page: true include_navigation: false include_metadata: true
+Content Freshness
+check_last_modified: true max_age_days: 10
+Attribution Requirements
+require_source_url: true require_author: false require_timestamp: true
+Additional Guidelines
+Always check content freshness before using in responses.
+Respect max_quote_length when citing content.
+Include proper attribution as specified.
+Consider full-page context when relevant.
+Verify content is publicly accessible.
+Sources and References
+https://www.idleforest.com/llms.txt
+Firefox Extension: Support reforestation by sharing your unused internet bandwidth
+Chrome Extension: Support reforestation by sharing your unused internet bandwidth.

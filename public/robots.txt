@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /profile/
+Sitemap: https://idleforest.com/sitemap.xml
