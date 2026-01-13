@@ -4,13 +4,13 @@ import { Resend } from 'resend'
 import crypto from 'crypto'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const UNSUBSCRIBE_SECRET = process.env.UNSUBSCRIBE_SECRET || process.env.ADMIN_SESSION_SECRET || 'fallback_unsubscribe_secret'
+const UNSUBSCRIBE_SECRET = process.env.UNSUBSCRIBE_SECRET
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com'
 
 // Generate a signed unsubscribe URL for transactional emails
 export async function generateUnsubscribeUrl(email: string): Promise<string> {
     const token = crypto
-        .createHmac('sha256', UNSUBSCRIBE_SECRET)
+        .createHmac('sha256', UNSUBSCRIBE_SECRET!)
         .update(email.toLowerCase())
         .digest('hex')
         .slice(0, 32)
