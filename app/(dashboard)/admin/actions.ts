@@ -751,8 +751,8 @@ export async function sendUserEmail(
 
     // Replace template variables
     const name = firstName || 'there'
-    let processedSubject = subject.replace(/\{\{\{FIRST_NAME\}\}\}/g, name)
-    let processedContent = content
+    const processedSubject = subject.replace(/\{\{\{FIRST_NAME\}\}\}/g, name)
+    const processedContent = content
         .replace(/\{\{\{FIRST_NAME\}\}\}/g, name)
         .replace(/\{\{UNSUBSCRIBE_URL\}\}/g, unsubscribeUrl)
 

@@ -754,8 +754,7 @@ export default function AdminPage() {
                             fetchAudiences()
                         }
                     }}
-                    className="w-full"
-                >
+                    className="w-full" defaultValue={'real-data'}                 >
                     <TabsList className="grid w-full max-w-2xl grid-cols-5 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Real Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
