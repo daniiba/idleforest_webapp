@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-const UNSUBSCRIBE_SECRET = process.env.UNSUBSCRIBE_SECRET || process.env.ADMIN_SESSION_SECRET || 'fallback_unsubscribe_secret'
+const UNSUBSCRIBE_SECRET = process.env.UNSUBSCRIBE_SECRET!
 
 // Verify the token signature
 function verifyToken(email: string, token: string): boolean {

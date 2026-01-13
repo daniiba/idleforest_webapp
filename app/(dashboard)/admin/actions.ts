@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 
 // Session management
 const ADMIN_SESSION_COOKIE = 'admin_session'
-const SESSION_TOKEN = process.env.ADMIN_SESSION_SECRET || 'fallback_admin_session_secret'
+const SESSION_TOKEN = process.env.ADMIN_SESSION_SECRET!
 
 // Verify admin password and set session cookie
 export async function verifyAdminPassword(inputPassword: string): Promise<boolean> {
