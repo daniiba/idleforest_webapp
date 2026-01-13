@@ -459,7 +459,7 @@ export default function LandingPage() {
                 answer={
                   <>
                     <p className="mb-3">
-                      When you use IdleForest, your shared bandwidth generates revenue. We use 100% of this revenue to fund verified tree planting projects around the world.
+                      When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world.
                     </p>
                     <p>
                       We partner with established organizations like Trees for the Future and Tree-Nation to ensure every tree is planted, tracked, and contributes to real environmental impact. You can track your personal contribution in real-time through your dashboard.

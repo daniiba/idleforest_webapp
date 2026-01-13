@@ -17,10 +17,35 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+
+// Email Preview Component with proper scaling
+const EmailPreview = ({ html, subject, className = "" }: { html: string; subject?: string; className?: string }) => {
+    return (
+        <div className={`w-full h-full border-2 border-black overflow-hidden bg-gray-50 relative group flex flex-col ${className}`}>
+            {subject && (
+                <div className="bg-white border-b-2 border-black p-2 text-xs font-bold text-neutral-500 truncate flex-shrink-0">
+                    Subject: <span className="text-black">{subject}</span>
+                </div>
+            )}
+            <div className="flex-grow relative w-full h-full overflow-hidden">
+                <div className="w-[200%] h-[200%] origin-top-left transform scale-50 absolute top-0 left-0">
+                    <iframe
+                        srcDoc={html}
+                        className="w-full h-full border-none pointer-events-none"
+                        tabIndex={-1}
+                        title="Email Preview"
+                    />
+                </div>
+                {/* Overlay to catch interaction */}
+                <div className="absolute inset-0 z-10" />
+            </div>
+        </div>
+    )
+}
 
 
 // Hardcoded Financial Data
@@ -85,6 +110,44 @@ export default function AdminPage() {
     const [isVerifying, setIsVerifying] = useState(false)
     const [isCheckingSession, setIsCheckingSession] = useState(true)
 
+    // Power Users state
+    const [powerUsers, setPowerUsers] = useState<PowerUser[]>([])
+    const [segmentStats, setSegmentStats] = useState<SegmentStats | null>(null)
+    const [selectedSegment, setSelectedSegment] = useState<UserSegment | 'all'>('all')
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false)
+    const [syncingSegment, setSyncingSegment] = useState<UserSegment | null>(null)
+    const [syncResult, setSyncResult] = useState<{ segment: string; success: boolean; message: string } | null>(null)
+
+    // Templates & Email State
+    const [templates, setTemplates] = useState<EmailTemplate[]>([])
+    const [searchQuery, setSearchQuery] = useState('')
+    const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
+    const [templateModalMode, setTemplateModalMode] = useState<'create' | 'edit'>('create')
+    const [editingTemplateId, setEditingTemplateId] = useState<string | null>(null)
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
+    const [newTemplate, setNewTemplate] = useState({ name: '', subject: '', content: '', from_email: '' })
+    const [emailCompose, setEmailCompose] = useState({ userId: '', userEmail: '', userName: '', subject: '', content: '', from_email: '', loading: false })
+    const [emailResult, setEmailResult] = useState<{ success: boolean; message: string } | null>(null)
+    const [activeTab, setActiveTab] = useState('real-data')
+
+    // Audiences State
+    const [audiences, setAudiences] = useState<{ id: string; name: string }[]>([])
+    const [selectedAudienceId, setSelectedAudienceId] = useState<string | null>(null)
+    const [audienceContacts, setAudienceContacts] = useState<ResendContact[]>([])
+    const [isLoadingContacts, setIsLoadingContacts] = useState(false)
+
+    // Email History State
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
+    const [historyUser, setHistoryUser] = useState<PowerUser | null>(null)
+    const [emailHistory, setEmailHistory] = useState<EmailLog[]>([])
+    const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+
+    // Broadcast Campaign State
+    const [broadcastAudienceId, setBroadcastAudienceId] = useState<string>('')
+    const [broadcastTemplateId, setBroadcastTemplateId] = useState<string>('')
+    const [isSendingBroadcast, setIsSendingBroadcast] = useState(false)
+    const [broadcastResult, setBroadcastResult] = useState<{ success: boolean; message: string } | null>(null)
+
     // Check for existing session on mount (server-side cookie check)
     useEffect(() => {
         verifyAdminSession().then((isValid) => {
@@ -125,6 +188,309 @@ export default function AdminPage() {
             setRevenueHistory(data)
         }).catch(err => console.error('Error fetching revenue history:', err))
     }, [isAuthenticated])
+
+    // Fetch power users data 
+    const fetchPowerUsersData = async () => {
+        setIsLoadingUsers(true)
+        try {
+            const [users, counts] = await Promise.all([
+                getPowerUsers(),
+                getSegmentCounts()
+            ])
+            setPowerUsers(users)
+            setSegmentStats(counts)
+        } catch (err) {
+            console.error('Error fetching power users:', err)
+        } finally {
+            setIsLoadingUsers(false)
+        }
+    }
+
+    // Fetch templates
+    const fetchTemplates = async () => {
+        try {
+            const data = await getEmailTemplates()
+            setTemplates(data)
+        } catch (err) {
+            console.error('Error fetching templates:', err)
+        }
+    }
+
+    // Fetch Audiences
+    const fetchAudiences = async () => {
+        try {
+            const data = await getResendAudiences()
+            setAudiences(data)
+            if (data.length > 0 && !selectedAudienceId) {
+                setSelectedAudienceId(data[0].id)
+            }
+        } catch (err) {
+            console.error('Error fetching audiences:', err)
+        }
+    }
+
+    // Fetch Audience Contacts
+    const fetchContacts = async (audienceId: string) => {
+        setIsLoadingContacts(true)
+        try {
+            const data = await getAudienceContacts(audienceId)
+            setAudienceContacts(data)
+        } catch (err) {
+            console.error('Error fetching contacts:', err)
+        } finally {
+            setIsLoadingContacts(false)
+        }
+    }
+
+    useEffect(() => {
+        if (selectedAudienceId) {
+            fetchContacts(selectedAudienceId)
+        }
+    }, [selectedAudienceId])
+
+    // Also fetch contacts when broadcast audience is selected (for preview)
+    useEffect(() => {
+        if (broadcastAudienceId) {
+            fetchContacts(broadcastAudienceId)
+        }
+    }, [broadcastAudienceId])
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchTemplates()
+        }
+    }, [isAuthenticated])
+
+    // Template Handlers
+    const handleCreateTemplate = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            if (templateModalMode === 'create') {
+                await createEmailTemplate(newTemplate.name, newTemplate.subject, newTemplate.content, newTemplate.from_email || undefined)
+            } else if (templateModalMode === 'edit' && editingTemplateId) {
+                await updateEmailTemplate(editingTemplateId, newTemplate.name, newTemplate.subject, newTemplate.content, newTemplate.from_email || undefined)
+            }
+            await fetchTemplates()
+            setIsTemplateModalOpen(false)
+            setNewTemplate({ name: '', subject: '', content: '', from_email: '' })
+            setEditingTemplateId(null)
+            setTemplateModalMode('create')
+        } catch (err) {
+            console.error('Error saving template:', err)
+            alert('Failed to save template')
+        }
+    }
+
+    const handleEditTemplate = (template: EmailTemplate) => {
+        setNewTemplate({
+            name: template.name,
+            subject: template.subject,
+            content: template.content,
+            from_email: template.from_email || ''
+        })
+        setEditingTemplateId(template.id)
+        setTemplateModalMode('edit')
+        setIsTemplateModalOpen(true)
+    }
+
+    const handleCloseTemplateModal = () => {
+        setIsTemplateModalOpen(false)
+        setNewTemplate({ name: '', subject: '', content: '', from_email: '' })
+        setEditingTemplateId(null)
+        setTemplateModalMode('create')
+    }
+
+    const handleDeleteTemplate = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this template?')) return
+        try {
+            await deleteEmailTemplate(id)
+            await fetchTemplates()
+        } catch (err) {
+            console.error('Error deleting template:', err)
+        }
+    }
+
+    // Email Handlers
+    const handleOpenEmailModal = (user: PowerUser) => {
+        setEmailCompose({
+            userId: user.user_id,
+            userEmail: user.email || '',
+            userName: user.display_name || '',
+            subject: '',
+            content: '',
+            from_email: '',
+            loading: false
+        })
+        setEmailResult(null)
+        setIsEmailModalOpen(true)
+    }
+
+    const handleLoadTemplate = (templateId: string) => {
+        const template = templates.find(t => t.id === templateId)
+        if (template) {
+            setEmailCompose(prev => ({
+                ...prev,
+                subject: template.subject,
+                content: template.content,
+                from_email: template.from_email || ''
+            }))
+        }
+    }
+
+    // Send test email to daniiba account
+    const handleSendTestEmail = async () => {
+        const testUser = powerUsers.find(u => u.display_name.toLowerCase().includes('daniiba') || u.email?.toLowerCase().includes('daniiba'))
+        if (!testUser || !testUser.email) {
+            setEmailResult({ success: false, message: 'Test user "daniiba" not found or has no email' })
+            return
+        }
+
+        setEmailCompose(prev => ({ ...prev, loading: true }))
+        setEmailResult(null)
+
+        try {
+            await sendUserEmail(
+                testUser.user_id,
+                testUser.email,
+                `[TEST] ${emailCompose.subject}`,
+                emailCompose.content,
+                testUser.display_name,
+                emailCompose.from_email || undefined
+            )
+            setEmailResult({ success: true, message: `Test email sent to ${testUser.email}!` })
+        } catch (err) {
+            setEmailResult({
+                success: false,
+                message: err instanceof Error ? err.message : 'Failed to send test email'
+            })
+        } finally {
+            setEmailCompose(prev => ({ ...prev, loading: false }))
+        }
+    }
+
+    const handleSendEmail = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setEmailCompose(prev => ({ ...prev, loading: true }))
+        setEmailResult(null)
+
+        try {
+            await sendUserEmail(
+                emailCompose.userId,
+                emailCompose.userEmail,
+                emailCompose.subject,
+                emailCompose.content,
+                emailCompose.userName,
+                emailCompose.from_email || undefined
+            )
+            setEmailResult({ success: true, message: 'Email sent successfully!' })
+            setTimeout(() => {
+                setIsEmailModalOpen(false)
+                setEmailResult(null)
+            }, 1500)
+        } catch (err) {
+            setEmailResult({
+                success: false,
+                message: err instanceof Error ? err.message : 'Failed to send email'
+            })
+        } finally {
+            setEmailCompose(prev => ({ ...prev, loading: false }))
+        }
+    }
+
+    // Handle segment sync
+    const handleSyncSegment = async (segment: UserSegment, dryRun: boolean = false) => {
+        setSyncingSegment(segment)
+        setSyncResult(null)
+        try {
+            const result = await syncSegmentToResend(segment, dryRun)
+            if (dryRun) {
+                setSyncResult({
+                    segment,
+                    success: true,
+                    message: `Preview: ${result.usersToSync} users would be synced to Resend`
+                })
+            } else {
+                setSyncResult({
+                    segment,
+                    success: result.success,
+                    message: result.success
+                        ? `Synced ${result.syncedCount} users to Resend`
+                        : `Errors: ${result.errors?.join(', ')}`
+                })
+            }
+        } catch (err) {
+            setSyncResult({
+                segment,
+                success: false,
+                message: 'Failed to sync: ' + (err instanceof Error ? err.message : 'Unknown error')
+            })
+        } finally {
+            setSyncingSegment(null)
+        }
+    }
+
+    // Handle viewing email history for a user
+    const handleViewEmailHistory = async (user: PowerUser) => {
+        setHistoryUser(user)
+        setEmailHistory([])
+        setIsHistoryModalOpen(true)
+        setIsLoadingHistory(true)
+
+        try {
+            const history = await getUserEmailHistory(user.user_id)
+            setEmailHistory(history)
+        } catch (err) {
+            console.error('Error fetching email history:', err)
+        } finally {
+            setIsLoadingHistory(false)
+        }
+    }
+
+    // Handle sending a broadcast campaign
+    const handleSendBroadcast = async () => {
+        if (!broadcastAudienceId || !broadcastTemplateId) return
+
+        setIsSendingBroadcast(true)
+        setBroadcastResult(null)
+
+        try {
+            const result = await sendBroadcastToAudience(
+                broadcastAudienceId,
+                broadcastTemplateId
+            )
+
+            if (result.success) {
+                setBroadcastResult({
+                    success: true,
+                    message: `Broadcast sent! ID: ${result.broadcastId}`
+                })
+                setBroadcastAudienceId('')
+                setBroadcastTemplateId('')
+            } else {
+                setBroadcastResult({
+                    success: false,
+                    message: result.error || 'Failed to send broadcast'
+                })
+            }
+        } catch (err) {
+            setBroadcastResult({
+                success: false,
+                message: err instanceof Error ? err.message : 'Failed to send broadcast'
+            })
+        } finally {
+            setIsSendingBroadcast(false)
+        }
+    }
+
+    // Filter users by selected segment
+    const filteredUsers = powerUsers.filter(u => {
+        const matchesSegment = selectedSegment === 'all' || u.segments.includes(selectedSegment)
+        const matchesSearch = searchQuery === '' ||
+            u.display_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (u.email && u.email.toLowerCase().includes(searchQuery.toLowerCase()))
+
+        return matchesSegment && matchesSearch
+    })
 
     // Loading state while checking session
     if (isCheckingSession) {
@@ -373,10 +739,29 @@ export default function AdminPage() {
                     </div>
                 </div>
 
-                <Tabs defaultValue="real-data" className="w-full">
-                    <TabsList className="grid w-full max-w-md grid-cols-2 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
-                        <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Real Data</TabsTrigger>
-                        <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 2026 Projections</TabsTrigger>
+                <Tabs
+                    value={activeTab}
+                    onValueChange={(value) => {
+                        setActiveTab(value)
+                        if (value === 'power-users') {
+                            fetchPowerUsersData()
+                        }
+                        if (value === 'templates') {
+                            fetchTemplates()
+                            fetchAudiences()
+                        }
+                        if (value === 'audiences') {
+                            fetchAudiences()
+                        }
+                    }}
+                    className="w-full"
+                >
+                    <TabsList className="grid w-full max-w-2xl grid-cols-5 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
+                        <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Real Data</TabsTrigger>
+                        <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
+                        <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
+                        <TabsTrigger value="audiences" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📋 Lists</TabsTrigger>
+                        <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="real-data" className="space-y-6 mt-6">
@@ -731,6 +1116,512 @@ export default function AdminPage() {
                             </div>
                         </section>
                     </TabsContent>
+
+                    {/* POWER USERS TAB */}
+                    <TabsContent value="power-users" className="space-y-6 mt-6">
+                        {isLoadingUsers ? (
+                            <div className="flex items-center justify-center py-12">
+                                <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
+                                <span className="ml-3 text-neutral-600 font-bold">Loading users...</span>
+                            </div>
+                        ) : (
+                            <>
+                                {/* Segment Stats Cards */}
+                                <section>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                            <Users className="h-5 w-5 text-brand-navy" />
+                                            User Segments
+                                        </h2>
+                                        <button
+                                            onClick={fetchPowerUsersData}
+                                            className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                        >
+                                            <RefreshCw className="h-4 w-4" /> Refresh
+                                        </button>
+                                    </div>
+
+                                    {/* Search Filter */}
+                                    <div className="mb-6">
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                                            <input
+                                                type="text"
+                                                placeholder="Search by name or email..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                className="w-full pl-10 pr-4 py-3 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
+                                        <button
+                                            onClick={() => setSelectedSegment('all')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'all' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Users className="h-4 w-4 text-brand-navy" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">All Users</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.total || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('power_users')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'power_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Zap className="h-4 w-4 text-yellow-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Power Users</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.power_users || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('active')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'active' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Activity className="h-4 w-4 text-green-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Active (7d)</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.active || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('inactive')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'inactive' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Clock className="h-4 w-4 text-red-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Inactive (30d+)</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.inactive || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('new_users')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'new_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <UserPlus className="h-4 w-4 text-blue-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">New (30d)</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.new_users || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('unopted_desktop')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Users className="h-4 w-4 text-purple-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Unopted Desktop</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.unopted_desktop || 0}</div>
+                                        </button>
+                                    </div>
+                                </section>
+
+                                {/* Sync to Resend Section */}
+                                {selectedSegment !== 'all' && (
+                                    <section className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                                    <Mail className="h-5 w-5 text-brand-yellow" />
+                                                    Sync to Resend
+                                                </h3>
+                                                <p className="text-sm text-gray-300 mt-1">
+                                                    Sync {filteredUsers.filter(u => u.email).length} users with emails to Resend audience
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    onClick={() => handleSyncSegment(selectedSegment, true)}
+                                                    disabled={syncingSegment !== null}
+                                                    className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                >
+                                                    {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                                                    Preview
+                                                </button>
+                                                <button
+                                                    onClick={() => handleSyncSegment(selectedSegment, false)}
+                                                    disabled={syncingSegment !== null}
+                                                    className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                >
+                                                    {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                                    Sync Now
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {syncResult && syncResult.segment === selectedSegment && (
+                                            <div className={`mt-4 p-3 border-2 border-black ${syncResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                                <p className={`text-sm font-bold ${syncResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                                                    {syncResult.message}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </section>
+                                )}
+
+                                {/* User Table */}
+                                <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                    <h3 className="text-base font-bold text-black mb-4">
+                                        {selectedSegment === 'all' ? 'All Users' : `${selectedSegment.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}`} ({filteredUsers.length})
+                                    </h3>
+                                    <div className="overflow-x-auto">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow className="border-b-2 border-black">
+                                                    <TableHead className="text-xs font-bold">Name</TableHead>
+                                                    <TableHead className="text-xs font-bold">Email</TableHead>
+                                                    <TableHead className="text-right text-xs font-bold">Points</TableHead>
+                                                    <TableHead className="text-xs font-bold">Last Active</TableHead>
+                                                    <TableHead className="text-xs font-bold">Segments</TableHead>
+                                                    <TableHead className="text-right text-xs font-bold">Actions</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {filteredUsers.slice(0, 50).map((user) => (
+                                                    <TableRow key={user.id} className="border-b border-neutral-200">
+                                                        <TableCell className="font-bold text-xs py-2">{user.display_name}</TableCell>
+                                                        <TableCell className="text-xs py-2 text-neutral-600">
+                                                            {user.email || <span className="text-red-400">No email</span>}
+                                                        </TableCell>
+                                                        <TableCell className="text-right text-xs py-2 font-semibold">
+                                                            {user.total_points.toLocaleString()}
+                                                        </TableCell>
+                                                        <TableCell className="text-xs py-2 text-neutral-600">
+                                                            {user.last_active
+                                                                ? new Date(user.last_active).toLocaleDateString()
+                                                                : <span className="text-neutral-400">Never</span>}
+                                                        </TableCell>
+                                                        <TableCell className="text-xs py-2">
+                                                            <div className="flex gap-1 flex-wrap">
+                                                                {user.segments.map(seg => (
+                                                                    <span
+                                                                        key={seg}
+                                                                        className={`px-2 py-0.5 text-[10px] font-bold uppercase border border-black ${seg === 'power_users' ? 'bg-yellow-100' :
+                                                                            seg === 'active' ? 'bg-green-100' :
+                                                                                seg === 'inactive' ? 'bg-red-100' :
+                                                                                    seg === 'unopted_desktop' ? 'bg-purple-100' :
+                                                                                        'bg-blue-100'
+                                                                            }`}
+                                                                    >
+                                                                        {seg.replace('_', ' ')}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="text-right text-xs py-2">
+                                                            <div className="flex items-center justify-end gap-1">
+                                                                <button
+                                                                    onClick={() => handleViewEmailHistory(user)}
+                                                                    className="inline-flex items-center justify-center p-2 text-neutral-500 hover:text-brand-navy hover:bg-blue-50 transition-colors"
+                                                                    title="View Email History"
+                                                                >
+                                                                    <History className="h-4 w-4" />
+                                                                </button>
+                                                                {user.email && (
+                                                                    <button
+                                                                        onClick={() => handleOpenEmailModal(user)}
+                                                                        className="inline-flex items-center justify-center p-2 text-brand-navy hover:bg-blue-50 transition-colors"
+                                                                        title="Send Email"
+                                                                    >
+                                                                        <Mail className="h-4 w-4" />
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                        {filteredUsers.length > 50 && (
+                                            <p className="text-center text-sm text-neutral-500 mt-4">
+                                                Showing first 50 of {filteredUsers.length} users
+                                            </p>
+                                        )}
+                                    </div>
+                                </section>
+                            </>
+                        )}
+                    </TabsContent>
+
+                    {/* AUDIENCES TAB */}
+                    <TabsContent value="audiences" className="space-y-6 mt-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <List className="h-5 w-5 text-brand-navy" />
+                                Email Lists ({audiences.length})
+                            </h2>
+                            <button
+                                onClick={() => selectedAudienceId && fetchContacts(selectedAudienceId)}
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${isLoadingContacts ? 'animate-spin' : ''}`} /> Refresh
+                            </button>
+                        </div>
+
+                        <div className="grid lg:grid-cols-4 gap-6">
+                            {/* Audience List Sidebar */}
+                            <div className="lg:col-span-1 space-y-2">
+                                <h3 className="text-sm font-bold uppercase text-neutral-500 mb-2">Select Audience</h3>
+                                {audiences.map(audience => (
+                                    <button
+                                        key={audience.id}
+                                        onClick={() => setSelectedAudienceId(audience.id)}
+                                        className={`w-full text-left p-3 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold text-sm transition-all ${selectedAudienceId === audience.id ? 'bg-brand-yellow translate-x-[1px] translate-y-[1px] shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-white hover:bg-gray-50'}`}
+                                    >
+                                        {audience.name}
+                                    </button>
+                                ))}
+                                {audiences.length === 0 && (
+                                    <div className="p-4 bg-neutral-100 border-2 border-dashed border-neutral-300 text-sm text-neutral-500 text-center">
+                                        No audiences found in Resend.
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Contacts Table */}
+                            <div className="lg:col-span-3">
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                    <h3 className="text-base font-bold text-black mb-4 flex items-center justify-between">
+                                        <span>Contacts in List ({audienceContacts.length})</span>
+                                        {selectedAudienceId && <span className="text-xs font-normal text-neutral-500 uppercase tracking-wider">ID: {selectedAudienceId}</span>}
+                                    </h3>
+
+                                    {isLoadingContacts ? (
+                                        <div className="py-12 flex justify-center">
+                                            <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow className="border-b-2 border-black">
+                                                        <TableHead className="text-xs font-bold">Email</TableHead>
+                                                        <TableHead className="text-xs font-bold">Name</TableHead>
+                                                        <TableHead className="text-xs font-bold">Status</TableHead>
+                                                        <TableHead className="text-right text-xs font-bold">Joined</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {audienceContacts.length > 0 ? audienceContacts.map((contact, i) => (
+                                                        <TableRow key={i} className="border-b border-neutral-200">
+                                                            <TableCell className="font-bold text-xs py-2">{contact.email}</TableCell>
+                                                            <TableCell className="text-xs py-2 text-neutral-600">
+                                                                {contact.firstName ? `${contact.firstName} ${contact.lastName || ''}` : '-'}
+                                                            </TableCell>
+                                                            <TableCell className="text-xs py-2">
+                                                                {contact.unsubscribed ? (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-[10px] font-bold uppercase">
+                                                                        <UserX className="h-3 w-3" /> Unsubscribed
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 border border-green-200 rounded-full text-[10px] font-bold uppercase">
+                                                                        <Zap className="h-3 w-3" /> Active
+                                                                    </span>
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell className="text-right text-xs py-2 text-neutral-500">
+                                                                {contact.created_at ? new Date(contact.created_at).toLocaleDateString() : '-'}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )) : (
+                                                        <TableRow>
+                                                            <TableCell colSpan={4} className="text-center py-8 text-neutral-500">
+                                                                No contacts in this list specifically. Power users might be synced but not showing here if the Resend API delay is active.
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
+                                                </TableBody>
+                                            </Table>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="templates" className="space-y-6 mt-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <FileText className="h-5 w-5 text-brand-navy" />
+                                Email Templates
+                            </h2>
+                            <button
+                                onClick={() => {
+                                    setTemplateModalMode('create')
+                                    setNewTemplate({ name: '', subject: '', content: '', from_email: '' })
+                                    setIsTemplateModalOpen(true)
+                                }}
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            >
+                                <Plus className="h-4 w-4" /> Create Template
+                            </button>
+                        </div>
+
+                        {/* Broadcast Campaign Section */}
+                        <div className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 mb-6">
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                                <Send className="h-5 w-5 text-brand-yellow" />
+                                Send Broadcast Campaign
+                            </h3>
+                            <div className="grid md:grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-gray-300 mb-2">Select Template</label>
+                                    <select
+                                        value={broadcastTemplateId}
+                                        onChange={(e) => setBroadcastTemplateId(e.target.value)}
+                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                    >
+                                        <option value="">Choose a template...</option>
+                                        {templates.map(t => (
+                                            <option key={t.id} value={t.id}>{t.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-gray-300 mb-2">Select Audience</label>
+                                    <select
+                                        value={broadcastAudienceId}
+                                        onChange={(e) => setBroadcastAudienceId(e.target.value)}
+                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                    >
+                                        <option value="">Choose an audience...</option>
+                                        {audiences.map(a => (
+                                            <option key={a.id} value={a.id}>{a.name}</option>
+                                        ))}
+                                    </select>
+                                    {audiences.length === 0 && (
+                                        <p className="text-xs text-gray-400 mt-1">Load audiences from Lists tab first</p>
+                                    )}
+                                </div>
+                                <div className="flex items-end">
+                                    <button
+                                        onClick={handleSendBroadcast}
+                                        disabled={!broadcastTemplateId || !broadcastAudienceId || isSendingBroadcast}
+                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                    >
+                                        {isSendingBroadcast ? (
+                                            <>
+                                                <Loader2 className="h-4 w-4 animate-spin" /> Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Send className="h-4 w-4" /> Send Broadcast
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                            {broadcastResult && (
+                                <div className={`mt-4 p-3 border-2 border-black ${broadcastResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                    <p className={`text-sm font-bold ${broadcastResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                                        {broadcastResult.message}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Preview Section */}
+                            {broadcastTemplateId && broadcastAudienceId && (
+                                <div className="mt-6 pt-6 border-t-2 border-gray-600">
+                                    <h4 className="text-sm font-bold uppercase text-gray-300 mb-4 flex items-center gap-2">
+                                        <Eye className="h-4 w-4" /> Preview Before Sending
+                                    </h4>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {/* Email Preview */}
+                                        <div className="bg-white border-2 border-black">
+                                            <div className="bg-neutral-100 border-b-2 border-black px-3 py-2 text-xs font-bold uppercase text-neutral-500">
+                                                Email Template
+                                            </div>
+                                            {(() => {
+                                                const selectedTemplate = templates.find(t => t.id === broadcastTemplateId)
+                                                if (!selectedTemplate) return null
+                                                return (
+                                                    <div className="p-3">
+                                                        <p className="text-sm font-bold mb-2 truncate">Subject: {selectedTemplate.subject}</p>
+                                                        <div className="h-[200px]">
+                                                            <EmailPreview html={selectedTemplate.content} />
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })()}
+                                        </div>
+
+                                        {/* Recipients Preview */}
+                                        <div className="bg-white border-2 border-black">
+                                            <div className="bg-neutral-100 border-b-2 border-black px-3 py-2 text-xs font-bold uppercase text-neutral-500 flex items-center justify-between">
+                                                <span>Recipients</span>
+                                                <span className="bg-brand-navy text-white px-2 py-0.5 rounded-full text-[10px]">
+                                                    {audienceContacts.filter(c => !c.unsubscribed).length} active
+                                                </span>
+                                            </div>
+                                            <div className="p-3 max-h-[240px] overflow-y-auto">
+                                                {isLoadingContacts ? (
+                                                    <div className="flex justify-center py-4">
+                                                        <Loader2 className="h-5 w-5 animate-spin text-neutral-400" />
+                                                    </div>
+                                                ) : audienceContacts.length > 0 ? (
+                                                    <div className="space-y-2">
+                                                        {audienceContacts.filter(c => !c.unsubscribed).slice(0, 10).map((contact, i) => (
+                                                            <div key={i} className="flex items-center gap-2 text-xs border-b border-neutral-100 pb-2">
+                                                                <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span>
+                                                                <span className="font-medium truncate">{contact.firstName || 'User'}</span>
+                                                                <span className="text-neutral-400 truncate">{contact.email}</span>
+                                                            </div>
+                                                        ))}
+                                                        {audienceContacts.filter(c => !c.unsubscribed).length > 10 && (
+                                                            <p className="text-xs text-neutral-400 text-center pt-2">
+                                                                +{audienceContacts.filter(c => !c.unsubscribed).length - 10} more recipients
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-sm text-neutral-400 text-center py-4">
+                                                        Select audience from Lists tab to load contacts
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {templates.map(template => (
+                                <div key={template.id} className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-lg font-bold mb-2">{template.name}</h3>
+                                        <p className="text-sm font-semibold text-neutral-600 mb-2">Subject: {template.subject}</p>
+
+                                        {/* Visual Preview */}
+                                        <div className="w-full h-[180px] mb-4">
+                                            <EmailPreview html={template.content} />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end pt-4 border-t border-neutral-100 gap-2">
+                                        <button
+                                            onClick={() => handleEditTemplate(template)}
+                                            className="text-neutral-600 hover:text-black p-2"
+                                            title="Edit Template"
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteTemplate(template.id)}
+                                            className="text-red-600 hover:text-red-800 p-2"
+                                            title="Delete Template"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {templates.length === 0 && (
+                                <div className="col-span-full py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
+                                    No templates created yet.
+                                </div>
+                            )}
+                        </div>
+                    </TabsContent>
                 </Tabs>
 
                 {/* Detailed Breakdown - Available in both views */}
@@ -834,6 +1725,275 @@ export default function AdminPage() {
                     )}
                 </div>
             </div>
-        </div>
+            {/* CREATE/EDIT TEMPLATE MODAL */}
+            {
+                isTemplateModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                        <div className="bg-white w-full max-w-4xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[95vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-extrabold font-candu uppercase text-black">
+                                    {templateModalMode === 'create' ? 'Create Template' : 'Edit Template'}
+                                </h2>
+                                <button onClick={handleCloseTemplateModal} className="p-1 hover:bg-neutral-100 rounded">
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+
+                            <Tabs defaultValue="edit" className="w-full">
+                                <TabsList className="mb-4 bg-neutral-100 border border-neutral-200">
+                                    <TabsTrigger value="edit" className="flex gap-2 items-center">
+                                        <Code className="h-4 w-4" /> Editor
+                                    </TabsTrigger>
+                                    <TabsTrigger value="preview" className="flex gap-2 items-center">
+                                        <Eye className="h-4 w-4" /> Preview
+                                    </TabsTrigger>
+                                </TabsList>
+
+                                <TabsContent value="edit">
+                                    <form onSubmit={handleCreateTemplate} className="space-y-4">
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-bold mb-1">Template Name</label>
+                                                <input
+                                                    required
+                                                    value={newTemplate.name}
+                                                    onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })}
+                                                    className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                    placeholder="e.g. Welcome Email"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold mb-1">From Email</label>
+                                                <input
+                                                    value={newTemplate.from_email}
+                                                    onChange={e => setNewTemplate({ ...newTemplate, from_email: e.target.value })}
+                                                    className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                    placeholder="Daniel from IdleForest <daniel@idleforest.com>"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold mb-1">Subject Line</label>
+                                            <input
+                                                required
+                                                value={newTemplate.subject}
+                                                onChange={e => setNewTemplate({ ...newTemplate, subject: e.target.value })}
+                                                className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                placeholder="Email subject..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold mb-1">HTML Content</label>
+                                            <textarea
+                                                required
+                                                value={newTemplate.content}
+                                                onChange={e => setNewTemplate({ ...newTemplate, content: e.target.value })}
+                                                className="w-full px-3 py-2 border-2 border-black min-h-[400px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                placeholder="<p>Enter HTML content here...</p>"
+                                            />
+                                        </div>
+                                        <div className="flex justify-end gap-2 mt-6">
+                                            <button
+                                                type="button"
+                                                onClick={handleCloseTemplateModal}
+                                                className="px-4 py-2 font-bold border-2 border-transparent hover:bg-neutral-100"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all"
+                                            >
+                                                {templateModalMode === 'create' ? 'Create Template' : 'Save Changes'}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </TabsContent>
+
+                                <TabsContent value="preview">
+                                    <div className="border-2 border-neutral-300 rounded-md bg-gray-50 overflow-hidden">
+                                        <div className="bg-white border-b border-neutral-200 p-3 text-sm text-neutral-500 flex gap-4">
+                                            <span><span className="font-bold text-black">Subject:</span> {newTemplate.subject || '(No subject)'}</span>
+                                        </div>
+                                        <div className="bg-white min-h-[500px] w-full">
+                                            <iframe
+                                                srcDoc={newTemplate.content}
+                                                className="w-full h-[500px]"
+                                                title="Email Preview"
+                                                sandbox="allow-same-origin"
+                                            />
+                                        </div>
+                                    </div>
+                                </TabsContent>
+                            </Tabs>
+                        </div>
+                    </div>
+                )
+            }
+
+            {/* SEND EMAIL MODAL */}
+            {
+                isEmailModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                        <div className="bg-white w-full max-w-lg border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                    <Mail className="h-5 w-5" /> Send Email
+                                </h2>
+                                <button onClick={() => setIsEmailModalOpen(false)} className="p-1 hover:bg-neutral-100 rounded">
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+
+                            {emailResult && (
+                                <div className={`mb-4 p-3 border-2 border-black ${emailResult.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                    <p className="font-bold text-sm">{emailResult.message}</p>
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSendEmail} className="space-y-4">
+                                <div className="bg-neutral-50 p-3 border border-neutral-200 text-sm">
+                                    <span className="font-bold text-neutral-500">To:</span> {emailCompose.userEmail}
+                                </div>
+
+                                {templates.length > 0 && (
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-neutral-500 mb-1">Load Template</label>
+                                        <select
+                                            onChange={(e) => handleLoadTemplate(e.target.value)}
+                                            className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled>Select a template...</option>
+                                            {templates.map(t => (
+                                                <option key={t.id} value={t.id}>{t.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Subject</label>
+                                    <input
+                                        required
+                                        value={emailCompose.subject}
+                                        onChange={e => setEmailCompose({ ...emailCompose, subject: e.target.value })}
+                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                        placeholder="Subject line..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Message (HTML)</label>
+                                    <textarea
+                                        required
+                                        value={emailCompose.content}
+                                        onChange={e => setEmailCompose({ ...emailCompose, content: e.target.value })}
+                                        className="w-full px-3 py-2 border-2 border-black min-h-[200px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                        placeholder="Email content..."
+                                    />
+                                </div>
+
+                                <div className="flex justify-between gap-2 mt-6">
+                                    <button
+                                        type="button"
+                                        onClick={handleSendTestEmail}
+                                        disabled={emailCompose.loading || !emailCompose.content || !emailCompose.subject}
+                                        className="px-4 py-2 bg-brand-navy text-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold text-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                        title="Send test email to daniiba account"
+                                    >
+                                        🧪 Test (daniiba)
+                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsEmailModalOpen(false)}
+                                            className="px-4 py-2 font-bold border-2 border-transparent hover:bg-neutral-100"
+                                            disabled={emailCompose.loading}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={emailCompose.loading}
+                                            className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                        >
+                                            {emailCompose.loading ? (
+                                                <span className="flex items-center gap-2">
+                                                    <Loader2 className="h-4 w-4 animate-spin" /> Sending...
+                                                </span>
+                                            ) : (
+                                                <span className="flex items-center gap-2">
+                                                    <Send className="h-4 w-4" /> Send Email
+                                                </span>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
+
+            {/* EMAIL HISTORY MODAL */}
+            {isHistoryModalOpen && historyUser && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white w-full max-w-2xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                    <History className="h-5 w-5" /> Email History
+                                </h2>
+                                <p className="text-sm text-neutral-500 mt-1">{historyUser.display_name} ({historyUser.email || 'No email'})</p>
+                            </div>
+                            <button onClick={() => setIsHistoryModalOpen(false)} className="p-1 hover:bg-neutral-100 rounded">
+                                <X className="h-6 w-6" />
+                            </button>
+                        </div>
+
+                        {isLoadingHistory ? (
+                            <div className="py-12 flex justify-center">
+                                <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
+                            </div>
+                        ) : emailHistory.length > 0 ? (
+                            <div className="space-y-3">
+                                {emailHistory.map((log) => (
+                                    <div key={log.id} className="p-4 border-2 border-neutral-200 hover:border-black transition-colors">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-bold text-sm truncate">{log.subject}</p>
+                                                <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
+                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${log.email_type === 'broadcast' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                        {log.email_type}
+                                                    </span>
+                                                    {log.segment && (
+                                                        <span className="text-neutral-400">• {log.segment.replace('_', ' ')}</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                                <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                    {log.status}
+                                                </span>
+                                                <p className="text-xs text-neutral-400 mt-1">
+                                                    {new Date(log.sent_at).toLocaleDateString()} {new Date(log.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
+                                <History className="h-8 w-8 mx-auto mb-2 text-neutral-300" />
+                                <p className="font-bold">No emails sent to this user yet</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div >
     )
 }
+
