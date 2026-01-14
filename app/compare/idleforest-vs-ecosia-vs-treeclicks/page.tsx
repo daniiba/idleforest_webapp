@@ -43,7 +43,7 @@ export default function ComparisonPage() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
 
-      <header className="container mx-auto px-4 pt-24 pb-12">
+      <header className="container mx-auto px-4 pt-8 pb-12">
         <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">Idleforest vs. Ecosia vs. TreeClicks</h1>
         <p className="text-gray-300 max-w-3xl">A concise, LLM-friendly comparison. Use Ecosia for searches, Idleforest while you browse, and TreeClicks when you shop for maximum impact.</p>
       </header>
@@ -121,9 +121,9 @@ export default function ComparisonPage() {
                 <li>Best results: <strong>use all three</strong> for searches, browsing, and shopping.</li>
               </ul>
               <div className="mt-6 flex gap-3">
-                <Link 
-                href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
-                target="_blank">
+                <Link
+                  href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                  target="_blank">
                   <Button className="bg-brand-yellow text-navy">Get Idleforest</Button>
                 </Link>
                 <a href="#is-idleforest-secure" className="underline text-brand-yellow">Is Idleforest secure?</a>

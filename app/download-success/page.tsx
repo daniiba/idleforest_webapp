@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { 
-  ArrowLeft, 
-  CheckCircle2, 
-  Monitor, 
-  Apple, 
-  AlertCircle, 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Monitor,
+  Apple,
+  AlertCircle,
   ArrowRight,
   HelpCircle,
   Download
@@ -19,12 +19,12 @@ import Navigation from '@/components/navigation'
 import { motion } from 'framer-motion'
 
 // Animation component for fade-in effect
-const FadeIn = ({ 
-  children, 
-  delay = 0 
-}: { 
-  children: React.ReactNode, 
-  delay?: number 
+const FadeIn = ({
+  children,
+  delay = 0
+}: {
+  children: React.ReactNode,
+  delay?: number
 }) => {
   return (
     <motion.div
@@ -59,7 +59,7 @@ const StepCard = ({
 }) => {
   // Hardcoded brighter background colors for each step
   const getImageBgColor = () => {
-    switch(stepNumber) {
+    switch (stepNumber) {
       case 1:
         return 'bg-blue-400';
       case 2:
@@ -70,9 +70,9 @@ const StepCard = ({
         return 'bg-blue-400';
     }
   };
-  
+
   const imageBgColor = getImageBgColor();
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -81,15 +81,15 @@ const StepCard = ({
       className="rounded-xl overflow-hidden shadow-xl flex flex-col transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1"
     >
       {/* Main content section - 2/3 height */}
-      <div 
+      <div
         className={`${bgColor} p-7 flex flex-col flex-grow`}
       >
         <div className="mb-4">
           <div className="text-sm font-medium text-white/80">STEP {stepNumber}</div>
           <h3 className="text-2xl font-bold text-white">{title}</h3>
         </div>
-        <div className="text-white/90 flex-grow min-h-[3em]">{ description}</div>
-        
+        <div className="text-white/90 flex-grow min-h-[3em]">{description}</div>
+
         {textHelp && (
           <div className="mt-4 flex items-start gap-2">
             <HelpCircle className="h-5 w-5 text-white/70 flex-shrink-0 mt-0.5" />
@@ -97,24 +97,24 @@ const StepCard = ({
           </div>
         )}
       </div>
-      
+
       {/* Image section - 1/3 height with brighter background */}
       {imageSrc ? (
-        <div 
+        <div
           className={`${imageBgColor} p-4 flex items-center justify-center h-52`}
         >
           <div className="bg-white/10 rounded-lg p-2 flex justify-center items-center w-full h-full">
-            <Image 
-              src={imageSrc} 
-              alt={`Step ${stepNumber}: ${title}`} 
-              width={300} 
-              height={200} 
-              className="rounded object-contain max-h-full" 
+            <Image
+              src={imageSrc}
+              alt={`Step ${stepNumber}: ${title}`}
+              width={300}
+              height={200}
+              className="rounded object-contain max-h-full"
             />
           </div>
         </div>
       ) : (
-        <div 
+        <div
           className={`${imageBgColor} h-52`}
         />
       )}
@@ -138,8 +138,8 @@ export default function DownloadSuccessPage() {
   return (
     <div className="min-h-screen bg-brand-gray text-white">
       <Navigation />
-      
-      <main className="container mx-auto px-4 py-32">
+
+      <main className="container mx-auto px-4 pb-32">
         {/* Download Header */}
         <div className="text-center mb-10">
           <motion.div
@@ -150,7 +150,7 @@ export default function DownloadSuccessPage() {
           >
             <Download className="h-10 w-10 text-brand-yellow" />
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -158,7 +158,7 @@ export default function DownloadSuccessPage() {
           >
             Thanks for downloading IdleForest, only a few steps left
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -167,7 +167,7 @@ export default function DownloadSuccessPage() {
             Follow the instructions below to install IdleForest and start planting trees.
           </motion.p>
         </div>
-        
+
         {/* Installation Steps */}
         <div className="max-w-5xl mx-auto mb-16">
           <div className="grid md:grid-cols-3 gap-6">
@@ -186,7 +186,7 @@ export default function DownloadSuccessPage() {
                   textHelp="Can't find the installer? Check your Downloads folder."
                   imageSrc="/onboarding/download_windows.png"
                 />
-                
+
                 <StepCard
                   stepNumber={2}
                   title="Extract" // Changed
@@ -200,7 +200,7 @@ export default function DownloadSuccessPage() {
                   textHelp="Right-click the .zip file and choose 'Extract All...' or use your preferred unzipping tool." // Added
                   imageSrc="/onboarding/install_windows.png"
                 />
-                
+
                 <StepCard
                   stepNumber={3}
                   title="Run & Approve"
@@ -235,7 +235,7 @@ export default function DownloadSuccessPage() {
                   textHelp="Can't find the file? Check your Downloads folder."
                   imageSrc="/onboarding/download.png"
                 />
-                
+
                 <StepCard
                   stepNumber={2}
                   title="Install"
@@ -248,7 +248,7 @@ export default function DownloadSuccessPage() {
                   }
                   imageSrc="/onboarding/install.png"
                 />
-                
+
                 <StepCard
                   stepNumber={3}
                   title="Allow"
@@ -266,9 +266,9 @@ export default function DownloadSuccessPage() {
             )}
           </div>
         </div>
-        
+
         {/* What happens next section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
@@ -297,10 +297,10 @@ export default function DownloadSuccessPage() {
             </div>
           </div>
         </motion.div>
-        
-       
+
+
       </main>
-      
+
       {/* Background glow effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div

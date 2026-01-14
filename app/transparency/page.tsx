@@ -55,7 +55,7 @@ export default function TransparencyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <main className="min-h-screen bg-brand-gray text-black pt-32 lg:pt-24">
+      <main className="min-h-screen bg-brand-gray text-black">
         {/* Hero Section */}
         <section className="relative bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-20">

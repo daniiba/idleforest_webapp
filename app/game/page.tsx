@@ -29,7 +29,7 @@ export default function IdleForestGame() {
 
 	return (
 		<div className="min-h-screen bg-brand-gray pt-0 pb-12 font-rethink-sans text-black overflow-x-hidden relative">
-			<Navigation />
+			<Navigation hideBanner />
 
 			{/* News Ticker positioned below the 96px (h-24) Navigation */}
 			<div className="fixed top-24 left-0 right-0 z-40 pointer-events-none">

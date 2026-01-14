@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar } from "lucide-react"
 
@@ -55,6 +53,7 @@ export default function TeamsPage() {
 	const [periodTopUsers, setPeriodTopUsers] = useState<PeriodUserStat[]>([])
 	const [periodTopTeams, setPeriodTopTeams] = useState<PeriodTeamStat[]>([])
 	const [fastestGrowingTeams, setFastestGrowingTeams] = useState<PeriodTeamStat[]>([])
+	// const [topDailyTeams, setTopDailyTeams] = useState<PeriodTeamStat[]>([]) // Moved to layout
 
 	useEffect(() => {
 		fetchBaseData()
@@ -116,11 +115,19 @@ export default function TeamsPage() {
 			setProfiles(rankedProfiles)
 		}
 
+
 		// Fetch initial period data
 		await fetchPeriodData()
+		// await fetchTopDailyTeams() // Moved to layout
 
 		setIsLoading(false)
 	}
+
+	/* Moved to layout
+	const fetchTopDailyTeams = async () => {
+		...
+	}
+	*/
 
 	const fetchPeriodData = async () => {
 		const { startDate, endDate } = getDateRange(timePeriod)
@@ -353,298 +360,301 @@ export default function TeamsPage() {
 	}
 
 	return (
-		<div className="container mx-auto p-4 pt-24">
-			{/* Title */}
-			<div className="flex justify-center items-center mb-8">
-				<h1 className="text-6xl md:text-7xl font-extrabold font-rethink-sans tracking-tight text-black">Teams</h1>
-			</div>
+		<div className="min-h-screen bg-brand-gray p-4 font-rethink-sans">
+			<div className="max-w-7xl mx-auto space-y-6">
+				{/* Top 3 Daily Banner - MOVED TO LAYOUT */}
 
-			{/* Tabs */}
-			<div className="flex justify-center mb-8">
-				<div className="inline-flex rounded-lg bg-brand-navy/95 p-1 gap-1">
-					<button
-						onClick={() => setActiveTab('teams')}
-						className={`px-6 py-3 rounded-md font-semibold transition-colors ${activeTab === 'teams'
-							? 'bg-brand-yellow text-black'
-							: 'text-white hover:text-brand-yellow'
-							}`}
-					>
-						<Users className="inline-block mr-2 h-4 w-4" />
-						Teams
-					</button>
-					<button
-						onClick={() => setActiveTab('rankings')}
-						className={`px-6 py-3 rounded-md font-semibold transition-colors ${activeTab === 'rankings'
-							? 'bg-brand-yellow text-black'
-							: 'text-white hover:text-brand-yellow'
-							}`}
-					>
-						<Award className="inline-block mr-2 h-4 w-4" />
-						Rankings
-					</button>
-				</div>
-			</div>
+				{/* Header */}
 
-			{/* Teams Tab */}
-			{activeTab === 'teams' && (
-				<>
-					{/* Search */}
-					<div className="flex justify-center mb-10">
-						<div className="relative w-full max-w-xl">
-							<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
-							<Input
-								placeholder="Search Teams"
-								value={searchQuery}
-								onChange={(e) => setSearchQuery(e.target.value)}
-								className="pl-10 pr-4 py-6 rounded-full bg-brand-navy/95 text-white placeholder:text-gray-300 border border-transparent focus-visible:ring-0 focus:border-brand-yellow"
-							/>
-						</div>
+
+				{/* Tabs */}
+				<div className="flex justify-center">
+					<div className="inline-flex bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-1 gap-1">
+						<button
+							onClick={() => setActiveTab('rankings')}
+							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'rankings'
+								? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
+								}`}
+						>
+							<Award className="inline-block mr-2 h-4 w-4" />
+							Rankings
+						</button>
+						<button
+							onClick={() => setActiveTab('teams')}
+							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'teams'
+								? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
+								}`}
+						>
+							<Users className="inline-block mr-2 h-4 w-4" />
+							Teams
+						</button>
 					</div>
+				</div>
 
-					{/* Grid */}
-					{isLoading ? (
-						<div className="flex justify-center items-center min-h-[200px]">
-							<p className="text-gray-500">Loading teams...</p>
+				{/* Teams Tab */}
+				{activeTab === 'teams' && (
+					<>
+						{/* Search */}
+						<div className="flex justify-center">
+							<div className="relative w-full max-w-xl">
+								<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+								<input
+									placeholder="Search Teams"
+									value={searchQuery}
+									onChange={(e) => setSearchQuery(e.target.value)}
+									className="w-full pl-10 pr-4 py-4 border-2 border-black bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-2"
+								/>
+							</div>
 						</div>
-					) : filteredTeams.length > 0 ? (
-						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-							{filteredTeams.map((team) => (
-								<Link href={`/teams/${team.id}`} key={team.id}>
-									<Card className="p-6 flex items-center bg-brand-navy text-white border border-zinc-800 hover:border-brand-yellow transition-colors cursor-pointer">
-										<div className="flex items-center gap-4 w-full">
-											{/* Team Image */}
-											{team.image_url ? (
-												<img
-													src={team.image_url}
-													alt={team.name}
-													className="w-12 h-12 rounded-lg object-cover border-2 border-brand-yellow/50 flex-shrink-0"
-												/>
-											) : (
-												<div className="w-12 h-12 rounded-lg bg-gradient-to-br from-brand-yellow to-yellow-300 flex items-center justify-center flex-shrink-0 border-2 border-brand-yellow/50">
-													<Users className="w-6 h-6 text-brand-navy/60" />
+
+						{/* Grid */}
+						{isLoading ? (
+							<div className="flex justify-center items-center min-h-[200px]">
+								<p className="text-neutral-500 font-bold">Loading teams...</p>
+							</div>
+						) : filteredTeams.length > 0 ? (
+							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+								{filteredTeams.map((team) => (
+									<Link href={`/teams/${team.id}`} key={team.id} className="block min-w-0">
+										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
+											<div className="flex items-center gap-4 w-full">
+												{/* Team Image */}
+												{team.image_url ? (
+													<img
+														src={team.image_url}
+														alt={team.name}
+														className="w-12 h-12 object-cover border-2 border-black flex-shrink-0"
+													/>
+												) : (
+													<div className="w-12 h-12 bg-brand-yellow border-2 border-black flex items-center justify-center flex-shrink-0">
+														<Users className="w-6 h-6 text-black" />
+													</div>
+												)}
+												<div className="flex-1 min-w-0">
+													<h2 className="text-lg font-bold truncate text-black">{team.name}</h2>
+													<p className="mt-1 text-xs text-neutral-500">Created {formatCreated(team.created_at)}</p>
 												</div>
-											)}
-											<div className="flex-1 min-w-0">
-												<h2 className="text-lg md:text-xl font-semibold truncate">{team.name}</h2>
-												<p className="mt-1 text-xs text-gray-400">Created {formatCreated(team.created_at)}</p>
-											</div>
-											<div className="flex items-center text-brand-yellow flex-shrink-0">
-												<Trophy size={16} className="mr-1" />
-												<span className="tabular-nums">{formatPoints(team.total_points)}</span>
+												<div className="flex items-center bg-brand-yellow border-2 border-black px-2 py-1 flex-shrink-0">
+													<Trophy size={14} className="mr-1 text-black" />
+													<span className="tabular-nums font-bold text-sm text-black">{formatPoints(team.total_points)}</span>
+												</div>
 											</div>
 										</div>
-									</Card>
-								</Link>
-							))}
-						</div>
-					) : (
-						<Card className="p-6 bg-brand-navy text-white border border-zinc-800">
-							<h2 className="text-xl font-semibold mb-2">No Teams Found</h2>
-							<p className="text-gray-400">
-								{searchQuery ? "No teams match your search" : "Create a team to get started"}
-							</p>
-						</Card>
-					)}
-				</>
-			)}
+									</Link>
+								))}
+							</div>
+						) : (
+							<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+								<h2 className="text-xl font-bold mb-2 text-black">No Teams Found</h2>
+								<p className="text-neutral-500">
+									{searchQuery ? "No teams match your search" : "Create a team to get started"}
+								</p>
+							</div>
+						)}
+					</>
+				)}
 
-			{/* Rankings Tab */}
-			{activeTab === 'rankings' && (
-				<div className="max-w-3xl mx-auto">
-					{/* Ranking Category Selector */}
-					<div className="flex flex-wrap justify-center gap-2 mb-4">
-						{rankingCategories.map(({ key, label, icon: Icon }) => (
-							<button
-								key={key}
-								onClick={() => setRankingCategory(key)}
-								className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all ${rankingCategory === key
-									? 'bg-brand-yellow text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black'
-									: 'bg-white text-gray-700 border-2 border-gray-300 hover:border-brand-yellow'
-									}`}
-							>
-								<Icon className="w-4 h-4" />
-								{label}
-							</button>
-						))}
-					</div>
-
-					{/* Time Period Selector - show for non-allTime categories */}
-					{rankingCategory !== 'allTime' && (
-						<div className="flex justify-center gap-2 mb-6">
-							<div className="inline-flex items-center gap-1 bg-gray-100 rounded-full p-1">
-								<Calendar className="w-4 h-4 text-gray-500 ml-2" />
-								{timePeriods.map(({ key, label }) => (
+				{/* Rankings Tab */}
+				{activeTab === 'rankings' && (
+					<div className="max-w-3xl mx-auto space-y-6">
+						{/* Filters Bar */}
+						<div className="flex flex-col lg:flex-row justify-between items-center gap-4">
+							{/* Ranking Category Selector */}
+							<div className="flex flex-wrap justify-center lg:justify-start gap-2">
+								{rankingCategories.map(({ key, label, icon: Icon }) => (
 									<button
 										key={key}
-										onClick={() => setTimePeriod(key)}
-										className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${timePeriod === key
-											? 'bg-brand-navy text-white'
-											: 'text-gray-600 hover:text-black'
+										onClick={() => setRankingCategory(key)}
+										className={`flex items-center gap-2 px-3 py-2 font-bold text-xs md:text-sm uppercase transition-all ${rankingCategory === key
+											? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+											: 'bg-white text-neutral-600 border-2 border-black hover:bg-gray-100'
 											}`}
 									>
+										<Icon className="w-4 h-4" />
 										{label}
 									</button>
 								))}
 							</div>
+
+							{/* Time Period Selector */}
+							{rankingCategory !== 'allTime' && (
+								<div className="inline-flex items-center gap-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-1 flex-shrink-0">
+									<Calendar className="w-4 h-4 text-neutral-500 ml-2" />
+									{timePeriods.map(({ key, label }) => (
+										<button
+											key={key}
+											onClick={() => setTimePeriod(key)}
+											className={`px-3 py-1.5 text-xs md:text-sm font-bold uppercase transition-all ${timePeriod === key
+												? 'bg-black text-white'
+												: 'text-neutral-600 hover:text-black'
+												}`}
+										>
+											{label}
+										</button>
+									))}
+								</div>
+							)}
 						</div>
-					)}
 
-					{isLoading ? (
-						<div className="flex justify-center items-center min-h-[200px]">
-							<p className="text-gray-500">Loading rankings...</p>
-						</div>
-					) : (
-						<>
-							{/* All Time User Rankings */}
-							{rankingCategory === 'allTime' && (
-								<>
-									<div className="text-center mb-4">
-										<p className="text-sm text-gray-600">All-Time User Rankings</p>
-									</div>
-									<Card className="bg-brand-navy text-white border border-zinc-800 overflow-hidden">
-										{profiles.map((profile, idx) => (
-											<Link
-												key={profile.user_id}
-												href={`/profile/${profile.display_name}`}
-												className="block"
-											>
-												<div className={`flex items-center justify-between px-6 py-4 ${idx < profiles.length - 1 ? 'border-b border-zinc-800' : ''} hover:bg-white/5 transition-colors`}>
-													<div className="flex items-center gap-4 min-w-0">
-														<span className="text-lg font-bold text-brand-yellow shrink-0">#{profile.rank}</span>
-														<h3 className="text-base md:text-lg font-semibold truncate">{profile.display_name}</h3>
-													</div>
-													<div className="text-right shrink-0">
-														<p className="text-[10px] uppercase tracking-wide text-gray-400">Points</p>
-														<p className="text-base md:text-lg font-bold text-brand-yellow tabular-nums">{formatPoints(profile.total_points)}</p>
-													</div>
-												</div>
-											</Link>
-										))}
-										{profiles.length === 0 && (
-											<p className="text-gray-400 text-center p-6">No users found</p>
-										)}
-									</Card>
-								</>
-							)}
-
-							{/* Period User Rankings */}
-							{rankingCategory === 'users' && (
-								<>
-									<div className="text-center mb-4">
-										<p className="text-sm text-gray-600">Top Earners - {getPeriodLabel()}</p>
-									</div>
-									<Card className="bg-brand-navy text-white border border-zinc-800 overflow-hidden">
-										{periodTopUsers.map((user, idx) => (
-											<Link
-												key={user.user_id}
-												href={`/profile/${user.display_name}`}
-												className="block"
-											>
-												<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopUsers.length - 1 ? 'border-b border-zinc-800' : ''} hover:bg-white/5 transition-colors`}>
-													<div className="flex items-center gap-4 min-w-0">
-														<span className="text-lg font-bold text-brand-yellow shrink-0">#{idx + 1}</span>
-														<h3 className="text-base md:text-lg font-semibold truncate">{user.display_name}</h3>
-													</div>
-													<div className="text-right shrink-0">
-														<p className="text-[10px] uppercase tracking-wide text-gray-400">{getPeriodLabel()}</p>
-														<p className="text-base md:text-lg font-bold text-green-400 tabular-nums">+{formatPoints(user.points_gained)}</p>
-													</div>
-												</div>
-											</Link>
-										))}
-										{periodTopUsers.length === 0 && (
-											<p className="text-gray-400 text-center p-6">No data for this period</p>
-										)}
-									</Card>
-								</>
-							)}
-
-							{/* Period Team Rankings */}
-							{rankingCategory === 'teams' && (
-								<>
-									<div className="text-center mb-4">
-										<p className="text-sm text-gray-600">Top Teams - {getPeriodLabel()}</p>
-									</div>
-									<Card className="bg-brand-navy text-white border border-zinc-800 overflow-hidden">
-										{periodTopTeams.map((team, idx) => (
-											<Link
-												key={team.team_id}
-												href={`/teams/${team.team_id}`}
-												className="block"
-											>
-												<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopTeams.length - 1 ? 'border-b border-zinc-800' : ''} hover:bg-white/5 transition-colors`}>
-													<div className="flex items-center gap-4 min-w-0">
-														<span className="text-lg font-bold text-brand-yellow shrink-0">#{idx + 1}</span>
-														{team.team_image ? (
-															<img src={team.team_image} alt={team.team_name} className="w-8 h-8 rounded object-cover" />
-														) : (
-															<div className="w-8 h-8 rounded bg-brand-yellow/20 flex items-center justify-center">
-																<Users className="w-4 h-4 text-brand-yellow" />
-															</div>
-														)}
-														<h3 className="text-base md:text-lg font-semibold truncate">{team.team_name}</h3>
-													</div>
-													<div className="text-right shrink-0">
-														<p className="text-[10px] uppercase tracking-wide text-gray-400">{getPeriodLabel()}</p>
-														<p className="text-base md:text-lg font-bold text-green-400 tabular-nums">+{formatPoints(team.points_gained)}</p>
-													</div>
-												</div>
-											</Link>
-										))}
-										{periodTopTeams.length === 0 && (
-											<p className="text-gray-400 text-center p-6">No data for this period</p>
-										)}
-									</Card>
-								</>
-							)}
-
-							{/* Fastest Growing Teams */}
-							{rankingCategory === 'fastestGrowing' && (
-								<>
-									<div className="text-center mb-4">
-										<p className="text-sm text-gray-600">Fastest Growing (New Members) - {getPeriodLabel()}</p>
-									</div>
-									<Card className="bg-brand-navy text-white border border-zinc-800 overflow-hidden">
-										{fastestGrowingTeams.map((team, idx) => (
-											<Link
-												key={team.team_id}
-												href={`/teams/${team.team_id}`}
-												className="block"
-											>
-												<div className={`flex items-center justify-between px-6 py-4 ${idx < fastestGrowingTeams.length - 1 ? 'border-b border-zinc-800' : ''} hover:bg-white/5 transition-colors`}>
-													<div className="flex items-center gap-4 min-w-0">
-														<span className="text-lg font-bold text-brand-yellow shrink-0">#{idx + 1}</span>
-														{team.team_image ? (
-															<img src={team.team_image} alt={team.team_name} className="w-8 h-8 rounded object-cover" />
-														) : (
-															<div className="w-8 h-8 rounded bg-brand-yellow/20 flex items-center justify-center">
-																<Users className="w-4 h-4 text-brand-yellow" />
-															</div>
-														)}
-														<div className="min-w-0">
-															<h3 className="text-base md:text-lg font-semibold truncate">{team.team_name}</h3>
-															<p className="text-xs text-gray-400">{team.member_count} members total</p>
+						{isLoading ? (
+							<div className="flex justify-center items-center min-h-[200px]">
+								<p className="text-neutral-500 font-bold">Loading rankings...</p>
+							</div>
+						) : (
+							<>
+								{/* All Time User Rankings */}
+								{rankingCategory === 'allTime' && (
+									<>
+										<div className="text-center">
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">All-Time User Rankings</p>
+										</div>
+										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+											{profiles.map((profile, idx) => (
+												<Link
+													key={profile.user_id}
+													href={`/profile/${profile.display_name}`}
+													className="block"
+												>
+													<div className={`flex items-center justify-between px-6 py-4 ${idx < profiles.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
+														<div className="flex items-center gap-4 min-w-0">
+															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{profile.rank}</span>
+															<h3 className="text-base md:text-lg font-bold truncate text-black">{profile.display_name}</h3>
+														</div>
+														<div className="text-right shrink-0">
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">Points</p>
+															<p className="text-base md:text-lg font-extrabold text-black tabular-nums">{formatPoints(profile.total_points)}</p>
 														</div>
 													</div>
-													<div className="text-right shrink-0">
-														<p className="text-[10px] uppercase tracking-wide text-gray-400">New Members</p>
-														<p className="text-base md:text-lg font-bold text-purple-400 tabular-nums">
-															+{team.member_growth || 0}
-														</p>
+												</Link>
+											))}
+											{profiles.length === 0 && (
+												<p className="text-neutral-500 text-center p-6 font-bold">No users found</p>
+											)}
+										</div>
+									</>
+								)}
+
+								{/* Period User Rankings */}
+								{rankingCategory === 'users' && (
+									<>
+										<div className="text-center">
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Top Earners - {getPeriodLabel()}</p>
+										</div>
+										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+											{periodTopUsers.map((user, idx) => (
+												<Link
+													key={user.user_id}
+													href={`/profile/${user.display_name}`}
+													className="block"
+												>
+													<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopUsers.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
+														<div className="flex items-center gap-4 min-w-0">
+															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
+															<h3 className="text-base md:text-lg font-bold truncate text-black">{user.display_name}</h3>
+														</div>
+														<div className="text-right shrink-0">
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{getPeriodLabel()}</p>
+															<p className="text-base md:text-lg font-extrabold text-green-600 tabular-nums">+{formatPoints(user.points_gained)}</p>
+														</div>
 													</div>
-												</div>
-											</Link>
-										))}
-										{fastestGrowingTeams.length === 0 && (
-											<p className="text-gray-400 text-center p-6">No teams gained members this period</p>
-										)}
-									</Card>
-								</>
-							)}
-						</>
-					)}
-				</div>
-			)}
+												</Link>
+											))}
+											{periodTopUsers.length === 0 && (
+												<p className="text-neutral-500 text-center p-6 font-bold">No data for this period</p>
+											)}
+										</div>
+									</>
+								)}
+
+								{/* Period Team Rankings */}
+								{rankingCategory === 'teams' && (
+									<>
+										<div className="text-center">
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Top Teams - {getPeriodLabel()}</p>
+										</div>
+										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+											{periodTopTeams.map((team, idx) => (
+												<Link
+													key={team.team_id}
+													href={`/teams/${team.team_id}`}
+													className="block"
+												>
+													<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
+														<div className="flex items-center gap-4 min-w-0">
+															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
+															{team.team_image ? (
+																<img src={team.team_image} alt={team.team_name} className="w-8 h-8 object-cover border-2 border-black" />
+															) : (
+																<div className="w-8 h-8 bg-brand-yellow border-2 border-black flex items-center justify-center">
+																	<Users className="w-4 h-4 text-black" />
+																</div>
+															)}
+															<h3 className="text-base md:text-lg font-bold truncate text-black">{team.team_name}</h3>
+														</div>
+														<div className="text-right shrink-0">
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{getPeriodLabel()}</p>
+															<p className="text-base md:text-lg font-extrabold text-green-600 tabular-nums">+{formatPoints(team.points_gained)}</p>
+														</div>
+													</div>
+												</Link>
+											))}
+											{periodTopTeams.length === 0 && (
+												<p className="text-neutral-500 text-center p-6 font-bold">No data for this period</p>
+											)}
+										</div>
+									</>
+								)}
+
+								{/* Fastest Growing Teams */}
+								{rankingCategory === 'fastestGrowing' && (
+									<>
+										<div className="text-center">
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Fastest Growing (New Members) - {getPeriodLabel()}</p>
+										</div>
+										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+											{fastestGrowingTeams.map((team, idx) => (
+												<Link
+													key={team.team_id}
+													href={`/teams/${team.team_id}`}
+													className="block"
+												>
+													<div className={`flex items-center justify-between px-6 py-4 ${idx < fastestGrowingTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
+														<div className="flex items-center gap-4 min-w-0">
+															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
+															{team.team_image ? (
+																<img src={team.team_image} alt={team.team_name} className="w-8 h-8 object-cover border-2 border-black" />
+															) : (
+																<div className="w-8 h-8 bg-brand-yellow border-2 border-black flex items-center justify-center">
+																	<Users className="w-4 h-4 text-black" />
+																</div>
+															)}
+															<div className="min-w-0">
+																<h3 className="text-base md:text-lg font-bold truncate text-black">{team.team_name}</h3>
+																<p className="text-xs text-neutral-500 font-medium">{team.member_count} members total</p>
+															</div>
+														</div>
+														<div className="text-right shrink-0">
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">New Members</p>
+															<p className="text-base md:text-lg font-extrabold text-purple-600 tabular-nums">
+																+{team.member_growth || 0}
+															</p>
+														</div>
+													</div>
+												</Link>
+											))}
+											{fastestGrowingTeams.length === 0 && (
+												<p className="text-neutral-500 text-center p-6 font-bold">No teams gained members this period</p>
+											)}
+										</div>
+									</>
+								)}
+							</>
+						)}
+					</div>
+				)}
+			</div>
 		</div>
 	)
 }

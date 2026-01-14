@@ -8,6 +8,7 @@ import "./globals.css";
 import { Inter, Rethink_Sans } from "next/font/google";
 import { TreeStatsProvider } from "@/contexts/TreeStatsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import TopTeamsBanner from "@/components/TopTeamsBanner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

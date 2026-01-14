@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black pt-32 lg:pt-24">
+      <main className="min-h-screen bg-brand-gray text-black">
         {/* Hero Section */}
         <section className="relative bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-20">
@@ -47,7 +47,7 @@ export default function TermsOfServicePage() {
         <section className="relative bg-brand-gray py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto space-y-8">
-              
+
               {/* 1. Acceptance of Terms */}
               <Card className="bg-white border-2 border-black p-8">
                 <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">

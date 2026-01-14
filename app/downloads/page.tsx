@@ -18,7 +18,7 @@ const DownloadsPage = () => {
         <meta name="description" content="Download IdleForest for your desktop or browser. Start planting trees today!" />
       </Head>
       <Navigation />
-      <main className="min-h-screen pt-32 lg:pt-24 xl:pt-32">
+      <main className="min-h-screen">
 
         {/* Header Section */}
         <section className="relative overflow-hidden pt-10 pb-20">

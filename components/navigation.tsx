@@ -8,12 +8,14 @@ import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { supabase } from "@/lib/supabase/client"
 import { Button } from "./ui/button"
+import TopTeamsBanner from "@/components/TopTeamsBanner"
 
 interface NavigationProps {
   variant?: 'default' | 'dashboard'
+  hideBanner?: boolean
 }
 
-export default function Navigation({ variant = 'default' }: NavigationProps) {
+export default function Navigation({ variant = 'default', hideBanner = false }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [profileUrl, setProfileUrl] = useState<string>('/')
   const pathname = usePathname()
@@ -66,7 +68,8 @@ export default function Navigation({ variant = 'default' }: NavigationProps) {
   ]
 
   return (
-    <header className={`fixed top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all`}>
+    <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
+      {!hideBanner && <TopTeamsBanner />}
       <div className="relative mx-auto px-4 h-24 grid grid-cols-3 items-center">
         <Link href='/' className="flex items-center gap-2 col-start-1 justify-self-start">
           <Image src="/logo.svg" alt="IdleForest logo" width={121} height={33} className="w-[100px] md:w-[121px]" />
@@ -176,3 +179,4 @@ export default function Navigation({ variant = 'default' }: NavigationProps) {
     </header>
   )
 }
+

@@ -12,6 +12,7 @@ import { EmailForm } from "@/components/email-form";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 import { ReviewsSection } from "@/components/reviews-section";
 import { SmartCTA } from "@/components/smart-cta";
+import TopTeamsBanner from "@/components/TopTeamsBanner";
 
 export default function LandingPage() {
   const [stats, setStats] = useState({
@@ -62,8 +63,9 @@ export default function LandingPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-white pt-32 lg:pt-24 xl:pt-0">
+      <main className="min-h-screen bg-brand-gray text-white">
         {/* HERO */}
+
         <section className="relative overflow-hidden">
           {/* Decorative wavy background */}
           <Image

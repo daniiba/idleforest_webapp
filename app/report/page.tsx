@@ -47,7 +47,7 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray pt-32 pb-12 font-inter">
+    <div className="min-h-screen bg-brand-gray pb-12 font-inter">
       <Navigation />
 
       <div className="container mx-auto px-6">

@@ -70,14 +70,14 @@ async function getBlogPosts(cursor?: string | null) {
     // Add a unique timestamp to the query name to bypass caching
     const timestamp = Date.now();
     const uniqueQuery = query.replace('query Publication', `query Publication_${timestamp}`);
-    
+
     const response = await fetch('https://gql.hashnode.com', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({ query:uniqueQuery, variables }),
+      body: JSON.stringify({ query: uniqueQuery, variables }),
       cache: 'no-store'
     })
 
@@ -122,14 +122,14 @@ export default async function BlogPage({
       <div className="min-h-screen bg-brand-gray">
         <Navigation />
 
-        <div className="container mx-auto px-4 py-8 pt-24">
+        <div className="container mx-auto px-4 py-8 pt-8">
           <h1 className="text-4xl font-bold mb-8 text-white">Blog Posts</h1>
           <div className="text-center py-12">
             <p className="text-gray-400">No blog posts found. Please try again later.</p>
             {currentPage > 1 && (
               <Link href="/blog">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="bg-transparent mt-4 border-brand-yellow text-brand-yellow hover:bg-brand-yellow"
                 >
                   Back to First Page
@@ -158,9 +158,9 @@ export default async function BlogPage({
       <img src="/yellow-shape.svg" alt="accent" className="pointer-events-none select-none absolute -top-24 -left-24 w-[600px] opacity-70" />
       <img src="/yellow-shape.svg" alt="accent" className="pointer-events-none select-none absolute -bottom-40 -right-20 w-[520px] rotate-12 opacity-70" />
 
-      <div className="container mx-auto px-4 py-8 pt-28 relative">
+      <div className="container mx-auto px-4 py-8 pt-8 relative">
         <h1 className="text-center font-rethink-sans text-black text-5xl md:text-6xl font-extrabold tracking-tight mb-10">BLOG</h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           {posts.map((post: BlogPost) => (
             <BlogPostCard key={post.slug} post={post} />
@@ -171,7 +171,7 @@ export default async function BlogPage({
         <nav className="mt-12 flex justify-center items-center gap-4" aria-label="Blog pagination">
           {currentPage > 1 && (
             <Link href={`/blog?page=${currentPage - 1}`} className="inline-block">
-              <Button 
+              <Button
                 className="bg-brand-yellow text-black border-brand-yellow hover:brightness-95"
               >
                 <ChevronLeft className="h-4 w-4 mr-2" />
@@ -179,7 +179,7 @@ export default async function BlogPage({
               </Button>
             </Link>
           )}
-          
+
           <div className="flex items-center gap-2">
             <span className="text-black px-4 text-lg">
               Page {currentPage}
@@ -188,7 +188,7 @@ export default async function BlogPage({
 
           {pageInfo?.hasNextPage && (
             <Link href={`/blog?page=${currentPage + 1}&cursor=${pageInfo.endCursor}`} className="inline-block">
-              <Button 
+              <Button
                 className="bg-brand-yellow text-black border-brand-yellow hover:brightness-95"
               >
                 Next

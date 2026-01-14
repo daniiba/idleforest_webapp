@@ -94,11 +94,11 @@ export default function BusinessPage() {
 
   return (
     // Main container with black background and white text
-    <div className="min-h-screen bg-brand-gray text-black overflow-x-hidden md:pt-24"> {/* Prevent horizontal scroll */}
+    <div className="min-h-screen bg-brand-gray text-black overflow-x-hidden"> {/* Prevent horizontal scroll */}
       <Navigation />
 
       {/* Hero Section */}
-      <section className="min-h-[80vh] flex justify-center items-center pt-32 pb-16 relative overflow-hidden bg-white">
+      <section className="min-h-[80vh] flex justify-center items-center pt-16 pb-16 relative overflow-hidden bg-white">
         {/* Decorative SVG Lines */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <Image
