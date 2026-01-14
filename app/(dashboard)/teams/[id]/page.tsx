@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Chrome, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { PointsHistoryChart } from "@/components/PointsHistoryChart"
 
 interface TeamMember {
 	id: string
@@ -198,6 +199,7 @@ export default function TeamPage() {
 	const [editImageFile, setEditImageFile] = useState<File | null>(null)
 	const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
 	const [uploadingImage, setUploadingImage] = useState(false)
+	const [historicalData, setHistoricalData] = useState<any[]>([])
 	const params = useParams()
 	const router = useRouter()
 
@@ -205,6 +207,7 @@ export default function TeamPage() {
 		checkCurrentUser()
 		fetchTeamData()
 		fetchNodeStatus()
+		fetchHistoricalData()
 	}, [params.id])
 
 	// Poll for node status every 5 seconds when user logs in and doesn't have a node yet
@@ -341,6 +344,23 @@ export default function TeamPage() {
 		}
 
 		setIsLoading(false)
+	}
+
+	const fetchHistoricalData = async () => {
+		try {
+			const { data: dailyStats } = await supabase
+				.from('team_daily_stats')
+				.select('date, total_points_snapshot, points_gained_that_day, member_count')
+				.eq('team_id', params.id)
+				.order('date', { ascending: true })
+				.limit(30)
+
+			if (dailyStats) {
+				setHistoricalData(dailyStats)
+			}
+		} catch (error) {
+			console.error('Error fetching historical data:', error)
+		}
 	}
 
 	const fetchInvites = async () => {
@@ -1018,6 +1038,15 @@ export default function TeamPage() {
 							</div>
 						</div>
 					</Card>
+
+					{/* Team Points History */}
+					{historicalData.length > 0 && (
+						<PointsHistoryChart
+							data={historicalData}
+							title="Team Points History"
+							showMemberCount={true}
+						/>
+					)}
 
 					<Card className="p-6 bg-brand-navy backdrop-blur-sm border-2 border-brand-yellow">
 						<div className="flex items-center gap-4 mb-6">

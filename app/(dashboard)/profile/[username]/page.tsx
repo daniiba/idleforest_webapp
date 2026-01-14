@@ -7,6 +7,7 @@ import { Trophy, Users, Gift, Loader2, Plus, Upload, X, Apple, Chrome, Share2 } 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
+import { PointsHistoryChart } from "@/components/PointsHistoryChart"
 
 interface Profile {
     id: string
@@ -66,6 +67,7 @@ export default function PublicProfilePage() {
     const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [uploadingImage, setUploadingImage] = useState(false)
     const [createError, setCreateError] = useState('')
+    const [historicalData, setHistoricalData] = useState<any[]>([])
     const params = useParams()
     const router = useRouter()
 
@@ -163,6 +165,18 @@ export default function PublicProfilePage() {
                 const { data: { user } } = await supabase.auth.getUser()
                 if (user && user.id === profile.user_id) {
                     setIsOwnProfile(true)
+                }
+
+                // Fetch historical data
+                const { data: dailyStats } = await supabase
+                    .from('user_daily_stats')
+                    .select('date, total_points_snapshot, points_gained_that_day')
+                    .eq('user_id', profile.user_id)
+                    .order('date', { ascending: true })
+                    .limit(30)
+
+                if (dailyStats) {
+                    setHistoricalData(dailyStats)
                 }
             }
         } catch (error) {
@@ -485,6 +499,14 @@ export default function PublicProfilePage() {
                         <p className="text-3xl font-extrabold font-candu text-black">{referralStats.total_requests}</p>
                     </div>
                 </div>
+
+                {/* Points History */}
+                {historicalData.length > 0 && (
+                    <PointsHistoryChart
+                        data={historicalData}
+                        title="Points History"
+                    />
+                )}
 
                 {/* Badges Section */}
                 <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">

@@ -495,11 +495,17 @@ export async function triggerCampaign(
         return { success: false, error: 'Failed to get audience from Resend' }
     }
 
+    // Replace {{UNSUBSCRIBE_URL}} with Resend's variable for broadcasts
+    const processedContent = htmlContent.replace(
+        /\{\{UNSUBSCRIBE_URL\}\}/g,
+        '{{{RESEND_UNSUBSCRIBE_URL}}}'
+    )
+
     // Create broadcast
     const result = await resendCreateBroadcast(
         audience.id,
         subject,
-        htmlContent,
+        processedContent,
         'support@idleforest.com'
     )
 
@@ -874,13 +880,19 @@ export async function sendBroadcastToAudience(
         return { success: false, error: 'Template not found' }
     }
 
-    // 2. Create the broadcast using Resend
+    // 2. Replace {{UNSUBSCRIBE_URL}} with Resend's variable for broadcasts
+    const processedContent = template.content.replace(
+        /\{\{UNSUBSCRIBE_URL\}\}/g,
+        '{{{RESEND_UNSUBSCRIBE_URL}}}'
+    )
+
+    // 3. Create the broadcast using Resend
     const { createBroadcast, sendBroadcast } = await import('@/lib/resend')
 
     const createResult = await createBroadcast(
         audienceId,
         template.subject,
-        template.content,
+        processedContent,
         template.from_email || 'support@idleforest.com',
         template.name // Pass template name for Resend dashboard
     )
