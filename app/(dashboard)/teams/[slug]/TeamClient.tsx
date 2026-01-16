@@ -6,7 +6,12 @@ import { Card } from "@/components/ui/card"
 import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Chrome, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { PointsHistoryChart } from "@/components/PointsHistoryChart"
+import { ThreadList } from "@/components/ThreadList"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TeamStats } from "@/components/TeamStats"
+import { TeamMembers } from "@/components/TeamMembers"
+
+
 
 interface TeamMember {
 	id: string
@@ -19,7 +24,9 @@ interface TeamMember {
 		username?: string
 	}
 	platforms?: string[] // 'windows' | 'mac' | 'extension'
+	role?: 'owner' | 'admin' | 'member'
 }
+
 
 interface Team {
 	id: string
@@ -170,7 +177,7 @@ function InstallBanner({
 // Create client once outside component
 const supabase = createClient()
 
-export default function TeamPage() {
+export default function TeamClient() {
 	const [team, setTeam] = useState<Team | null>(null)
 	const [members, setMembers] = useState<TeamMember[]>([])
 	const [isLoading, setIsLoading] = useState(true)
@@ -200,15 +207,22 @@ export default function TeamPage() {
 	const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
 	const [uploadingImage, setUploadingImage] = useState(false)
 	const [historicalData, setHistoricalData] = useState<any[]>([])
+	const [currentUserRole, setCurrentUserRole] = useState<'owner' | 'admin' | 'member' | null>(null)
 	const params = useParams()
 	const router = useRouter()
+
 
 	useEffect(() => {
 		checkCurrentUser()
 		fetchTeamData()
 		fetchNodeStatus()
-		fetchHistoricalData()
-	}, [params.id])
+	}, [params.slug])
+
+	useEffect(() => {
+		if (team?.id) {
+			fetchHistoricalData()
+		}
+	}, [team?.id])
 
 	// Poll for node status every 5 seconds when user logs in and doesn't have a node yet
 	useEffect(() => {
@@ -273,11 +287,11 @@ export default function TeamPage() {
 	const fetchTeamData = async () => {
 		setIsLoading(true)
 
-		// Get team data
+		// Get team data by slug
 		const { data: teamData } = await supabase
 			.from('teams')
 			.select('*')
-			.eq('id', params.id)
+			.eq('slug', params.slug)
 			.single()
 
 		if (teamData) {
@@ -291,8 +305,10 @@ export default function TeamPage() {
 					user_id,
 					team_id,
 					joined_at,
-					contribution_points
+					contribution_points,
+					role
 				`)
+
 				.eq('team_id', teamData.id)
 
 			if (membersData) {
@@ -301,7 +317,15 @@ export default function TeamPage() {
 				if (user) {
 					const userIsMember = membersData.some(m => m.user_id === user.id)
 					setIsMember(userIsMember)
+
+					if (userIsMember) {
+						const memberRecord = membersData.find(m => m.user_id === user.id)
+						if (memberRecord?.role) {
+							setCurrentUserRole(memberRecord.role as 'owner' | 'admin' | 'member')
+						}
+					}
 				}
+
 
 				// Get profile and node information for each member
 				const membersWithProfiles = await Promise.all(
@@ -348,10 +372,13 @@ export default function TeamPage() {
 
 	const fetchHistoricalData = async () => {
 		try {
+			// First get team ID from slug
+			if (!team?.id) return
+
 			const { data: dailyStats } = await supabase
 				.from('team_daily_stats')
 				.select('date, total_points_snapshot, points_gained_that_day, member_count')
-				.eq('team_id', params.id)
+				.eq('team_id', team.id)
 				.order('date', { ascending: true })
 				.limit(30)
 
@@ -365,7 +392,8 @@ export default function TeamPage() {
 
 	const fetchInvites = async () => {
 		try {
-			const response = await fetch(`/api/teams/invite?teamId=${params.id}`)
+			if (!team?.id) return
+			const response = await fetch(`/api/teams/invite?teamId=${team.id}`)
 			const data = await response.json()
 			if (data.invites) {
 				setInvites(data.invites)
@@ -382,7 +410,7 @@ export default function TeamPage() {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					teamId: params.id,
+					teamId: team?.id,
 					usesRemaining: null, // Unlimited
 					expiresInDays: null  // Never expires
 				})
@@ -435,7 +463,7 @@ export default function TeamPage() {
 			const response = await fetch('/api/teams/leave', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ teamId: params.id })
+				body: JSON.stringify({ teamId: team?.id })
 			})
 
 			if (response.ok) {
@@ -456,7 +484,7 @@ export default function TeamPage() {
 	const handleDeleteTeam = async () => {
 		setDeletingTeam(true)
 		try {
-			const response = await fetch(`/api/teams/delete?teamId=${params.id}`, {
+			const response = await fetch(`/api/teams/delete?teamId=${team?.id}`, {
 				method: 'DELETE'
 			})
 
@@ -477,7 +505,7 @@ export default function TeamPage() {
 
 	const handleJoinTeam = async (confirmSwitch = false) => {
 		if (!currentUser) {
-			router.push('/auth/user/login?redirect=/teams/' + params.id)
+			router.push('/auth/user/login?redirect=/teams/' + params.slug)
 			return
 		}
 
@@ -487,7 +515,7 @@ export default function TeamPage() {
 			const response = await fetch('/api/teams/join-direct', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ teamId: params.id, confirmSwitch })
+				body: JSON.stringify({ teamId: team?.id, confirmSwitch })
 			})
 
 			const data = await response.json()
@@ -641,117 +669,296 @@ export default function TeamPage() {
 	return (
 		<div className="container mx-auto p-4 pt-32">
 			<div className="max-w-4xl mx-auto">
-				{/* Team Header Card */}
-				<div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8 mb-8">
-					<div className="flex flex-col md:flex-row gap-6">
-						{/* Team Image */}
-						{team.image_url ? (
-							<div className="flex-shrink-0">
-								<img
-									src={team.image_url}
-									alt={`${team.name} logo`}
-									className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-								/>
-							</div>
-						) : (
-							<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
-								<Users className="w-12 h-12 md:w-16 md:h-16 text-black/60" />
-							</div>
-						)}
+				{/* Critical Alerts - Moved to Top */}
+				{/* Join Error Message */}
+				{joinError && (
+					<div className="bg-red-50 border-2 border-red-400 p-4 mb-4">
+						<div className="flex items-center gap-3">
+							<AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
+							<p className="text-red-700">{joinError}</p>
+						</div>
+					</div>
+				)}
 
-						{/* Team Info */}
-						<div className="flex-1 min-w-0">
-							<h1 className="text-3xl md:text-5xl font-extrabold font-rethink-sans text-black uppercase tracking-tight mb-2">
-								{team.name}
-							</h1>
+				{/* Install Banner - for members without nodes */}
+				{isMember && hasNode === false && (
+					<div className="mb-8">
+						<InstallBanner
+							teamName={team?.name || 'your team'}
+							onCheckConnection={refetchNodeStatus}
+							isChecking={isCheckingConnection}
+						/>
+					</div>
+				)}
 
-							{/* Contribution Status Badge */}
-							{isMember && hasNode && (
-								<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform -rotate-1">
-									<div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-									Contributing
+				<Tabs defaultValue="discussions" className="w-full">
+					{/* Team Header Card - Now wraps TabsList */}
+					<div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8">
+						<div className="p-6 md:p-8">
+							<div className="flex flex-col md:flex-row gap-6">
+								{/* Team Image */}
+								{team.image_url ? (
+									<div className="flex-shrink-0">
+										<img
+											src={team.image_url}
+											alt={`${team.name} logo`}
+											className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+										/>
+									</div>
+								) : (
+									<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
+										<Users className="w-12 h-12 md:w-16 md:h-16 text-black/60" />
+									</div>
+								)}
+
+								{/* Team Info */}
+								<div className="flex-1 min-w-0">
+									<div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
+										<h1 className="text-3xl md:text-5xl font-extrabold font-rethink-sans text-black uppercase tracking-tight">
+											{team.name}
+										</h1>
+
+										{/* Action Buttons - Top Right */}
+										<div className="flex flex-wrap items-center gap-2">
+											{/* Join Team - for non-members */}
+											{!isMember && currentUser && (
+												<button
+													onClick={() => handleJoinTeam()}
+													disabled={joiningTeam}
+													title="Join Team"
+													className="flex items-center justify-center p-2.5 bg-green-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+												>
+													{joiningTeam ? (
+														<Loader2 className="w-5 h-5 animate-spin" />
+													) : (
+														<UserPlus className="w-5 h-5" />
+													)}
+												</button>
+											)}
+
+											{/* Invite - Keeps Text */}
+											{isMember && (
+												<button
+													onClick={toggleInviteSection}
+													className="flex items-center gap-2 px-5 py-2.5 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												>
+													<UserPlus className="w-5 h-5" />
+													Invite
+												</button>
+											)}
+
+											{/* Leave Team - for non-owner members */}
+											{isMember && !isOwner && (
+												<button
+													onClick={() => setShowLeaveConfirm(true)}
+													title="Leave Team"
+													className="flex items-center justify-center p-2.5 bg-gray-100 border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												>
+													<LogOut className="w-5 h-5" />
+												</button>
+											)}
+
+											{/* Edit Team - for owner only */}
+											{isOwner && (
+												<button
+													onClick={openEditModal}
+													title="Edit Team"
+													className="flex items-center justify-center p-2.5 bg-blue-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												>
+													<Pencil className="w-5 h-5" />
+												</button>
+											)}
+
+											{/* Delete Team - for owner only */}
+											{isOwner && (
+												<button
+													onClick={() => setShowDeleteConfirm(true)}
+													title="Delete Team"
+													className="flex items-center justify-center p-2.5 bg-red-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												>
+													<Trash2 className="w-5 h-5" />
+												</button>
+											)}
+
+											{/* Share Team Stats */}
+											<Link
+												href={`/share/team/${params.slug}`}
+												title="Share Team"
+												className="flex items-center justify-center p-2.5 bg-purple-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+											>
+												<Share2 className="w-5 h-5" />
+											</Link>
+										</div>
+									</div>
+
+									{/* Contribution Status Badge */}
+									{isMember && hasNode && (
+										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform -rotate-1">
+											<div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+											Contributing
+										</div>
+									)}
+
+									{/* Team Description */}
+									{team.description && (
+										<p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
+											{team.description}
+										</p>
+									)}
+
+
+
+									{/* Action Buttons */}
+
 								</div>
-							)}
+							</div>
+						</div>
 
-							{/* Team Description */}
-							{team.description && (
-								<p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
-									{team.description}
-								</p>
-							)}
+						{/* Stats Grid - Integrated Bottom Section */}
+						<div className="grid grid-cols-3 gap-0 border-t-2 border-black">
+							<div className="p-4 border-r-2 border-black text-center bg-brand-yellow/10">
+								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Total Points</p>
+								<p className="text-2xl md:text-3xl font-black text-brand-navy">{team.total_points.toLocaleString()}</p>
+							</div>
+							<div className="p-4 border-r-2 border-black text-center bg-blue-50">
+								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Members</p>
+								<p className="text-2xl md:text-3xl font-black text-brand-navy">{members.length}</p>
+							</div>
+							<div className="p-4 text-center bg-gray-50">
+								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Created</p>
+								<p className="text-2xl md:text-3xl font-black text-brand-navy">{new Date(team.created_at).toLocaleDateString()}</p>
+							</div>
+						</div>
 
-							{/* Action Buttons */}
-							<div className="flex flex-wrap items-center gap-2 mt-auto">
-								{/* Join Team - for non-members */}
-								{!isMember && currentUser && (
+						{/* Tabs integrated into Header Footer */}
+						<div className="border-t-2 border-black bg-black text-white p-0">
+							<TabsList className="flex w-full bg-transparent border-0 p-0 h-auto gap-0 rounded-none">
+								<TabsTrigger
+									value="discussions"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+								>
+									Discussions
+								</TabsTrigger>
+								<TabsTrigger
+									value="members"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+								>
+									Members
+								</TabsTrigger>
+								<TabsTrigger
+									value="stats"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-0 data-[state=active]:border-l-2 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+								>
+									Stats
+								</TabsTrigger>
+							</TabsList>
+						</div>
+					</div>
+
+					{/* Invite Section - Expandable */}
+					{showInviteSection && isMember && (
+						<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8">
+							<div className="flex items-center justify-between mb-4">
+								<div className="flex items-center gap-3">
+									<div className="bg-brand-yellow p-2 border-2 border-black">
+										<LinkIcon className="w-5 h-5 text-black" />
+									</div>
+									<div>
+										<h3 className="font-bold text-lg">Your Invite Link</h3>
+										<p className="text-sm text-gray-600">Share your personal link to invite people to the team</p>
+									</div>
+								</div>
+								{invites.length === 0 && (
 									<button
-										onClick={() => handleJoinTeam()}
-										disabled={joiningTeam}
-										className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+										onClick={handleCreateInvite}
+										disabled={creatingInvite}
+										className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
 									>
-										{joiningTeam ? (
-											<><Loader2 className="w-4 h-4 animate-spin" /> Joining...</>
+										{creatingInvite ? (
+											<><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
 										) : (
-											<><UserPlus className="w-4 h-4" /> Join Team</>
+											<><UserPlus className="w-4 h-4" /> Create Invite Link</>
 										)}
 									</button>
 								)}
-
-								{isMember && (
-									<button
-										onClick={toggleInviteSection}
-										className="flex items-center gap-2 px-4 py-2 bg-brand-yellow border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-									>
-										<UserPlus className="w-4 h-4" />
-										Invite
-									</button>
-								)}
-
-								{/* Leave Team - for non-owner members */}
-								{isMember && !isOwner && (
-									<button
-										onClick={() => setShowLeaveConfirm(true)}
-										className="flex items-center gap-2 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-									>
-										<LogOut className="w-4 h-4" />
-										Leave
-									</button>
-								)}
-
-								{/* Edit Team - for owner only */}
-								{isOwner && (
-									<button
-										onClick={openEditModal}
-										className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-									>
-										<Pencil className="w-4 h-4" />
-										Edit
-									</button>
-								)}
-
-								{/* Delete Team - for owner only */}
-								{isOwner && (
-									<button
-										onClick={() => setShowDeleteConfirm(true)}
-										className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-									>
-										<Trash2 className="w-4 h-4" />
-										Delete
-									</button>
-								)}
-
-								{/* Share Team Stats */}
-								<Link
-									href={`/share/team/${params.id}`}
-									className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-								>
-									<Share2 className="w-4 h-4" />
-									Share
-								</Link>
 							</div>
-						</div>
-					</div>
-				</div>
+
+							{invites.length > 0 ? (
+								<div className="space-y-2">
+									{invites.map((invite) => (
+										<div key={invite.id} className="flex items-center justify-between p-3 bg-gray-50 border-2 border-gray-200">
+											<div className="flex flex-col gap-1">
+												<div className="flex items-center gap-3">
+													<code className="text-sm bg-white px-2 py-1 border border-gray-300 font-mono">
+														https://idleforest.com/invite/{invite.invite_code}
+													</code>
+												</div>
+												<div className="flex items-center gap-4 text-xs text-gray-500">
+													<span>Created {new Date(invite.created_at).toLocaleDateString()}</span>
+													<span className="font-medium text-brand-navy">
+														{invite.total_uses || 0} uses
+													</span>
+													<span className="font-medium text-green-600">
+														{invite.new_signups || 0} new accounts
+													</span>
+												</div>
+											</div>
+											<div className="flex items-center gap-2">
+												<button
+													onClick={() => handleCopyInvite(invite.invite_code)}
+													className="p-2 hover:bg-gray-200 transition-colors"
+													title="Copy link"
+												>
+													{copiedCode === invite.invite_code ? (
+														<Check className="w-4 h-4 text-green-600" />
+													) : (
+														<Copy className="w-4 h-4 text-gray-600" />
+													)}
+												</button>
+												<button
+													onClick={() => handleDeleteInvite(invite.id)}
+													className="p-2 hover:bg-red-100 transition-colors"
+													title="Delete invite"
+												>
+													<Trash2 className="w-4 h-4 text-red-600" />
+												</button>
+											</div>
+										</div>
+									))}
+								</div>
+							) : (
+								<p className="text-center text-gray-500 py-4">No active invite links. Create one to invite members!</p>
+							)}
+						</Card>
+					)}
+
+					<TabsContent value="discussions" className="mt-0">
+						<ThreadList
+							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
+							teamId={team?.id || ''}
+							teamName={team.name}
+							currentUserRole={currentUserRole}
+						/>
+					</TabsContent>
+
+					<TabsContent value="members" className="mt-0">
+						<TeamMembers
+							members={members}
+							teamCreatorId={team?.created_by || ''}
+						/>
+					</TabsContent>
+
+					<TabsContent value="stats" className="mt-0">
+						<TeamStats
+							team={{
+								total_points: team?.total_points || 0,
+								created_at: team?.created_at || new Date().toISOString()
+							}}
+							memberCount={members.length}
+							historicalData={historicalData}
+						/>
+					</TabsContent>
+				</Tabs>
 
 				{/* Leave Team Confirmation Modal */}
 				{showLeaveConfirm && (
@@ -916,202 +1123,9 @@ export default function TeamPage() {
 					</div>
 				)}
 
-				{/* Join Error Message */}
-				{joinError && (
-					<div className="bg-red-50 border-2 border-red-400 p-4 mb-8">
-						<div className="flex items-center gap-3">
-							<AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
-							<p className="text-red-700">{joinError}</p>
-						</div>
-					</div>
-				)}
 
-				{/* Install Banner - for members without nodes */}
-				{isMember && hasNode === false && (
-					<InstallBanner
-						teamName={team?.name || 'your team'}
-						onCheckConnection={refetchNodeStatus}
-						isChecking={isCheckingConnection}
-					/>
-				)}
 
-				{/* Invite Section - Expandable */}
-				{showInviteSection && isMember && (
-					<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8">
-						<div className="flex items-center justify-between mb-4">
-							<div className="flex items-center gap-3">
-								<div className="bg-brand-yellow p-2 border-2 border-black">
-									<LinkIcon className="w-5 h-5 text-black" />
-								</div>
-								<div>
-									<h3 className="font-bold text-lg">Your Invite Link</h3>
-									<p className="text-sm text-gray-600">Share your personal link to invite people to the team</p>
-								</div>
-							</div>
-							{invites.length === 0 && (
-								<button
-									onClick={handleCreateInvite}
-									disabled={creatingInvite}
-									className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
-								>
-									{creatingInvite ? (
-										<><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
-									) : (
-										<><UserPlus className="w-4 h-4" /> Create Invite Link</>
-									)}
-								</button>
-							)}
-						</div>
 
-						{invites.length > 0 ? (
-							<div className="space-y-2">
-								{invites.map((invite) => (
-									<div key={invite.id} className="flex items-center justify-between p-3 bg-gray-50 border-2 border-gray-200">
-										<div className="flex flex-col gap-1">
-											<div className="flex items-center gap-3">
-												<code className="text-sm bg-white px-2 py-1 border border-gray-300 font-mono">
-													https://idleforest.com/invite/{invite.invite_code}
-												</code>
-											</div>
-											<div className="flex items-center gap-4 text-xs text-gray-500">
-												<span>Created {new Date(invite.created_at).toLocaleDateString()}</span>
-												<span className="font-medium text-brand-navy">
-													{invite.total_uses || 0} uses
-												</span>
-												<span className="font-medium text-green-600">
-													{invite.new_signups || 0} new accounts
-												</span>
-											</div>
-										</div>
-										<div className="flex items-center gap-2">
-											<button
-												onClick={() => handleCopyInvite(invite.invite_code)}
-												className="p-2 hover:bg-gray-200 transition-colors"
-												title="Copy link"
-											>
-												{copiedCode === invite.invite_code ? (
-													<Check className="w-4 h-4 text-green-600" />
-												) : (
-													<Copy className="w-4 h-4 text-gray-600" />
-												)}
-											</button>
-											<button
-												onClick={() => handleDeleteInvite(invite.id)}
-												className="p-2 hover:bg-red-100 transition-colors"
-												title="Delete invite"
-											>
-												<Trash2 className="w-4 h-4 text-red-600" />
-											</button>
-										</div>
-									</div>
-								))}
-							</div>
-						) : (
-							<p className="text-center text-gray-500 py-4">No active invite links. Create one to invite members!</p>
-						)}
-					</Card>
-				)}
-
-				<div className="grid gap-8">
-					<Card className="p-6 bg-brand-navy backdrop-blur-sm border-2 border-brand-yellow">
-						<div className="flex items-center gap-4 mb-6">
-							<div className="bg-brand-yellow p-3 rounded-lg">
-								<Trophy className="w-6 h-6 text-brand-navy" />
-							</div>
-							<div>
-								<h2 className="text-2xl font-bold text-white">Team Stats</h2>
-								<p className="text-gray-400">Team performance metrics</p>
-							</div>
-						</div>
-						<div className="grid grid-cols-2 gap-8">
-							<div>
-								<p className="text-sm text-gray-400">Total Points</p>
-								<p className="text-3xl font-bold text-brand-yellow">{team.total_points.toLocaleString()}</p>
-							</div>
-							<div>
-								<p className="text-sm text-gray-400">Members</p>
-								<p className="text-3xl font-bold text-brand-yellow">{members.length}</p>
-							</div>
-							<div>
-								<p className="text-sm text-gray-400">Created On</p>
-								<p className="text-xl font-bold text-white">{new Date(team.created_at).toLocaleDateString()}</p>
-							</div>
-						</div>
-					</Card>
-
-					{/* Team Points History */}
-					{historicalData.length > 0 && (
-						<PointsHistoryChart
-							data={historicalData}
-							title="Team Points History"
-							showMemberCount={true}
-						/>
-					)}
-
-					<Card className="p-6 bg-brand-navy backdrop-blur-sm border-2 border-brand-yellow">
-						<div className="flex items-center gap-4 mb-6">
-							<div className="bg-brand-yellow p-3 rounded-lg">
-								<Users className="w-6 h-6 text-brand-navy" />
-							</div>
-							<div>
-								<h2 className="text-2xl font-bold text-white">Team Members</h2>
-								<p className="text-gray-400">{members.length} members</p>
-							</div>
-						</div>
-						<div className="space-y-4">
-							{members.length > 0 ? (
-								members.map((member) => (
-									<Link
-										key={member.id}
-										href={`/profile/${member.profile?.display_name}`}
-										className="block"
-									>
-										<div className="flex items-center justify-between p-4 border-2 border-brand-yellow rounded-lg hover:bg-brand-yellow/30 cursor-pointer transition-colors">
-											<div className="flex items-center gap-3">
-												<div>
-													<p className="text-white">{member.profile?.display_name || 'Anonymous'}</p>
-													{member.user_id === team.created_by && (
-														<span className="text-sm text-brand-yellow">Admin</span>
-													)}
-												</div>
-												{/* Platform Icons */}
-												{member.platforms && member.platforms.length > 0 && (
-													<div className="flex items-center gap-1">
-														{member.platforms.includes('windows') && (
-															<div className="bg-blue-500/20 p-1 rounded" title="Windows">
-																<svg className="w-3 h-3 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-																	<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
-																</svg>
-															</div>
-														)}
-														{member.platforms.includes('mac') && (
-															<div className="bg-gray-500/20 p-1 rounded" title="Mac">
-																<Apple className="w-3 h-3 text-gray-300" />
-															</div>
-														)}
-														{member.platforms.includes('extension') && (
-															<div className="bg-green-500/20 p-1 rounded" title="Browser Extension">
-																<Chrome className="w-3 h-3 text-green-400" />
-															</div>
-														)}
-													</div>
-												)}
-											</div>
-											<div className="flex items-center">
-												<div className="text-right">
-													<p className="text-sm text-gray-400">Points</p>
-													<p className="text-xl font-bold text-brand-yellow">{member.contribution_points?.toLocaleString() || '0'}</p>
-												</div>
-											</div>
-										</div>
-									</Link>
-								))
-							) : (
-								<p className="text-gray-400 text-center p-4">No members in this team yet</p>
-							)}
-						</div>
-					</Card>
-				</div>
 			</div>
 		</div>
 	)

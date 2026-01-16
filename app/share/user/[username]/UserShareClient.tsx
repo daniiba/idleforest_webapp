@@ -71,7 +71,7 @@ export default function UserShareClient() {
                 if (teamMembership) {
                     const { data: teamData } = await supabase
                         .from('teams')
-                        .select('id, name')
+                        .select('id, name, slug')
                         .eq('id', teamMembership.team_id)
                         .single()
                     team = teamData

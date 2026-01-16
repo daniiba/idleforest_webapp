@@ -18,6 +18,7 @@ interface InviteData {
         total_points: number
         description: string | null
         image_url: string | null
+        slug: string
     }
     inviter: {
         display_name: string
@@ -34,7 +35,7 @@ export default function InvitePageClient() {
     const [error, setError] = useState<string | null>(null)
     const [joining, setJoining] = useState(false)
     const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null)
-    const [existingTeam, setExistingTeam] = useState<{ id: string; name: string } | null>(null)
+    const [existingTeam, setExistingTeam] = useState<{ id: string; name: string; slug?: string } | null>(null)
     const [isTeamOwner, setIsTeamOwner] = useState(false)
     const [showSwitchConfirm, setShowSwitchConfirm] = useState(false)
     const params = useParams()
@@ -53,14 +54,14 @@ export default function InvitePageClient() {
         if (user) {
             const { data: membership } = await supabase
                 .from('team_members')
-                .select('team_id, teams(id, name, created_by)')
+                .select('team_id, teams(id, name, created_by, slug)')
                 .eq('user_id', user.id)
                 .single()
 
             if (membership?.teams) {
                 // teams is an object when using .single()
-                const team = membership.teams as unknown as { id: string; name: string; created_by: string }
-                setExistingTeam({ id: team.id, name: team.name })
+                const team = membership.teams as unknown as { id: string; name: string; created_by: string; slug: string }
+                setExistingTeam({ id: team.id, name: team.name, slug: team.slug })
                 // Check if user is the owner
                 setIsTeamOwner(team.created_by === user.id)
             }
@@ -99,7 +100,7 @@ export default function InvitePageClient() {
             // Get team details
             const { data: team, error: teamError } = await supabase
                 .from('teams')
-                .select('id, name, total_points, description, image_url')
+                .select('id, name, total_points, description, image_url, slug')
                 .eq('id', invite.team_id)
                 .single()
 
@@ -164,7 +165,7 @@ export default function InvitePageClient() {
                         return
                     }
                     // Already a member of this team
-                    router.push(`/teams/${inviteData?.team.id}`)
+                    router.push(`/teams/${inviteData?.team.slug}`)
                     return
                 }
                 if (response.status === 403 && data.isOwner) {
@@ -308,7 +309,7 @@ export default function InvitePageClient() {
                                 </p>
                                 {isTeamOwner ? (
                                     <Link
-                                        href={`/teams/${existingTeam.id}`}
+                                        href={`/teams/${existingTeam.slug || existingTeam.id}`}
                                         className="inline-block px-4 py-2 text-sm font-bold uppercase bg-red-500 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
                                     >
                                         Go to Your Team

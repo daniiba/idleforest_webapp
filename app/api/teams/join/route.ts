@@ -55,7 +55,8 @@ export async function POST(request: Request) {
                 expires_at,
                 teams (
                     id,
-                    name
+                    name,
+                    slug
                 )
             `)
             .eq('invite_code', inviteCode)

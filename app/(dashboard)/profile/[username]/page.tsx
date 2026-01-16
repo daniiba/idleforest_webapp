@@ -38,6 +38,7 @@ interface UserTeam {
     id: string
     name: string
     total_points: number
+    slug: string
 }
 
 // Create client once outside component
@@ -138,7 +139,7 @@ export default function PublicProfilePage() {
                 if (teamMembership) {
                     const { data: team } = await supabase
                         .from('teams')
-                        .select('id, name, total_points')
+                        .select('id, name, total_points, slug')
                         .eq('id', teamMembership.team_id)
                         .single()
 
@@ -234,7 +235,7 @@ export default function PublicProfilePage() {
             const data = await response.json()
 
             if (response.ok && data.team) {
-                router.push(`/teams/${data.team.id}`)
+                router.push(`/teams/${data.team.slug}`)
             } else {
                 setCreateError(data.error || 'Failed to create team')
             }
@@ -337,7 +338,7 @@ export default function PublicProfilePage() {
                     {/* Team Badge */}
                     {userTeam && (
                         <Link
-                            href={`/teams/${userTeam.id}`}
+                            href={`/teams/${userTeam.slug}`}
                             className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-navy text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
                         >
                             <Users className="w-4 h-4 text-brand-yellow" />

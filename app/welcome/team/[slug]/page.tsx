@@ -25,6 +25,7 @@ interface TeamData {
     total_points: number
     description: string | null
     image_url: string | null
+    slug: string
 }
 
 interface NodeStatus {
@@ -55,7 +56,7 @@ export default function TeamWelcomePage() {
         }
 
         fetchData()
-    }, [params.id])
+    }, [params.slug])
 
     // Poll for node status every 5 seconds when user doesn't have a node yet
     useEffect(() => {
@@ -81,8 +82,8 @@ export default function TeamWelcomePage() {
             // Fetch team data
             const { data: teamData, error: teamError } = await supabase
                 .from('teams')
-                .select('id, name, total_points, description, image_url')
-                .eq('id', params.id)
+                .select('id, name, total_points, description, image_url, slug')
+                .eq('slug', params.slug)
                 .single()
 
             if (teamError || !teamData) {
@@ -96,7 +97,7 @@ export default function TeamWelcomePage() {
             const { count } = await supabase
                 .from('team_members')
                 .select('*', { count: 'exact', head: true })
-                .eq('team_id', params.id)
+                .eq('team_id', teamData.id)
 
             setMemberCount(count || 0)
 
@@ -160,7 +161,7 @@ export default function TeamWelcomePage() {
                         <span className="font-bold text-black">{team.name}</span> and earning points for the team!
                     </p>
                     <Link
-                        href={`/teams/${team.id}`}
+                        href={`/teams/${team.slug}`}
                         className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
                     >
                         View Your Team <ArrowRight className="w-5 h-5" />
@@ -326,7 +327,7 @@ export default function TeamWelcomePage() {
                 {/* Skip Link */}
                 <div className="text-center">
                     <Link
-                        href={`/teams/${team.id}`}
+                        href={`/teams/${team.slug}`}
                         className="text-sm font-bold text-neutral-500 underline decoration-1 hover:text-black hover:decoration-brand-yellow hover:decoration-2 transition-all"
                     >
                         Skip for now → View team page

@@ -108,7 +108,7 @@ function SignupForm() {
             const joinData = await response.json();
             setMessage('Successfully joined the team! Redirecting...');
             // Redirect to team welcome page for progressive engagement
-            router.push(`/welcome/team/${joinData.team?.id || ''}`);
+            router.push(`/welcome/team/${joinData.team?.slug || joinData.team?.id || ''}`);
             setLoading(false);
             return;
           } else {

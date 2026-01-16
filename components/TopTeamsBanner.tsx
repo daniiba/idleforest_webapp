@@ -7,6 +7,7 @@ import { Flame, Users } from "lucide-react"
 
 interface PeriodTeamStat {
     team_id: string
+    team_slug: string
     points_gained: number
     member_count: number
     team_name?: string
@@ -38,13 +39,14 @@ export default function TopTeamsBanner() {
                 const teamIds = dailyTeams.map(t => t.team_id)
                 const { data: teamInfo } = await supabase
                     .from('teams')
-                    .select('id, name, image_url')
+                    .select('id, name, image_url, slug')
                     .in('id', teamIds)
 
-                const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url }]) || [])
+                const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url, slug: t.slug }]) || [])
 
                 const enriched = dailyTeams.map(t => ({
                     team_id: t.team_id,
+                    team_slug: teamMap.get(t.team_id)?.slug || '',
                     points_gained: t.points_gained_that_day,
                     member_count: t.member_count,
                     team_name: teamMap.get(t.team_id)?.name || 'Unknown',
@@ -93,7 +95,7 @@ export default function TopTeamsBanner() {
                                 {idx + 1}
                             </div>
 
-                            <Link href={`/teams/${team.team_id}`} className="flex items-center gap-1.5 flex-1 min-w-0">
+                            <Link href={`/teams/${team.team_slug}`} className="flex items-center gap-1.5 flex-1 min-w-0">
                                 {team.team_image ? (
                                     <img src={team.team_image} alt={team.team_name} className="w-6 h-6 object-cover border border-black shrink-0" />
                                 ) : (

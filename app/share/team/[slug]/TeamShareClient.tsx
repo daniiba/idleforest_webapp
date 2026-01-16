@@ -17,14 +17,14 @@ export default function TeamShareClient() {
 
     useEffect(() => {
         fetchTeam()
-    }, [params.id])
+    }, [params.slug])
 
     const fetchTeam = async () => {
         try {
             const { data: teamData } = await supabase
                 .from('teams')
-                .select('id, name, image_url, total_points')
-                .eq('id', params.id)
+                .select('id, name, image_url, total_points, slug')
+                .eq('slug', params.slug)
                 .single()
 
             if (teamData) {
@@ -40,7 +40,13 @@ export default function TeamShareClient() {
                     totalPoints: teamData.total_points || 0,
                     memberCount: memberCount || 0,
                     treesPlanted: Math.floor((teamData.total_points || 0) / 1000), // Estimate
+                    slug: teamData.slug
                 })
+
+                /* We are using the teamData.slug for the button link directly, 
+                   since TeamCardData doesn't store slug (except in UserCardData variant)
+                   But we can pass it down if needed or just use state 
+                */
             }
         } catch (error) {
             console.error('Error fetching team:', error)
@@ -50,7 +56,7 @@ export default function TeamShareClient() {
     }
 
     const shareUrl = typeof window !== 'undefined'
-        ? `${window.location.origin}/share/team/${params.id}`
+        ? `${window.location.origin}/share/team/${params.slug}`
         : ''
 
     const shareText = team
@@ -153,7 +159,7 @@ export default function TeamShareClient() {
                 {/* CTA to join */}
                 <div className="text-center space-y-4">
                     <Link
-                        href={`/teams/${team.id}`}
+                        href={`/teams/${team.slug || team.id}`}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow text-black font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
                     >
                         <Users className="w-5 h-5" />

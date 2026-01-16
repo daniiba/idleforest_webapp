@@ -7,6 +7,7 @@ import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar } from "
 
 interface Team {
 	id: string
+	slug: string
 	name: string
 	created_at: string
 	created_by: string
@@ -29,6 +30,7 @@ interface PeriodUserStat {
 
 interface PeriodTeamStat {
 	team_id: string
+	team_slug?: string
 	points_gained: number
 	member_count: number
 	team_name?: string
@@ -93,7 +95,7 @@ export default function TeamsPage() {
 		// Fetch teams with image_url
 		const { data: teamsData } = await supabase
 			.from('teams')
-			.select('id, name, created_at, created_by, total_points, image_url')
+			.select('id, slug, name, created_at, created_by, total_points, image_url')
 			.order('total_points', { ascending: false })
 
 		if (teamsData) {
@@ -265,7 +267,7 @@ export default function TeamsPage() {
 
 		const { data: teamInfo } = await supabase
 			.from('teams')
-			.select('id, name, image_url')
+			.select('id, name, image_url, slug')
 			.in('id', teamIds)
 
 		// Get previous day's member counts for growth calculation
@@ -278,14 +280,14 @@ export default function TeamsPage() {
 			.select('team_id, member_count')
 			.eq('date', yesterdayStr)
 			.in('team_id', teamIds)
-
 		const yesterdayMap = new Map(yesterdayStats?.map(t => [t.team_id, t.member_count]) || [])
-		const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url }]) || [])
+		const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url, slug: t.slug }]) || [])
 
 		const enrichedTeams = teamData.map(t => {
 			const yesterdayCount = yesterdayMap.get(t.team_id) || 0
 			return {
 				...t,
+				team_slug: teamMap.get(t.team_id)?.slug,
 				team_name: teamMap.get(t.team_id)?.name || 'Unknown',
 				team_image: teamMap.get(t.team_id)?.image || null,
 				member_growth: t.member_count - yesterdayCount
@@ -305,13 +307,14 @@ export default function TeamsPage() {
 
 		const { data: teamInfo } = await supabase
 			.from('teams')
-			.select('id, name, image_url')
+			.select('id, name, image_url, slug')
 			.in('id', teamIds)
 
-		const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url }]) || [])
+		const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url, slug: t.slug }]) || [])
 
 		const enrichedTeams = teamData.map(t => ({
 			...t,
+			team_slug: teamMap.get(t.team_id)?.slug,
 			team_name: teamMap.get(t.team_id)?.name || 'Unknown',
 			team_image: teamMap.get(t.team_id)?.image || null,
 		}))
@@ -417,7 +420,7 @@ export default function TeamsPage() {
 						) : filteredTeams.length > 0 ? (
 							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 								{filteredTeams.map((team) => (
-									<Link href={`/teams/${team.id}`} key={team.id} className="block min-w-0">
+									<Link href={`/teams/${team.slug}`} key={team.id} className="block min-w-0">
 										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
 											<div className="flex items-center gap-4 w-full">
 												{/* Team Image */}
@@ -578,7 +581,7 @@ export default function TeamsPage() {
 											{periodTopTeams.map((team, idx) => (
 												<Link
 													key={team.team_id}
-													href={`/teams/${team.team_id}`}
+													href={`/teams/${team.team_slug}`}
 													className="block"
 												>
 													<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
@@ -617,7 +620,7 @@ export default function TeamsPage() {
 											{fastestGrowingTeams.map((team, idx) => (
 												<Link
 													key={team.team_id}
-													href={`/teams/${team.team_id}`}
+													href={`/teams/${team.team_slug}`}
 													className="block"
 												>
 													<div className={`flex items-center justify-between px-6 py-4 ${idx < fastestGrowingTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>

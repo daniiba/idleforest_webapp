@@ -74,6 +74,7 @@ export interface TeamCardData {
     totalPoints: number
     memberCount: number
     treesPlanted?: number
+    slug?: string
 }
 
 // User data for the card
@@ -86,6 +87,7 @@ export interface UserCardData {
     team?: {
         id: string
         name: string
+        slug: string
     } | null
 }
 
@@ -872,7 +874,7 @@ function UserCardContent({ data }: { data: UserCardData }) {
             {/* Team link if exists */}
             {data.team && (
                 <Link
-                    href={`/teams/${data.team.id}`}
+                    href={`/teams/${data.team.slug}`}
                     className="block text-center text-xs text-white/60 hover:text-brand-yellow transition-colors font-medium"
                 >
                     View Team →
