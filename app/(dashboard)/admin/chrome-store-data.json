@@ -107,20 +107,29 @@
             "wauStart": 499,
             "wauEnd": 408,
             "wauAvg": 475
+        },
+        {
+            "month": "Jan 2026",
+            "installs": 73,
+            "uninstalls": 26,
+            "netGrowth": 47,
+            "wauStart": 415,
+            "wauEnd": 529,
+            "wauAvg": 480
         }
     ],
     "totals": {
-        "totalInstalls": 993,
-        "totalUninstalls": 370,
-        "netUsers": 623,
-        "currentWau": 420,
+        "totalInstalls": 1066,
+        "totalUninstalls": 396,
+        "netUsers": 670,
+        "currentWau": 529,
         "peakWau": 549,
         "peakWauDate": "Oct 20, 2025"
     },
     "yearOverYear": {
-        "wauGrowth": "40x",
-        "wauGrowthPercent": 3400,
+        "wauGrowth": "44x",
+        "wauGrowthPercent": 4408,
         "startWau": 12,
-        "endWau": 420
+        "endWau": 529
     }
 }

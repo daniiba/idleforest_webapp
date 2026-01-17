@@ -171,12 +171,12 @@ export async function sendEmail(
     subject: string,
     html: string,
     from: string = 'Daniel from IdleForest <daniel@idleforest.com>'
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; emailId?: string; error?: string }> {
     try {
         // Generate signed unsubscribe URL for this recipient
         const unsubscribeUrl = await generateUnsubscribeUrl(to)
 
-        const { error } = await resend.emails.send({
+        const { data, error } = await resend.emails.send({
             from,
             to,
             subject,
@@ -191,7 +191,7 @@ export async function sendEmail(
             return { success: false, error: error.message }
         }
 
-        return { success: true }
+        return { success: true, emailId: data?.id }
     } catch (err) {
         return { success: false, error: err instanceof Error ? err.message : 'Unknown error' }
     }

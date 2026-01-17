@@ -226,7 +226,7 @@ import {
 export type { ResendContact }
 
 
-export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop'
+export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop' | 'team_owners'
 
 export interface PowerUser {
     id: string
@@ -237,6 +237,7 @@ export interface PowerUser {
     last_active: string | null
     created_at: string
     segments: UserSegment[]
+    team_name?: string
 }
 
 export interface SegmentStats {
@@ -245,6 +246,7 @@ export interface SegmentStats {
     inactive: number
     new_users: number
     unopted_desktop: number
+    team_owners: number
     total: number
 }
 
@@ -338,6 +340,14 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
         })
     }
 
+    // Fetch team owners with team names
+    const { data: teamOwners } = await supabase
+        .from('teams')
+        .select('created_by, name')
+
+    const teamOwnerMap = new Map(teamOwners?.map(t => [t.created_by, t.name]) || [])
+    const teamOwnerIds = new Set(teamOwners?.map(t => t.created_by) || [])
+
     // Calculate segments
     const now = new Date()
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -382,6 +392,11 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             segments.push('unopted_desktop')
         }
 
+        // Team Owner: created a team
+        if (teamOwnerIds.has(profile.user_id)) {
+            segments.push('team_owners')
+        }
+
         return {
             id: profile.id,
             user_id: profile.user_id,
@@ -390,7 +405,8 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             total_points: profile.total_points,
             last_active: lastActive,
             created_at: profile.created_at,
-            segments
+            segments,
+            team_name: teamOwnerMap.get(profile.user_id)
         }
     })
 
@@ -412,6 +428,7 @@ export async function getSegmentCounts(): Promise<SegmentStats> {
         inactive: users.filter(u => u.segments.includes('inactive')).length,
         new_users: users.filter(u => u.segments.includes('new_users')).length,
         unopted_desktop: users.filter(u => u.segments.includes('unopted_desktop')).length,
+        team_owners: users.filter(u => u.segments.includes('team_owners')).length,
         total: users.length
     }
 }
@@ -579,9 +596,15 @@ export interface EmailLog {
     email_type: 'transactional' | 'broadcast'
     segment: string | null
     broadcast_id: string | null
+    resend_id: string | null
     status: string
     sent_at: string
     created_at: string
+    delivered_at: string | null
+    opened_at: string | null
+    clicked_at: string | null
+    bounced_at: string | null
+    complained_at: string | null
 }
 
 // Log an email send to the database
@@ -593,6 +616,7 @@ async function logEmail(data: {
     emailType: 'transactional' | 'broadcast'
     segment?: string
     broadcastId?: string
+    resendId?: string
     status?: string
 }): Promise<void> {
     const supabase = await createClient()
@@ -605,6 +629,7 @@ async function logEmail(data: {
         email_type: data.emailType,
         segment: data.segment || null,
         broadcast_id: data.broadcastId || null,
+        resend_id: data.resendId || null,
         status: data.status || 'sent'
     })
 
@@ -778,17 +803,18 @@ export async function sendUserEmail(
         throw new Error(result.error)
     }
 
-    // Log successful send
+    // Log successful send with Resend ID for tracking
     await logEmail({
         userId,
         email,
         subject: processedSubject,
         templateId,
         emailType: 'transactional',
+        resendId: result.emailId,
         status: 'sent'
     })
 
-    return { success: true }
+    return { success: true, emailId: result.emailId }
 }
 
 // Send a broadcast to a segment (syncs users, creates broadcast, sends, and logs)
@@ -939,5 +965,282 @@ export async function sendBroadcastToAudience(
     return {
         success: true,
         broadcastId: createResult.broadcastId
+    }
+}
+
+// ========================================
+// TEAM OWNER PERSONALIZED EMAILS
+// ========================================
+
+export interface TeamOwnerEmailResult {
+    success: boolean
+    sent: number
+    failed: number
+    skipped: number
+    errors: string[]
+}
+
+// Send personalized emails to team owners with team-specific variables
+export async function sendTeamOwnerEmails(
+    templateId: string,
+    dryRun: boolean = true
+): Promise<TeamOwnerEmailResult> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) throw new Error('Unauthorized')
+
+    const supabase = await createClient()
+    const adminClient = createAdminClient()
+
+    // Get the template
+    const { data: template, error: templateError } = await supabase
+        .from('email_templates')
+        .select('*')
+        .eq('id', templateId)
+        .single()
+
+    if (templateError || !template) {
+        return { success: false, sent: 0, failed: 0, skipped: 0, errors: ['Template not found'] }
+    }
+
+    // Get all teams with their owners
+    const { data: teams, error: teamsError } = await supabase
+        .from('teams')
+        .select('id, name, slug, created_by')
+
+    if (teamsError || !teams || teams.length === 0) {
+        return { success: false, sent: 0, failed: 0, skipped: 0, errors: ['No teams found'] }
+    }
+
+    // Get profiles for team owners
+    const ownerIds = teams.map(t => t.created_by)
+    const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, display_name')
+        .in('user_id', ownerIds)
+
+    const profileMap = new Map(profiles?.map(p => [p.user_id, p.display_name]) || [])
+
+    // Get emails from auth.users
+    let allAuthUsers: any[] = []
+    let page = 1
+    const perPage = 50
+    let hasMore = true
+
+    while (hasMore) {
+        const { data: authUsers, error: authError } = await adminClient.auth.admin.listUsers({
+            page: page,
+            perPage: perPage
+        })
+
+        if (authError) break
+
+        if (authUsers?.users) {
+            allAuthUsers = [...allAuthUsers, ...authUsers.users]
+            if (authUsers.users.length < perPage) {
+                hasMore = false
+            } else {
+                page++
+            }
+        } else {
+            hasMore = false
+        }
+    }
+
+    const emailMap = new Map(allAuthUsers.map(u => [u.id, u.email]))
+
+    // Dry run: return preview
+    if (dryRun) {
+        const preview = teams.slice(0, 5).map(team => ({
+            teamName: team.name,
+            teamSlug: team.slug,
+            ownerEmail: emailMap.get(team.created_by) || 'no-email',
+            ownerName: profileMap.get(team.created_by) || 'Unknown'
+        }))
+
+        return {
+            success: true,
+            sent: 0,
+            failed: 0,
+            skipped: teams.length,
+            errors: [`DRY RUN: Would send to ${teams.length} team owners. Preview: ${JSON.stringify(preview)}`]
+        }
+    }
+
+    // Generate unsubscribe URLs and send emails
+    const { generateUnsubscribeUrl } = await import('@/lib/resend')
+
+    let sent = 0
+    let failed = 0
+    let skipped = 0
+    const errors: string[] = []
+
+    for (const team of teams) {
+        const email = emailMap.get(team.created_by)
+        const displayName = profileMap.get(team.created_by) || 'there'
+
+        if (!email) {
+            skipped++
+            continue
+        }
+
+        // Check if user has unsubscribed
+        const { data: unsubscribeRecord } = await supabase
+            .from('email_logs')
+            .select('id')
+            .eq('email', email)
+            .eq('status', 'unsubscribed')
+            .limit(1)
+            .maybeSingle()
+
+        if (unsubscribeRecord) {
+            skipped++
+            continue
+        }
+
+        try {
+            const unsubscribeUrl = await generateUnsubscribeUrl(email)
+
+            // Replace all template variables
+            const processedSubject = template.subject
+                .replace(/\{\{\{FIRST_NAME\}\}\}/g, displayName)
+                .replace(/\{\{TEAM_NAME\}\}/g, team.name)
+                .replace(/\{\{TEAM_SLUG\}\}/g, team.slug)
+
+            const processedContent = template.content
+                .replace(/\{\{\{FIRST_NAME\}\}\}/g, displayName)
+                .replace(/\{\{TEAM_NAME\}\}/g, team.name)
+                .replace(/\{\{TEAM_SLUG\}\}/g, team.slug)
+                .replace(/\{\{UNSUBSCRIBE_URL\}\}/g, unsubscribeUrl)
+
+            // Send the email
+            const result = await resendSendEmail(
+                email,
+                processedSubject,
+                processedContent,
+                template.from_email || undefined
+            )
+
+            if (result.success) {
+                // Log with Resend ID
+                await logEmail({
+                    userId: team.created_by,
+                    email,
+                    subject: processedSubject,
+                    templateId: template.id,
+                    emailType: 'transactional',
+                    segment: 'team_owners',
+                    resendId: result.emailId,
+                    status: 'sent'
+                })
+                sent++
+            } else {
+                await logEmail({
+                    userId: team.created_by,
+                    email,
+                    subject: processedSubject,
+                    templateId: template.id,
+                    emailType: 'transactional',
+                    segment: 'team_owners',
+                    status: 'failed'
+                })
+                failed++
+                errors.push(`${email}: ${result.error}`)
+            }
+
+            // Rate limit: 2 requests per second
+            await new Promise(resolve => setTimeout(resolve, 600))
+        } catch (error) {
+            failed++
+            errors.push(`${email}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        }
+    }
+
+    return {
+        success: failed === 0,
+        sent,
+        failed,
+        skipped,
+        errors
+    }
+}
+
+// ========================================
+// EMAIL ANALYTICS
+// ========================================
+
+export interface EmailStats {
+    total: number
+    sent: number
+    delivered: number
+    opened: number
+    clicked: number
+    bounced: number
+    complained: number
+    deliveryRate: number
+    openRate: number
+    clickRate: number
+}
+
+// Get email statistics for a date range
+export async function getEmailStats(
+    startDate?: string,
+    endDate?: string,
+    segment?: string
+): Promise<EmailStats> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) throw new Error('Unauthorized')
+
+    const supabase = await createClient()
+
+    let query = supabase
+        .from('email_logs')
+        .select('status, delivered_at, opened_at, clicked_at, bounced_at, complained_at')
+
+    if (startDate) {
+        query = query.gte('created_at', startDate)
+    }
+    if (endDate) {
+        query = query.lte('created_at', endDate)
+    }
+    if (segment) {
+        query = query.eq('segment', segment)
+    }
+
+    const { data: logs, error } = await query
+
+    if (error || !logs) {
+        return {
+            total: 0,
+            sent: 0,
+            delivered: 0,
+            opened: 0,
+            clicked: 0,
+            bounced: 0,
+            complained: 0,
+            deliveryRate: 0,
+            openRate: 0,
+            clickRate: 0
+        }
+    }
+
+    const total = logs.length
+    const sent = logs.filter(l => l.status === 'sent' || l.status === 'delivered').length
+    const delivered = logs.filter(l => l.delivered_at).length
+    const opened = logs.filter(l => l.opened_at).length
+    const clicked = logs.filter(l => l.clicked_at).length
+    const bounced = logs.filter(l => l.bounced_at).length
+    const complained = logs.filter(l => l.complained_at).length
+
+    return {
+        total,
+        sent,
+        delivered,
+        opened,
+        clicked,
+        bounced,
+        complained,
+        deliveryRate: sent > 0 ? Math.round((delivered / sent) * 100) : 0,
+        openRate: delivered > 0 ? Math.round((opened / delivered) * 100) : 0,
+        clickRate: opened > 0 ? Math.round((clicked / opened) * 100) : 0
     }
 }

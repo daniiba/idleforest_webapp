@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/chart'
 import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Email Preview Component with proper scaling
@@ -1131,6 +1131,14 @@ export default function AdminPage() {
                                         <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                             <Users className="h-5 w-5 text-brand-navy" />
                                             User Segments
+                                            {(selectedSegment === 'active' || selectedSegment === 'new_users' || selectedSegment === 'power_users' || selectedSegment === 'team_owners') && (
+                                                <button
+                                                    onClick={() => handleSyncSegment(selectedSegment as UserSegment)}
+                                                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border-2 border-black hover:bg-brand-yellow transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                                >
+                                                    <Mail className="h-3 w-3" /> Sync to Resend
+                                                </button>
+                                            )}
                                         </h2>
                                         <button
                                             onClick={fetchPowerUsersData}
@@ -1204,6 +1212,17 @@ export default function AdminPage() {
                                             </div>
                                             <div className="text-2xl font-extrabold font-candu">{segmentStats?.new_users || 0}</div>
                                         </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('team_owners')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Trophy className="h-4 w-4 text-orange-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Team Owners</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.team_owners || 0}</div>
+                                        </button>
+
                                         <button
                                             onClick={() => setSelectedSegment('unopted_desktop')}
                                             className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
@@ -1279,7 +1298,15 @@ export default function AdminPage() {
                                             <TableBody>
                                                 {filteredUsers.slice(0, 50).map((user) => (
                                                     <TableRow key={user.id} className="border-b border-neutral-200">
-                                                        <TableCell className="font-bold text-xs py-2">{user.display_name}</TableCell>
+                                                        <TableCell className="font-bold text-xs py-2">
+                                                            <div>{user.display_name}</div>
+                                                            {user.team_name && (
+                                                                <div className="flex items-center gap-1 text-[10px] text-orange-600 mt-0.5 font-normal">
+                                                                    <Trophy className="h-3 w-3" />
+                                                                    Owner of {user.team_name}
+                                                                </div>
+                                                            )}
+                                                        </TableCell>
                                                         <TableCell className="text-xs py-2 text-neutral-600">
                                                             {user.email || <span className="text-red-400">No email</span>}
                                                         </TableCell>
@@ -1936,62 +1963,64 @@ export default function AdminPage() {
             }
 
             {/* EMAIL HISTORY MODAL */}
-            {isHistoryModalOpen && historyUser && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white w-full max-w-2xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
-                                    <History className="h-5 w-5" /> Email History
-                                </h2>
-                                <p className="text-sm text-neutral-500 mt-1">{historyUser.display_name} ({historyUser.email || 'No email'})</p>
+            {
+                isHistoryModalOpen && historyUser && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                        <div className="bg-white w-full max-w-2xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <div>
+                                    <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                        <History className="h-5 w-5" /> Email History
+                                    </h2>
+                                    <p className="text-sm text-neutral-500 mt-1">{historyUser.display_name} ({historyUser.email || 'No email'})</p>
+                                </div>
+                                <button onClick={() => setIsHistoryModalOpen(false)} className="p-1 hover:bg-neutral-100 rounded">
+                                    <X className="h-6 w-6" />
+                                </button>
                             </div>
-                            <button onClick={() => setIsHistoryModalOpen(false)} className="p-1 hover:bg-neutral-100 rounded">
-                                <X className="h-6 w-6" />
-                            </button>
-                        </div>
 
-                        {isLoadingHistory ? (
-                            <div className="py-12 flex justify-center">
-                                <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
-                            </div>
-                        ) : emailHistory.length > 0 ? (
-                            <div className="space-y-3">
-                                {emailHistory.map((log) => (
-                                    <div key={log.id} className="p-4 border-2 border-neutral-200 hover:border-black transition-colors">
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-bold text-sm truncate">{log.subject}</p>
-                                                <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
-                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${log.email_type === 'broadcast' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
-                                                        {log.email_type}
+                            {isLoadingHistory ? (
+                                <div className="py-12 flex justify-center">
+                                    <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
+                                </div>
+                            ) : emailHistory.length > 0 ? (
+                                <div className="space-y-3">
+                                    {emailHistory.map((log) => (
+                                        <div key={log.id} className="p-4 border-2 border-neutral-200 hover:border-black transition-colors">
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-bold text-sm truncate">{log.subject}</p>
+                                                    <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${log.email_type === 'broadcast' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                            {log.email_type}
+                                                        </span>
+                                                        {log.segment && (
+                                                            <span className="text-neutral-400">• {log.segment.replace('_', ' ')}</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right flex-shrink-0">
+                                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                        {log.status}
                                                     </span>
-                                                    {log.segment && (
-                                                        <span className="text-neutral-400">• {log.segment.replace('_', ' ')}</span>
-                                                    )}
+                                                    <p className="text-xs text-neutral-400 mt-1">
+                                                        {new Date(log.sent_at).toLocaleDateString()} {new Date(log.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="text-right flex-shrink-0">
-                                                <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                                    {log.status}
-                                                </span>
-                                                <p className="text-xs text-neutral-400 mt-1">
-                                                    {new Date(log.sent_at).toLocaleDateString()} {new Date(log.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </p>
-                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
-                                <History className="h-8 w-8 mx-auto mb-2 text-neutral-300" />
-                                <p className="font-bold">No emails sent to this user yet</p>
-                            </div>
-                        )}
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
+                                    <History className="h-8 w-8 mx-auto mb-2 text-neutral-300" />
+                                    <p className="font-bold">No emails sent to this user yet</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </div >
     )
 }
