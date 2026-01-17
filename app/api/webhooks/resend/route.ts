@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import crypto from 'crypto'
+import { Resend } from 'resend'
 
-const RESEND_WEBHOOK_SECRET = process.env.RESEND_WEBHOOK_SECRET
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Resend webhook event types
 type ResendEventType =
@@ -27,72 +27,36 @@ interface ResendWebhookPayload {
     }
 }
 
-// Verify Resend webhook signature using Svix format
-function verifySignature(
-    payload: string,
-    signatureHeader: string | null,
-    timestampHeader: string | null,
-    idHeader: string | null
-): boolean {
-    if (!RESEND_WEBHOOK_SECRET) {
-        console.warn('Missing webhook secret')
-        return false
-    }
-
-    if (!signatureHeader || !timestampHeader) {
-        console.warn('Missing signature or timestamp header')
-        return false
-    }
-
-    try {
-        // Get the secret - Resend secrets start with "whsec_" and are base64 encoded
-        let secret = RESEND_WEBHOOK_SECRET
-        if (secret.startsWith('whsec_')) {
-            secret = secret.slice(6) // Remove "whsec_" prefix
-        }
-        const secretBytes = Buffer.from(secret, 'base64')
-
-        // Create the signed payload (timestamp.payload)
-        const signedPayload = `${timestampHeader}.${payload}`
-
-        // Calculate expected signature
-        const expectedSignature = crypto
-            .createHmac('sha256', secretBytes)
-            .update(signedPayload)
-            .digest('base64')
-
-        // The signature header contains space-separated list of versioned signatures
-        // Format: "v1,signature1 v1,signature2 ..."
-        const signatures = signatureHeader.split(' ')
-
-        for (const versionedSig of signatures) {
-            const [version, sig] = versionedSig.split(',')
-            if (version === 'v1' && sig === expectedSignature) {
-                return true
-            }
-        }
-
-        console.warn('No matching signature found')
-        return false
-    } catch (error) {
-        console.error('Signature verification error:', error)
-        return false
-    }
-}
-
 export async function POST(request: NextRequest) {
     try {
         const payload = await request.text()
 
-        // Get all Svix headers
-        const svixSignature = request.headers.get('svix-signature')
-        const svixTimestamp = request.headers.get('svix-timestamp')
-        const svixId = request.headers.get('svix-id')
+        // Get Svix headers
+        const svixId = request.headers.get('svix-id') || ''
+        const svixTimestamp = request.headers.get('svix-timestamp') || ''
+        const svixSignature = request.headers.get('svix-signature') || ''
 
-        // In development, skip signature verification if no secret is set
-        if (process.env.NODE_ENV === 'production' && !verifySignature(payload, svixSignature, svixTimestamp, svixId)) {
-            console.error('Invalid webhook signature')
-            return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+        // Verify webhook signature in production
+        if (process.env.NODE_ENV === 'production') {
+            if (!process.env.RESEND_WEBHOOK_SECRET) {
+                console.error('Missing RESEND_WEBHOOK_SECRET')
+                return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+            }
+
+            try {
+                resend.webhooks.verify({
+                    payload,
+                    headers: {
+                        id: svixId,
+                        timestamp: svixTimestamp,
+                        signature: svixSignature,
+                    },
+                    webhookSecret: process.env.RESEND_WEBHOOK_SECRET,
+                })
+            } catch (err) {
+                console.error('Webhook verification failed:', err)
+                return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+            }
         }
 
         const event: ResendWebhookPayload = JSON.parse(payload)
