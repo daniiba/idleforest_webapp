@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/chart'
 import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Email Preview Component with proper scaling
@@ -1998,9 +1998,45 @@ export default function AdminPage() {
                                                             <span className="text-neutral-400">• {log.segment.replace('_', ' ')}</span>
                                                         )}
                                                     </div>
+                                                    {/* Tracking indicators */}
+                                                    <div className="flex items-center gap-3 mt-2 text-xs">
+                                                        {log.delivered_at && (
+                                                            <span className="flex items-center gap-1 text-green-600" title={`Delivered: ${new Date(log.delivered_at).toLocaleString()}`}>
+                                                                <Check className="h-3 w-3" /> Delivered
+                                                            </span>
+                                                        )}
+                                                        {log.opened_at && (
+                                                            <span className="flex items-center gap-1 text-blue-600" title={`Opened: ${new Date(log.opened_at).toLocaleString()}`}>
+                                                                <Eye className="h-3 w-3" /> Opened
+                                                            </span>
+                                                        )}
+                                                        {log.clicked_at && (
+                                                            <span className="flex items-center gap-1 text-purple-600" title={`Clicked: ${new Date(log.clicked_at).toLocaleString()}`}>
+                                                                <MousePointer className="h-3 w-3" /> Clicked
+                                                            </span>
+                                                        )}
+                                                        {log.bounced_at && (
+                                                            <span className="flex items-center gap-1 text-red-600" title={`Bounced: ${new Date(log.bounced_at).toLocaleString()}`}>
+                                                                <X className="h-3 w-3" /> Bounced
+                                                            </span>
+                                                        )}
+                                                        {log.complained_at && (
+                                                            <span className="flex items-center gap-1 text-orange-600" title={`Spam complaint: ${new Date(log.complained_at).toLocaleString()}`}>
+                                                                <AlertTriangle className="h-3 w-3" /> Spam
+                                                            </span>
+                                                        )}
+                                                        {!log.delivered_at && !log.bounced_at && log.status === 'sent' && (
+                                                            <span className="flex items-center gap-1 text-neutral-400">
+                                                                <Clock className="h-3 w-3" /> Pending
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 <div className="text-right flex-shrink-0">
-                                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' || log.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                                                        log.status === 'bounced' || log.status === 'complained' ? 'bg-red-100 text-red-700' :
+                                                            'bg-neutral-100 text-neutral-700'
+                                                        }`}>
                                                         {log.status}
                                                     </span>
                                                     <p className="text-xs text-neutral-400 mt-1">

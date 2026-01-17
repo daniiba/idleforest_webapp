@@ -740,6 +740,143 @@ export async function deleteEmailTemplate(id: string) {
     return { success: true }
 }
 
+// ========================================
+// DYNAMIC EMAIL VARIABLES SYSTEM
+// ========================================
+
+export interface EmailVariables {
+    // User basics
+    FIRST_NAME: string
+    DISPLAY_NAME: string
+    EMAIL: string
+    USER_ID: string
+
+    // User stats
+    TOTAL_POINTS: string
+    TREES_PLANTED: string
+
+    // Team (if user owns a team)
+    TEAM_NAME: string
+    TEAM_SLUG: string
+    TEAM_MEMBER_COUNT: string
+
+    // URLs
+    UNSUBSCRIBE_URL: string
+    PROFILE_URL: string
+    TEAM_URL: string
+
+    // Misc
+    APP_URL: string
+}
+
+// Fetch all available variables for a user from Supabase
+async function getUserEmailVariables(
+    userId: string,
+    email: string
+): Promise<EmailVariables> {
+    const supabase = await createClient()
+    const { generateUnsubscribeUrl } = await import('@/lib/resend')
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com'
+
+    // Fetch user profile
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('display_name, total_points, username')
+        .eq('user_id', userId)
+        .single()
+
+    // First, check if user owns a team
+    let team: { id: string; name: string; slug: string } | null = null
+
+    const { data: ownedTeam } = await supabase
+        .from('teams')
+        .select('id, name, slug')
+        .eq('created_by', userId)
+        .maybeSingle()
+
+    if (ownedTeam) {
+        team = ownedTeam
+    } else {
+        // If not an owner, check if user is a member of a team
+        const { data: membership } = await supabase
+            .from('team_members')
+            .select('team_id, teams(id, name, slug)')
+            .eq('user_id', userId)
+            .maybeSingle()
+
+        if (membership?.teams) {
+            team = membership.teams as unknown as { id: string; name: string; slug: string }
+        }
+    }
+
+    // Fetch team member count if user has a team
+    let teamMemberCount = 0
+    if (team) {
+        const { count } = await supabase
+            .from('team_members')
+            .select('*', { count: 'exact', head: true })
+            .eq('team_id', team.id)
+        teamMemberCount = count || 0
+    }
+
+    // Debug logging
+    console.log('[Email Variables]', {
+        userId,
+        profileFound: !!profile,
+        displayName: profile?.display_name,
+        teamFound: !!team,
+        teamName: team?.name,
+        teamSlug: team?.slug
+    })
+
+    // Generate unsubscribe URL
+    const unsubscribeUrl = await generateUnsubscribeUrl(email)
+
+    // Calculate trees planted (1 tree per 1000 points)
+    const treesPlanted = Math.floor((profile?.total_points || 0) / 1000)
+
+    return {
+        // User basics
+        FIRST_NAME: profile?.display_name || 'there',
+        DISPLAY_NAME: profile?.display_name || 'there',
+        EMAIL: email,
+        USER_ID: userId,
+
+        // User stats
+        TOTAL_POINTS: String(profile?.total_points || 0),
+        TREES_PLANTED: String(treesPlanted),
+
+        // Team
+        TEAM_NAME: team?.name || '',
+        TEAM_SLUG: team?.slug || '',
+        TEAM_MEMBER_COUNT: String(teamMemberCount),
+
+        // URLs
+        UNSUBSCRIBE_URL: unsubscribeUrl,
+        PROFILE_URL: profile?.username ? `${appUrl}/profile/${profile.username}` : appUrl,
+        TEAM_URL: team?.slug ? `${appUrl}/teams/${team.slug}` : '',
+
+        // Misc
+        APP_URL: appUrl
+    }
+}
+
+// Replace all template variables in content
+function replaceEmailVariables(content: string, variables: EmailVariables): string {
+    let result = content
+
+    // Replace each variable - support both {{VAR}} and {{{VAR}}} syntax
+    for (const [key, value] of Object.entries(variables)) {
+        // Triple braces (Handlebars unescaped)
+        result = result.replace(new RegExp(`\\{\\{\\{${key}\\}\\}\\}`, 'g'), value)
+        // Double braces
+        result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value)
+    }
+
+    return result
+}
+
 export async function sendUserEmail(
     userId: string,
     email: string,
@@ -776,16 +913,17 @@ export async function sendUserEmail(
         throw new Error('User has unsubscribed from emails')
     }
 
-    // Generate signed unsubscribe URL for this recipient
-    const { generateUnsubscribeUrl } = await import('@/lib/resend')
-    const unsubscribeUrl = await generateUnsubscribeUrl(email)
+    // Fetch all user variables from database
+    const variables = await getUserEmailVariables(userId, email)
 
-    // Replace template variables
-    const name = firstName || 'there'
-    const processedSubject = subject.replace(/\{\{\{FIRST_NAME\}\}\}/g, name)
-    const processedContent = content
-        .replace(/\{\{\{FIRST_NAME\}\}\}/g, name)
-        .replace(/\{\{UNSUBSCRIBE_URL\}\}/g, unsubscribeUrl)
+    // Override FIRST_NAME if explicitly provided
+    if (firstName) {
+        variables.FIRST_NAME = firstName
+    }
+
+    // Replace all template variables
+    const processedSubject = replaceEmailVariables(subject, variables)
+    const processedContent = replaceEmailVariables(content, variables)
 
     // Send via Resend with optional custom from address
     const result = await resendSendEmail(email, processedSubject, processedContent, fromEmail)
