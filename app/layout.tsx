@@ -37,13 +37,13 @@ const rethinkSans = Rethink_Sans({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Plant Trees For Free While Browsing | IdleForest - An Ecosia Alternative",
-  description: "IdleForest lets you plant trees for free while browsing the web. A perfect complement to Ecosia, our browser extension turns unused bandwidth into reforestation efforts.",
+  title: "Plant Trees For Free While Browsing | IdleForest - Passive Reforestation",
+  description: "Plant trees automatically without changing how you browse. IdleForest's browser extension uses idle bandwidth to fund reforestation—no donations, no search engine switch required.",
   metadataBase: new URL('https://idleforest.com'),
-  keywords: ["plant trees for free", "ecosia alternative", "free tree planting", "product like ecosia", "reforestation", "browser extension", "plant trees while browsing", "eco-friendly browsing"],
+  keywords: ["plant trees for free", "free tree planting", "plant trees without money", "browser extension plant trees", "chrome extension environment", "passive reforestation", "plant trees while browsing", "eco-friendly browser extension", "reforestation app", "plant trees automatically"],
   openGraph: {
-    title: "Plant Trees For Free While Browsing | IdleForest - An Ecosia Alternative",
-    description: "IdleForest lets you plant trees for free while browsing the web. A perfect complement to Ecosia, our browser extension turns unused bandwidth into reforestation efforts.",
+    title: "Plant Trees For Free While Browsing | IdleForest - Passive Reforestation",
+    description: "Plant trees automatically without changing how you browse. IdleForest's browser extension uses idle bandwidth to fund reforestation—no donations, no search engine switch required.",
     images: [
       {
         url: '/preview.png',
