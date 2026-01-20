@@ -13,6 +13,7 @@ import Navigation from "@/components/navigation"; // Assuming Navigation compone
 
 // Animation Libraries
 import { motion } from "framer-motion";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 // Icons
 import { Mail, Phone, MapPin, Send, Building, ArrowRight, CalendarDays } from "lucide-react"; // Added Send, Building, and CalendarDays icons
@@ -56,6 +57,7 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   // Handle form input changes (works for Input and Textarea)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -83,7 +85,7 @@ export default function ContactPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, token: turnstileToken }),
       });
 
       const data = await response.json();
@@ -261,7 +263,13 @@ export default function ContactPage() {
                       </div>
 
                       {/* Submission Button & Status */}
-                      <div className="pt-2">
+                      <div className="pt-2 space-y-4">
+                        <Turnstile
+                          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} // Default to test key if not set
+                          onSuccess={(token) => setTurnstileToken(token)}
+                          className="mx-auto" // Center it if needed
+                        />
+
                         {submitStatus === 'success' && (
                           <p className="text-sm text-brand-yellow mb-3">✓ Message sent successfully! We'll get back to you soon.</p>
                         )}
@@ -271,7 +279,7 @@ export default function ContactPage() {
                         <Button
                           type="submit"
                           className="w-full bg-brand-yellow hover:bg-brand-yellow text-white font-bold py-3 px-6 rounded-md transition-colors duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || !turnstileToken}
                         >
                           {isSubmitting ? (
                             <>

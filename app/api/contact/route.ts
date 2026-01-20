@@ -4,12 +4,33 @@ import nodemailer from 'nodemailer';
 export async function POST(request: Request) {
   try {
     // Parse the request body
-    const { name, email, companyName, companySize, location, subject, message } = await request.json();
+    const { name, email, companyName, companySize, location, subject, message, token } = await request.json();
 
     // Validate the input
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !subject || !message || !token) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields or captcha' },
+        { status: 400 }
+      );
+    }
+
+    // Verify Turnstile Token
+    const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA', // Use test key if not set
+        response: token,
+      }),
+    });
+
+    const verifyData = await verifyResponse.json();
+
+    if (!verifyData.success) {
+      return NextResponse.json(
+        { error: 'Invalid captcha' },
         { status: 400 }
       );
     }
