@@ -161,12 +161,14 @@ export default function TeamsPage() {
 			}
 		} else {
 			// For weekly/monthly, use server-side aggregation via RPC
-			const { data: periodUsers } = await supabase
+			const { data: periodUsers, error } = await supabase
 				.rpc('get_top_users_by_period', {
 					start_date: startDate,
 					end_date: endDate,
 					limit_count: 20
 				})
+
+			console.log('RPC get_top_users_by_period:', { startDate, endDate, periodUsers, error })
 
 			if (periodUsers && periodUsers.length > 0) {
 				const userIds = periodUsers.map((u: { user_id: string }) => u.user_id)
@@ -178,7 +180,7 @@ export default function TeamsPage() {
 				const profileMap = new Map(userProfiles?.map(p => [p.user_id, p.display_name]) || [])
 				setPeriodTopUsers(periodUsers.map((u: { user_id: string, points_gained: number }) => ({
 					user_id: u.user_id,
-					points_gained: u.points_gained,
+					points_gained: Number(u.points_gained), // Ensure it's a number
 					display_name: profileMap.get(u.user_id) || 'Unknown'
 				})))
 			} else {
@@ -207,20 +209,67 @@ export default function TeamsPage() {
 			}
 		} else {
 			// For weekly/monthly, use server-side aggregation via RPC
-			const { data: periodTeams } = await supabase
+			const { data: periodTeams, error } = await supabase
 				.rpc('get_top_teams_by_period', {
 					start_date: startDate,
 					end_date: endDate,
 					limit_count: 20
 				})
 
+			console.log('RPC get_top_teams_by_period:', { startDate, endDate, periodTeams, error })
+
 			if (periodTeams && periodTeams.length > 0) {
-				const teamData = periodTeams.map((t: { team_id: string, points_gained: number, member_count: number }) => ({
-					team_id: t.team_id,
-					points_gained: t.points_gained,
-					member_count: t.member_count,
-					member_growth: 0 // RPC doesn't calculate growth, set to 0 for now
-				}))
+				const teamIds = periodTeams.map((t: { team_id: string }) => t.team_id)
+
+				// Fetch the EARLIEST member counts within the period for each team
+				// (using order by date asc and getting distinct per team)
+				const { data: periodStats, error: statsError } = await supabase
+					.from('team_daily_stats')
+					.select('team_id, member_count, date')
+					.gte('date', startDate)
+					.lte('date', endDate)
+					.in('team_id', teamIds)
+					.order('date', { ascending: true })
+
+				console.log('Period stats query:', { startDate, endDate, periodStats, statsError })
+
+				// Build maps with earliest and latest member counts per team
+				const startMap = new Map<string, number>()
+				const endMap = new Map<string, number>()
+
+				if (periodStats) {
+					for (const stat of periodStats) {
+						// First occurrence (earliest date) sets the start count
+						if (!startMap.has(stat.team_id)) {
+							startMap.set(stat.team_id, stat.member_count)
+						}
+						// Always update end count (last occurrence will be latest date)
+						endMap.set(stat.team_id, stat.member_count)
+					}
+				}
+
+				console.log('Member count maps:', {
+					startMap: Object.fromEntries(startMap),
+					endMap: Object.fromEntries(endMap)
+				})
+
+				const teamData = periodTeams.map((t: { team_id: string, points_gained: number, member_count: number }) => {
+					const startMembers = startMap.get(t.team_id)
+					const endMembers = endMap.get(t.team_id)
+					// Only calculate growth if we have both start and end data
+					const memberGrowth = (startMembers !== undefined && endMembers !== undefined)
+						? endMembers - startMembers
+						: 0
+
+					console.log(`Team ${t.team_id}: start=${startMembers}, end=${endMembers}, growth=${memberGrowth}`)
+
+					return {
+						team_id: t.team_id,
+						points_gained: Number(t.points_gained), // Ensure it's a number
+						member_count: endMembers || t.member_count,
+						member_growth: memberGrowth
+					}
+				})
 
 				await enrichTeamDataWithGrowth(teamData)
 			} else {
