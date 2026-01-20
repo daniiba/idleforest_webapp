@@ -160,36 +160,26 @@ export default function TeamsPage() {
 				setPeriodTopUsers([])
 			}
 		} else {
-			// For weekly/monthly, we need to aggregate
+			// For weekly/monthly, use server-side aggregation via RPC
 			const { data: periodUsers } = await supabase
-				.from('user_daily_stats')
-				.select('user_id, points_gained_that_day')
-				.gte('date', startDate)
-				.lte('date', endDate)
-
-			if (periodUsers && periodUsers.length > 0) {
-				// Aggregate by user
-				const userTotals = new Map<string, number>()
-				periodUsers.forEach(u => {
-					userTotals.set(u.user_id, (userTotals.get(u.user_id) || 0) + u.points_gained_that_day)
+				.rpc('get_top_users_by_period', {
+					start_date: startDate,
+					end_date: endDate,
+					limit_count: 20
 				})
 
-				// Sort and get top 20
-				const sorted = Array.from(userTotals.entries())
-					.sort((a, b) => b[1] - a[1])
-					.slice(0, 20)
-
-				const userIds = sorted.map(([id]) => id)
+			if (periodUsers && periodUsers.length > 0) {
+				const userIds = periodUsers.map((u: { user_id: string }) => u.user_id)
 				const { data: userProfiles } = await supabase
 					.from('profiles')
 					.select('user_id, display_name')
 					.in('user_id', userIds)
 
 				const profileMap = new Map(userProfiles?.map(p => [p.user_id, p.display_name]) || [])
-				setPeriodTopUsers(sorted.map(([user_id, points_gained]) => ({
-					user_id,
-					points_gained,
-					display_name: profileMap.get(user_id) || 'Unknown'
+				setPeriodTopUsers(periodUsers.map((u: { user_id: string, points_gained: number }) => ({
+					user_id: u.user_id,
+					points_gained: u.points_gained,
+					display_name: profileMap.get(u.user_id) || 'Unknown'
 				})))
 			} else {
 				setPeriodTopUsers([])
@@ -216,45 +206,23 @@ export default function TeamsPage() {
 				setFastestGrowingTeams([])
 			}
 		} else {
-			// For weekly/monthly, aggregate
+			// For weekly/monthly, use server-side aggregation via RPC
 			const { data: periodTeams } = await supabase
-				.from('team_daily_stats')
-				.select('team_id, points_gained_that_day, member_count, date')
-				.gte('date', startDate)
-				.lte('date', endDate)
-
-			if (periodTeams && periodTeams.length > 0) {
-				// Aggregate points and get latest member count
-				const teamData = new Map<string, { points: number, member_count: number, start_members: number }>()
-
-				// Sort by date to get proper start/end member counts
-				const sortedByDate = [...periodTeams].sort((a, b) => a.date.localeCompare(b.date))
-
-				sortedByDate.forEach(t => {
-					const existing = teamData.get(t.team_id)
-					if (existing) {
-						existing.points += t.points_gained_that_day
-						existing.member_count = t.member_count // Keep updating to get latest
-					} else {
-						teamData.set(t.team_id, {
-							points: t.points_gained_that_day,
-							member_count: t.member_count,
-							start_members: t.member_count // First entry is start count
-						})
-					}
+				.rpc('get_top_teams_by_period', {
+					start_date: startDate,
+					end_date: endDate,
+					limit_count: 20
 				})
 
-				const sorted = Array.from(teamData.entries())
-					.map(([team_id, data]) => ({
-						team_id,
-						points_gained: data.points,
-						member_count: data.member_count,
-						member_growth: data.member_count - data.start_members
-					}))
-					.sort((a, b) => b.points_gained - a.points_gained)
-					.slice(0, 20)
+			if (periodTeams && periodTeams.length > 0) {
+				const teamData = periodTeams.map((t: { team_id: string, points_gained: number, member_count: number }) => ({
+					team_id: t.team_id,
+					points_gained: t.points_gained,
+					member_count: t.member_count,
+					member_growth: 0 // RPC doesn't calculate growth, set to 0 for now
+				}))
 
-				await enrichTeamDataWithGrowth(sorted)
+				await enrichTeamDataWithGrowth(teamData)
 			} else {
 				setPeriodTopTeams([])
 				setFastestGrowingTeams([])
