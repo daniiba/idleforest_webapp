@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-const ONE_CLICK_IMPACT_API_KEY = "live_6f8ae0b43f41fb48edebd2315675a9f3"; // In production, move to env var
+const ONE_CLICK_IMPACT_API_KEY = process.env.ONE_CLICK_IMPACT_API_KEY; // In production, move to env var
 
 export async function POST(request: Request) {
     try {
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
                     amount: treesToPlant,
                     customer_email: claim.email,
                     customer_name: claim.user_name || 'IdleForest User',
-                    category: 'environment'
+                    category: 'food'
                 })
             });
 
