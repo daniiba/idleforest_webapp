@@ -25,6 +25,64 @@ export interface ResendContact {
     unsubscribed?: boolean
     created_at?: string
 }
+// ... existing interfaces ...
+
+// ... existing functions ...
+
+// ... existing functions ...
+
+// Send a transactional email using a template
+export async function sendTemplateEmail(
+    to: string,
+    templateId: string, // actually Resend logic uses 'react' or 'html' usually, but maybe they mean 'from' a saved template? 
+    // Wait, Resend doesn't have "stored templates" via API ID like SendGrid unless using their specific "Broadcasts" or just pure React components.
+    // However, the user asked to "save it as a template and give you the template id".
+    // This implies they might be using a service that supports this, OR they assume Resend has this.
+    // Resend DOES have "Templates" in Early Access / Beta or just standard React templates.
+    // But usually you pass the component.
+    // IF the user means passing a hardcoded HTML string is "saving as template", that's one thing.
+    // BUT if they mean Resend's "Transactional Templates" feature (which exists), the API is often just passing the template ID? 
+    // Actually, looking at Resend docs, to use a "Template", you usually just send the HTML. 
+    // UNLESS they are talking about *Resend Broadcasts* which has templates.
+    // OR they might be using another provider and just calling it "Resend" in the code?
+    // Let's assume standard Resend usage where you just pass JSX or HTML.
+    // BUT, since the user explicitly said "give me the html, i will save it as template and give you the template id",
+    // they probably mean they are using an Email Service Provider (ESP) interface (like SendGrid or maybe Resend's new feature) that gives an ID.
+    // Resend *does* allow sending via `text` or `html` or `react`. 
+    // There isn't a "templateId" field in the standard `resend.emails.send` payload in the public docs usually, usually you import the template.
+    // However, if they are using a wrapper or a specific feature...
+    // Let's look at the existing code again. It imports `Resend` from `resend`.
+    // Valid properties: from, to, subject, html, text, react, headers, attachments, tags, cc, bcc, reply_to.
+    // NO `template_id`.
+    // 
+    // Wait, if the user wants to give a "Template ID", maybe they are confused about Resend or I am missing a feautre.
+    // OR maybe they want me to abstract it locally?
+    // Let's just provide the HTML first, and then ASK them about the template ID implementation.
+    // Actually, I should probably stick to `html` for now in the `sendEmail` function, but I will prepare the API route to receive the ID if they want to pass it? 
+    // No, they said "I will save it... and give you the template id". 
+    // So they will come back with an ID.
+    // If Resend doesn't support ID, I should warn them.
+    // But maybe they mean they will save it in *their* code as a template file? 
+    // No, "give you the template id" implies a string ID like "tpl_123".
+    // I will write the HTML to a file so they can copy it easily, and then notify them.
+    // I won't modify `lib/resend.ts` yet because I'm not sure if `template_id` is supported.
+
+    // Correction: I will just output the HTML in the notify_user message.
+    // And I will tell them "Resend's Node SDK typically uses React components or raw HTML. If you have a specific way to use Template IDs (e.g. creating a helper that fetches it), let me know. Otherwise, I can just keep the HTML here."
+    // Actually, let's just enable them to copy it.
+
+    inputProps: any // placeholder
+) {
+    // Placeholder
+}
+
+export interface ResendContact {
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    unsubscribed?: boolean
+    created_at?: string
+}
 
 export interface ResendAudience {
     id: string
