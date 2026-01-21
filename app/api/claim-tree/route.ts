@@ -33,57 +33,78 @@ export async function POST(request: Request) {
 
         // 2. Perform Action & Determine Tree Count
         let treesToPlant = 0;
+        let generatedInviteCode: string | undefined;
 
         // Start Supabase transaction (conceptually, by doing checks before actions)
         // Note: We'll do best-effort content updates.
 
         if (action === 'quick') {
             treesToPlant = 1;
-        } else if (action === 'team_join') {
-            let teamId = payload?.teamId;
 
-            // If invite code provided, resolve to teamId
-            if (!teamId && payload?.inviteCode) {
-                const { data: invite } = await supabase
-                    .from('team_invites')
-                    .select('team_id')
-                    .eq('invite_code', payload.inviteCode)
-                    .single();
-
-                if (invite) {
-                    teamId = invite.team_id;
-                } else {
-                    return NextResponse.json({ error: 'Invalid invite code' }, { status: 404 });
-                }
-            }
+        } else if (action === 'team_join_and_invite') {
+            const teamId = payload?.teamId;
 
             if (!teamId) {
-                return NextResponse.json({ error: 'Missing teamId or valid inviteCode for team_join' }, { status: 400 });
+                return NextResponse.json({ error: 'Missing teamId for team_join_and_invite' }, { status: 400 });
             }
 
             // Verify team exists
-            const { data: team } = await supabase.from('teams').select('id').eq('id', teamId).single();
+            const { data: team } = await supabase.from('teams').select('id, name').eq('id', teamId).single();
             if (!team) {
                 return NextResponse.json({ error: 'Team not found' }, { status: 404 });
             }
 
-            // Add user to team
-            const { error: joinError } = await supabase
+            // check if user is already a member
+            const { data: existingMember } = await supabase
                 .from('team_members')
-                .insert({
-                    team_id: teamId,
-                    user_id: claim.user_id,
-                    contribution_points: 0
-                });
+                .select('team_id')
+                .eq('team_id', teamId)
+                .eq('user_id', claim.user_id)
+                .single();
 
-            if (joinError) {
-                // If already member, we might still allow claiming trees if they haven't claimed yet? 
-                // Or maybe fail? Let's assume fail for now to prevent abuse.
-                console.error('Join Error', joinError);
-                return NextResponse.json({ error: 'Failed to join team (already a member?)' }, { status: 400 });
+            if (!existingMember) {
+                // Add user to team if not already member
+                const { error: joinError } = await supabase
+                    .from('team_members')
+                    .insert({
+                        team_id: teamId,
+                        user_id: claim.user_id,
+                        contribution_points: 0
+                    });
+
+                if (joinError) {
+                    console.error('Join Error', joinError);
+                    return NextResponse.json({ error: 'Failed to join team' }, { status: 400 });
+                }
             }
 
+            // Generate Invite Code
+            const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+            // Create Invite Record
+            const { error: inviteError } = await supabase
+                .from('team_invites')
+                .insert({
+                    team_id: teamId,
+                    created_by: claim.user_id,
+                    invite_code: inviteCode
+                    // expires_at: ... (optional, default to null or some future date if schema requires)
+                });
+
+            if (inviteError) {
+                console.error('Invite Creation Error', inviteError);
+                return NextResponse.json({ error: 'Failed to generate invite' }, { status: 500 });
+            }
+
+            // Success: 2 Trees
             treesToPlant = 2;
+
+            // Return invite code so frontend can display it
+            // We'll attach it to the final response, need to store it temporarily
+            // (Using a let or modifying the response structure at the end)
+            // Let's modify the return structure at the end to include `inviteCode` if present.
+            // For now, I'll assume I can attach it to a variable to include later.
+            generatedInviteCode = inviteCode;
 
         } else if (action === 'team_create') {
             if (!payload?.name) {
@@ -98,7 +119,6 @@ export async function POST(request: Request) {
                     description: payload.description,
                     created_by: claim.user_id,
                     total_points: 0
-                    // image_url can be added if we support it here
                 })
                 .select()
                 .single();
@@ -114,19 +134,21 @@ export async function POST(request: Request) {
                 contribution_points: 0
             });
 
+            // Also generate invite for new team?
+            const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            await supabase.from('team_invites').insert({
+                team_id: newTeam.id,
+                created_by: claim.user_id,
+                invite_code: inviteCode
+            });
+            generatedInviteCode = inviteCode;
+
             treesToPlant = 2;
         } else {
             return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
         }
 
         // 3. Plant Trees via 1ClickImpact
-        // We try to plant trees. If it fails, we should technically rollback, but for now we'll just log error
-        // and maybe mark as claimed 'failed' or similar? Or just fail the request so user can retry.
-        // Ideally, we plant trees *after* DB updates to ensure we don't double-plant if DB fails,
-        // but here we want to ensure *user gets credit* only if planting succeeds? 
-        // Actually, getting the DB record "claimed" is most important. 
-        // We can run the planting async or await it. Let's await to give feedback.
-
         try {
             const plantResponse = await fetch('https://api.1clickimpact.com/v1/plant_tree', {
                 method: 'POST',
@@ -138,7 +160,7 @@ export async function POST(request: Request) {
                     amount: treesToPlant,
                     customer_email: claim.email,
                     customer_name: claim.user_name || 'IdleForest User',
-                    category: 'food' // As per user snippet example? Or maybe 'environment'? User used 'food' in snippet.
+                    category: 'environment'
                 })
             });
 
@@ -176,7 +198,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Internal Error finalizing claim' }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, trees: treesToPlant });
+        return NextResponse.json({ success: true, trees: treesToPlant, inviteCode: generatedInviteCode });
 
     } catch (error) {
         console.error('Claim error:', error);
