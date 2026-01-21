@@ -153,7 +153,7 @@ export async function POST(request: Request) {
             const plantResponse = await fetch('https://api.1clickimpact.com/v1/plant_tree', {
                 method: 'POST',
                 headers: {
-                    'x-api-key': ONE_CLICK_IMPACT_API_KEY,
+                    'x-api-key': ONE_CLICK_IMPACT_API_KEY!,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
