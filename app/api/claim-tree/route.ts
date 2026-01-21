@@ -34,6 +34,8 @@ export async function POST(request: Request) {
         // 2. Perform Action & Determine Tree Count
         let treesToPlant = 0;
         let generatedInviteCode: string | undefined;
+        let joinedTeamId: string | undefined;
+        let joinedTeamSlug: string | undefined;
 
         // Start Supabase transaction (conceptually, by doing checks before actions)
         // Note: We'll do best-effort content updates.
@@ -47,12 +49,14 @@ export async function POST(request: Request) {
             if (!teamId) {
                 return NextResponse.json({ error: 'Missing teamId for team_join_and_invite' }, { status: 400 });
             }
+            joinedTeamId = teamId;
 
             // Verify team exists
-            const { data: team } = await supabase.from('teams').select('id, name').eq('id', teamId).single();
+            const { data: team } = await supabase.from('teams').select('id, name, slug').eq('id', teamId).single();
             if (!team) {
                 return NextResponse.json({ error: 'Team not found' }, { status: 404 });
             }
+            joinedTeamSlug = team.slug;
 
             // check if user is already a member
             const { data: existingMember } = await supabase
@@ -142,6 +146,8 @@ export async function POST(request: Request) {
                 invite_code: inviteCode
             });
             generatedInviteCode = inviteCode;
+            joinedTeamId = newTeam.id;
+            joinedTeamSlug = newTeam.slug;
 
             treesToPlant = 2;
         } else {
@@ -198,7 +204,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Internal Error finalizing claim' }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, trees: treesToPlant, inviteCode: generatedInviteCode });
+        return NextResponse.json({ success: true, trees: treesToPlant, inviteCode: generatedInviteCode, teamId: joinedTeamId, teamSlug: joinedTeamSlug });
 
     } catch (error) {
         console.error('Claim error:', error);

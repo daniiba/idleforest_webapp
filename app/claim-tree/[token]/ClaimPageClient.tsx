@@ -47,7 +47,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [successData, setSuccessData] = useState<{ trees: number; inviteCode?: string } | null>(null);
+    const [successData, setSuccessData] = useState<{ trees: number; inviteCode?: string; teamId?: string; teamSlug?: string } | null>(null);
 
     // Team Selection State
     const [teams, setTeams] = useState<Team[]>([]);
@@ -131,7 +131,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                 throw new Error(data.error || 'Failed to claim trees');
             }
 
-            setSuccessData({ trees: data.trees, inviteCode: data.inviteCode });
+            setSuccessData({ trees: data.trees, inviteCode: data.inviteCode, teamId: data.teamId, teamSlug: data.teamSlug });
 
         } catch (err: any) {
             setError(err.message);
@@ -149,7 +149,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                     </div>
                     <h1 className="text-3xl font-extrabold font-candu uppercase">Offer Expired</h1>
                     <p className="text-neutral-600">Sorry, this tree claim offer has expired (valid for 7 days).</p>
-                    <Link href="/dashboard" className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Dashboard</Link>
+                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Profile</Link>
                 </div>
             </div>
         );
@@ -164,7 +164,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                     </div>
                     <h1 className="text-3xl font-extrabold font-candu uppercase">Already Claimed</h1>
                     <p className="text-neutral-600">You have already claimed your signup trees!</p>
-                    <Link href="/dashboard" className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Dashboard</Link>
+                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Profile</Link>
                 </div>
             </div>
         );
@@ -217,10 +217,10 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                     )}
 
                     <Link
-                        href="/dashboard"
+                        href={successData.teamSlug ? `/teams/${successData.teamSlug}` : (userName ? `/profile/${userName}` : '/')}
                         className="block w-full py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors mt-6 text-lg border-2 border-transparent hover:border-black"
                     >
-                        Go to Dashboard
+                        {successData.teamSlug ? 'Go to Team Page' : 'Go to Profile'}
                     </Link>
                 </div>
             </div>
