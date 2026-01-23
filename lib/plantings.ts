@@ -42,6 +42,7 @@ export type Project = {
   lng?: number;
   description?: string;
   externalRef?: string; // provider project id/URL
+  images?: string[];
 };
 
 export type Receipt = {
@@ -111,6 +112,16 @@ export const plantingsData: PlantingsData = {
       lng: 38.36667,
       description: "Restoring the Mkussu Nature Forest Reserve in Lushoto District after fire damage.",
       externalRef: "https://tree-nation.com/projects/replanting-the-burnt-mkussu-forest",
+      images: ["/report-images/mkussu-forest.jpg"],
+    },
+    {
+      id: "tn-plant-to-stop-poverty",
+      name: "Plant to Stop Poverty",
+      partnerId: "tree-nation",
+      countryCode: "TZ",
+      description: "Helping rural communities implement agroforestry to combat poverty.",
+      externalRef: "https://tree-nation.com/projects/plant-to-stop-poverty",
+      images: ["/report-images/plant-to-stop-poverty.jpg"],
     },
   ],
   receipts: [
@@ -119,6 +130,8 @@ export const plantingsData: PlantingsData = {
       provider: "Tree-Nation",
       date: "2025-01-17",
       url: "https://tree-nation.com/certificate/8f474fdbcdfd8099",
+      amount: 15,
+      currency: "USD",
     },
     {
       id: "tftf-2025-09-05",
@@ -143,6 +156,21 @@ export const plantingsData: PlantingsData = {
       amount: 140,
       currency: "EUR",
       url: "https://tree-nation.com/certificate/2bd099426b9a30d6",
+    },
+    {
+      id: "tn-2026-01-23",
+      provider: "Tree-Nation",
+      date: "2026-01-23",
+      url: "https://tree-nation.com/certificate/de0dce608ee3fbb6",
+      amount: 477,
+      currency: "USD",
+    },
+    {
+      id: "IF-2024-001",
+      provider: "Trees for the Future",
+      date: "2024-11-12",
+      amount: 11,
+      currency: "USD",
     },
   ],
   events: [
@@ -169,6 +197,7 @@ export const plantingsData: PlantingsData = {
         { name: "Palm trees", count: 20 },
         { name: "Avocado", count: 14 },
       ],
+      receiptId: "IF-2024-001",
     },
     {
       id: "evt-tftf-2025-09-05-466",
@@ -212,6 +241,15 @@ export const plantingsData: PlantingsData = {
       species: [
         { name: "Syzygium guineense", count: 400 },
       ],
+    },
+    {
+      id: "evt-tn-2026-01-23-900",
+      date: "2026-01-23",
+      trees: 900,
+      partnerId: "tree-nation",
+      projectId: "tn-plant-to-stop-poverty",
+      countryCode: "TZ",
+      receiptId: "tn-2026-01-23",
     },
   ],
 };
@@ -327,7 +365,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
     const speciesAggregate = Array.from(speciesCount.entries()).map(([name, count]) => ({ name, count }));
 
     // images placeholder; can be customized per project later
-    const images: string[] = ["/preview.png"];
+    const images: string[] = project.images ?? ["/preview.png"];
 
     const entry = buckets.get(key) ?? {
       lng,
@@ -478,7 +516,7 @@ export function toGeoJSONProjects(data: PlantingsData): GeoJSON.FeatureCollectio
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
     // Simple image list (placeholders for now)
-    const images: string[] = ["/preview.png"]; // can be extended per project in the future
+    const images: string[] = project.images ?? ["/preview.png"]; // use project images or placeholder
     return {
       type: "Feature",
       geometry: { type: "Point", coordinates: [lng, lat] },
