@@ -126,7 +126,7 @@ export default function TransparencyPage() {
                 <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
                   <div className="text-center mb-6">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4 p-2">
-                      <Image src="/logo.svg" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
+                      <Image src="/logo.png" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
                     </div>
                     <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
                       Distributed Networks

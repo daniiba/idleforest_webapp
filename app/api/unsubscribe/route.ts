@@ -101,7 +101,7 @@ function renderPage(title: string, message: string, success: boolean): string {
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 40px 20px; background-color: #D9D9D9; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div style="max-width: 480px; text-align: center;">
         <div style="background-color: ${bgColor}; padding: 20px 24px; border: 2px solid #000000; border-bottom: none;">
-            <img src="https://idleforest.com/logo.svg" alt="IdleForest" style="height: 28px;">
+            <img src="https://idleforest.com/logo.png" alt="IdleForest" style="height: 28px;">
         </div>
         <div style="background-color: #ffffff; padding: 40px 32px; border: 2px solid #000000;">
             <h1 style="margin: 0 0 16px 0; font-size: 24px; color: #0B101F;">${title}</h1>
@@ -126,7 +126,7 @@ function renderConfirmPage(email: string, token: string): string {
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 40px 20px; background-color: #D9D9D9; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div style="max-width: 480px; text-align: center;">
         <div style="background-color: #E0F146; padding: 20px 24px; border: 2px solid #000000; border-bottom: none;">
-            <img src="https://idleforest.com/logo.svg" alt="IdleForest" style="height: 28px;">
+            <img src="https://idleforest.com/logo.png" alt="IdleForest" style="height: 28px;">
         </div>
         <div style="background-color: #ffffff; padding: 40px 32px; border: 2px solid #000000;">
             <h1 style="margin: 0 0 16px 0; font-size: 24px; color: #0B101F;">Unsubscribe from Emails</h1>

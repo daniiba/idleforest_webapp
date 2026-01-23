@@ -72,7 +72,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
       {!hideBanner && <TopTeamsBanner />}
       <div className="relative mx-auto px-4 h-24 grid grid-cols-3 items-center">
         <Link href='/' className="flex items-center gap-2 col-start-1 justify-self-start">
-          <Image src="/logo.svg" alt="IdleForest logo" width={121} height={33} className="w-[100px] md:w-[121px]" />
+          <Image src="/logo.png" alt="IdleForest logo" width={121} height={33} className="w-[100px] md:w-[121px]" />
         </Link>
 
         {/* Desktop Navigation */}

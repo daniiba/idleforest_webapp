@@ -17,7 +17,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -147,6 +147,10 @@ export default function AdminPage() {
     const [broadcastTemplateId, setBroadcastTemplateId] = useState<string>('')
     const [isSendingBroadcast, setIsSendingBroadcast] = useState(false)
     const [broadcastResult, setBroadcastResult] = useState<{ success: boolean; message: string } | null>(null)
+
+    // Sync All Users State
+    const [isSyncingAllUsers, setIsSyncingAllUsers] = useState(false)
+    const [syncAllUsersResult, setSyncAllUsersResult] = useState<{ success: boolean; message: string } | null>(null)
 
     // Check for existing session on mount (server-side cookie check)
     useEffect(() => {
@@ -482,6 +486,36 @@ export default function AdminPage() {
         }
     }
 
+    // Handle syncing all users to an audience
+    const handleSyncAllUsers = async (dryRun: boolean = false) => {
+        setIsSyncingAllUsers(true)
+        setSyncAllUsersResult(null)
+
+        try {
+            const result = await syncAllUsersToResend(undefined, dryRun)
+            if (dryRun) {
+                setSyncAllUsersResult({
+                    success: true,
+                    message: `Preview: ${result.usersToSync} users with emails would be synced to "idleforest_all_users" audience`
+                })
+            } else {
+                setSyncAllUsersResult({
+                    success: result.success,
+                    message: result.success
+                        ? `Successfully synced ${result.syncedCount} users to "idleforest_all_users" audience!`
+                        : `Errors: ${result.errors?.join(', ')}`
+                })
+            }
+        } catch (err) {
+            setSyncAllUsersResult({
+                success: false,
+                message: err instanceof Error ? err.message : 'Failed to sync users'
+            })
+        } finally {
+            setIsSyncingAllUsers(false)
+        }
+    }
+
     // Filter users by selected segment
     const filteredUsers = powerUsers.filter(u => {
         const matchesSegment = selectedSegment === 'all' || u.segments.includes(selectedSegment)
@@ -745,6 +779,7 @@ export default function AdminPage() {
                         setActiveTab(value)
                         if (value === 'power-users') {
                             fetchPowerUsersData()
+                            fetchAudiences()
                         }
                         if (value === 'templates') {
                             fetchTemplates()
@@ -1237,46 +1272,77 @@ export default function AdminPage() {
                                 </section>
 
                                 {/* Sync to Resend Section */}
-                                {selectedSegment !== 'all' && (
-                                    <section className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                                    <Mail className="h-5 w-5 text-brand-yellow" />
-                                                    Sync to Resend
-                                                </h3>
-                                                <p className="text-sm text-gray-300 mt-1">
-                                                    Sync {filteredUsers.filter(u => u.email).length} users with emails to Resend audience
-                                                </p>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <button
-                                                    onClick={() => handleSyncSegment(selectedSegment, true)}
-                                                    disabled={syncingSegment !== null}
-                                                    className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
-                                                >
-                                                    {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-                                                    Preview
-                                                </button>
-                                                <button
-                                                    onClick={() => handleSyncSegment(selectedSegment, false)}
-                                                    disabled={syncingSegment !== null}
-                                                    className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
-                                                >
-                                                    {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                                                    Sync Now
-                                                </button>
-                                            </div>
+                                <section className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                                <Mail className="h-5 w-5 text-brand-yellow" />
+                                                Sync to Resend
+                                            </h3>
+                                            <p className="text-sm text-gray-300 mt-1">
+                                                {selectedSegment === 'all'
+                                                    ? `Sync all ${filteredUsers.filter(u => u.email).length} users with emails to Resend audience`
+                                                    : `Sync ${filteredUsers.filter(u => u.email).length} users with emails to Resend audience`
+                                                }
+                                            </p>
                                         </div>
-                                        {syncResult && syncResult.segment === selectedSegment && (
-                                            <div className={`mt-4 p-3 border-2 border-black ${syncResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
-                                                <p className={`text-sm font-bold ${syncResult.success ? 'text-green-800' : 'text-red-800'}`}>
-                                                    {syncResult.message}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </section>
-                                )}
+                                        <div className="flex items-center gap-3">
+                                            {selectedSegment === 'all' ? (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleSyncAllUsers(true)}
+                                                        disabled={isSyncingAllUsers}
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                    >
+                                                        {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                                                        Preview
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleSyncAllUsers(false)}
+                                                        disabled={isSyncingAllUsers}
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                    >
+                                                        {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                                        Sync Now
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleSyncSegment(selectedSegment, true)}
+                                                        disabled={syncingSegment !== null}
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                    >
+                                                        {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                                                        Preview
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleSyncSegment(selectedSegment, false)}
+                                                        disabled={syncingSegment !== null}
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                    >
+                                                        {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                                        Sync Now
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {selectedSegment === 'all' && syncAllUsersResult && (
+                                        <div className={`mt-4 p-3 border-2 border-black ${syncAllUsersResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                            <p className={`text-sm font-bold ${syncAllUsersResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                                                {syncAllUsersResult.message}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {selectedSegment !== 'all' && syncResult && syncResult.segment === selectedSegment && (
+                                        <div className={`mt-4 p-3 border-2 border-black ${syncResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                            <p className={`text-sm font-bold ${syncResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                                                {syncResult.message}
+                                            </p>
+                                        </div>
+                                    )}
+                                </section>
 
                                 {/* User Table */}
                                 <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">

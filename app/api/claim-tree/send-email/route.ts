@@ -4,48 +4,48 @@ import { sendEmail } from '@/lib/resend';
 import { randomUUID } from 'crypto';
 
 export async function POST(request: Request) {
-    try {
-        const { userId, email, userName } = await request.json();
+  try {
+    const { userId, email, userName } = await request.json();
 
-        if (!userId || !email) {
-            return NextResponse.json({ error: 'Missing userId or email' }, { status: 400 });
-        }
+    if (!userId || !email) {
+      return NextResponse.json({ error: 'Missing userId or email' }, { status: 400 });
+    }
 
-        const supabase = createAdminClient();
+    const supabase = createAdminClient();
 
-        // Check if user already has a pending or completed claim?
-        // For now, assume one per user.
-        const { data: existing } = await supabase.from('pending_tree_claims')
-            .select('id')
-            .eq('user_id', userId)
-            .single();
+    // Check if user already has a pending or completed claim?
+    // For now, assume one per user.
+    const { data: existing } = await supabase.from('pending_tree_claims')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
 
-        if (existing) {
-            return NextResponse.json({ message: 'Claim already exists' }, { status: 200 }); // Idempotency
-        }
+    if (existing) {
+      return NextResponse.json({ message: 'Claim already exists' }, { status: 200 }); // Idempotency
+    }
 
-        const token = randomUUID();
-        // Simple referral code generation (could be better)
-        const referralCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+    const token = randomUUID();
+    // Simple referral code generation (could be better)
+    const referralCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
-        // 1. Create Pending Claim
-        const { error: insertError } = await supabase.from('pending_tree_claims').insert({
-            user_id: userId,
-            email: email,
-            user_name: userName,
-            claim_token: token,
-            referral_code: referralCode
-        });
+    // 1. Create Pending Claim
+    const { error: insertError } = await supabase.from('pending_tree_claims').insert({
+      user_id: userId,
+      email: email,
+      user_name: userName,
+      claim_token: token,
+      referral_code: referralCode
+    });
 
-        if (insertError) {
-            console.error('Error creating claim record', insertError);
-            return NextResponse.json({ error: 'Database error' }, { status: 500 });
-        }
+    if (insertError) {
+      console.error('Error creating claim record', insertError);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    }
 
-        // 2. Send Email
-        const claimUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com'}/claim-tree/${token}`;
+    // 2. Send Email
+    const claimUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com'}/claim-tree/${token}`;
 
-        const emailHtml = `
+    const emailHtml = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
   <div style="max-width: 580px; margin: 0 auto;">
     
     <div style="background-color: #E0F146; padding: 20px 24px; border: 2px solid #000000; border-bottom: none;">
-      <img src="https://idleforest.com/logo.svg" alt="IdleForest" style="height: 28px;">
+      <img src="https://idleforest.com/logo.png" alt="IdleForest" style="height: 28px;">
     </div>
     
     <div style="background-color: #ffffff; padding: 32px; border: 2px solid #000000;">
@@ -95,21 +95,21 @@ export async function POST(request: Request) {
 </html>
     `;
 
-        const { success, error: emailError } = await sendEmail(
-            email,
-            'Action Required: Claim your free trees 🌲',
-            emailHtml
-        );
+    const { success, error: emailError } = await sendEmail(
+      email,
+      'Action Required: Claim your free trees 🌲',
+      emailHtml
+    );
 
-        if (!success) {
-            console.error('Failed to send claim email', emailError);
-            return NextResponse.json({ error: 'Failed to send email' }, { status: 500 }); // Should we retry?
-        }
-
-        return NextResponse.json({ success: true });
-
-    } catch (error) {
-        console.error('Send Claim Email Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    if (!success) {
+      console.error('Failed to send claim email', emailError);
+      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 }); // Should we retry?
     }
+
+    return NextResponse.json({ success: true });
+
+  } catch (error) {
+    console.error('Send Claim Email Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

@@ -572,6 +572,73 @@ export async function getAudienceContacts(audienceId: string): Promise<ResendCon
     return data
 }
 
+// Sync ALL users with emails to a specific audience (or create idleforest_all_users if none specified)
+export async function syncAllUsersToResend(
+    audienceId?: string,
+    dryRun: boolean = true
+): Promise<{
+    success: boolean
+    usersToSync: number
+    syncedCount?: number
+    errors?: string[]
+    previewUsers?: { email: string; name: string }[]
+    audienceName?: string
+}> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    // Get all users (not filtered by segment)
+    const users = await getPowerUsers()
+    const usersWithEmail = users.filter(u => u.email)
+
+    // Dry run: return preview without syncing
+    if (dryRun) {
+        return {
+            success: true,
+            usersToSync: usersWithEmail.length,
+            previewUsers: usersWithEmail.slice(0, 10).map(u => ({
+                email: u.email!,
+                name: u.display_name
+            })),
+            audienceName: audienceId ? undefined : 'idleforest_all_users'
+        }
+    }
+
+    // Get or create audience
+    let targetAudienceId = audienceId
+    if (!targetAudienceId) {
+        const audience = await getOrCreateAudience('idleforest_all_users')
+        if (!audience) {
+            return {
+                success: false,
+                usersToSync: usersWithEmail.length,
+                errors: ['Failed to create/get audience in Resend']
+            }
+        }
+        targetAudienceId = audience.id
+    }
+
+    // Prepare contacts
+    const contacts: ResendContact[] = usersWithEmail.map(u => ({
+        email: u.email!,
+        firstName: u.display_name,
+        unsubscribed: false
+    }))
+
+    // Sync to Resend
+    const result = await syncContactsToAudience(contacts, targetAudienceId)
+
+    return {
+        success: result.success,
+        usersToSync: usersWithEmail.length,
+        syncedCount: result.synced,
+        errors: result.errors.length > 0 ? result.errors : undefined,
+        audienceName: audienceId ? undefined : 'idleforest_all_users'
+    }
+}
+
 // ========================================
 // EMAIL TEMPLATES & SENDING
 // ========================================
