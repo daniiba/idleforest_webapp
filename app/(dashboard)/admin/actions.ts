@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
+import chromeStoreData from './chrome-store-data.json'
 
 // Session management
 const ADMIN_SESSION_COOKIE = 'admin_session'
@@ -150,19 +151,24 @@ export async function getAdminStats() {
     const totalUsersCount = (profilesCount || 0) + (anonymousNodesCount || 0)
     const newTotalUsersCount = (newProfilesCount || 0) + (newAnonymousNodesCount || 0)
 
-    // 5. Active Users (MAU)
-    // From Google Chrome Store: 500 weekly active extension users
-    // From PostHog: 45 weekly desktop users
-    const activeUsersCount = 545 // 500 (Chrome) + 45 (Desktop)
+    // 5. Active Users (WAU) - use monthly average for ARPU consistency
+    // Using wauAvg (monthly average) instead of currentWau (latest snapshot) for accurate ARPU
+    const latestMonthData = chromeStoreData.monthlyData[chromeStoreData.monthlyData.length - 1]
+    const chromeWauAvg = latestMonthData?.wauAvg || 0
+    const chromeWauCurrent = chromeStoreData.totals.currentWau  // Keep for display purposes
+    const desktopWau = chromeStoreData.desktopData.length > 0
+        ? chromeStoreData.desktopData[chromeStoreData.desktopData.length - 1].wauAvg
+        : 0
+    const activeUsersCount = chromeWauAvg + desktopWau  // Use avg for ARPU calculations
 
-    // 6. Churn Rate (from Chrome Web Store data)
-    // 993 total installs, 370 uninstalls over 12 months
-    // Monthly Churn Rate = (370 / 993) / 12 ≈ 3.1%
-    const chromeStoreInstalls = 993
-    const chromeStoreUninstalls = 370
-    const monthsRunning = 12
-    const churnRate = (chromeStoreUninstalls / chromeStoreInstalls) / monthsRunning // ~0.031 (3.1%)
-
+    // 6. Churn Rate (Extension) - average monthly churn rate
+    // Formula: (Total Uninstalls / Total Installs) / Number of Months
+    // This gives the average monthly rate at which users uninstall
+    const totalInstalls = chromeStoreData.totals.totalInstalls
+    const totalUninstalls = chromeStoreData.totals.totalUninstalls
+    const numberOfMonths = chromeStoreData.monthlyData.length
+    const lifetimeUninstallRate = totalInstalls > 0 ? totalUninstalls / totalInstalls : 0
+    const churnRate = numberOfMonths > 0 ? lifetimeUninstallRate / numberOfMonths : 0
 
     // 7. Revenue Stats (mellowtel_stats)
     const { data: currentStats, error: currentError } = await supabase
@@ -193,6 +199,55 @@ export async function getAdminStats() {
     const monthlyRevenue = Math.max(0, currentEarnings - pastEarnings)
 
 
+    // 8. Platform breakdown - calculate revenue distribution based on total_requests per platform
+    // Desktop platforms: win32, darwin
+    // Extension: everything else (chrome extension IDs)
+    const { data: allNodes } = await supabase
+        .from('nodes')
+        .select('platform, total_requests, opt_in')
+
+    let extensionRequests = 0
+    let desktopRequests = 0
+    let extensionNodeCount = 0
+    let desktopNodeCount = 0
+    let desktopOptedOutCount = 0
+    let desktopInactiveCount = 0  // nodes with 0 requests
+
+    if (allNodes) {
+        for (const node of allNodes) {
+            const requests = node.total_requests || 0
+            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            if (isDesktop) {
+                desktopRequests += requests
+                desktopNodeCount++
+                if (node.opt_in === false) {
+                    desktopOptedOutCount++
+                }
+                if (requests === 0) {
+                    desktopInactiveCount++
+                }
+            } else {
+                extensionRequests += requests
+                extensionNodeCount++
+            }
+        }
+    }
+
+    // Desktop "churn proxy" - percentage that opted out or are inactive
+    const desktopOptOutRate = desktopNodeCount > 0 ? desktopOptedOutCount / desktopNodeCount : 0
+
+    const totalRequests = extensionRequests + desktopRequests
+    const extensionRevenueShare = totalRequests > 0 ? extensionRequests / totalRequests : 1
+    const desktopRevenueShare = totalRequests > 0 ? desktopRequests / totalRequests : 0
+
+    // Estimated revenue per platform
+    const extensionRevenue = monthlyRevenue * extensionRevenueShare
+    const desktopRevenue = monthlyRevenue * desktopRevenueShare
+
+    // ARPU per platform (using WAU avg for each)
+    const extensionArpu = chromeWauAvg > 0 ? extensionRevenue / chromeWauAvg : 0
+    const desktopArpu = desktopWau > 0 ? desktopRevenue / desktopWau : 0
+
     return {
         profilesCount: profilesCount || 0,
         newProfilesCount: newProfilesCount || 0,
@@ -204,7 +259,20 @@ export async function getAdminStats() {
         totalUsersCount,
         newTotalUsersCount,
         activeUsersCount,
-        churnRate
+        churnRate,
+        // Platform breakdown
+        chromeWau: chromeWauAvg,  // Use avg for ARPU calculations
+        chromeWauCurrent,          // Latest snapshot for display
+        desktopWau,
+        extensionNodeCount,
+        desktopNodeCount,
+        extensionRevenueShare,
+        desktopRevenueShare,
+        extensionRevenue,
+        desktopRevenue,
+        extensionArpu,
+        desktopArpu,
+        desktopOptOutRate  // Desktop "churn proxy" - % of desktop nodes that opted out
     }
 }
 
@@ -1448,4 +1516,490 @@ export async function getEmailStats(
         openRate: delivered > 0 ? Math.round((opened / delivered) * 100) : 0,
         clickRate: opened > 0 ? Math.round((clicked / opened) * 100) : 0
     }
+}
+
+// ========================================
+// URL METADATA FETCHING FOR REPORTS
+// ========================================
+
+export interface UrlMetadata {
+    url: string
+    title: string
+    description: string
+    image: string | null
+    siteName: string | null
+    type: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'other'
+    fetchedAt: string
+}
+
+// Fetch Open Graph metadata from a URL
+export async function fetchUrlMetadata(url: string): Promise<UrlMetadata | null> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) return null
+
+    try {
+        // Determine the platform type
+        const type = getUrlPlatformType(url)
+
+        // Fetch the page HTML
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+            },
+            next: { revalidate: 3600 } // Cache for 1 hour
+        })
+
+        if (!response.ok) {
+            console.error(`Failed to fetch URL: ${response.status}`)
+            return {
+                url,
+                title: url,
+                description: '',
+                image: null,
+                siteName: null,
+                type,
+                fetchedAt: new Date().toISOString()
+            }
+        }
+
+        const html = await response.text()
+
+        // Parse Open Graph tags
+        const title = extractMetaTag(html, 'og:title') || extractMetaTag(html, 'twitter:title') || extractTitle(html) || url
+        const description = extractMetaTag(html, 'og:description') || extractMetaTag(html, 'twitter:description') || extractMetaTag(html, 'description') || ''
+        const image = extractMetaTag(html, 'og:image') || extractMetaTag(html, 'twitter:image') || null
+        const siteName = extractMetaTag(html, 'og:site_name') || null
+
+        return {
+            url,
+            title: title.trim(),
+            description: description.trim().slice(0, 300),
+            image: image ? normalizeImageUrl(image, url) : null,
+            siteName,
+            type,
+            fetchedAt: new Date().toISOString()
+        }
+    } catch (error) {
+        console.error('Error fetching URL metadata:', error)
+        return {
+            url,
+            title: url,
+            description: '',
+            image: null,
+            siteName: null,
+            type: getUrlPlatformType(url),
+            fetchedAt: new Date().toISOString()
+        }
+    }
+}
+
+// Helper to determine platform type from URL
+function getUrlPlatformType(url: string): UrlMetadata['type'] {
+    const lowerUrl = url.toLowerCase()
+    if (lowerUrl.includes('instagram.com') || lowerUrl.includes('instagr.am')) return 'instagram'
+    if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) return 'youtube'
+    if (lowerUrl.includes('linkedin.com')) return 'linkedin'
+    if (lowerUrl.includes('twitter.com') || lowerUrl.includes('x.com')) return 'twitter'
+    return 'other'
+}
+
+// Extract meta tag content from HTML
+function extractMetaTag(html: string, propertyOrName: string): string | null {
+    // Try property attribute first (Open Graph)
+    const propertyMatch = html.match(new RegExp(`<meta[^>]*property=["']${propertyOrName}["'][^>]*content=["']([^"']*)["']`, 'i'))
+    if (propertyMatch) return propertyMatch[1]
+
+    // Try content before property
+    const reversePropertyMatch = html.match(new RegExp(`<meta[^>]*content=["']([^"']*)["'][^>]*property=["']${propertyOrName}["']`, 'i'))
+    if (reversePropertyMatch) return reversePropertyMatch[1]
+
+    // Try name attribute (standard meta)
+    const nameMatch = html.match(new RegExp(`<meta[^>]*name=["']${propertyOrName}["'][^>]*content=["']([^"']*)["']`, 'i'))
+    if (nameMatch) return nameMatch[1]
+
+    // Try content before name
+    const reverseNameMatch = html.match(new RegExp(`<meta[^>]*content=["']([^"']*)["'][^>]*name=["']${propertyOrName}["']`, 'i'))
+    if (reverseNameMatch) return reverseNameMatch[1]
+
+    return null
+}
+
+// Extract title tag
+function extractTitle(html: string): string | null {
+    const match = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+    return match ? match[1] : null
+}
+
+// Normalize relative image URLs to absolute
+function normalizeImageUrl(imageUrl: string, baseUrl: string): string {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl
+    }
+    try {
+        const base = new URL(baseUrl)
+        return new URL(imageUrl, base.origin).href
+    } catch {
+        return imageUrl
+    }
+}
+
+// ========================================
+// MARKETING ENTRIES CRUD
+// ========================================
+
+export interface MarketingEntry {
+    id: string
+    url: string
+    title: string | null
+    description: string | null
+    image_url: string | null
+    platform: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'other'
+    cost: number | null
+    impressions: number | null
+    clicks: number | null
+    engagement: number | null
+    notes: string | null
+    month: number
+    year: number
+    created_by: string | null
+    created_at: string
+    updated_at: string
+}
+
+export interface CreateMarketingEntryInput {
+    url: string
+    cost?: number | null
+    impressions?: number | null
+    clicks?: number | null
+    engagement?: number | null
+    notes?: string | null
+    month: number
+    year: number
+    created_by?: string
+}
+
+export interface UpdateMarketingEntryInput {
+    url?: string
+    title?: string | null
+    description?: string | null
+    image_url?: string | null
+    platform?: MarketingEntry['platform']
+    cost?: number | null
+    impressions?: number | null
+    clicks?: number | null
+    engagement?: number | null
+    notes?: string | null
+    month?: number
+    year?: number
+}
+
+// Get marketing entries with optional month/year filter
+export async function getMarketingEntries(
+    month?: number,
+    year?: number
+): Promise<MarketingEntry[]> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    let query = adminClient
+        .from('marketing_entries')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (month !== undefined) {
+        query = query.eq('month', month)
+    }
+    if (year !== undefined) {
+        query = query.eq('year', year)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+        console.error('Error fetching marketing entries:', error)
+        return []
+    }
+
+    return data || []
+}
+
+// Create a new marketing entry (auto-fetches metadata from URL)
+export async function createMarketingEntry(
+    input: CreateMarketingEntryInput
+): Promise<{ success: boolean; entry?: MarketingEntry; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // Auto-fetch metadata from URL
+    const metadata = await fetchUrlMetadata(input.url)
+
+    const insertData = {
+        url: input.url,
+        title: metadata?.title || input.url,
+        description: metadata?.description || null,
+        image_url: metadata?.image || null,
+        platform: metadata?.type || 'other',
+        cost: input.cost || null,
+        impressions: input.impressions || null,
+        clicks: input.clicks || null,
+        engagement: input.engagement || null,
+        notes: input.notes || null,
+        month: input.month,
+        year: input.year,
+        created_by: input.created_by || null
+    }
+
+    const { data, error } = await adminClient
+        .from('marketing_entries')
+        .insert(insertData)
+        .select()
+        .single()
+
+    if (error) {
+        console.error('Error creating marketing entry:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true, entry: data }
+}
+
+// Update an existing marketing entry
+export async function updateMarketingEntry(
+    id: string,
+    input: UpdateMarketingEntryInput
+): Promise<{ success: boolean; entry?: MarketingEntry; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // If URL is being updated, re-fetch metadata
+    let updateData: Record<string, unknown> = { ...input }
+
+    if (input.url) {
+        const metadata = await fetchUrlMetadata(input.url)
+        if (metadata) {
+            updateData = {
+                ...updateData,
+                title: metadata.title,
+                description: metadata.description,
+                image_url: metadata.image,
+                platform: metadata.type
+            }
+        }
+    }
+
+    const { data, error } = await adminClient
+        .from('marketing_entries')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single()
+
+    if (error) {
+        console.error('Error updating marketing entry:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true, entry: data }
+}
+
+// Delete a marketing entry
+export async function deleteMarketingEntry(
+    id: string
+): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    const { error } = await adminClient
+        .from('marketing_entries')
+        .delete()
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error deleting marketing entry:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
+
+// Get marketing entries for a date range (for reports)
+export async function getMarketingEntriesForReport(
+    month: number,
+    year: number
+): Promise<{
+    entries: MarketingEntry[]
+    totalCost: number
+    totalImpressions: number
+    totalClicks: number
+    totalEngagement: number
+}> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const entries = await getMarketingEntries(month, year)
+
+    const totalCost = entries.reduce((sum, e) => sum + (e.cost || 0), 0)
+    const totalImpressions = entries.reduce((sum, e) => sum + (e.impressions || 0), 0)
+    const totalClicks = entries.reduce((sum, e) => sum + (e.clicks || 0), 0)
+    const totalEngagement = entries.reduce((sum, e) => sum + (e.engagement || 0), 0)
+
+    return {
+        entries,
+        totalCost,
+        totalImpressions,
+        totalClicks,
+        totalEngagement
+    }
+}
+
+// ========================================
+// YOUTUBE ANALYTICS
+// ========================================
+
+interface YouTubeVideoStats {
+    viewCount: number
+    likeCount: number
+    commentCount: number
+    title?: string
+    thumbnail?: string
+    publishedAt?: string
+}
+
+// Extract YouTube video ID from URL
+function extractYouTubeVideoId(url: string): string | null {
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+        /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+    ]
+
+    for (const pattern of patterns) {
+        const match = url.match(pattern)
+        if (match) return match[1]
+    }
+    return null
+}
+
+// Fetch YouTube video statistics using Data API
+export async function fetchYouTubeStats(url: string): Promise<YouTubeVideoStats | null> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const apiKey = process.env.YOUTUBE_API_KEY
+    if (!apiKey) {
+        console.error('YOUTUBE_API_KEY not configured')
+        return null
+    }
+
+    const videoId = extractYouTubeVideoId(url)
+    if (!videoId) {
+        console.error('Could not extract YouTube video ID from URL:', url)
+        return null
+    }
+
+    try {
+        const response = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${videoId}&key=${apiKey}`,
+            { next: { revalidate: 300 } } // Cache for 5 minutes
+        )
+
+        if (!response.ok) {
+            console.error('YouTube API error:', response.status, await response.text())
+            return null
+        }
+
+        const data = await response.json()
+
+        if (!data.items || data.items.length === 0) {
+            console.error('Video not found:', videoId)
+            return null
+        }
+
+        const video = data.items[0]
+        const stats = video.statistics
+        const snippet = video.snippet
+
+        return {
+            viewCount: parseInt(stats.viewCount || '0', 10),
+            likeCount: parseInt(stats.likeCount || '0', 10),
+            commentCount: parseInt(stats.commentCount || '0', 10),
+            title: snippet?.title,
+            thumbnail: snippet?.thumbnails?.high?.url || snippet?.thumbnails?.default?.url,
+            publishedAt: snippet?.publishedAt
+        }
+    } catch (error) {
+        console.error('Error fetching YouTube stats:', error)
+        return null
+    }
+}
+
+// Refresh analytics for a marketing entry (auto-fetch for YouTube)
+export async function refreshMarketingEntryAnalytics(
+    id: string
+): Promise<{ success: boolean; entry?: MarketingEntry; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // First get the entry
+    const { data: entry, error: fetchError } = await adminClient
+        .from('marketing_entries')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (fetchError || !entry) {
+        return { success: false, error: 'Entry not found' }
+    }
+
+    // Only auto-fetch for YouTube
+    if (entry.platform !== 'youtube') {
+        return { success: false, error: 'Auto-fetch only available for YouTube. Use manual input for other platforms.' }
+    }
+
+    const stats = await fetchYouTubeStats(entry.url)
+    if (!stats) {
+        return { success: false, error: 'Could not fetch YouTube analytics. Check if API key is configured.' }
+    }
+
+    // Update entry with fetched stats
+    const { data: updated, error: updateError } = await adminClient
+        .from('marketing_entries')
+        .update({
+            impressions: stats.viewCount,
+            engagement: stats.likeCount + stats.commentCount,
+            title: stats.title || entry.title,
+            image_url: stats.thumbnail || entry.image_url
+        })
+        .eq('id', id)
+        .select()
+        .single()
+
+    if (updateError) {
+        return { success: false, error: updateError.message }
+    }
+
+    return { success: true, entry: updated }
 }

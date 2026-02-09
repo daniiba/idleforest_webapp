@@ -9,7 +9,7 @@ import { Loader2, CheckCircle } from 'lucide-react';
 
 export default function ResetPasswordPage() {
     const router = useRouter();
-    const { session } = useAuth();
+    const { session, loading: authLoading } = useAuth();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -18,14 +18,16 @@ export default function ResetPasswordPage() {
     const [checkingSession, setCheckingSession] = useState(true);
 
     useEffect(() => {
-        // Check if user has a valid session (from reset link)
-        if (session === null) {
-            // No session means they didn't come from a valid reset link
-            router.push('/auth/user/forgot-password');
-        } else if (session !== null) {
-            setCheckingSession(false);
+        if (!authLoading) {
+            // Check if user has a valid session (from reset link)
+            if (session === null) {
+                // No session means they didn't come from a valid reset link
+                router.push('/auth/user/forgot-password');
+            } else {
+                setCheckingSession(false);
+            }
         }
-    }, [session, router]);
+    }, [session, authLoading, router]);
 
     const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

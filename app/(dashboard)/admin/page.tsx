@@ -1,6 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
+import { plantingsData } from '@/lib/plantings'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
     Table,
@@ -10,16 +13,16 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import { Area, AreaChart, Bar, CartesianGrid, Line, XAxis, YAxis, ComposedChart, Legend } from 'recharts'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, XAxis, YAxis, ComposedChart, Legend } from 'recharts'
 import {
     ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Email Preview Component with proper scaling
@@ -51,7 +54,7 @@ const EmailPreview = ({ html, subject, className = "" }: { html: string; subject
 // Hardcoded Financial Data
 const FINANCIAL_DATA = {
     totalCosts: 980.00, // Fixed costs only
-    marketingSpent: 100.00, // Actual marketing spent so far (for CAC)
+    marketingSpent: 700.00, // Actual marketing spent so far (for CAC)
     costBreakdown: [
         { category: 'Tech Fix Fee', amount: 300.00 },
         { category: 'Salary Cost', amount: 680.00 },
@@ -61,6 +64,10 @@ const FINANCIAL_DATA = {
 // Chart Configs
 const wauChartConfig = {
     wauAvg: { label: "Weekly Active Users", color: "hsl(var(--chart-1))" },
+} satisfies ChartConfig
+
+const desktopChartConfig = {
+    wauAvg: { label: "Desktop WAU", color: "hsl(217, 91%, 60%)" },
 } satisfies ChartConfig
 
 const growthChartConfig = {
@@ -74,6 +81,8 @@ const revenueChartConfig = {
     arpu: { label: "ARPU (€)", color: "hsl(var(--chart-2))" },
 } satisfies ChartConfig
 
+
+
 const projectionChartConfig = {
     organicWau: { label: "Organic WAU", color: "hsl(142, 76%, 45%)" },
     paidWau: { label: "+ Paid Users", color: "hsl(217, 91%, 60%)" },
@@ -86,6 +95,10 @@ const paidGrowthChartConfig = {
     aggressive: { label: "Aggressive", color: "hsl(0, 72%, 51%)" },
     moderate: { label: "Moderate", color: "hsl(45, 93%, 47%)" },
     conservative: { label: "Conservative", color: "hsl(142, 76%, 45%)" },
+} satisfies ChartConfig
+
+const churnChartConfig = {
+    uninstallRate: { label: "Uninstall Rate", color: "hsl(0, 72%, 51%)" },
 } satisfies ChartConfig
 
 export default function AdminPage() {
@@ -102,7 +115,20 @@ export default function AdminPage() {
         totalUsersCount: number,
         newTotalUsersCount: number,
         activeUsersCount: number,
-        churnRate: number
+        churnRate: number,
+        // Platform breakdown
+        chromeWau: number,
+        chromeWauCurrent: number,
+        desktopWau: number,
+        extensionNodeCount: number,
+        desktopNodeCount: number,
+        extensionRevenueShare: number,
+        desktopRevenueShare: number,
+        extensionRevenue: number,
+        desktopRevenue: number,
+        extensionArpu: number,
+        desktopArpu: number,
+        desktopOptOutRate: number
     } | null>(null)
     const [revenueHistory, setRevenueHistory] = useState<{ month: string; earnings: number; revenue: number }[]>([])
     const [showDetails, setShowDetails] = useState(false)
@@ -151,6 +177,453 @@ export default function AdminPage() {
     // Sync All Users State
     const [isSyncingAllUsers, setIsSyncingAllUsers] = useState(false)
     const [syncAllUsersResult, setSyncAllUsersResult] = useState<{ success: boolean; message: string } | null>(null)
+
+    // PDF Report State
+    const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+
+    // Marketing Entries State (persisted to database)
+    const [marketingEntries, setMarketingEntries] = useState<MarketingEntry[]>([])
+    const [isLoadingEntries, setIsLoadingEntries] = useState(false)
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1) // 1-12
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+    const [newEntryUrl, setNewEntryUrl] = useState('')
+    const [newEntryCost, setNewEntryCost] = useState('')
+    const [newEntryNotes, setNewEntryNotes] = useState('')
+    const [newEntryImpressions, setNewEntryImpressions] = useState('')
+    const [newEntryClicks, setNewEntryClicks] = useState('')
+    const [newEntryEngagement, setNewEntryEngagement] = useState('')
+    const [isAddingEntry, setIsAddingEntry] = useState(false)
+    const [editingEntryId, setEditingEntryId] = useState<string | null>(null)
+    const [editEntryCost, setEditEntryCost] = useState('')
+    const [editEntryNotes, setEditEntryNotes] = useState('')
+    const [editEntryImpressions, setEditEntryImpressions] = useState('')
+    const [editEntryClicks, setEditEntryClicks] = useState('')
+    const [editEntryEngagement, setEditEntryEngagement] = useState('')
+    const [refreshingEntryId, setRefreshingEntryId] = useState<string | null>(null)
+    const [marketingTotals, setMarketingTotals] = useState({ totalCost: 0, totalImpressions: 0, totalClicks: 0, totalEngagement: 0 })
+
+    // Fetch marketing entries for selected month/year
+    const fetchMarketingEntries = async () => {
+        setIsLoadingEntries(true)
+        try {
+            const data = await getMarketingEntriesForReport(selectedMonth, selectedYear)
+            setMarketingEntries(data.entries)
+            setMarketingTotals({
+                totalCost: data.totalCost,
+                totalImpressions: data.totalImpressions,
+                totalClicks: data.totalClicks,
+                totalEngagement: data.totalEngagement
+            })
+        } catch (error) {
+            console.error('Error fetching marketing entries:', error)
+        } finally {
+            setIsLoadingEntries(false)
+        }
+    }
+
+    // Add new marketing entry
+    const handleAddMarketingEntry = async () => {
+        if (!newEntryUrl.trim() || isAddingEntry) return
+
+        setIsAddingEntry(true)
+        try {
+            const result = await createMarketingEntry({
+                url: newEntryUrl.trim(),
+                cost: newEntryCost ? parseFloat(newEntryCost) : null,
+                notes: newEntryNotes.trim() || null,
+                impressions: newEntryImpressions ? parseInt(newEntryImpressions) : null,
+                clicks: newEntryClicks ? parseInt(newEntryClicks) : null,
+                engagement: newEntryEngagement ? parseInt(newEntryEngagement) : null,
+                month: selectedMonth,
+                year: selectedYear
+            })
+
+            if (result.success) {
+                setNewEntryUrl('')
+                setNewEntryCost('')
+                setNewEntryNotes('')
+                setNewEntryImpressions('')
+                setNewEntryClicks('')
+                setNewEntryEngagement('')
+                await fetchMarketingEntries()
+            }
+        } catch (error) {
+            console.error('Error adding marketing entry:', error)
+        } finally {
+            setIsAddingEntry(false)
+        }
+    }
+
+    // Update marketing entry
+    const handleUpdateMarketingEntry = async (id: string) => {
+        try {
+            await updateMarketingEntry(id, {
+                cost: editEntryCost ? parseFloat(editEntryCost) : null,
+                notes: editEntryNotes.trim() || null,
+                impressions: editEntryImpressions ? parseInt(editEntryImpressions) : null,
+                clicks: editEntryClicks ? parseInt(editEntryClicks) : null,
+                engagement: editEntryEngagement ? parseInt(editEntryEngagement) : null
+            })
+            setEditingEntryId(null)
+            await fetchMarketingEntries()
+        } catch (error) {
+            console.error('Error updating marketing entry:', error)
+        }
+    }
+
+    // Delete marketing entry
+    const handleDeleteMarketingEntry = async (id: string) => {
+        if (!confirm('Delete this entry?')) return
+        try {
+            await deleteMarketingEntry(id)
+            await fetchMarketingEntries()
+        } catch (error) {
+            console.error('Error deleting marketing entry:', error)
+        }
+    }
+
+    // Start editing an entry
+    const startEditingEntry = (entry: MarketingEntry) => {
+        setEditingEntryId(entry.id)
+        setEditEntryCost(entry.cost?.toString() || '')
+        setEditEntryNotes(entry.notes || '')
+        setEditEntryImpressions(entry.impressions?.toString() || '')
+        setEditEntryClicks(entry.clicks?.toString() || '')
+        setEditEntryEngagement(entry.engagement?.toString() || '')
+    }
+
+    // Refresh YouTube analytics for an entry
+    const handleRefreshAnalytics = async (id: string) => {
+        setRefreshingEntryId(id)
+        try {
+            const { refreshMarketingEntryAnalytics } = await import('./actions')
+            const result = await refreshMarketingEntryAnalytics(id)
+            if (result.success) {
+                await fetchMarketingEntries()
+            } else {
+                alert(result.error || 'Failed to refresh analytics')
+            }
+        } catch (error) {
+            console.error('Error refreshing analytics:', error)
+            alert('Failed to refresh analytics')
+        } finally {
+            setRefreshingEntryId(null)
+        }
+    }
+
+
+    // Calculate trees planted this month from plantings data
+    const getTreesThisMonth = () => {
+        const now = new Date()
+        const currentMonth = now.getMonth()
+        const currentYear = now.getFullYear()
+
+        return plantingsData.events.filter(event => {
+            const eventDate = new Date(event.date)
+            return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear
+        }).reduce((sum, event) => sum + event.trees, 0)
+    }
+
+    // Calculate total trees planted
+    const getTotalTrees = () => {
+        return plantingsData.events.reduce((sum, event) => sum + event.trees, 0)
+    }
+
+    // Get donations this month
+    const getDonationsThisMonth = () => {
+        const now = new Date()
+        const currentMonth = now.getMonth()
+        const currentYear = now.getFullYear()
+
+        return plantingsData.receipts
+            .filter(receipt => {
+                if (!receipt.date) return false
+                const receiptDate = new Date(receipt.date)
+                return receiptDate.getMonth() === currentMonth && receiptDate.getFullYear() === currentYear
+            })
+            .reduce((sum, receipt) => sum + (receipt.amount || 0), 0)
+    }
+
+    // Generate structured Monthly Report PDF
+    const generateMonthlyReport = async () => {
+        if (isGeneratingPdf || !stats) return
+
+        const previousTab = activeTab
+        setIsGeneratingPdf(true)
+
+        try {
+            // 1. Ensure we are on the data tab so charts are rendered
+            if (activeTab !== 'real-data') {
+                setActiveTab('real-data')
+                // Small delay to allow charts to render
+                await new Promise(resolve => setTimeout(resolve, 1000))
+            }
+
+            // 2. Capture charts
+            const wauChart = document.getElementById('wau-chart')
+            const desktopChart = document.getElementById('desktop-chart')
+            const growthChart = document.getElementById('acquisition-chart')
+            const revenueChart = document.getElementById('revenue-chart')
+
+            const chartImages: { [key: string]: string | null } = {
+                wau: null,
+                desktop: null,
+                growth: null,
+                revenue: null
+            }
+
+            if (wauChart) {
+                const canvas = await html2canvas(wauChart, { scale: 2 })
+                chartImages.wau = canvas.toDataURL('image/png')
+            }
+
+            if (desktopChart) {
+                const canvas = await html2canvas(desktopChart, { scale: 2 })
+                chartImages.desktop = canvas.toDataURL('image/png')
+            }
+
+            if (growthChart) {
+                const canvas = await html2canvas(growthChart, { scale: 2 })
+                chartImages.growth = canvas.toDataURL('image/png')
+            }
+
+            if (revenueChart) {
+                const canvas = await html2canvas(revenueChart, { scale: 2 })
+                chartImages.revenue = canvas.toDataURL('image/png')
+            }
+
+            // 3. Generate PDF
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            })
+
+            const pageWidth = pdf.internal.pageSize.getWidth()
+            const margin = 20
+            let y = 20
+
+            // Current month/year
+            const now = new Date()
+            const monthYear = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+
+            // === HEADER ===
+            pdf.setFillColor(252, 211, 77) // brand-yellow
+            pdf.rect(0, 0, pageWidth, 40, 'F')
+
+            pdf.setFontSize(28)
+            pdf.setFont('helvetica', 'bold')
+            pdf.setTextColor(0, 0, 0)
+            pdf.text('IdleForest', margin, 25)
+
+            pdf.setFontSize(14)
+            pdf.setFont('helvetica', 'normal')
+            pdf.text(`Monthly Report - ${monthYear}`, margin, 35)
+
+            y = 55
+
+            // === USER METRICS ===
+            pdf.setFontSize(16)
+            pdf.setFont('helvetica', 'bold')
+            pdf.setTextColor(34, 34, 34)
+            pdf.text('User Metrics', margin, y)
+            y += 10
+
+            pdf.setFontSize(11)
+            pdf.setFont('helvetica', 'normal')
+            pdf.text(`Total Users: ${stats.totalUsersCount.toLocaleString()}`, margin, y)
+            y += 6
+            pdf.text(`New Users This Month: +${stats.newTotalUsersCount.toLocaleString()}`, margin, y)
+            y += 6
+            pdf.text(`Weekly Active Users: ${(stats.chromeWauCurrent + stats.desktopWau).toLocaleString()} (${stats.chromeWauCurrent} extension + ${stats.desktopWau} desktop)`, margin, y)
+            y += 6
+            pdf.text(`Monthly Churn Rate: ${(stats.churnRate * 100).toFixed(1)}%`, margin, y)
+            y += 15
+
+            // === FINANCIALS ===
+            pdf.setFontSize(16)
+            pdf.setFont('helvetica', 'bold')
+            pdf.text('Financials', margin, y)
+            y += 10
+
+            const profit = stats.monthlyRevenue - FINANCIAL_DATA.totalCosts
+            pdf.setFontSize(11)
+            pdf.setFont('helvetica', 'normal')
+            pdf.text(`Revenue: EUR ${stats.monthlyRevenue.toFixed(2)}`, margin, y)
+            y += 6
+            pdf.text(`Costs: EUR ${FINANCIAL_DATA.totalCosts.toFixed(2)}`, margin, y)
+            y += 6
+            pdf.text(`Marketing Spent: EUR ${FINANCIAL_DATA.marketingSpent.toFixed(2)}`, margin, y)
+            y += 6
+            pdf.setFont('helvetica', 'bold')
+            pdf.text(`Profit/Loss: EUR ${profit.toFixed(2)}`, margin, y)
+            pdf.setFont('helvetica', 'normal')
+            y += 15
+
+            // === ENVIRONMENTAL IMPACT ===
+            const treesThisMonth = getTreesThisMonth()
+            const totalTrees = getTotalTrees()
+            const donationsThisMonth = getDonationsThisMonth()
+
+            pdf.setFontSize(16)
+            pdf.setFont('helvetica', 'bold')
+            pdf.text('Environmental Impact', margin, y)
+            y += 10
+
+            pdf.setFontSize(11)
+            pdf.setFont('helvetica', 'normal')
+            if (treesThisMonth > 0) {
+                pdf.text(`Trees Planted This Month: ${treesThisMonth.toLocaleString()}`, margin, y)
+                y += 6
+            }
+            pdf.text(`Total Trees Planted: ${totalTrees.toLocaleString()}`, margin, y)
+            y += 6
+            if (donationsThisMonth > 0) {
+                pdf.text(`Donations This Month: $${donationsThisMonth.toFixed(2)}`, margin, y)
+                y += 6
+            }
+            y += 10
+
+            // === POSTS & PARTNERSHIPS ===
+            if (marketingEntries.length > 0) {
+                pdf.setFontSize(16)
+                pdf.setFont('helvetica', 'bold')
+                pdf.text('Posts & Partnerships', margin, y)
+                y += 10
+
+                // Show total marketing cost
+                if (marketingTotals.totalCost > 0) {
+                    pdf.setFontSize(11)
+                    pdf.setFont('helvetica', 'bold')
+                    pdf.text(`Total Marketing Cost: EUR ${marketingTotals.totalCost.toFixed(2)}`, margin, y)
+                    pdf.setFont('helvetica', 'normal')
+                    y += 8
+                }
+
+                pdf.setFontSize(11)
+                for (const entry of marketingEntries) {
+                    // Check if we need a new page
+                    if (y > 270) {
+                        pdf.addPage()
+                        y = 20
+                    }
+
+                    const costStr = entry.cost ? ` (EUR ${entry.cost.toFixed(2)})` : ''
+                    // Clean title to remove emojis/special chars if needed, though simpler chars might pass
+                    // For now, assuming title is mostly safe text
+                    pdf.text(`- ${entry.title}${costStr}`, margin, y)
+                    y += 5
+                    pdf.setTextColor(60, 100, 180)
+                    pdf.text(`  ${entry.url}`, margin, y)
+                    pdf.setTextColor(34, 34, 34)
+                    if (entry.notes) {
+                        y += 4
+                        pdf.setTextColor(100, 100, 100)
+                        pdf.text(`  ${entry.notes}`, margin, y)
+                        pdf.setTextColor(34, 34, 34)
+                    }
+                    y += 7
+                }
+                y += 5
+            }
+
+            // === CHARTS PAGE ===
+            if (chartImages.wau || chartImages.desktop) {
+                pdf.addPage()
+                let chartY = 20
+
+                pdf.setFontSize(16)
+                pdf.setFont('helvetica', 'bold')
+                pdf.text('Weekly Active Users', margin, chartY)
+                chartY += 10
+
+                if (chartImages.wau) {
+                    // Fit width, maintain aspect ratio roughly
+                    const imgProps = pdf.getImageProperties(chartImages.wau)
+                    const pdfImgWidth = pageWidth - (margin * 2)
+                    const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width
+
+                    pdf.addImage(chartImages.wau, 'PNG', margin, chartY, pdfImgWidth, pdfImgHeight)
+                    chartY += pdfImgHeight + 10
+                }
+
+                if (chartImages.desktop) {
+                    if (chartY > 200) { pdf.addPage(); chartY = 20; }
+
+                    pdf.setFontSize(16)
+                    pdf.setFont('helvetica', 'bold')
+                    pdf.text('Desktop Growth', margin, chartY)
+                    chartY += 10
+
+                    const imgProps = pdf.getImageProperties(chartImages.desktop)
+                    const pdfImgWidth = pageWidth - (margin * 2)
+                    const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width
+
+                    pdf.addImage(chartImages.desktop, 'PNG', margin, chartY, pdfImgWidth, pdfImgHeight)
+                    chartY += pdfImgHeight + 10
+                }
+            }
+
+            // === REVENUE & GROWTH CHARTS PAGE ===
+            if (chartImages.revenue || chartImages.growth) {
+                pdf.addPage()
+                let chartY = 20
+
+                if (chartImages.revenue) {
+                    pdf.setFontSize(16)
+                    pdf.setFont('helvetica', 'bold')
+                    pdf.text('Revenue Trends', margin, chartY)
+                    chartY += 10
+
+                    const imgProps = pdf.getImageProperties(chartImages.revenue)
+                    const pdfImgWidth = pageWidth - (margin * 2)
+                    const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width
+
+                    pdf.addImage(chartImages.revenue, 'PNG', margin, chartY, pdfImgWidth, pdfImgHeight)
+                    chartY += pdfImgHeight + 10
+                }
+
+                if (chartImages.growth) {
+                    if (chartY > 200) { pdf.addPage(); chartY = 20; }
+
+                    pdf.setFontSize(16)
+                    pdf.setFont('helvetica', 'bold')
+                    pdf.text('Acquisition & Churn', margin, chartY)
+                    chartY += 10
+
+                    const imgProps = pdf.getImageProperties(chartImages.growth)
+                    const pdfImgWidth = pageWidth - (margin * 2)
+                    const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width
+
+                    pdf.addImage(chartImages.growth, 'PNG', margin, chartY, pdfImgWidth, pdfImgHeight)
+                    chartY += pdfImgHeight + 10
+                }
+            }
+
+            // === FOOTER ===
+            const footerY = pdf.internal.pageSize.getHeight() - 15
+            pdf.setFontSize(9)
+            pdf.setTextColor(100, 100, 100)
+            const checkPage = pdf.getNumberOfPages()
+            for (let i = 1; i <= checkPage; i++) {
+                pdf.setPage(i)
+                pdf.text(`Generated on ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, margin, footerY)
+                pdf.text('idleforest.io', pageWidth - margin - 25, footerY)
+            }
+
+            // Generate filename with month-year
+            const filename = `idleforest-report-${monthYear.toLowerCase().replace(' ', '-')}.pdf`
+            pdf.save(filename)
+        } catch (error) {
+            console.error('Error generating PDF:', error)
+            alert('Failed to generate PDF. See console for details.')
+        } finally {
+            if (activeTab !== previousTab) {
+                setActiveTab(previousTab)
+            }
+            setIsGeneratingPdf(false)
+        }
+    }
 
     // Check for existing session on mount (server-side cookie check)
     useEffect(() => {
@@ -592,16 +1065,30 @@ export default function AdminPage() {
     const targetMaxCac = ltv / 3
 
     // Monthly revenue per WAU - merge actual revenue with WAU data
+    // For months where we have desktop data, add it to total WAU for accurate ARPU
     const monthlyMetricsData = chromeStoreData.monthlyData.map((m) => {
         const revenueData = revenueHistory.find(r => r.month === m.month)
         const actualRevenue = revenueData?.revenue || 0
-        const actualArpu = m.wauAvg > 0 ? (actualRevenue / m.wauAvg) : 0
+
+        // Check if we have desktop data for this month
+        const desktopDataForMonth = chromeStoreData.desktopData.find(d => d.month === m.month)
+        const desktopWauForMonth = desktopDataForMonth?.wauAvg || 0
+        const totalWauForMonth = m.wauAvg + desktopWauForMonth
+
+        const actualArpu = totalWauForMonth > 0 ? (actualRevenue / totalWauForMonth) : 0
+        // Monthly uninstall rate = uninstalls / installs for that month
+        const uninstallRate = m.installs > 0 ? (m.uninstalls / m.installs) * 100 : 0
         return {
             ...m,
             revenue: Math.round(actualRevenue * 100) / 100,
-            arpu: Math.round(actualArpu * 100) / 100
+            arpu: Math.round(actualArpu * 100) / 100,
+            totalWau: totalWauForMonth,
+            hasDesktopData: desktopWauForMonth > 0,
+            uninstallRate: Math.round(uninstallRate * 10) / 10 // Percentage with 1 decimal
         }
     })
+
+
 
     // Year-end projections for profitability
     const currentMonthlyRevenue = stats.monthlyRevenue
@@ -769,6 +1256,17 @@ export default function AdminPage() {
                                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Marketing Spent</div>
                                 <div className="text-2xl font-extrabold font-candu text-black">€{FINANCIAL_DATA.marketingSpent}</div>
                             </div>
+                            <button
+                                onClick={generateMonthlyReport}
+                                disabled={isGeneratingPdf}
+                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                            >
+                                {isGeneratingPdf ? (
+                                    <><Loader2 className="h-4 w-4 animate-spin" /> Generating...</>
+                                ) : (
+                                    <><Download className="h-4 w-4" /> Report</>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -788,14 +1286,19 @@ export default function AdminPage() {
                         if (value === 'audiences') {
                             fetchAudiences()
                         }
+                        if (value === 'marketing') {
+                            fetchMarketingEntries()
+                        }
                     }}
                     className="w-full" defaultValue={'real-data'}                 >
-                    <TabsList className="grid w-full max-w-2xl grid-cols-5 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
-                        <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Real Data</TabsTrigger>
+                    <TabsList className="grid w-full max-w-4xl grid-cols-7 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
+                        <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
                         <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
                         <TabsTrigger value="audiences" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📋 Lists</TabsTrigger>
                         <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
+                        <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
+                        <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="real-data" className="space-y-6 mt-6">
@@ -820,10 +1323,13 @@ export default function AdminPage() {
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Activity className="h-4 w-4 text-brand-navy" />
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active (Current)</p>
                                     </div>
-                                    <div className="text-3xl font-extrabold font-candu text-black">{currentWau}</div>
-                                    <p className="text-sm text-neutral-600 mt-1">Peak: {chromeStoreData.totals.peakWau}</p>
+                                    <div className="text-3xl font-extrabold font-candu text-black">{stats.chromeWauCurrent + stats.desktopWau}</div>
+                                    <p className="text-sm text-neutral-600 mt-1">
+                                        <span className="text-blue-600">{stats.chromeWauCurrent}</span> ext + <span className="text-purple-600">{stats.desktopWau}</span> desktop
+                                    </p>
+                                    <p className="text-xs text-neutral-400 mt-1">Avg: {stats.chromeWau + stats.desktopWau} (used for ARPU)</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <div className="flex items-center gap-2 mb-2">
@@ -878,14 +1384,44 @@ export default function AdminPage() {
                                     <p className="text-xs text-neutral-600 mt-1">Target: 3x+</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU</div>
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Blended)</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{arpu.toFixed(2)}</div>
-                                    <p className="text-xs text-neutral-600 mt-1">Per active user</p>
+                                    <p className="text-xs text-neutral-600 mt-1">All platforms</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Churn</div>
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Monthly Churn <span className="text-blue-600">(Chrome)</span></div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{(churnRate * 100).toFixed(1)}%</div>
-                                    <p className="text-xs text-neutral-600 mt-1">Monthly</p>
+                                    <p className="text-xs text-neutral-600 mt-1">Avg uninstalls / installs</p>
+                                </div>
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Opt-Out Rate <span className="text-purple-600">(Desktop)</span></div>
+                                    <div className="text-2xl font-extrabold font-candu text-black">{(stats.desktopOptOutRate * 100).toFixed(1)}%</div>
+                                    <p className="text-xs text-neutral-600 mt-1">{stats.desktopNodeCount} desktop nodes</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Platform Breakdown */}
+                        <section>
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                                <Activity className="h-5 w-5 text-brand-navy" />
+                                Platform Breakdown
+                            </h2>
+                            <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension ARPU</div>
+                                    <div className="text-2xl font-extrabold font-candu text-blue-600">€{stats.extensionArpu.toFixed(2)}</div>
+                                    <p className="text-xs text-neutral-600 mt-1">{stats.chromeWau} WAU • {(stats.extensionRevenueShare * 100).toFixed(0)}% of revenue</p>
+                                </div>
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension Nodes</div>
+                                    <div className="text-2xl font-extrabold font-candu text-black">{stats.extensionNodeCount}</div>
+                                    <p className="text-xs text-neutral-600 mt-1">Chrome Extension users</p>
+                                </div>
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Desktop Nodes</div>
+                                    <div className="text-2xl font-extrabold font-candu text-black">{stats.desktopNodeCount}</div>
+                                    <p className="text-xs text-neutral-600 mt-1">Windows + macOS users</p>
                                 </div>
                             </div>
                         </section>
@@ -923,8 +1459,8 @@ export default function AdminPage() {
                         {/* Charts - 2 Column Grid */}
                         <section>
                             <h2 className="text-xl font-extrabold mb-4 font-candu uppercase text-black">Growth Trends</h2>
-                            <div className="grid gap-4 lg:grid-cols-2">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div className="grid gap-4 lg:grid-cols-3">
+                                <div id="wau-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Weekly Active Users</h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         {chromeStoreData.yearOverYear.startWau} → {chromeStoreData.yearOverYear.endWau} ({chromeStoreData.yearOverYear.wauGrowth})
@@ -946,8 +1482,8 @@ export default function AdminPage() {
                                     </ChartContainer>
                                 </div>
 
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
-                                    <h3 className="text-base font-bold text-black mb-1">Acquisition & Churn</h3>
+                                <div id="acquisition-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                    <h3 className="text-base font-bold text-black mb-1">Acquisition & Churn <span className="text-amber-600 text-sm font-normal">(Chrome Store only)</span></h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         {chromeStoreData.totals.totalInstalls} installs, {chromeStoreData.totals.totalUninstalls} uninstalls ({chromeStoreData.totals.netUsers} net)
                                     </p>
@@ -964,13 +1500,29 @@ export default function AdminPage() {
                                         </ComposedChart>
                                     </ChartContainer>
                                 </div>
+
+                                <div id="desktop-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                    <h3 className="text-base font-bold text-black mb-1">Desktop App Growth</h3>
+                                    <p className="text-xs text-neutral-600 mb-4">
+                                        Active users on desktop app
+                                    </p>
+                                    <ChartContainer config={desktopChartConfig} className="h-[200px] w-full">
+                                        <BarChart data={chromeStoreData.desktopData} margin={{ left: 0, right: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" tickFormatter={(v) => v.replace(' 2026', '').slice(0, 3)} fontSize={11} />
+                                            <YAxis fontSize={11} />
+                                            <ChartTooltip content={<ChartTooltipContent />} />
+                                            <Bar dataKey="wauAvg" fill="var(--color-wauAvg)" radius={4} />
+                                        </BarChart>
+                                    </ChartContainer>
+                                </div>
                             </div>
                         </section>
 
                         {/* Revenue Chart */}
-                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <div id="revenue-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                             <h3 className="text-base font-bold text-black mb-1">Revenue & ARPU Trend</h3>
-                            <p className="text-xs text-neutral-600 mb-4">Monthly revenue and ARPU per WAU</p>
+                            <p className="text-xs text-neutral-600 mb-4">ARPU includes desktop WAU where available (Jan 2026+)</p>
                             <ChartContainer config={revenueChartConfig} className="h-[200px] w-full">
                                 <ComposedChart data={monthlyMetricsData} margin={{ left: 0, right: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
@@ -984,6 +1536,367 @@ export default function AdminPage() {
                                 </ComposedChart>
                             </ChartContainer>
                         </div>
+
+                    </TabsContent>
+
+                    {/* MARKETING TAB - Posts & Partnerships with Database Persistence */}
+                    <TabsContent value="marketing" className="space-y-6 mt-6">
+                        {/* Month/Year Selector */}
+                        <div className="flex flex-wrap items-center gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-bold">Month:</label>
+                                <select
+                                    value={selectedMonth}
+                                    onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                                    className="border-2 border-black px-3 py-2 font-bold"
+                                >
+                                    {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
+                                        <option key={i + 1} value={i + 1}>{m}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-bold">Year:</label>
+                                <select
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                                    className="border-2 border-black px-3 py-2 font-bold"
+                                >
+                                    {[2024, 2025, 2026, 2027].map(y => (
+                                        <option key={y} value={y}>{y}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <button
+                                onClick={fetchMarketingEntries}
+                                disabled={isLoadingEntries}
+                                className="bg-brand-yellow border-2 border-black px-4 py-2 font-bold text-sm uppercase flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+                            >
+                                {isLoadingEntries ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                                Load
+                            </button>
+                        </div>
+
+                        {/* Add new entry form */}
+                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                                <Plus className="h-5 w-5 text-brand-navy" />
+                                Add Entry
+                            </h2>
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                                <div className="lg:col-span-2">
+                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">URL *</label>
+                                    <input
+                                        type="url"
+                                        placeholder="Paste URL (Instagram, YouTube, LinkedIn, etc.)"
+                                        value={newEntryUrl}
+                                        onChange={(e) => setNewEntryUrl(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAddMarketingEntry()}
+                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        YouTube videos: analytics can be auto-fetched after adding
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Cost (€)</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={newEntryCost}
+                                        onChange={(e) => setNewEntryCost(e.target.value)}
+                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Notes</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Optional notes..."
+                                        value={newEntryNotes}
+                                        onChange={(e) => setNewEntryNotes(e.target.value)}
+                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Analytics fields (collapsible) */}
+                            <details className="mt-4">
+                                <summary className="text-xs font-bold uppercase text-neutral-500 cursor-pointer hover:text-neutral-700">
+                                    + Manual Analytics (optional - for non-YouTube)
+                                </summary>
+                                <div className="grid gap-4 sm:grid-cols-3 mt-3 pt-3 border-t border-gray-200">
+                                    <div>
+                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Impressions/Views</label>
+                                        <input
+                                            type="number"
+                                            placeholder="0"
+                                            value={newEntryImpressions}
+                                            onChange={(e) => setNewEntryImpressions(e.target.value)}
+                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Clicks</label>
+                                        <input
+                                            type="number"
+                                            placeholder="0"
+                                            value={newEntryClicks}
+                                            onChange={(e) => setNewEntryClicks(e.target.value)}
+                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Engagement (likes, comments)</label>
+                                        <input
+                                            type="number"
+                                            placeholder="0"
+                                            value={newEntryEngagement}
+                                            onChange={(e) => setNewEntryEngagement(e.target.value)}
+                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            </details>
+
+                            <button
+                                onClick={handleAddMarketingEntry}
+                                disabled={!newEntryUrl.trim() || isAddingEntry}
+                                className="mt-4 bg-brand-yellow border-2 border-black px-6 py-3 font-bold text-sm uppercase disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            >
+                                {isAddingEntry ? (
+                                    <><Loader2 className="h-4 w-4 animate-spin" /> Adding...</>
+                                ) : (
+                                    <><Plus className="h-4 w-4" /> Add Entry</>
+                                )}
+                            </button>
+                        </section>
+
+                        {/* Entries List */}
+                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                                <Link2 className="h-5 w-5 text-brand-navy" />
+                                Entries ({marketingEntries.length})
+                            </h2>
+
+                            {isLoadingEntries ? (
+                                <div className="py-12 flex justify-center">
+                                    <Loader2 className="h-8 w-8 animate-spin text-brand-navy" />
+                                </div>
+                            ) : marketingEntries.length > 0 ? (
+                                <div className="space-y-4">
+                                    {marketingEntries.map((entry) => (
+                                        <div key={entry.id} className="flex gap-4 p-4 bg-gray-50 border-2 border-gray-200 hover:border-black transition-colors">
+                                            {/* Thumbnail */}
+                                            {entry.image_url && (
+                                                <div className="w-20 h-20 flex-shrink-0 bg-gray-200 border border-gray-300 overflow-hidden">
+                                                    <img
+                                                        src={entry.image_url}
+                                                        alt=""
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => (e.currentTarget.style.display = 'none')}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {/* Content */}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                    <span className={`text-xs font-bold uppercase px-2 py-0.5 ${entry.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                                                        entry.platform === 'youtube' ? 'bg-red-600 text-white' :
+                                                            entry.platform === 'linkedin' ? 'bg-blue-700 text-white' :
+                                                                entry.platform === 'twitter' ? 'bg-black text-white' :
+                                                                    'bg-gray-600 text-white'
+                                                        }`}>
+                                                        {entry.platform}
+                                                    </span>
+                                                    {entry.cost && (
+                                                        <span className="text-sm font-bold text-green-700">€{entry.cost.toFixed(2)}</span>
+                                                    )}
+                                                    {/* Analytics badges */}
+                                                    {entry.impressions && (
+                                                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                                                            {entry.impressions.toLocaleString()} views
+                                                        </span>
+                                                    )}
+                                                    {entry.clicks && (
+                                                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                                                            {entry.clicks.toLocaleString()} clicks
+                                                        </span>
+                                                    )}
+                                                    {entry.engagement && (
+                                                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+                                                            {entry.engagement.toLocaleString()} engagement
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <h3 className="font-bold text-sm line-clamp-1 mb-1">{entry.title}</h3>
+                                                <a href={entry.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate block">
+                                                    {entry.url}
+                                                </a>
+
+                                                {/* Edit Mode */}
+                                                {editingEntryId === entry.id ? (
+                                                    <div className="mt-2 space-y-2">
+                                                        <div className="flex gap-2 items-center flex-wrap">
+                                                            <input
+                                                                type="number"
+                                                                step="0.01"
+                                                                placeholder="Cost €"
+                                                                value={editEntryCost}
+                                                                onChange={(e) => setEditEntryCost(e.target.value)}
+                                                                className="w-24 px-2 py-1 border-2 border-black text-sm"
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Notes"
+                                                                value={editEntryNotes}
+                                                                onChange={(e) => setEditEntryNotes(e.target.value)}
+                                                                className="flex-1 min-w-[100px] px-2 py-1 border-2 border-black text-sm"
+                                                            />
+                                                        </div>
+                                                        <div className="flex gap-2 items-center flex-wrap">
+                                                            <input
+                                                                type="number"
+                                                                placeholder="Views"
+                                                                value={editEntryImpressions}
+                                                                onChange={(e) => setEditEntryImpressions(e.target.value)}
+                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                placeholder="Clicks"
+                                                                value={editEntryClicks}
+                                                                onChange={(e) => setEditEntryClicks(e.target.value)}
+                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                placeholder="Engagement"
+                                                                value={editEntryEngagement}
+                                                                onChange={(e) => setEditEntryEngagement(e.target.value)}
+                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                            />
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={() => handleUpdateMarketingEntry(entry.id)}
+                                                                className="px-3 py-1 bg-green-500 text-white text-xs font-bold"
+                                                            >
+                                                                Save
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setEditingEntryId(null)}
+                                                                className="px-3 py-1 bg-gray-300 text-black text-xs font-bold"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : entry.notes ? (
+                                                    <p className="text-xs text-gray-500 mt-1">{entry.notes}</p>
+                                                ) : null}
+                                            </div>
+
+                                            {/* Actions */}
+                                            {editingEntryId !== entry.id && (
+                                                <div className="flex flex-col gap-1">
+                                                    {/* YouTube refresh button */}
+                                                    {entry.platform === 'youtube' && (
+                                                        <button
+                                                            onClick={() => handleRefreshAnalytics(entry.id)}
+                                                            disabled={refreshingEntryId === entry.id}
+                                                            className="p-2 text-green-600 hover:bg-green-100 border border-transparent hover:border-green-200 disabled:opacity-50"
+                                                            title="Refresh YouTube analytics"
+                                                        >
+                                                            {refreshingEntryId === entry.id ? (
+                                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                            ) : (
+                                                                <RefreshCw className="h-4 w-4" />
+                                                            )}
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => startEditingEntry(entry)}
+                                                        className="p-2 text-blue-600 hover:bg-blue-100 border border-transparent hover:border-blue-200"
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteMarketingEntry(entry.id)}
+                                                        className="p-2 text-red-600 hover:bg-red-100 border border-transparent hover:border-red-200"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 text-neutral-400">
+                                    <Link2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                                    <p className="text-sm">No entries for this month. Add a URL above or load a different month.</p>
+                                </div>
+                            )}
+                        </section>
+                    </TabsContent>
+
+                    {/* REPORT TAB - Summary and PDF Generation */}
+                    <TabsContent value="report" className="space-y-6 mt-6">
+                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                                <FileText className="h-5 w-5 text-brand-navy" />
+                                Monthly Report Generator
+                            </h2>
+                            <p className="text-sm text-neutral-600 mb-6">Generate a comprehensive PDF report with user metrics, financials, environmental impact, and marketing entries from the current month.</p>
+
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-6">
+                                <div className="p-4 bg-green-50 border border-green-200">
+                                    <div className="text-xs font-bold uppercase text-green-700 mb-1">Trees This Month</div>
+                                    <div className="text-2xl font-bold text-green-800">{getTreesThisMonth().toLocaleString()}</div>
+                                </div>
+                                <div className="p-4 bg-blue-50 border border-blue-200">
+                                    <div className="text-xs font-bold uppercase text-blue-700 mb-1">Total Trees</div>
+                                    <div className="text-2xl font-bold text-blue-800">{getTotalTrees().toLocaleString()}</div>
+                                </div>
+                                <div className="p-4 bg-yellow-50 border border-yellow-200">
+                                    <div className="text-xs font-bold uppercase text-yellow-700 mb-1">Revenue</div>
+                                    <div className="text-2xl font-bold text-yellow-800">€{stats?.monthlyRevenue.toFixed(2) || '0.00'}</div>
+                                </div>
+                                <div className="p-4 bg-purple-50 border border-purple-200">
+                                    <div className="text-xs font-bold uppercase text-purple-700 mb-1">Marketing Entries</div>
+                                    <div className="text-2xl font-bold text-purple-800">{marketingEntries.length}</div>
+                                </div>
+                                <div className="p-4 bg-red-50 border border-red-200">
+                                    <div className="text-xs font-bold uppercase text-red-700 mb-1">Marketing Cost</div>
+                                    <div className="text-2xl font-bold text-red-800">€{marketingTotals.totalCost.toFixed(2)}</div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 border-2 border-gray-200 p-4 mb-6">
+                                <h3 className="font-bold text-sm mb-2">Report includes:</h3>
+                                <ul className="text-sm text-gray-600 grid gap-1">
+                                    <li>• User metrics (total users, new users, WAU, churn rate)</li>
+                                    <li>• Financials (revenue, costs, profit/loss)</li>
+                                    <li>• Environmental impact (trees planted, donations)</li>
+                                    <li>• Marketing entries from the Marketing tab ({marketingEntries.length} entries, €{marketingTotals.totalCost.toFixed(2)} total cost)</li>
+                                </ul>
+                            </div>
+
+                            <button
+                                onClick={generateMonthlyReport}
+                                disabled={isGeneratingPdf}
+                                className="w-full bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-4 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                            >
+                                {isGeneratingPdf ? (
+                                    <><Loader2 className="h-5 w-5 animate-spin" /> Generating PDF...</>
+                                ) : (
+                                    <><Download className="h-5 w-5" /> Generate Monthly Report PDF</>
+                                )}
+                            </button>
+                        </section>
                     </TabsContent>
 
                     <TabsContent value="projections" className="space-y-6 mt-6">

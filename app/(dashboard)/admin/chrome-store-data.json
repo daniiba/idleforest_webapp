@@ -1,64 +1,82 @@
 {
     "monthlyData": [
         {
+            "month": "Nov 2024",
+            "installs": 25,
+            "uninstalls": 13,
+            "netGrowth": 12,
+            "wauStart": 2,
+            "wauEnd": 12,
+            "wauAvg": 9
+        },
+        {
+            "month": "Dec 2024",
+            "installs": 17,
+            "uninstalls": 15,
+            "netGrowth": 2,
+            "wauStart": 12,
+            "wauEnd": 13,
+            "wauAvg": 16
+        },
+        {
             "month": "Jan 2025",
-            "installs": 15,
-            "uninstalls": 11,
+            "installs": 17,
+            "uninstalls": 13,
             "netGrowth": 4,
             "wauStart": 12,
             "wauEnd": 19,
-            "wauAvg": 17
+            "wauAvg": 16
         },
         {
             "month": "Feb 2025",
-            "installs": 56,
+            "installs": 58,
             "uninstalls": 10,
-            "netGrowth": 46,
+            "netGrowth": 48,
             "wauStart": 18,
             "wauEnd": 71,
             "wauAvg": 42
         },
         {
             "month": "Mar 2025",
-            "installs": 57,
-            "uninstalls": 23,
-            "netGrowth": 34,
+            "installs": 62,
+            "uninstalls": 25,
+            "netGrowth": 37,
             "wauStart": 72,
             "wauEnd": 130,
-            "wauAvg": 105
+            "wauAvg": 103
         },
         {
             "month": "Apr 2025",
-            "installs": 71,
-            "uninstalls": 19,
-            "netGrowth": 52,
+            "installs": 74,
+            "uninstalls": 20,
+            "netGrowth": 54,
             "wauStart": 132,
             "wauEnd": 188,
-            "wauAvg": 160
+            "wauAvg": 157
         },
         {
             "month": "May 2025",
-            "installs": 141,
+            "installs": 172,
             "uninstalls": 37,
-            "netGrowth": 104,
+            "netGrowth": 135,
             "wauStart": 190,
             "wauEnd": 338,
-            "wauAvg": 305
+            "wauAvg": 295
         },
         {
             "month": "Jun 2025",
-            "installs": 62,
-            "uninstalls": 23,
-            "netGrowth": 39,
+            "installs": 65,
+            "uninstalls": 25,
+            "netGrowth": 40,
             "wauStart": 337,
             "wauEnd": 403,
             "wauAvg": 365
         },
         {
             "month": "Jul 2025",
-            "installs": 62,
+            "installs": 68,
             "uninstalls": 41,
-            "netGrowth": 21,
+            "netGrowth": 27,
             "wauStart": 400,
             "wauEnd": 389,
             "wauAvg": 383
@@ -70,7 +88,7 @@
             "netGrowth": 3,
             "wauStart": 389,
             "wauEnd": 386,
-            "wauAvg": 385
+            "wauAvg": 384
         },
         {
             "month": "Sep 2025",
@@ -83,53 +101,80 @@
         },
         {
             "month": "Oct 2025",
-            "installs": 103,
-            "uninstalls": 44,
-            "netGrowth": 59,
+            "installs": 99,
+            "uninstalls": 46,
+            "netGrowth": 53,
             "wauStart": 420,
             "wauEnd": 471,
-            "wauAvg": 465
+            "wauAvg": 466
         },
         {
             "month": "Nov 2025",
-            "installs": 137,
+            "installs": 143,
             "uninstalls": 51,
-            "netGrowth": 86,
+            "netGrowth": 92,
             "wauStart": 473,
             "wauEnd": 488,
-            "wauAvg": 481
+            "wauAvg": 483
         },
         {
             "month": "Dec 2025",
-            "installs": 146,
-            "uninstalls": 44,
-            "netGrowth": 102,
+            "installs": 144,
+            "uninstalls": 48,
+            "netGrowth": 96,
             "wauStart": 499,
             "wauEnd": 408,
-            "wauAvg": 475
+            "wauAvg": 478
         },
         {
             "month": "Jan 2026",
-            "installs": 73,
-            "uninstalls": 26,
-            "netGrowth": 47,
+            "installs": 155,
+            "uninstalls": 59,
+            "netGrowth": 96,
             "wauStart": 415,
-            "wauEnd": 529,
-            "wauAvg": 480
+            "wauEnd": 563,
+            "wauAvg": 516
+        },
+        {
+            "month": "Feb 2026",
+            "installs": 33,
+            "uninstalls": 13,
+            "netGrowth": 20,
+            "wauStart": 558,
+            "wauEnd": 558,
+            "wauAvg": 559
+        }
+    ],
+    "desktopData": [
+        {
+            "month": "Nov 2025",
+            "wauAvg": 0
+        },
+        {
+            "month": "Dec 2025",
+            "wauAvg": 24
+        },
+        {
+            "month": "Jan 2026",
+            "wauAvg": 50
+        },
+        {
+            "month": "Feb 2026",
+            "wauAvg": 32
         }
     ],
     "totals": {
-        "totalInstalls": 1066,
-        "totalUninstalls": 396,
-        "netUsers": 670,
-        "currentWau": 529,
-        "peakWau": 549,
-        "peakWauDate": "Oct 20, 2025"
+        "totalInstalls": 1218,
+        "totalUninstalls": 471,
+        "netUsers": 747,
+        "currentWau": 558,
+        "peakWau": 564,
+        "peakWauDate": "Jan 29, 2026"
     },
     "yearOverYear": {
-        "wauGrowth": "44x",
-        "wauGrowthPercent": 4408,
-        "startWau": 12,
-        "endWau": 529
+        "wauGrowth": "279x",
+        "wauGrowthPercent": 27800,
+        "startWau": 2,
+        "endWau": 558
     }
 }
