@@ -26,9 +26,9 @@ function DiscordLinkContent() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 if (!user) {
-                    // Redirect to login if not authenticated
-                    const currentPath = `/discord/link?${searchParams.toString()}`
-                    router.push(`/auth/user/login?next=${encodeURIComponent(currentPath)}`)
+                    // Show login screen instead of auto-redirecting
+                    setStatus('unauthenticated')
+                    setIsLoading(false)
                     return
                 }
 
@@ -55,6 +55,34 @@ function DiscordLinkContent() {
 
         init()
     }, [router, searchParams])
+
+    const handleLoginWithDiscord = async () => {
+        setIsLoading(true)
+        try {
+            const origin = window.location.origin
+            const redirectUrl = `${origin}/discord/link`
+            const queryParams: Record<string, string> = {}
+            searchParams.forEach((value, key) => {
+                queryParams[key] = value
+            })
+
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'discord',
+                options: {
+                    redirectTo: redirectUrl,
+                    scopes: 'identify email guilds',
+                    queryParams: queryParams
+                }
+            })
+
+            if (error) throw error
+        } catch (err: any) {
+            console.error('Error logging in with Discord:', err)
+            setErrorMessage(err.message || 'Failed to login with Discord')
+            setStatus('error')
+            setIsLoading(false)
+        }
+    }
 
     const handleConnectDiscord = async () => {
         setIsLoading(true)
@@ -99,9 +127,37 @@ function DiscordLinkContent() {
         )
     }
 
-    // Note: 'unauthenticated' state handles the redirect, but we might render a flash or null while redirecting.
-    // However, if we want to be explicit, we can show a message "Redirecting to login..."
-    // For now, let's keep it simple. If router.push takes a moment, user sees loading.
+    if (status === 'unauthenticated') {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
+                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
+                    <div className="bg-brand-yellow w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
+                        <AlertCircle className="w-8 h-8 text-black" />
+                    </div>
+                    <h1 className="text-2xl font-bold font-candu uppercase text-brand-navy mb-4">
+                        Login Required
+                    </h1>
+                    <p className="text-neutral-600 mb-8">
+                        To continue setting up your team for <strong>{guildName || 'your server'}</strong>, please log in with Discord.
+                    </p>
+                    <button
+                        onClick={handleLoginWithDiscord}
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                    >
+                        Login with Discord
+                    </button>
+                    <div className="mt-6">
+                        <Link
+                            href="/"
+                            className="text-sm text-neutral-500 hover:text-black underline"
+                        >
+                            Back to Home
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     if (status === 'linking_required') {
         return (
