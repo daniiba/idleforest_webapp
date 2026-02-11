@@ -16,6 +16,9 @@ function DiscordLinkContent() {
     const [errorMessage, setErrorMessage] = useState('')
     const [teamData, setTeamData] = useState<{ name: string, slug: string } | null>(null)
     const [conflictTeamId, setConflictTeamId] = useState<string | null>(null)
+    const [conflictTeamRole, setConflictTeamRole] = useState<string | null>(null)
+    const [conflictTeamName, setConflictTeamName] = useState<string | null>(null)
+    const [conflictHasDiscord, setConflictHasDiscord] = useState<boolean>(false)
 
     const action = searchParams.get('action')
     const guildId = searchParams.get('guild_id')
@@ -39,6 +42,9 @@ function DiscordLinkContent() {
                 if (!response.ok) {
                     if (response.status === 409 && data.conflictTeamId) {
                         setConflictTeamId(data.conflictTeamId)
+                        setConflictTeamRole(data.conflictTeamRole)
+                        setConflictTeamName(data.conflictTeamName)
+                        setConflictHasDiscord(data.conflictHasDiscord)
                         setStatus('conflict_existing_team')
                         return
                     }
@@ -207,6 +213,37 @@ function DiscordLinkContent() {
         }
     }
 
+    const handleConnectExistingTeam = async () => {
+        if (!conflictTeamId || !guildId) return
+
+        setIsLoading(true)
+        try {
+            const response = await fetch('/api/teams/link-discord', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    teamId: conflictTeamId,
+                    discordGuildId: guildId
+                })
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to connect team')
+            }
+
+            setTeamData(data.team)
+            setStatus('success')
+        } catch (err: any) {
+            console.error('Error connecting existing team:', err)
+            setErrorMessage(err.message || 'Failed to connect team')
+            setStatus('error')
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     if (isLoading || status === 'checking' || status === 'creating') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
@@ -301,6 +338,8 @@ function DiscordLinkContent() {
     }
 
     if (status === 'conflict_existing_team') {
+        const canConnect = (conflictTeamRole === 'owner' || conflictTeamRole === 'admin') && !conflictHasDiscord
+
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
                 <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
@@ -311,18 +350,37 @@ function DiscordLinkContent() {
                         Already in a Team
                     </h1>
                     <p className="text-neutral-600 mb-8">
-                        You are already a member of a team. You can only be part of one team at a time.
+                        You are already a member of <strong>{conflictTeamName || 'a team'}</strong>.
                         <br /><br />
-                        Do you want to leave your current team and create <strong>{guildName}</strong>?
+                        {canConnect ? (
+                            <>
+                                Would you like to connect <strong>{conflictTeamName}</strong> to this Discord server, or leave and create a new team?
+                            </>
+                        ) : (
+                            <>
+                                You can only be part of one team at a time. Do you want to leave your current team and create <strong>{guildName}</strong>?
+                            </>
+                        )}
                     </p>
                     <div className="space-y-3">
+                        {canConnect && (
+                            <button
+                                onClick={handleConnectExistingTeam}
+                                disabled={isLoading}
+                                className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-green-600 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+                            >
+                                {isLoading ? <Loader2 className="animate-spin" /> : `Connect ${conflictTeamName}`}
+                            </button>
+                        )}
+
                         <button
                             onClick={handleLeaveAndCreate}
                             disabled={isLoading}
                             className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
                         >
-                            {isLoading ? <Loader2 className="animate-spin" /> : 'Leave & Create Team'}
+                            {isLoading ? <Loader2 className="animate-spin" /> : 'Leave & Create New Team'}
                         </button>
+
                         <Link
                             href="/teams"
                             className="block w-full py-3 font-bold uppercase tracking-wider bg-white border-2 border-black hover:bg-neutral-50 transition-colors"

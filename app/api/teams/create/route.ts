@@ -70,14 +70,31 @@ export async function POST(request: Request) {
         // Check if user is already a member of any team (1 team max constraint)
         const { data: existingTeamMember } = await supabase
             .from('team_members')
-            .select('id, team_id')
+            .select(`
+                id, 
+                team_id, 
+                role,
+                teams (
+                    name,
+                    slug,
+                    discord_guild_id
+                )
+            `)
             .eq('user_id', user.id)
             .limit(1)
 
         if (existingTeamMember && existingTeamMember.length > 0) {
+            const member = existingTeamMember[0]
+            // @ts-ignore - Supabase type inference might be tricky with nested joins
+            const team = member.teams
+
             return NextResponse.json({
                 error: 'You are already a member of a team. You can only be part of one team at a time.',
-                conflictTeamId: existingTeamMember[0].team_id
+                conflictTeamId: member.team_id,
+                conflictTeamRole: member.role,
+                conflictTeamName: team?.name,
+                conflictTeamSlug: team?.slug,
+                conflictHasDiscord: !!team?.discord_guild_id
             }, { status: 409 })
         }
 
