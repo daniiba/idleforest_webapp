@@ -77,6 +77,7 @@ export async function POST(request: Request) {
         if (existingTeamMember && existingTeamMember.length > 0) {
             return NextResponse.json({
                 error: 'You are already a member of a team. You can only be part of one team at a time.',
+                conflictTeamId: existingTeamMember[0].team_id
             }, { status: 409 })
         }
 
