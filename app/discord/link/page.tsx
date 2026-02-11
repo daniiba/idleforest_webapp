@@ -12,7 +12,7 @@ function DiscordLinkContent() {
     const supabase = createClient()
 
     const [isLoading, setIsLoading] = useState(true)
-    const [status, setStatus] = useState<'checking' | 'linking_required' | 'creating' | 'success' | 'error'>('checking')
+    const [status, setStatus] = useState<'checking' | 'unauthenticated' | 'linking_required' | 'creating' | 'success' | 'error'>('checking')
     const [errorMessage, setErrorMessage] = useState('')
     const [teamData, setTeamData] = useState<{ name: string, slug: string } | null>(null)
 
@@ -57,9 +57,8 @@ function DiscordLinkContent() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 if (!user) {
-                    const params = new URLSearchParams(searchParams.toString())
-                    const currentPath = `/discord/link?${params.toString()}`
-                    router.push(`/auth/user/login?redirect=${encodeURIComponent(currentPath)}`)
+                    setStatus('unauthenticated')
+                    setIsLoading(false)
                     return
                 }
 
@@ -139,6 +138,39 @@ function DiscordLinkContent() {
                     {status === 'creating' ? 'Setting up your Team...' : 'Checking details...'}
                 </h1>
                 <p className="text-neutral-600">Please wait a moment.</p>
+            </div>
+        )
+    }
+
+    if (status === 'unauthenticated') {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
+                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
+                    <div className="bg-brand-yellow w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
+                        <AlertCircle className="w-8 h-8 text-black" />
+                    </div>
+                    <h1 className="text-2xl font-bold font-candu uppercase text-brand-navy mb-4">
+                        Welcome to IdleForest
+                    </h1>
+                    <p className="text-neutral-600 mb-8">
+                        To join <strong>{guildName || 'this server'}</strong>'s team, please sign in with Discord.
+                    </p>
+                    <button
+                        onClick={handleConnectDiscord}
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                    >
+                        Sign in with Discord
+                    </button>
+                    <div className="mt-4 text-sm">
+                        <p className="text-neutral-500">Already have an account?</p>
+                        <Link
+                            href={`/auth/user/login?redirect=${encodeURIComponent(`/discord/link?${searchParams.toString()}`)}`}
+                            className="font-bold underline hover:text-brand-navy"
+                        >
+                            Log in with Email
+                        </Link>
+                    </div>
+                </div>
             </div>
         )
     }
