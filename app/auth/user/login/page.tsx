@@ -55,12 +55,23 @@ export default function UserLoginPage() {
     }
   };
 
+
   return (
     <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
       <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
         <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-8">
           Welcome Back
         </h1>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t-2 border-dashed border-neutral-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-neutral-500 font-bold uppercase">Or continue with email</span>
+          </div>
+        </div>
+
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">

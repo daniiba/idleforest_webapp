@@ -107,23 +107,42 @@ function DiscordLinkContent() {
             const params = new URLSearchParams(searchParams.toString())
             const currentPath = `${window.location.origin}/discord/link?${params.toString()}`
 
-            const { data, error } = await supabase.auth.linkIdentity({
-                provider: 'discord',
-                options: {
-                    redirectTo: currentPath,
-                    scopes: 'identify email guilds'
-                }
-            })
+            const { data: { user } } = await supabase.auth.getUser()
 
-            if (error) throw error
-
-            if (data?.url) {
-                window.location.href = data.url
+            if (!user) {
+                // Not logged in - Sign in with Discord
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'discord',
+                    options: {
+                        redirectTo: currentPath,
+                        scopes: 'identify email guilds'
+                    }
+                })
+                if (error) throw error
+                // signInWithOAuth usually handles the redirect automatically or returns data.url
+                // If it returns a URL (for PKCE flow sometimes), we might need to redirect manually?
+                // The client SDK usually handles it.
             } else {
-                throw new Error('No redirect URL initiated')
+                // Logged in - Link Identity
+                const { data, error } = await supabase.auth.linkIdentity({
+                    provider: 'discord',
+                    options: {
+                        redirectTo: currentPath,
+                        scopes: 'identify email guilds'
+                    }
+                })
+
+                if (error) throw error
+
+                if (data?.url) {
+                    window.location.href = data.url
+                } else {
+                    throw new Error('No redirect URL initiated')
+                }
             }
+
         } catch (err: any) {
-            console.error('Error linking identity:', err)
+            console.error('Error connecting Discord:', err)
             setErrorMessage(err.message || 'Failed to connect Discord')
             setStatus('error')
             setIsLoading(false)
