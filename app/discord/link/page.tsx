@@ -103,14 +103,32 @@ function DiscordLinkContent() {
     }, [action, guildId, guildName, router, searchParams]) // supabase is stable
 
     const handleConnectDiscord = async () => {
-        const params = new URLSearchParams(searchParams.toString())
-        const currentPath = `${window.location.origin}/discord/link?${params.toString()}`
-        await supabase.auth.linkIdentity({
-            provider: 'discord',
-            options: {
-                redirectTo: currentPath
+        setIsLoading(true)
+        try {
+            const params = new URLSearchParams(searchParams.toString())
+            const currentPath = `${window.location.origin}/discord/link?${params.toString()}`
+
+            const { data, error } = await supabase.auth.linkIdentity({
+                provider: 'discord',
+                options: {
+                    redirectTo: currentPath,
+                    scopes: 'identify email guilds'
+                }
+            })
+
+            if (error) throw error
+
+            if (data?.url) {
+                window.location.href = data.url
+            } else {
+                throw new Error('No redirect URL initiated')
             }
-        })
+        } catch (err: any) {
+            console.error('Error linking identity:', err)
+            setErrorMessage(err.message || 'Failed to connect Discord')
+            setStatus('error')
+            setIsLoading(false)
+        }
     }
 
     if (isLoading || status === 'checking' || status === 'creating') {
