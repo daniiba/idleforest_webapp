@@ -59,14 +59,20 @@ function DiscordLinkContent() {
     const handleConnectDiscord = async () => {
         setIsLoading(true)
         try {
-            const params = new URLSearchParams(searchParams.toString())
-            const currentPath = `${window.location.origin}/discord/link?${params.toString()}`
+            const origin = window.location.origin
+            const redirectUrl = `${origin}/discord/link`
+
+            const queryParams: Record<string, string> = {}
+            searchParams.forEach((value, key) => {
+                queryParams[key] = value
+            })
 
             const { error } = await supabase.auth.linkIdentity({
                 provider: 'discord',
                 options: {
-                    redirectTo: currentPath,
-                    scopes: 'identify email guilds'
+                    redirectTo: redirectUrl,
+                    scopes: 'identify email guilds',
+                    queryParams: queryParams
                 }
             })
 
