@@ -33,13 +33,22 @@ function DiscordLinkContent() {
                 }
 
                 // 2. Check Discord Link
-                const isDiscordLinked = user.identities?.some(id => id.provider === 'discord')
+                const discordIdentity = user.identities?.find(id => id.provider === 'discord')
 
-                if (!isDiscordLinked) {
+                if (!discordIdentity) {
                     setStatus('linking_required')
                     setIsLoading(false)
                     return
                 }
+
+                // 2.5 Sync Discord ID to Profile if missing
+                // The bot looks for 'discord_user_id' in the profiles table.
+                const discordUserId = discordIdentity.id // Supabase stores the provider's unique ID here
+
+                await supabase
+                    .from('profiles')
+                    .update({ discord_user_id: discordUserId })
+                    .eq('user_id', user.id)
 
                 // 3. Success - User is logged in and linked
                 setStatus('success')
