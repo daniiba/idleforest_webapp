@@ -31,34 +31,5 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Allow access to public routes
-  if (
-    !user &&
-    (request.nextUrl.pathname.startsWith('/login') ||
-      request.nextUrl.pathname.startsWith('/auth') ||
-      request.nextUrl.pathname.startsWith('/profile') ||
-      request.nextUrl.pathname.startsWith('/verify') ||
-      request.nextUrl.pathname.startsWith('/install') ||
-      request.nextUrl.pathname.startsWith('/discord') ||
-      request.nextUrl.pathname.startsWith('/teams') ||
-      request.nextUrl.pathname === '/')
-  ) {
-    return supabaseResponse
-  }
-
-  // Redirect to login if no user and trying to access protected route
-  if (!user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/user/login'
-    return NextResponse.redirect(url)
-  }
-
-  // Allow access to verification and onboarding pages
-  if (
-    request.nextUrl.pathname.startsWith('/onboarding')
-  ) {
-    return supabaseResponse
-  }
-
   return supabaseResponse
 }
