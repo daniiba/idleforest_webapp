@@ -40,6 +40,7 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/verify') ||
       request.nextUrl.pathname.startsWith('/install') ||
       request.nextUrl.pathname.startsWith('/discord') ||
+      request.nextUrl.pathname.startsWith('/teams') ||
       request.nextUrl.pathname === '/')
   ) {
     return supabaseResponse
@@ -48,7 +49,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect to login if no user and trying to access protected route
   if (!user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/auth/user/login'
     return NextResponse.redirect(url)
   }
 
