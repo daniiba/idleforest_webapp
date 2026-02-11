@@ -1528,7 +1528,7 @@ export interface UrlMetadata {
     description: string
     image: string | null
     siteName: string | null
-    type: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'other'
+    type: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'tiktok' | 'blog' | 'other'
     fetchedAt: string
 }
 
@@ -1600,6 +1600,11 @@ function getUrlPlatformType(url: string): UrlMetadata['type'] {
     if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) return 'youtube'
     if (lowerUrl.includes('linkedin.com')) return 'linkedin'
     if (lowerUrl.includes('twitter.com') || lowerUrl.includes('x.com')) return 'twitter'
+    if (lowerUrl.includes('tiktok.com') || lowerUrl.includes('vm.tiktok.com')) return 'tiktok'
+    // Blog detection: common blog platforms or /blog/ in URL
+    if (lowerUrl.includes('medium.com') || lowerUrl.includes('substack.com') ||
+        lowerUrl.includes('dev.to') || lowerUrl.includes('/blog/') ||
+        lowerUrl.includes('hashnode.') || lowerUrl.includes('ghost.io')) return 'blog'
     return 'other'
 }
 
@@ -1647,17 +1652,40 @@ function normalizeImageUrl(imageUrl: string, baseUrl: string): string {
 // MARKETING ENTRIES CRUD
 // ========================================
 
+// SERP keyword tracking (multi-keyword per entry)
+export interface SerpKeyword {
+    id: string
+    marketing_entry_id: string
+    keyword: string
+    position: number | null
+    snippet: string | null
+    last_checked: string | null
+    created_at: string
+}
+
 export interface MarketingEntry {
     id: string
     url: string
-    title: string | null
+    title: string
     description: string | null
     image_url: string | null
-    platform: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'other'
+    platform: 'instagram' | 'youtube' | 'linkedin' | 'twitter' | 'tiktok' | 'blog' | 'other'
     cost: number | null
     impressions: number | null
     clicks: number | null
     engagement: number | null
+    // Engagement breakdown
+    likes: number | null
+    comments: number | null
+    shares: number | null
+    views: number | null
+    // SERP tracking (legacy single-keyword columns, kept for backward compat)
+    serp_keyword: string | null
+    serp_position: number | null
+    serp_snippet: string | null
+    serp_last_checked: string | null
+    // Multi-keyword SERP data (populated from serp_keywords table)
+    serp_keywords_data?: SerpKeyword[]
     notes: string | null
     month: number
     year: number
@@ -1672,6 +1700,11 @@ export interface CreateMarketingEntryInput {
     impressions?: number | null
     clicks?: number | null
     engagement?: number | null
+    likes?: number | null
+    comments?: number | null
+    shares?: number | null
+    views?: number | null
+    serp_keyword?: string | null
     notes?: string | null
     month: number
     year: number
@@ -1688,12 +1721,17 @@ export interface UpdateMarketingEntryInput {
     impressions?: number | null
     clicks?: number | null
     engagement?: number | null
+    likes?: number | null
+    comments?: number | null
+    shares?: number | null
+    views?: number | null
+    serp_keyword?: string | null
     notes?: string | null
     month?: number
     year?: number
 }
 
-// Get marketing entries with optional month/year filter
+// Get marketing entries with optional month/year filter (includes SERP keywords)
 export async function getMarketingEntries(
     month?: number,
     year?: number
@@ -1724,7 +1762,35 @@ export async function getMarketingEntries(
         return []
     }
 
-    return data || []
+    if (!data || data.length === 0) return []
+
+    // Fetch SERP keywords for all entries
+    const entryIds = data.map(e => e.id)
+    const { data: serpKeywords, error: serpError } = await adminClient
+        .from('serp_keywords')
+        .select('*')
+        .in('marketing_entry_id', entryIds)
+        .order('created_at', { ascending: true })
+
+    if (serpError) {
+        console.error('Error fetching serp_keywords:', serpError)
+    }
+
+    // Group keywords by entry ID
+    const keywordsByEntry = new Map<string, SerpKeyword[]>()
+    if (serpKeywords) {
+        for (const kw of serpKeywords) {
+            const list = keywordsByEntry.get(kw.marketing_entry_id) || []
+            list.push(kw)
+            keywordsByEntry.set(kw.marketing_entry_id, list)
+        }
+    }
+
+    // Attach keywords to entries
+    return data.map(entry => ({
+        ...entry,
+        serp_keywords_data: keywordsByEntry.get(entry.id) || []
+    }))
 }
 
 // Create a new marketing entry (auto-fetches metadata from URL)
@@ -1752,6 +1818,7 @@ export async function createMarketingEntry(
         clicks: input.clicks || null,
         engagement: input.engagement || null,
         notes: input.notes || null,
+        serp_keyword: input.serp_keyword || null,
         month: input.month,
         year: input.year,
         created_by: input.created_by || null
@@ -1871,6 +1938,485 @@ export async function getMarketingEntriesForReport(
 }
 
 // ========================================
+// OLOSTEP ANALYTICS (Instagram, TikTok, LinkedIn)
+// ========================================
+
+interface OlostepStats {
+    views: number | null
+    likes: number | null
+    comments: number | null
+    shares: number | null
+    title: string | null
+}
+
+// Get platform-specific LLM extraction schema
+function getOlostepSchemaForPlatform(platform: 'instagram' | 'tiktok' | 'linkedin' | 'other') {
+    switch (platform) {
+        case 'tiktok':
+            return {
+                stats: {
+                    type: 'object',
+                    properties: {
+                        title: {
+                            type: 'string',
+                            description: 'The post caption text, usually shown below the image/video.'
+                        },
+                        likes: {
+                            type: 'number',
+                            description: 'The number next to the heart icon. Extract ONLY the digits associated with likes. If you see 1047 but comments are 7, the likes are likely 104.'
+                        },
+                        comments: {
+                            type: 'number',
+                            description: 'The number next to the speech bubble icon.'
+                        },
+                        bookmarks: {
+                            type: 'number',
+                            description: 'The number next to the star/bookmark icon.'
+                        },
+                        shares: {
+                            type: 'number',
+                            description: 'The number next to the arrow/share icon.'
+                        }
+                    }
+                }
+
+            }
+
+        case 'instagram':
+            return {
+                stats: {
+                    type: 'object',
+                    properties: {
+                        title: {
+                            type: 'string',
+                            description: 'The post caption text, usually shown below the image/video.'
+                        },
+                        likes: {
+                            type: 'number',
+                            description: 'The number of likes, often shown as "X likes" below the post.'
+                        },
+                        comments: {
+                            type: 'number',
+                            description: 'The number of comments, often shown as "View all X comments".'
+                        },
+                        views: {
+                            type: 'number',
+                            description: 'For videos/reels, the view count (shown with play icon or as "X views").'
+                        }
+                    }
+                }
+            }
+
+        case 'linkedin':
+            return {
+                stats: {
+                    type: 'object',
+                    properties: {
+                        title: {
+                            type: 'string',
+                            description: 'The main text content of the LinkedIn post.'
+                        },
+                        reactions: {
+                            type: 'number',
+                            description: 'The total number of reactions (likes, celebrates, etc.) shown below the post.'
+                        },
+                        comments: {
+                            type: 'number',
+                            description: 'The number of comments on the post.'
+                        },
+                        reposts: {
+                            type: 'number',
+                            description: 'The number of reposts/shares of the post.'
+                        },
+                        impressions: {
+                            type: 'number',
+                            description: 'If visible, the number of impressions/views (sometimes shown to post author).'
+                        }
+                    }
+                }
+            }
+
+        default:
+            // Generic schema for other platforms
+            return {
+                stats: {
+                    type: 'object',
+                    properties: {
+                        title: {
+                            type: 'string',
+                            description: 'The main title or caption of the content.'
+                        },
+                        likes: {
+                            type: 'number',
+                            description: 'The number of likes or reactions.'
+                        },
+                        comments: {
+                            type: 'number',
+                            description: 'The number of comments.'
+                        },
+                        shares: {
+                            type: 'number',
+                            description: 'The number of shares or reposts.'
+                        },
+                        views: {
+                            type: 'number',
+                            description: 'The number of views if available.'
+                        }
+                    }
+                }
+            }
+    }
+}
+
+// Fetch analytics from any social media URL using Olostep's LLM extraction
+export async function fetchOlostepStats(url: string): Promise<OlostepStats | null> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const apiKey = process.env.OLOSTEP_API_KEY
+    if (!apiKey) {
+        console.error('OLOSTEP_API_KEY not configured')
+        return null
+    }
+
+    // Detect platform from URL
+    const lowerUrl = url.toLowerCase()
+    const isTikTok = lowerUrl.includes('tiktok.com')
+    const isInstagram = lowerUrl.includes('instagram.com')
+    const isLinkedIn = lowerUrl.includes('linkedin.com')
+
+    // Determine platform type
+    let platform: 'tiktok' | 'instagram' | 'linkedin' | 'other' = 'other'
+    if (isTikTok) platform = 'tiktok'
+    else if (isInstagram) platform = 'instagram'
+    else if (isLinkedIn) platform = 'linkedin'
+
+    // Get platform-specific schema
+    const schema = getOlostepSchemaForPlatform(platform)
+
+    try {
+        const response = await fetch('https://api.olostep.com/v1/scrapes', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url_to_scrape: url,
+                formats: ['json'],
+                // Force US-based node for consistent results
+                country: 'US',
+                // TikTok needs longer wait to load video content
+                wait_before_scraping: isTikTok ? 10000 : isInstagram ? 5000 : 3000,
+                // Use mobile screen for TikTok/Instagram (shows content better)
+                screen_size: (isTikTok || isInstagram) ? { screen_type: 'mobile' } : undefined,
+                // For TikTok, scroll to ensure content loads
+                actions: isTikTok ? [
+                    { type: 'wait', milliseconds: 2000 },
+                    { type: 'scroll', direction: 'down', amount: 500 }
+                ] : undefined,
+                llm_extract: { schema }
+            })
+        })
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            console.error('Olostep API error:', response.status, errorText)
+            return null
+        }
+
+        const data = await response.json()
+
+        // Log the raw response for debugging
+        console.log('Olostep response for', url, ':', JSON.stringify(data.result?.json_content || data.result?.markdown_content?.substring(0, 500)))
+
+        // Parse the JSON content from Olostep response
+        if (data.result?.json_content) {
+            try {
+                const parsed = JSON.parse(data.result.json_content)
+                // Olostep might return values at root level OR nested in stats.
+                // If stats contains a "type" property, it's the schema, so look at root level instead.
+                const hasSchemaInStats = parsed.stats?.type === 'object'
+                const stats = hasSchemaInStats ? parsed : (parsed.stats || parsed)
+
+                // Normalize field names based on platform
+                // LinkedIn uses: reactions, reposts, impressions
+                // TikTok uses: likes, shares, views, bookmarks
+                // Instagram uses: likes, comments, views
+                const likes = typeof stats.likes === 'number' ? stats.likes :
+                    typeof stats.reactions === 'number' ? stats.reactions : null
+                const shares = typeof stats.shares === 'number' ? stats.shares :
+                    typeof stats.reposts === 'number' ? stats.reposts : null
+                const views = typeof stats.views === 'number' ? stats.views :
+                    typeof stats.impressions === 'number' ? stats.impressions : null
+
+                return {
+                    views,
+                    likes,
+                    comments: typeof stats.comments === 'number' ? stats.comments : null,
+                    shares,
+                    title: typeof stats.title === 'string' ? stats.title : null
+                }
+            } catch (parseError) {
+                console.error('Error parsing Olostep JSON:', parseError)
+                return null
+            }
+        }
+
+        return null
+    } catch (error) {
+        console.error('Error fetching Olostep stats:', error)
+        return null
+    }
+}
+
+// ========================================
+// SERP RANKING (Google Search via Olostep)
+// ========================================
+
+interface SerpRankingResult {
+    position: number | null
+    snippet: string | null
+    title: string | null
+}
+
+// Fetch Google SERP ranking for a URL using Olostep's Google Search parser
+export async function fetchSerpRanking(
+    keyword: string,
+    targetUrl: string
+): Promise<SerpRankingResult> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const apiKey = process.env.OLOSTEP_API_KEY
+    if (!apiKey) {
+        console.error('OLOSTEP_API_KEY not configured')
+        return { position: null, snippet: null, title: null }
+    }
+
+    try {
+        // Use Olostep's @olostep/google-search parser for structured SERP data
+        // num=100 ensures we get at least top 50 results
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(keyword)}&gl=us&hl=en&num=100`
+
+        const response = await fetch('https://api.olostep.com/v1/scrapes', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url_to_scrape: searchUrl,
+                formats: ['json'],
+                parser: { id: '@olostep/google-search' },
+                wait_before_scraping: 0
+            })
+        })
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            console.error('Olostep SERP API error:', response.status, errorText)
+            return { position: null, snippet: null, title: null }
+        }
+
+        const data = await response.json()
+
+        console.log('Olostep SERP response for keyword:', keyword, 'results count:', data.result?.json_content ? 'found' : 'empty')
+
+        if (data.result?.json_content) {
+            const parsed = typeof data.result.json_content === 'string'
+                ? JSON.parse(data.result.json_content)
+                : data.result.json_content
+
+            const organicResults = parsed.organic || []
+            console.log(`SERP: Got ${organicResults.length} organic results for "${keyword}"`)
+
+            // Normalize target URL for matching (remove protocol, www, trailing slash)
+            const normalizeUrl = (url: string) =>
+                url.toLowerCase()
+                    .replace(/^https?:\/\//, '')
+                    .replace(/^www\./, '')
+                    .replace(/\/$/, '')
+
+            const normalizedTarget = normalizeUrl(targetUrl)
+
+            // Find the target URL in organic results
+            for (const result of organicResults) {
+                const normalizedLink = normalizeUrl(result.link || '')
+                if (normalizedLink === normalizedTarget || normalizedLink.includes(normalizedTarget) || normalizedTarget.includes(normalizedLink)) {
+                    return {
+                        position: result.position || null,
+                        snippet: result.snippet || null,
+                        title: result.title || null
+                    }
+                }
+            }
+
+            // URL not found in results
+            console.log(`Target URL not found in SERP results for "${keyword}". Checked ${organicResults.length} results.`)
+            return { position: null, snippet: null, title: null }
+        }
+
+        return { position: null, snippet: null, title: null }
+    } catch (error) {
+        console.error('Error fetching SERP ranking:', error)
+        return { position: null, snippet: null, title: null }
+    }
+}
+
+// ========================================
+// SERP KEYWORDS CRUD (Multi-keyword per entry)
+// ========================================
+
+// Get all SERP keywords for a marketing entry
+export async function getSerpKeywords(entryId: string): Promise<SerpKeyword[]> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { data, error } = await adminClient
+        .from('serp_keywords')
+        .select('*')
+        .eq('marketing_entry_id', entryId)
+        .order('created_at', { ascending: true })
+
+    if (error) {
+        console.error('Error fetching serp keywords:', error)
+        return []
+    }
+    return data || []
+}
+
+// Add a new SERP keyword to a marketing entry and immediately check its ranking
+export async function addSerpKeyword(
+    entryId: string,
+    keyword: string
+): Promise<{ success: boolean; keyword?: SerpKeyword; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // Insert the keyword row
+    const { data, error } = await adminClient
+        .from('serp_keywords')
+        .insert({
+            marketing_entry_id: entryId,
+            keyword: keyword.trim()
+        })
+        .select()
+        .single()
+
+    if (error) {
+        if (error.code === '23505') {
+            return { success: false, error: 'This keyword is already being tracked for this entry.' }
+        }
+        console.error('Error adding serp keyword:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true, keyword: data }
+}
+
+// Remove a SERP keyword
+export async function removeSerpKeyword(
+    keywordId: string
+): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient
+        .from('serp_keywords')
+        .delete()
+        .eq('id', keywordId)
+
+    if (error) {
+        console.error('Error removing serp keyword:', error)
+        return { success: false, error: error.message }
+    }
+    return { success: true }
+}
+
+// Refresh SERP rankings for all keywords of a marketing entry
+export async function refreshSerpKeywords(
+    entryId: string
+): Promise<{ success: boolean; results: SerpKeyword[]; errors?: string[] }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // Get the entry URL
+    const { data: entry, error: entryError } = await adminClient
+        .from('marketing_entries')
+        .select('url')
+        .eq('id', entryId)
+        .single()
+
+    if (entryError || !entry) {
+        return { success: false, results: [], errors: ['Entry not found'] }
+    }
+
+    // Get all keywords for this entry
+    const keywords = await getSerpKeywords(entryId)
+    if (keywords.length === 0) {
+        return { success: true, results: [] }
+    }
+
+    const updatedResults: SerpKeyword[] = []
+    const errors: string[] = []
+
+    // Check each keyword sequentially to avoid rate-limiting
+    for (const kw of keywords) {
+        try {
+            const serpResult = await fetchSerpRanking(kw.keyword, entry.url)
+
+            const { data: updated, error: updateError } = await adminClient
+                .from('serp_keywords')
+                .update({
+                    position: serpResult.position,
+                    snippet: serpResult.snippet,
+                    last_checked: new Date().toISOString()
+                })
+                .eq('id', kw.id)
+                .select()
+                .single()
+
+            if (updateError) {
+                errors.push(`Failed to update "${kw.keyword}": ${updateError.message}`)
+            } else if (updated) {
+                updatedResults.push(updated)
+            }
+
+            if (!serpResult.position) {
+                errors.push(`URL not found in Google results for "${kw.keyword}".`)
+            }
+        } catch (err) {
+            errors.push(`Error checking "${kw.keyword}": ${err}`)
+        }
+    }
+
+    return {
+        success: true,
+        results: updatedResults,
+        errors: errors.length > 0 ? errors : undefined
+    }
+}
+
+// ========================================
 // YOUTUBE ANALYTICS
 // ========================================
 
@@ -1952,7 +2498,7 @@ export async function fetchYouTubeStats(url: string): Promise<YouTubeVideoStats 
     }
 }
 
-// Refresh analytics for a marketing entry (auto-fetch for YouTube)
+// Refresh analytics for a marketing entry (auto-fetch for supported platforms)
 export async function refreshMarketingEntryAnalytics(
     id: string
 ): Promise<{ success: boolean; entry?: MarketingEntry; error?: string }> {
@@ -1974,32 +2520,93 @@ export async function refreshMarketingEntryAnalytics(
         return { success: false, error: 'Entry not found' }
     }
 
-    // Only auto-fetch for YouTube
-    if (entry.platform !== 'youtube') {
-        return { success: false, error: 'Auto-fetch only available for YouTube. Use manual input for other platforms.' }
+    // Determine which service to use based on platform
+    const platform = entry.platform as MarketingEntry['platform']
+
+    // YouTube: Use free YouTube Data API
+    if (platform === 'youtube') {
+        const stats = await fetchYouTubeStats(entry.url)
+        if (!stats) {
+            return { success: false, error: 'Could not fetch YouTube analytics. Check if YOUTUBE_API_KEY is configured.' }
+        }
+
+        const { data: updated, error: updateError } = await adminClient
+            .from('marketing_entries')
+            .update({
+                impressions: stats.viewCount,
+                views: stats.viewCount,
+                likes: stats.likeCount,
+                comments: stats.commentCount,
+                engagement: stats.likeCount + stats.commentCount,
+                title: stats.title || entry.title,
+                image_url: stats.thumbnail || entry.image_url
+            })
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (updateError) {
+            return { success: false, error: updateError.message }
+        }
+        return { success: true, entry: updated }
     }
 
-    const stats = await fetchYouTubeStats(entry.url)
-    if (!stats) {
-        return { success: false, error: 'Could not fetch YouTube analytics. Check if API key is configured.' }
+    // Instagram, TikTok, LinkedIn: Use Olostep
+    if (platform === 'instagram' || platform === 'tiktok' || platform === 'linkedin') {
+        const stats = await fetchOlostepStats(entry.url)
+        if (!stats) {
+            return { success: false, error: 'Could not fetch analytics. Check if OLOSTEP_API_KEY is configured.' }
+        }
+
+        const engagement = (stats.likes || 0) + (stats.comments || 0) + (stats.shares || 0)
+
+        const { data: updated, error: updateError } = await adminClient
+            .from('marketing_entries')
+            .update({
+                impressions: stats.views || entry.impressions,
+                views: stats.views || entry.views,
+                likes: stats.likes || entry.likes,
+                comments: stats.comments || entry.comments,
+                shares: stats.shares || entry.shares,
+                engagement: engagement || entry.engagement,
+                title: stats.title || entry.title
+            })
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (updateError) {
+            return { success: false, error: updateError.message }
+        }
+        return { success: true, entry: updated }
     }
 
-    // Update entry with fetched stats
-    const { data: updated, error: updateError } = await adminClient
-        .from('marketing_entries')
-        .update({
-            impressions: stats.viewCount,
-            engagement: stats.likeCount + stats.commentCount,
-            title: stats.title || entry.title,
-            image_url: stats.thumbnail || entry.image_url
-        })
-        .eq('id', id)
-        .select()
-        .single()
+    // Blog/Other: SERP ranking via multi-keyword system
+    if (platform === 'blog' || platform === 'other') {
+        const serpResult = await refreshSerpKeywords(id)
 
-    if (updateError) {
-        return { success: false, error: updateError.message }
+        // Re-fetch the updated entry with keywords
+        const { data: updated, error: refetchError } = await adminClient
+            .from('marketing_entries')
+            .select('*')
+            .eq('id', id)
+            .single()
+
+        if (refetchError) {
+            return { success: false, error: refetchError.message }
+        }
+
+        const errorMsg = serpResult.errors?.join('; ')
+        return {
+            success: true,
+            entry: updated,
+            error: errorMsg || undefined
+        }
     }
 
-    return { success: true, entry: updated }
+    // Twitter, Other: Manual input only
+    return {
+        success: false,
+        error: `Auto-fetch not available for ${platform}. Please enter analytics manually.`
+    }
 }

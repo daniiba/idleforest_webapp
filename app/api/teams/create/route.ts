@@ -27,6 +27,16 @@ async function createSupabaseClient() {
     )
 }
 
+// Helper to create a slug from a name
+function createSlug(name: string): string {
+    return name
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-')     // Replace spaces with hyphens
+        .replace(/-+/g, '-')      // Remove duplicate hyphens
+        .trim()
+}
+
 // Create a new team
 export async function POST(request: Request) {
     try {
@@ -38,7 +48,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const { name, description, imageUrl } = await request.json()
+        const { name, description, imageUrl, discordGuildId } = await request.json()
 
         if (!name || typeof name !== 'string' || name.trim().length === 0) {
             return NextResponse.json({ error: 'Team name is required' }, { status: 400 })
@@ -58,16 +68,39 @@ export async function POST(request: Request) {
         const teamImageUrl = imageUrl?.trim() || null
 
         // Check if user is already a member of any team (1 team max constraint)
-        const { data: existingTeam } = await supabase
+        const { data: existingTeamMember } = await supabase
             .from('team_members')
             .select('id, team_id')
             .eq('user_id', user.id)
             .limit(1)
 
-        if (existingTeam && existingTeam.length > 0) {
+        if (existingTeamMember && existingTeamMember.length > 0) {
             return NextResponse.json({
                 error: 'You are already a member of a team. You can only be part of one team at a time.',
             }, { status: 409 })
+        }
+
+        // Generate base slug
+        const baseSlug = createSlug(teamName) || 'team'
+        let slug = baseSlug
+        let attempt = 0
+
+        while (attempt < 5) {
+            // Check if slug exists
+            const { data: existingSlug } = await supabase
+                .from('teams')
+                .select('slug')
+                .eq('slug', slug)
+                .single()
+
+            if (!existingSlug) {
+                break
+            }
+
+            // If exists, append random number
+            const randomSuffix = Math.floor(Math.random() * 10000)
+            slug = `${baseSlug}-${randomSuffix}`
+            attempt++
         }
 
         // Create the team
@@ -78,12 +111,57 @@ export async function POST(request: Request) {
                 description: teamDescription,
                 image_url: teamImageUrl,
                 created_by: user.id,
-                total_points: 0
+                total_points: 0,
+                slug: slug,
+                discord_guild_id: discordGuildId || null
             })
             .select()
             .single()
 
         if (createError) {
+            // Check for unique violation on discord_guild_id
+            if (createError.code === '23505' && discordGuildId) {
+                // Fetch the existing team to return it
+                const { data: existingTeam } = await supabase
+                    .from('teams')
+                    .select()
+                    .eq('discord_guild_id', discordGuildId)
+                    .single()
+
+                if (existingTeam) {
+                    // Check if the current user is a member of this team
+                    const { data: isMember } = await supabase
+                        .from('team_members')
+                        .select('id')
+                        .eq('team_id', existingTeam.id)
+                        .eq('user_id', user.id)
+                        .single()
+
+                    if (!isMember) {
+                        // Add them to the team if not already (though earlier check prevented 1 user > 1 team, 
+                        // but maybe they are not in a team yet but this team exists)
+                        const { error: joinError } = await supabase
+                            .from('team_members')
+                            .insert({
+                                team_id: existingTeam.id,
+                                user_id: user.id,
+                                contribution_points: 0,
+                                role: 'member' // Default role
+                            })
+
+                        if (joinError) {
+                            console.error('Error joining existing Discord team:', joinError)
+                        }
+                    }
+
+                    return NextResponse.json({
+                        success: true,
+                        team: existingTeam,
+                        message: 'Team already active!'
+                    })
+                }
+            }
+
             console.error('Error creating team:', createError)
             return NextResponse.json({ error: 'Failed to create team' }, { status: 500 })
         }
@@ -94,7 +172,8 @@ export async function POST(request: Request) {
             .insert({
                 team_id: team.id,
                 user_id: user.id,
-                contribution_points: 0
+                contribution_points: 0,
+                role: 'owner'
             })
 
         if (memberError) {

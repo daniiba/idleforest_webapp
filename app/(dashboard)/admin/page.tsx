@@ -20,7 +20,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -192,6 +192,8 @@ export default function AdminPage() {
     const [newEntryImpressions, setNewEntryImpressions] = useState('')
     const [newEntryClicks, setNewEntryClicks] = useState('')
     const [newEntryEngagement, setNewEntryEngagement] = useState('')
+    const [newEntryKeywords, setNewEntryKeywords] = useState<string[]>([])
+    const [newEntryKeywordInput, setNewEntryKeywordInput] = useState('')
     const [isAddingEntry, setIsAddingEntry] = useState(false)
     const [editingEntryId, setEditingEntryId] = useState<string | null>(null)
     const [editEntryCost, setEditEntryCost] = useState('')
@@ -199,6 +201,9 @@ export default function AdminPage() {
     const [editEntryImpressions, setEditEntryImpressions] = useState('')
     const [editEntryClicks, setEditEntryClicks] = useState('')
     const [editEntryEngagement, setEditEntryEngagement] = useState('')
+    const [editEntryKeywordInput, setEditEntryKeywordInput] = useState('')
+    const [addingKeywordForEntry, setAddingKeywordForEntry] = useState<string | null>(null)
+    const [removingKeywordId, setRemovingKeywordId] = useState<string | null>(null)
     const [refreshingEntryId, setRefreshingEntryId] = useState<string | null>(null)
     const [marketingTotals, setMarketingTotals] = useState({ totalCost: 0, totalImpressions: 0, totalClicks: 0, totalEngagement: 0 })
 
@@ -238,13 +243,20 @@ export default function AdminPage() {
                 year: selectedYear
             })
 
-            if (result.success) {
+            if (result.success && result.entry) {
+                // Add SERP keywords if any
+                for (const kw of newEntryKeywords) {
+                    await addSerpKeyword(result.entry.id, kw)
+                }
+
                 setNewEntryUrl('')
                 setNewEntryCost('')
                 setNewEntryNotes('')
                 setNewEntryImpressions('')
                 setNewEntryClicks('')
                 setNewEntryEngagement('')
+                setNewEntryKeywords([])
+                setNewEntryKeywordInput('')
                 await fetchMarketingEntries()
             }
         } catch (error) {
@@ -254,7 +266,6 @@ export default function AdminPage() {
         }
     }
 
-    // Update marketing entry
     const handleUpdateMarketingEntry = async (id: string) => {
         try {
             await updateMarketingEntry(id, {
@@ -282,7 +293,6 @@ export default function AdminPage() {
         }
     }
 
-    // Start editing an entry
     const startEditingEntry = (entry: MarketingEntry) => {
         setEditingEntryId(entry.id)
         setEditEntryCost(entry.cost?.toString() || '')
@@ -290,6 +300,50 @@ export default function AdminPage() {
         setEditEntryImpressions(entry.impressions?.toString() || '')
         setEditEntryClicks(entry.clicks?.toString() || '')
         setEditEntryEngagement(entry.engagement?.toString() || '')
+        setEditEntryKeywordInput('')
+    }
+
+    // Add keyword to new entry (local only)
+    const handleAddNewEntryKeyword = () => {
+        const kw = newEntryKeywordInput.trim()
+        if (!kw || newEntryKeywords.includes(kw)) return
+        setNewEntryKeywords([...newEntryKeywords, kw])
+        setNewEntryKeywordInput('')
+    }
+
+    // Add keyword to existing entry (persisted to DB)
+    const handleAddKeywordToEntry = async (entryId: string) => {
+        const kw = editEntryKeywordInput.trim()
+        if (!kw) return
+        setAddingKeywordForEntry(entryId)
+        try {
+            const result = await addSerpKeyword(entryId, kw)
+            if (result.success) {
+                setEditEntryKeywordInput('')
+                await fetchMarketingEntries()
+            } else {
+                alert(result.error || 'Failed to add keyword')
+            }
+        } catch (error) {
+            console.error('Error adding keyword:', error)
+        } finally {
+            setAddingKeywordForEntry(null)
+        }
+    }
+
+    // Remove keyword from existing entry (persisted to DB)
+    const handleRemoveKeyword = async (keywordId: string) => {
+        setRemovingKeywordId(keywordId)
+        try {
+            const result = await removeSerpKeyword(keywordId)
+            if (result.success) {
+                await fetchMarketingEntries()
+            }
+        } catch (error) {
+            console.error('Error removing keyword:', error)
+        } finally {
+            setRemovingKeywordId(null)
+        }
     }
 
     // Refresh YouTube analytics for an entry
@@ -300,6 +354,10 @@ export default function AdminPage() {
             const result = await refreshMarketingEntryAnalytics(id)
             if (result.success) {
                 await fetchMarketingEntries()
+                // Show warning if URL wasn't found in SERP
+                if (result.error) {
+                    alert(result.error)
+                }
             } else {
                 alert(result.error || 'Failed to refresh analytics')
             }
@@ -1622,6 +1680,43 @@ export default function AdminPage() {
                             </div>
 
                             {/* Analytics fields (collapsible) */}
+
+                            {/* SERP keywords — shown for any non-social-media URL */}
+                            {newEntryUrl && !['youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'linkedin.com', 'twitter.com', 'x.com'].some(d => newEntryUrl.toLowerCase().includes(d)) && (
+                                <div className="mt-3 p-3 bg-orange-50 border border-orange-200">
+                                    <label className="text-xs font-bold uppercase text-orange-700 mb-1 block">🔍 SERP Keywords (Google Ranking)</label>
+                                    <div className="flex gap-2 items-center">
+                                        <input
+                                            type="text"
+                                            placeholder='e.g. "idle game browser extension"'
+                                            value={newEntryKeywordInput}
+                                            onChange={(e) => setNewEntryKeywordInput(e.target.value)}
+                                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddNewEntryKeyword() } }}
+                                            className="flex-1 px-4 py-2 border-2 border-orange-300 text-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleAddNewEntryKeyword}
+                                            disabled={!newEntryKeywordInput.trim()}
+                                            className="px-3 py-2 bg-orange-500 text-white text-xs font-bold uppercase disabled:opacity-50"
+                                        >
+                                            + Add
+                                        </button>
+                                    </div>
+                                    {newEntryKeywords.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {newEntryKeywords.map((kw, i) => (
+                                                <span key={i} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-bold">
+                                                    {kw}
+                                                    <button onClick={() => setNewEntryKeywords(newEntryKeywords.filter((_, j) => j !== i))} className="text-orange-400 hover:text-orange-700">✕</button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <p className="text-xs text-orange-600 mt-1">Add keywords to track this article&apos;s Google ranking (top 50+)</p>
+                                </div>
+                            )}
+
                             <details className="mt-4">
                                 <summary className="text-xs font-bold uppercase text-neutral-500 cursor-pointer hover:text-neutral-700">
                                     + Manual Analytics (optional - for non-YouTube)
@@ -1707,7 +1802,9 @@ export default function AdminPage() {
                                                         entry.platform === 'youtube' ? 'bg-red-600 text-white' :
                                                             entry.platform === 'linkedin' ? 'bg-blue-700 text-white' :
                                                                 entry.platform === 'twitter' ? 'bg-black text-white' :
-                                                                    'bg-gray-600 text-white'
+                                                                    entry.platform === 'tiktok' ? 'bg-gradient-to-r from-cyan-400 to-pink-500 text-white' :
+                                                                        entry.platform === 'blog' ? 'bg-orange-500 text-white' :
+                                                                            'bg-gray-600 text-white'
                                                         }`}>
                                                         {entry.platform}
                                                     </span>
@@ -1725,11 +1822,34 @@ export default function AdminPage() {
                                                             {entry.clicks.toLocaleString()} clicks
                                                         </span>
                                                     )}
-                                                    {entry.engagement && (
+                                                    {/* Engagement breakdown - show individual metrics if available */}
+                                                    {(entry.likes || entry.comments || entry.shares) ? (
+                                                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded flex items-center gap-1.5">
+                                                            {entry.likes ? <span title="Likes">❤️ {entry.likes.toLocaleString()}</span> : null}
+                                                            {entry.comments ? <span title="Comments">💬 {entry.comments.toLocaleString()}</span> : null}
+                                                            {entry.shares ? <span title="Shares">↗️ {entry.shares.toLocaleString()}</span> : null}
+                                                        </span>
+                                                    ) : entry.engagement && (
                                                         <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
                                                             {entry.engagement.toLocaleString()} engagement
                                                         </span>
                                                     )}
+                                                    {/* SERP ranking badges (multi-keyword) */}
+                                                    {entry.serp_keywords_data && entry.serp_keywords_data.length > 0 && entry.serp_keywords_data.map((kw) => (
+                                                        kw.position ? (
+                                                            <span key={kw.id} className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold" title={kw.snippet || undefined}>
+                                                                🏆 #{kw.position} for &quot;{kw.keyword}&quot;
+                                                            </span>
+                                                        ) : kw.last_checked ? (
+                                                            <span key={kw.id} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded" title="URL not found in Google results">
+                                                                🔍 Not ranked for &quot;{kw.keyword}&quot;
+                                                            </span>
+                                                        ) : (
+                                                            <span key={kw.id} className="text-xs bg-orange-50 text-orange-400 px-2 py-0.5 rounded">
+                                                                ⏳ &quot;{kw.keyword}&quot; (not checked yet)
+                                                            </span>
+                                                        )
+                                                    ))}
                                                 </div>
                                                 <h3 className="font-bold text-sm line-clamp-1 mb-1">{entry.title}</h3>
                                                 <a href={entry.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate block">
@@ -1779,6 +1899,47 @@ export default function AdminPage() {
                                                                 className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
                                                             />
                                                         </div>
+                                                        {(entry.platform === 'blog' || entry.platform === 'other') && (
+                                                            <div className="space-y-2">
+                                                                <label className="text-xs font-bold uppercase text-orange-700">🔍 SERP Keywords</label>
+                                                                {/* Existing keywords as removable chips */}
+                                                                {entry.serp_keywords_data && entry.serp_keywords_data.length > 0 && (
+                                                                    <div className="flex flex-wrap gap-1">
+                                                                        {entry.serp_keywords_data.map((kw) => (
+                                                                            <span key={kw.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded font-bold">
+                                                                                {kw.keyword}
+                                                                                {kw.position && <span className="text-orange-500">#{kw.position}</span>}
+                                                                                <button
+                                                                                    onClick={() => handleRemoveKeyword(kw.id)}
+                                                                                    disabled={removingKeywordId === kw.id}
+                                                                                    className="text-orange-400 hover:text-red-600 disabled:opacity-50"
+                                                                                >
+                                                                                    {removingKeywordId === kw.id ? <Loader2 className="h-3 w-3 animate-spin" /> : '✕'}
+                                                                                </button>
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                                {/* Add new keyword */}
+                                                                <div className="flex gap-1 items-center">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Add keyword..."
+                                                                        value={editEntryKeywordInput}
+                                                                        onChange={(e) => setEditEntryKeywordInput(e.target.value)}
+                                                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddKeywordToEntry(entry.id) } }}
+                                                                        className="flex-1 px-2 py-1 border-2 border-orange-300 text-sm bg-orange-50"
+                                                                    />
+                                                                    <button
+                                                                        onClick={() => handleAddKeywordToEntry(entry.id)}
+                                                                        disabled={!editEntryKeywordInput.trim() || addingKeywordForEntry === entry.id}
+                                                                        className="px-2 py-1 bg-orange-500 text-white text-xs font-bold disabled:opacity-50"
+                                                                    >
+                                                                        {addingKeywordForEntry === entry.id ? <Loader2 className="h-3 w-3 animate-spin" /> : '+ Add'}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                         <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => handleUpdateMarketingEntry(entry.id)}
@@ -1802,13 +1963,13 @@ export default function AdminPage() {
                                             {/* Actions */}
                                             {editingEntryId !== entry.id && (
                                                 <div className="flex flex-col gap-1">
-                                                    {/* YouTube refresh button */}
-                                                    {entry.platform === 'youtube' && (
+                                                    {/* Refresh button for supported platforms */}
+                                                    {(['youtube', 'instagram', 'tiktok', 'linkedin'].includes(entry.platform) || (['blog', 'other'].includes(entry.platform) && entry.serp_keywords_data && entry.serp_keywords_data.length > 0)) && (
                                                         <button
                                                             onClick={() => handleRefreshAnalytics(entry.id)}
                                                             disabled={refreshingEntryId === entry.id}
                                                             className="p-2 text-green-600 hover:bg-green-100 border border-transparent hover:border-green-200 disabled:opacity-50"
-                                                            title="Refresh YouTube analytics"
+                                                            title={`Refresh ${entry.platform === 'youtube' ? 'YouTube' : 'Olostep'} analytics`}
                                                         >
                                                             {refreshingEntryId === entry.id ? (
                                                                 <Loader2 className="h-4 w-4 animate-spin" />
