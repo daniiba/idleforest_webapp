@@ -85,8 +85,9 @@ export async function POST(request: Request) {
 
         if (existingTeamMember && existingTeamMember.length > 0) {
             const member = existingTeamMember[0]
-            // @ts-ignore - Supabase type inference might be tricky with nested joins
-            const team = member.teams
+            // @ts-ignore - Supabase type inference: member.teams is sometimes an array depending on query structure
+            const joinedTeams = member.teams
+            const team = Array.isArray(joinedTeams) ? joinedTeams[0] : joinedTeams
 
             return NextResponse.json({
                 error: 'You are already a member of a team. You can only be part of one team at a time.',
