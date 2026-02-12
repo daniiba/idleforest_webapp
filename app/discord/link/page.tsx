@@ -28,7 +28,10 @@ function DiscordLinkContent() {
 
                 if (authError) {
                     console.error('[Discord Link] Auth error:', authError)
-                    throw authError
+                    // If session is missing, just treat as unauthenticated
+                    if (authError.name !== 'AuthSessionMissingError') {
+                        throw authError
+                    }
                 }
 
                 if (!user) {
