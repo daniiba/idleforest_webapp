@@ -75,10 +75,11 @@ function DiscordLinkContent() {
                 queryParams[key] = value
             })
 
+            console.log('Starting Discord login flow')
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'discord',
                 options: {
-                    redirectTo: redirectUrl,
+                    redirectTo: `${origin}/auth/callback?next=/discord/link`,
                     scopes: 'identify email guilds',
                     queryParams: queryParams
                 }
@@ -97,17 +98,19 @@ function DiscordLinkContent() {
         setIsLoading(true)
         try {
             const origin = window.location.origin
-            const redirectUrl = `${origin}/discord/link`
+            // Redirect to callback route to handle code exchange
+            // const redirectUrl = `${origin}/auth/callback?next=/discord/link`
 
             const queryParams: Record<string, string> = {}
             searchParams.forEach((value, key) => {
                 queryParams[key] = value
             })
 
+            console.log('Starting Discord link flow')
             const { error } = await supabase.auth.linkIdentity({
                 provider: 'discord',
                 options: {
-                    redirectTo: redirectUrl,
+                    redirectTo: `${origin}/auth/callback?next=/discord/link`,
                     scopes: 'identify email guilds',
                     queryParams: queryParams
                 }

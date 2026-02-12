@@ -9,8 +9,13 @@ export async function GET(request: Request) {
 
     if (code) {
         const supabase = await createClient()
+        console.log('[Auth Callback] Exchanging code for session...')
         const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (!error) {
+
+        if (error) {
+            console.error('[Auth Callback] Error exchanging code:', error)
+        } else {
+            console.log('[Auth Callback] Session exchanged successfully')
             const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
             const isLocalEnv = process.env.NODE_ENV === 'development'
             if (isLocalEnv) {
