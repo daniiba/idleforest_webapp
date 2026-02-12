@@ -23,39 +23,62 @@ function DiscordLinkContent() {
         const init = async () => {
             try {
                 // 1. Check Auth
-                const { data: { user } } = await supabase.auth.getUser()
+                console.log('[Discord Link] Checking auth...')
+                const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+                if (authError) {
+                    console.error('[Discord Link] Auth error:', authError)
+                    throw authError
+                }
 
                 if (!user) {
+                    console.log('[Discord Link] No user found, showing login screen')
                     // Show login screen instead of auto-redirecting
                     setStatus('unauthenticated')
                     setIsLoading(false)
                     return
                 }
 
+                console.log('[Discord Link] User found:', user.id)
+
                 // 2. Check Discord Link
                 const discordIdentity = user.identities?.find(id => id.provider === 'discord')
 
                 if (!discordIdentity) {
+                    console.log('[Discord Link] No Discord identity found for user')
                     setStatus('linking_required')
                     setIsLoading(false)
                     return
                 }
 
+                console.log('[Discord Link] Discord identity found:', discordIdentity.id)
+
                 // 2.5 Sync Discord ID to Profile if missing
                 // The bot looks for 'discord_user_id' in the profiles table.
                 const discordUserId = discordIdentity.id // Supabase stores the provider's unique ID here
 
-                await supabase
+                console.log('[Discord Link] Updating profile with discord_user_id:', discordUserId)
+                const { data: profileData, error: profileError } = await supabase
                     .from('profiles')
                     .update({ discord_user_id: discordUserId })
                     .eq('user_id', user.id)
+                    .select()
+
+                if (profileError) {
+                    console.error('[Discord Link] Profile update error:', profileError)
+                } else {
+                    console.log('[Discord Link] Profile updated successfully:', profileData)
+                    if (profileData.length === 0) {
+                        console.warn('[Discord Link] WARNING: Profile update returned 0 rows. Does the profile exist?')
+                    }
+                }
 
                 // 3. Success - User is logged in and linked
                 setStatus('success')
                 setIsLoading(false)
 
             } catch (err) {
-                console.error('Error in Discord link flow:', err)
+                console.error('[Discord Link] Error in Discord link flow:', err)
                 setErrorMessage('An unexpected error occurred.')
                 setStatus('error')
                 setIsLoading(false)
