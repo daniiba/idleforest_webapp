@@ -56,7 +56,10 @@ function DiscordLinkContent() {
                     return
                 }
 
-                console.log('[Discord Link] Discord identity found:', discordIdentity.id)
+                console.log('[Discord Link] Discord identity found:', discordIdentity)
+                console.log('[Discord Link] Discord ID:', discordIdentity.id)
+                console.log('[Discord Link] Discord Metadata:', discordIdentity.identity_data)
+
 
                 // 2.5 Sync Discord ID to Profile if missing
                 // The bot looks for 'discord_user_id' in the profiles table.
@@ -98,7 +101,11 @@ function DiscordLinkContent() {
         try {
             const origin = window.location.origin
             const redirectUrl = `${origin}/discord/link`
-            const queryParams: Record<string, string> = {}
+            const queryParams: Record<string, string> = {
+                // Force Discord to show the authorization screen again,
+                // so the user can see which account they are using or switch accounts.
+                prompt: 'consent'
+            }
             searchParams.forEach((value, key) => {
                 queryParams[key] = value
             })
@@ -129,7 +136,9 @@ function DiscordLinkContent() {
             // Redirect to callback route to handle code exchange
             // const redirectUrl = `${origin}/auth/callback?next=/discord/link`
 
-            const queryParams: Record<string, string> = {}
+            const queryParams: Record<string, string> = {
+                prompt: 'consent'
+            }
             searchParams.forEach((value, key) => {
                 queryParams[key] = value
             })
@@ -298,10 +307,24 @@ function DiscordLinkContent() {
                         href={returnUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all mb-4"
                     >
                         Return to Discord <ArrowRight className="w-4 h-4" />
                     </a>
+
+                    {userEmail && (
+                        <div className="bg-neutral-100 p-3 mb-4 border border-neutral-200 rounded text-sm text-left">
+                            <span className="text-neutral-500 block mb-1">Connected as:</span>
+                            <span className="font-mono font-bold text-brand-navy break-all">{userEmail}</span>
+                        </div>
+                    )}
+
+                    <button
+                        onClick={handleLogout}
+                        className="w-full text-sm text-neutral-500 hover:text-red-600 hover:underline py-2"
+                    >
+                        Not you? Log out
+                    </button>
                 </div>
             </div>
         )
