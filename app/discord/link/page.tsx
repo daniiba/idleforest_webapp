@@ -14,6 +14,7 @@ function DiscordLinkContent() {
     const [isLoading, setIsLoading] = useState(true)
     const [status, setStatus] = useState<'checking' | 'unauthenticated' | 'linking_required' | 'success' | 'error'>('checking')
     const [errorMessage, setErrorMessage] = useState('')
+    const [userEmail, setUserEmail] = useState<string | null>(null)
 
     // We can use these for context in the UI, but no logic depends on them for team creation anymore
     const guildId = searchParams.get('guild_id')
@@ -43,6 +44,7 @@ function DiscordLinkContent() {
                 }
 
                 console.log('[Discord Link] User found:', user.id)
+                setUserEmail(user.email || null)
 
                 // 2. Check Discord Link
                 const discordIdentity = user.identities?.find(id => id.provider === 'discord')
@@ -153,6 +155,12 @@ function DiscordLinkContent() {
         }
     }
 
+    const handleLogout = async () => {
+        setIsLoading(true)
+        await supabase.auth.signOut()
+        window.location.reload()
+    }
+
     if (isLoading || status === 'checking') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
@@ -207,16 +215,32 @@ function DiscordLinkContent() {
                     <h1 className="text-2xl font-bold font-candu uppercase text-brand-navy mb-4">
                         Connect Discord
                     </h1>
-                    <p className="text-neutral-600 mb-8">
+                    <p className="text-neutral-600 mb-4">
                         To continue setting up your team for <strong>{guildName || 'your server'}</strong>, please link your Discord account.
                     </p>
+
+                    {userEmail && (
+                        <div className="bg-neutral-100 p-3 mb-6 border border-neutral-200 rounded text-sm">
+                            <span className="text-neutral-500 block mb-1">Logged in as:</span>
+                            <span className="font-mono font-bold text-brand-navy break-all">{userEmail}</span>
+                        </div>
+                    )}
+
                     <button
                         onClick={handleConnectDiscord}
-                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all mb-4"
                     >
                         Connect Discord Account
                     </button>
-                    <div className="mt-6">
+
+                    <button
+                        onClick={handleLogout}
+                        className="w-full text-sm text-neutral-500 hover:text-red-600 hover:underline py-2"
+                    >
+                        Not you? Log out
+                    </button>
+
+                    <div className="mt-2">
                         <Link
                             href="/profile"
                             className="text-sm text-neutral-500 hover:text-black underline"
