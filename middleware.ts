@@ -5,7 +5,22 @@ import { NextResponse } from 'next/server'
 export async function middleware(request: NextRequest) {
 
 
-  return await updateSession(request)
+  const response = await updateSession(request)
+
+  // A/B Testing Logic
+  const url = request.nextUrl
+  const variantParam = url.searchParams.get('variant')
+
+  if (variantParam && ['original', 'video', 'screenshots'].includes(variantParam)) {
+    // If variant param exists and is valid, set it and update cookie
+    response.cookies.set('ab-variant', variantParam)
+  } else if (!request.cookies.get('ab-variant')) {
+    const variants = ['original', 'video', 'screenshots']
+    const randomVariant = variants[Math.floor(Math.random() * variants.length)]
+    response.cookies.set('ab-variant', randomVariant)
+  }
+
+  return response
 }
 
 export const config = {

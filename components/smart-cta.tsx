@@ -7,20 +7,24 @@ import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 import { cn } from "@/lib/utils";
 import { EmailForm } from "@/components/email-form";
 
+import { DeviceDetection } from "@/lib/device-detection";
+
 export function SmartCTA({
     className,
     showLearnMore,
     forceVertical = false,
     buttonVariant = "default", // "default" (yellow bg) or "inverse" (black bg)
-    onDarkBackground = false
+    onDarkBackground = false,
+    deviceInfo
 }: {
     className?: string;
     showLearnMore?: boolean;
     forceVertical?: boolean;
     buttonVariant?: "default" | "inverse";
     onDarkBackground?: boolean;
+    deviceInfo?: DeviceDetection;
 }) {
-    const { isMobile, isDesktop, isChrome, isEdge, isMac } = useDeviceDetection();
+    const { isMobile, isDesktop, isChrome, isEdge, isMac } = useDeviceDetection(deviceInfo);
 
     const buttonClass = buttonVariant === "inverse"
         ? "w-full sm:w-auto bg-black text-brand-yellow font-bold hover:bg-black/80 rounded-full px-8 py-6 justify-center"
