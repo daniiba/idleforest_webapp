@@ -16,18 +16,24 @@ export default function UserLoginPage() {
 
   const redirectToProfile = async (userId: string) => {
     // Fetch the user's profile to get their display_name
-    const { data: profile } = await supabase
+    const { data: profiles } = await supabase
       .from('profiles')
       .select('display_name')
       .eq('user_id', userId)
-      .single();
+      .order('created_at', { ascending: false });
 
-    if (profile?.display_name) {
-      router.push(`/profile/${encodeURIComponent(profile.display_name)}`);
-    } else {
-      // Fallback to home if no profile found
-      router.push('/');
+    if (profiles && profiles.length > 0) {
+      // Prefer the newest profile that doesn't look like an email
+      const bestProfile = profiles.find(p => p.display_name && !p.display_name.includes('@')) || profiles[0];
+
+      if (bestProfile?.display_name) {
+        router.push(`/profile/${encodeURIComponent(bestProfile.display_name)}`);
+        return;
+      }
     }
+
+    // Fallback to home if no valid profile found
+    router.push('/');
   };
 
   // Redirect if already logged in

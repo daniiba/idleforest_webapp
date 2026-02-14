@@ -33,14 +33,19 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
       }
 
       try {
-        const { data: profile } = await supabase
+        const { data: profiles } = await supabase
           .from('profiles')
           .select('display_name')
           .eq('user_id', user.id)
-          .single()
+          .order('created_at', { ascending: false })
 
-        if (profile?.display_name) {
-          setProfileUrl(`/profile/${encodeURIComponent(profile.display_name)}`)
+        if (profiles && profiles.length > 0) {
+          // Find the newest profile that doesn't look like an email
+          const bestProfile = profiles.find(p => p.display_name && !p.display_name.includes('@')) || profiles[0]
+
+          if (bestProfile?.display_name) {
+            setProfileUrl(`/profile/${encodeURIComponent(bestProfile.display_name)}`)
+          }
         }
       } catch (err) {
         console.error('Navigation fetchProfileUrl error:', err)
