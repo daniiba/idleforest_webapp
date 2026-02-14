@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.olostep.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'ufsnmvbmgwvkhirfnptm.supabase.co',
+      },
     ],
   },
   async rewrites() {

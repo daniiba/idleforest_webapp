@@ -60,6 +60,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
   const navLinks = [
     { href: '/teams', label: 'Rankings' },
+    { href: '/discord-bot', label: 'Discord Bot' },
     { href: '/report', label: 'Report' },
     { href: '/transparency', label: 'Transparency' },
     { href: '/map', label: 'Map' },
