@@ -691,7 +691,7 @@ export default function TeamClient() {
 					</div>
 				)}
 
-				<Tabs defaultValue="discussions" className="w-full">
+				<Tabs defaultValue="stats" className="w-full">
 					{/* Team Header Card - Now wraps TabsList */}
 					<div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8">
 						<div className="p-6 md:p-8">
@@ -935,6 +935,16 @@ export default function TeamClient() {
 					)}
 
 					<TabsContent value="stats" className="mt-0">
+						<TeamStats
+							team={{
+								total_points: team?.total_points || 0,
+								created_at: team?.created_at || new Date().toISOString()
+							}}
+							memberCount={members.length}
+							historicalData={historicalData}
+						/>
+					</TabsContent>
+					<TabsContent value="discussions" className="mt-0">
 						<ThreadList
 							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
 							teamId={team?.id || ''}
@@ -950,16 +960,6 @@ export default function TeamClient() {
 						/>
 					</TabsContent>
 
-					<TabsContent value="stats" className="mt-0">
-						<TeamStats
-							team={{
-								total_points: team?.total_points || 0,
-								created_at: team?.created_at || new Date().toISOString()
-							}}
-							memberCount={members.length}
-							historicalData={historicalData}
-						/>
-					</TabsContent>
 				</Tabs>
 
 				{/* Leave Team Confirmation Modal */}
