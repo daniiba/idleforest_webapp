@@ -79,48 +79,25 @@ export default function PublicProfilePage() {
     const fetchProfile = async () => {
         try {
             setLoading(true)
-            const slug = params.username as string
-            const decodedSlug = decodeURIComponent(slug)
-
-            // If the slug contains '@', it might be looking up by username (email)
-            // or a display_name that happens to look like an email.
-            // We search both fields and pick the newest one.
-            let query = supabase
+            const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .or(`display_name.ilike.${decodedSlug},username.ilike.${decodedSlug}`)
-                .order('created_at', { ascending: false })
-                .limit(1)
-
-            const { data: profiles, error } = await query
+                .ilike('display_name', params.username as string)
+                .single()
 
             if (error) throw error
-            const foundProfile = profiles?.[0]
-
-            if (foundProfile) {
-                // If the URL slug is an email but the found profile has a better display_name,
-                // redirect to the better URL.
-                const isEmailSlug = decodedSlug.includes('@')
-                const hasBetterDisplayName = foundProfile.display_name && !foundProfile.display_name.includes('@')
-
-                if (isEmailSlug && hasBetterDisplayName) {
-                    console.log('[Profile] Redirecting from email slug to display_name slug')
-                    router.replace(`/profile/${encodeURIComponent(foundProfile.display_name)}`)
-                    return
-                }
-
-                setProfile(foundProfile)
+            if (profile) {
+                setProfile(profile)
                 // Fetch referral stats
                 const { data: referralStats, error: referralError } = await supabase
                     .from('referral_stats')
                     .select('*')
-                    .eq('user_id', foundProfile.user_id)
-                    .order('updated_at', { ascending: false })
-                    .limit(1)
+                    .eq('user_id', profile.user_id)
+                    .single()
 
-                if (!referralError && referralStats && referralStats.length > 0) {
+                if (!referralError && referralStats) {
                     setReferralStats({
-                        ...referralStats[0]
+                        ...referralStats
                     })
                 }
 
@@ -144,7 +121,7 @@ export default function PublicProfilePage() {
                     const { data: treeProgress, error: progressError } = await supabase
                         .from('badge_progress')
                         .select('current_value')
-                        .eq('user_id', foundProfile.user_id)
+                        .eq('user_id', profile.user_id)
                         .in('badge_tier_id', tierIds)
 
                     if (!progressError && treeProgress && treeProgress.length > 0) {
@@ -156,15 +133,14 @@ export default function PublicProfilePage() {
                 const { data: teamMembership } = await supabase
                     .from('team_members')
                     .select('team_id')
-                    .eq('user_id', foundProfile.user_id)
-                    .order('joined_at', { ascending: false })
-                    .limit(1)
+                    .eq('user_id', profile.user_id)
+                    .single()
 
-                if (teamMembership && teamMembership.length > 0) {
+                if (teamMembership) {
                     const { data: team } = await supabase
                         .from('teams')
                         .select('id, name, total_points, slug')
-                        .eq('id', teamMembership[0].team_id)
+                        .eq('id', teamMembership.team_id)
                         .single()
 
                     if (team) {
@@ -176,7 +152,7 @@ export default function PublicProfilePage() {
                 const { data: nodesData } = await supabase
                     .from('nodes')
                     .select('platform')
-                    .eq('user_id', foundProfile.user_id)
+                    .eq('user_id', profile.user_id)
 
                 if (nodesData && nodesData.length > 0) {
                     const userPlatforms: string[] = []
@@ -187,8 +163,8 @@ export default function PublicProfilePage() {
                 }
 
                 // Check if current user is viewing their own profile
-                const { data: { user: currentUser } } = await supabase.auth.getUser()
-                if (currentUser && currentUser.id === foundProfile.user_id) {
+                const { data: { user } } = await supabase.auth.getUser()
+                if (user && user.id === profile.user_id) {
                     setIsOwnProfile(true)
                 }
 
@@ -196,7 +172,7 @@ export default function PublicProfilePage() {
                 const { data: dailyStats } = await supabase
                     .from('user_daily_stats')
                     .select('date, total_points_snapshot, points_gained_that_day')
-                    .eq('user_id', foundProfile.user_id)
+                    .eq('user_id', profile.user_id)
                     .order('date', { ascending: true })
                     .limit(30)
 
