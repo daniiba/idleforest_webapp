@@ -833,11 +833,12 @@ export default function TeamClient() {
 						{/* Tabs integrated into Header Footer */}
 						<div className="border-t-2 border-black bg-black text-white p-0">
 							<TabsList className="flex w-full bg-transparent border-0 p-0 h-auto gap-0 rounded-none">
+
 								<TabsTrigger
-									value="discussions"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									value="stats"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-0 data-[state=active]:border-l-2 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
 								>
-									Discussions
+									Stats
 								</TabsTrigger>
 								<TabsTrigger
 									value="members"
@@ -846,11 +847,12 @@ export default function TeamClient() {
 									Members
 								</TabsTrigger>
 								<TabsTrigger
-									value="stats"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-0 data-[state=active]:border-l-2 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									value="discussions"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
 								>
-									Stats
+									Discussions
 								</TabsTrigger>
+
 							</TabsList>
 						</div>
 					</div>
