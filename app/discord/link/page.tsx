@@ -84,7 +84,6 @@ function DiscordLinkContent() {
                 // 3. Success - User is logged in and linked
                 setStatus('success')
                 setIsLoading(false)
-
             } catch (err) {
                 console.error('[Discord Link] Error in Discord link flow:', err)
                 setErrorMessage('An unexpected error occurred.')
@@ -168,6 +167,10 @@ function DiscordLinkContent() {
         setIsLoading(true)
         await supabase.auth.signOut()
         window.location.reload()
+    }
+
+    const handleCloseTab = () => {
+        window.close()
     }
 
     if (isLoading || status === 'checking') {
@@ -301,19 +304,27 @@ function DiscordLinkContent() {
                         Account Connected!
                     </h1>
                     <p className="text-neutral-600 mb-8">
-                        Your Discord account has been successfully linked. You can now return to Discord to finish setting up your team.
+                        Your Discord account has been successfully linked. You can now return to Discord or visit your profile.
                     </p>
-                    <a
-                        href={returnUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all mb-4"
-                    >
-                        Return to Discord <ArrowRight className="w-4 h-4" />
-                    </a>
+
+                    <div className="space-y-4">
+                        <Link
+                            href="/profile"
+                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-brand-yellow text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        >
+                            Go to Profile <ArrowRight className="w-4 h-4" />
+                        </Link>
+
+                        <button
+                            onClick={handleCloseTab}
+                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        >
+                            Return to Discord
+                        </button>
+                    </div>
 
                     {userEmail && (
-                        <div className="bg-neutral-100 p-3 mb-4 border border-neutral-200 rounded text-sm text-left">
+                        <div className="bg-neutral-100 p-3 mt-8 mb-4 border border-neutral-200 rounded text-sm text-left">
                             <span className="text-neutral-500 block mb-1">Connected as:</span>
                             <span className="font-mono font-bold text-brand-navy break-all">{userEmail}</span>
                         </div>
