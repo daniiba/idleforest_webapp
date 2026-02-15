@@ -132,10 +132,9 @@ export default function BotLandingPage() {
                                         {discordTeams.length > 0 ? (
                                             discordTeams.map((team) => (
                                                 <div key={team.id} className="w-10 h-10 rounded-full border-2 border-white bg-neutral-200 overflow-hidden relative" title={team.name}>
-                                                    <Image
+                                                    <img
                                                         src={team.image_url || "/logo.png"}
                                                         alt={team.name}
-                                                        fill
                                                         className="object-cover"
                                                     />
                                                 </div>
