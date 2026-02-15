@@ -934,7 +934,7 @@ export default function TeamClient() {
 						</Card>
 					)}
 
-					<TabsContent value="discussions" className="mt-0">
+					<TabsContent value="stats" className="mt-0">
 						<ThreadList
 							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
 							teamId={team?.id || ''}
