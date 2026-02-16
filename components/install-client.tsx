@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 
 const STORE_URLS = {
   chrome: 'https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk',
-  firefox: 'https://addons.mozilla.org/en-GB/firefox/addon/idleforest/',
+  // firefox: 'https://addons.mozilla.org/en-GB/firefox/addon/idleforest/',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb',
 } as const;
 
@@ -23,9 +23,9 @@ export default function InstallClient() {
     const userAgent = window.navigator.userAgent.toLowerCase();
     if (userAgent.includes('edg/')) {
       setBrowser('edge');
-    } else if (userAgent.includes('firefox/')) {
+    } /* else if (userAgent.includes('firefox/')) {
       setBrowser('firefox');
-    }
+    } */
 
     // Store referral code in localStorage
     if (ref) {
@@ -43,12 +43,12 @@ export default function InstallClient() {
   return (
     <Card className="max-w-md w-full p-6 space-y-6">
       <h1 className="text-2xl font-semibold text-center">Installing Idle Forest</h1>
-      
+
       <div className="space-y-4">
         <p className="text-center text-gray-600">
           Redirecting you to the {browser.charAt(0).toUpperCase() + browser.slice(1)} Web Store...
         </p>
-        
+
         {/* Loading animation */}
         <div className="flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -65,8 +65,7 @@ export default function InstallClient() {
                 key={key}
                 href={url}
                 className={`px-4 py-2 text-center rounded-lg transition-colors
-                  ${
-                    'bg-green-100 text-green-700 hover:bg-green-200'
+                  ${'bg-green-100 text-green-700 hover:bg-green-200'
                   }`}
               >
                 {key.charAt(0).toUpperCase() + key.slice(1)}

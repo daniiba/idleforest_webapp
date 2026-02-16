@@ -138,7 +138,7 @@ fbq('track', 'PageView');
               "@type": "SoftwareApplication",
               "name": "IdleForest",
               "applicationCategory": "BrowserExtension",
-              "operatingSystem": "Chrome, Firefox, Edge, Windows, macOS",
+              "operatingSystem": "Chrome, Edge, Windows, macOS",
               "offers": {
                 "@type": "Offer",
                 "price": "0",

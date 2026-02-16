@@ -23,7 +23,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
         treesPlanted: 0,
     });
 
-    const { isMobile, isDesktop, isChrome, isEdge, isSafari, isFirefox, isMac, isWindows } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection(deviceInfo);
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
     const [currentScreenshot, setCurrentScreenshot] = useState(0);

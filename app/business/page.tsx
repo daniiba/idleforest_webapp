@@ -77,8 +77,8 @@ export default function BusinessPage() {
 
       if (userAgent.indexOf('edg') !== -1) {
         return 'edge'
-      } else if (userAgent.indexOf('firefox') !== -1) {
-        return 'firefox'
+        /* } else if (userAgent.indexOf('firefox') !== -1) {
+          return 'firefox' */
       } else if (userAgent.indexOf('chrome') !== -1) {
         return 'chrome'
       } else {
