@@ -82,7 +82,7 @@ export default function PublicProfilePage() {
             const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .ilike('display_name', params.username as string)
+                .ilike('display_name', decodeURIComponent(params.username as string))
                 .single()
 
             if (error) throw error

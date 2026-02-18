@@ -28,7 +28,7 @@ export default function UserShareClient() {
             const { data: profile } = await supabase
                 .from('profiles')
                 .select('user_id, display_name, total_points')
-                .ilike('display_name', params.username as string)
+                .ilike('display_name', decodeURIComponent(params.username as string))
                 .single()
 
             if (profile) {

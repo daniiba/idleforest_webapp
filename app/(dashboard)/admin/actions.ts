@@ -294,7 +294,7 @@ import {
 export type { ResendContact }
 
 
-export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop' | 'team_owners'
+export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop' | 'team_owners' | 'extension_no_desktop'
 
 export interface PowerUser {
     id: string
@@ -315,6 +315,7 @@ export interface SegmentStats {
     new_users: number
     unopted_desktop: number
     team_owners: number
+    extension_no_desktop: number
     total: number
 }
 
@@ -399,14 +400,33 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
 
     // Create a set of users who have at least one desktop node with opt_in = false
     const unoptedDesktopUserIds = new Set<string>()
+    // Logic for extension_no_desktop: "if all nodes that belong to a user have platform Null then its a user without desktop"
+    const userNodesMap = new Map<string, { hasDesktop: boolean; hasAnyNode: boolean; allPlatformsNull: boolean }>()
+
     if (nodes) {
         nodes.forEach(node => {
-            // Check for desktop platform (win32 or darwin) AND opt_in is false
+            if (!node.user_id) return
+
+            // Existing logic for unopted desktop
             if ((node.platform === 'win32' || node.platform === 'darwin') && node.opt_in === false) {
                 unoptedDesktopUserIds.add(node.user_id)
             }
+
+            // Logic for extension_no_desktop
+            const stats = userNodesMap.get(node.user_id) || { hasDesktop: false, hasAnyNode: true, allPlatformsNull: true }
+            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            if (isDesktop) stats.hasDesktop = true
+            if (node.platform !== null) stats.allPlatformsNull = false
+            userNodesMap.set(node.user_id, stats)
         })
     }
+
+    const extensionOnlyUserIds = new Set<string>()
+    userNodesMap.forEach((stats, userId) => {
+        if (stats.allPlatformsNull && stats.hasAnyNode) {
+            extensionOnlyUserIds.add(userId)
+        }
+    })
 
     // Fetch team owners with team names
     const { data: teamOwners } = await supabase
@@ -465,6 +485,11 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             segments.push('team_owners')
         }
 
+        // Extension Only: all nodes have platform null
+        if (extensionOnlyUserIds.has(profile.user_id)) {
+            segments.push('extension_no_desktop')
+        }
+
         return {
             id: profile.id,
             user_id: profile.user_id,
@@ -497,6 +522,7 @@ export async function getSegmentCounts(): Promise<SegmentStats> {
         new_users: users.filter(u => u.segments.includes('new_users')).length,
         unopted_desktop: users.filter(u => u.segments.includes('unopted_desktop')).length,
         team_owners: users.filter(u => u.segments.includes('team_owners')).length,
+        extension_no_desktop: users.filter(u => u.segments.includes('extension_no_desktop')).length,
         total: users.length
     }
 }

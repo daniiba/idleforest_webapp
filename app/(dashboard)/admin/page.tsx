@@ -2322,25 +2322,34 @@ export default function AdminPage() {
                                             <div className="text-2xl font-extrabold font-candu">{segmentStats?.new_users || 0}</div>
                                         </button>
                                         <button
-                                            onClick={() => setSelectedSegment('team_owners')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
-                                        >
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <Trophy className="h-4 w-4 text-orange-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Team Owners</span>
-                                            </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.team_owners || 0}</div>
-                                        </button>
-
-                                        <button
                                             onClick={() => setSelectedSegment('unopted_desktop')}
                                             className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
-                                                <Users className="h-4 w-4 text-purple-500" />
+                                                <AlertTriangle className="h-4 w-4 text-red-500" />
                                                 <span className="text-xs font-bold uppercase text-neutral-500">Unopted Desktop</span>
                                             </div>
                                             <div className="text-2xl font-extrabold font-candu">{segmentStats?.unopted_desktop || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('extension_no_desktop')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'extension_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <MousePointer className="h-4 w-4 text-orange-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Extension Only</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.extension_no_desktop || 0}</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSegment('team_owners')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Trophy className="h-4 w-4 text-yellow-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Team Owners</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.team_owners || 0}</div>
                                         </button>
                                     </div>
                                 </section>
@@ -2890,7 +2899,7 @@ export default function AdminPage() {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
             {/* CREATE/EDIT TEMPLATE MODAL */}
             {
                 isTemplateModalOpen && (

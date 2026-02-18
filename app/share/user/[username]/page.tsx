@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         const { data: profile } = await supabase
             .from('profiles')
             .select('display_name, total_points')
-            .ilike('display_name', username)
+            .ilike('display_name', decodeURIComponent(username))
             .single()
 
         const displayName = profile?.display_name || username
