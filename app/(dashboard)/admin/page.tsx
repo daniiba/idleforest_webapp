@@ -20,7 +20,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, type CompanyAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -206,6 +206,97 @@ export default function AdminPage() {
     const [removingKeywordId, setRemovingKeywordId] = useState<string | null>(null)
     const [refreshingEntryId, setRefreshingEntryId] = useState<string | null>(null)
     const [marketingTotals, setMarketingTotals] = useState({ totalCost: 0, totalImpressions: 0, totalClicks: 0, totalEngagement: 0 })
+
+    // Companies & Portals State
+    const [companies, setCompanies] = useState<CompanyAdmin[]>([])
+    const [isLoadingCompanies, setIsLoadingCompanies] = useState(false)
+    const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
+    const [companyModalMode, setCompanyModalMode] = useState<'create' | 'edit'>('create')
+    const [editingCompanyId, setEditingCompanyId] = useState<string | null>(null)
+    const [newCompany, setNewCompany] = useState({ name: '', slug: '', invite_code: '', theme_color: '#10B981', website: '', video_url: '', logo_url: '', description: '', is_invite_only: true })
+    const [isSavingCompany, setIsSavingCompany] = useState(false)
+    const [previewCompany, setPreviewCompany] = useState<CompanyAdmin | null>(null)
+
+    // Fetch Companies
+    const fetchCompanies = async () => {
+        setIsLoadingCompanies(true)
+        try {
+            const data = await getCompaniesAdmin()
+            setCompanies(data)
+        } catch (error) {
+            console.error('Error fetching companies:', error)
+        } finally {
+            setIsLoadingCompanies(false)
+        }
+    }
+
+    const handleSaveCompany = async () => {
+        if (!newCompany.name.trim()) return
+        setIsSavingCompany(true)
+
+        try {
+            if (companyModalMode === 'create') {
+                const result = await createCompanyAdmin(newCompany)
+                if (result.success) {
+                    setIsCompanyModalOpen(false)
+                    await fetchCompanies()
+                } else {
+                    alert(result.error)
+                }
+            } else if (companyModalMode === 'edit' && editingCompanyId) {
+                const result = await updateCompanyAdmin(editingCompanyId, newCompany)
+                if (result.success) {
+                    setIsCompanyModalOpen(false)
+                    await fetchCompanies()
+                } else {
+                    alert(result.error)
+                }
+            }
+        } catch (error) {
+            console.error('Error saving company:', error)
+            alert('Failed to save company')
+        } finally {
+            setIsSavingCompany(false)
+        }
+    }
+
+    const handleDeleteCompany = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this company? Existing users will lose their association.')) return
+        try {
+            const result = await deleteCompanyAdmin(id)
+            if (result.success) {
+                await fetchCompanies()
+            } else {
+                alert(result.error)
+            }
+        } catch (error) {
+            console.error('Error deleting company:', error)
+        }
+    }
+
+    const startEditingCompany = (company: CompanyAdmin) => {
+        setCompanyModalMode('edit')
+        setEditingCompanyId(company.id)
+        setNewCompany({
+            name: company.name || '',
+            slug: company.slug || '',
+            invite_code: company.invite_code || '',
+            theme_color: company.theme_color || '#10B981',
+            website: company.website || '',
+            video_url: company.video_url || '',
+            logo_url: company.logo_url || '',
+            description: company.description || '',
+            is_invite_only: company.is_invite_only
+        })
+        setIsCompanyModalOpen(true)
+    }
+
+    const openCreateCompany = () => {
+        setCompanyModalMode('create')
+        setEditingCompanyId(null)
+        setNewCompany({ name: '', slug: '', invite_code: '', theme_color: '#10B981', website: '', video_url: '', logo_url: '', description: '', is_invite_only: true })
+        setIsCompanyModalOpen(true)
+    }
 
     // Fetch marketing entries for selected month/year
     const fetchMarketingEntries = async () => {
@@ -1347,6 +1438,9 @@ export default function AdminPage() {
                         if (value === 'marketing') {
                             fetchMarketingEntries()
                         }
+                        if (value === 'companies') {
+                            fetchCompanies()
+                        }
                     }}
                     className="w-full" defaultValue={'real-data'}                 >
                     <TabsList className="grid w-full max-w-4xl grid-cols-7 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
@@ -1356,6 +1450,7 @@ export default function AdminPage() {
                         <TabsTrigger value="audiences" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📋 Lists</TabsTrigger>
                         <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
                         <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
+                        <TabsTrigger value="companies" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🏢 Companies</TabsTrigger>
                         <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
                     </TabsList>
 
@@ -2797,6 +2892,101 @@ export default function AdminPage() {
                             )}
                         </div>
                     </TabsContent>
+
+                    {/* COMPANIES TAB */}
+                    <TabsContent value="companies" className="space-y-6 mt-6">
+                        <div className="flex justify-between items-center bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div>
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                    <TreePine className="h-5 w-5 text-brand-navy" />
+                                    Companies & Portals
+                                </h2>
+                                <p className="text-sm text-neutral-600 mt-1">Manage B2B partners and their custom widgets</p>
+                            </div>
+                            <button
+                                onClick={openCreateCompany}
+                                className="bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 flex items-center gap-2 font-bold hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all"
+                            >
+                                <Plus className="h-4 w-4" /> New Company
+                            </button>
+                        </div>
+
+                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                            {isLoadingCompanies ? (
+                                <div className="p-12 flex justify-center text-neutral-500">
+                                    <Loader2 className="h-8 w-8 animate-spin" />
+                                </div>
+                            ) : companies.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="border-b-2 border-black bg-neutral-50">
+                                                <TableHead className="font-bold text-black uppercase text-xs">Name</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Slug</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Invite Code</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Color</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {companies.map((company) => (
+                                                <TableRow key={company.id} className="border-b border-neutral-200 hover:bg-neutral-50">
+                                                    <TableCell className="font-medium">
+                                                        <div className="flex items-center gap-2">
+                                                            {company.logo_url && (
+                                                                // eslint-disable-next-line @next/next/no-img-element
+                                                                <img src={company.logo_url} alt="Logo" className="w-6 h-6 rounded-full object-cover border border-neutral-300" />
+                                                            )}
+                                                            {company.name}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="font-mono text-sm">/c/{company.slug || '—'}</TableCell>
+                                                    <TableCell className="font-mono text-sm">{company.invite_code || '—'}</TableCell>
+                                                    <TableCell>
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-4 h-4 rounded-sm border border-black" style={{ backgroundColor: company.theme_color || '#10B981' }}></div>
+                                                            <span className="text-xs">{company.theme_color}</span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const url = `${window.location.origin}/en/widget/c/${company.slug}`
+                                                                    navigator.clipboard.writeText(`<iframe src="${url}" width="350px" height="450px" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" allow="clipboard-write"></iframe>`)
+                                                                    alert('Widget iframe code copied to clipboard!')
+                                                                }}
+                                                                className="text-neutral-500 hover:text-black p-2" title="Copy Widget Code">
+                                                                <Code className="h-4 w-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setPreviewCompany(company)}
+                                                                className="text-neutral-500 hover:text-brand-yellow p-2" title="Preview Widget">
+                                                                <Eye className="h-4 w-4" />
+                                                            </button>
+                                                            <button onClick={() => startEditingCompany(company)} className="text-neutral-500 hover:text-brand-navy p-2" title="Edit">
+                                                                <Pencil className="h-4 w-4" />
+                                                            </button>
+                                                            <button onClick={() => handleDeleteCompany(company.id)} className="text-red-500 hover:text-red-700 p-2" title="Delete">
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </button>
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            ) : (
+                                <div className="p-12 text-center text-neutral-500 flex flex-col items-center">
+                                    <TreePine className="h-12 w-12 text-neutral-300 mb-4" />
+                                    <p className="font-bold text-black text-lg">No Companies Yet</p>
+                                    <p className="text-sm mt-1 mb-4">Create your first B2B client company to generate a widget.</p>
+                                    <button onClick={openCreateCompany} className="text-brand-navy font-bold hover:underline">Create Company</button>
+                                </div>
+                            )}
+                        </div>
+                    </TabsContent>
                 </Tabs>
 
                 {/* Detailed Breakdown - Available in both views */}
@@ -2899,7 +3089,190 @@ export default function AdminPage() {
                         </div>
                     )}
                 </div>
-            </div >
+            </div>
+
+            {/* CREATE/EDIT COMPANY MODAL */}
+            {isCompanyModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-2xl max-h-[90vh] flex flex-col relative">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b-4 border-black bg-brand-yellow">
+                            <h2 className="text-xl font-extrabold font-candu uppercase">
+                                {companyModalMode === 'create' ? 'Create New Company' : 'Edit Company'}
+                            </h2>
+                            <button
+                                onClick={() => setIsCompanyModalOpen(false)}
+                                className="p-1 hover:bg-black/10 rounded-full transition-colors"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-6">
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Company Name *</label>
+                                        <input
+                                            type="text"
+                                            value={newCompany.name}
+                                            onChange={e => setNewCompany({ ...newCompany, name: e.target.value })}
+                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-medium"
+                                            placeholder="Acme Corp"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Slug (URL)</label>
+                                        <input
+                                            type="text"
+                                            value={newCompany.slug}
+                                            onChange={e => setNewCompany({ ...newCompany, slug: e.target.value })}
+                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            placeholder="acme-corp"
+                                        />
+                                        <p className="text-xs text-neutral-500">Used for /c/slug portal</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Invite Code</label>
+                                        <input
+                                            type="text"
+                                            value={newCompany.invite_code}
+                                            onChange={e => setNewCompany({ ...newCompany, invite_code: e.target.value })}
+                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            placeholder="acme123"
+                                        />
+                                        <p className="text-xs text-neutral-500">Gateway code for the widget tracking</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Theme Color (Hex)</label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="color"
+                                                value={newCompany.theme_color}
+                                                onChange={e => setNewCompany({ ...newCompany, theme_color: e.target.value })}
+                                                className="w-12 h-11 border-2 border-black cursor-pointer p-0"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={newCompany.theme_color}
+                                                onChange={e => setNewCompany({ ...newCompany, theme_color: e.target.value })}
+                                                className="flex-1 px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2 items-center flex gap-3 pt-8 border-t border-neutral-200 mt-4">
+                                        <input
+                                            type="checkbox"
+                                            id="invite_only_check"
+                                            checked={newCompany.is_invite_only}
+                                            onChange={e => setNewCompany({ ...newCompany, is_invite_only: e.target.checked })}
+                                            className="w-5 h-5 border-2 border-black rounded-none appearance-none checked:bg-brand-navy checked:border-brand-navy flex items-center justify-center relative outline-none"
+                                        />
+                                        <div>
+                                            <label htmlFor="invite_only_check" className="text-sm font-bold uppercase tracking-wider text-black block cursor-pointer">Invite Only Registration</label>
+                                            <p className="text-xs text-neutral-500">Requires valid invite code to join</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 border-t border-neutral-200 pt-4 mt-4">
+                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Custom Explainer Video URL (YouTube, MP4)</label>
+                                    <input
+                                        type="url"
+                                        value={newCompany.video_url}
+                                        onChange={e => setNewCompany({ ...newCompany, video_url: e.target.value })}
+                                        className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                        placeholder="https://youtube.com/watch?v=..."
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Company Logo URL</label>
+                                    <input
+                                        type="url"
+                                        value={newCompany.logo_url}
+                                        onChange={e => setNewCompany({ ...newCompany, logo_url: e.target.value })}
+                                        className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                        placeholder="https://acme.com/logo.png"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Short Description</label>
+                                    <textarea
+                                        value={newCompany.description}
+                                        onChange={e => setNewCompany({ ...newCompany, description: e.target.value })}
+                                        className="w-full min-h-[100px] px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy resize-y"
+                                        placeholder="Join us in making the world greener..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-4 border-t-4 border-black bg-neutral-50 flex justify-end gap-3 shrink-0">
+                            <button
+                                type="button"
+                                onClick={() => setIsCompanyModalOpen(false)}
+                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-black bg-white hover:bg-neutral-100 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSaveCompany}
+                                disabled={isSavingCompany || !newCompany.name.trim()}
+                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-white bg-brand-navy hover:bg-brand-navy/90 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                            >
+                                {isSavingCompany && <Loader2 className="h-4 w-4 animate-spin" />}
+                                Save Company
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* PREVIEW WIDGET MODAL */}
+            {previewCompany && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-md flex flex-col relative overflow-hidden">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b-4 border-black bg-neutral-50">
+                            <h2 className="text-lg font-extrabold font-candu uppercase text-black break-words flex-1 pr-4">
+                                Preview: {previewCompany.name}
+                            </h2>
+                            <button
+                                onClick={() => setPreviewCompany(null)}
+                                className="p-1 hover:bg-black/10 rounded-full transition-colors flex-shrink-0"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 p-8 bg-neutral-100 flex items-center justify-center min-h-[500px]">
+                            {/* Iframe wrapper to simulate widget embed */}
+                            <iframe
+                                src={`/en/widget/c/${previewCompany.slug}`}
+                                width="350px"
+                                height="450px"
+                                className="border-none rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] bg-white"
+                                title={`Preview Widget for ${previewCompany.name}`}
+                            ></iframe>
+                        </div>
+
+                        <div className="p-4 border-t-4 border-black bg-neutral-50 flex justify-between items-center text-xs text-neutral-500 font-medium">
+                            <span>Width: 350px</span>
+                            <span>Height: 450px</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* CREATE/EDIT TEMPLATE MODAL */}
             {
                 isTemplateModalOpen && (

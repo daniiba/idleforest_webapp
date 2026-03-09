@@ -14,7 +14,20 @@ interface InviteInfo {
 function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const inviteCode = searchParams.get('invite');
+  const urlInviteCode = searchParams.get('invite');
+
+  // Check cookie for company_invite if no URL param
+  const [cookieInviteCode, setCookieInviteCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Basic cookie parsing to find company_invite
+    const match = document.cookie.match(new RegExp('(^| )company_invite=([^;]+)'));
+    if (match) {
+      setCookieInviteCode(match[2]);
+    }
+  }, []);
+
+  const inviteCode = urlInviteCode || cookieInviteCode;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -94,9 +107,9 @@ function SignupForm() {
       // User is signed up and logged in
       setMessage('Signup successful!');
 
-      // If there's an invite code, join the team
+      // If there's an invite code, join the team/company
       if (inviteCode) {
-        setMessage('Signup successful! Joining team...');
+        setMessage('Signup successful! Joining...');
         try {
           const response = await fetch('/api/teams/join', {
             method: 'POST',
@@ -106,14 +119,19 @@ function SignupForm() {
 
           if (response.ok) {
             const joinData = await response.json();
-            setMessage('Successfully joined the team! Redirecting...');
-            // Redirect to team welcome page for progressive engagement
-            router.push(`/welcome/team/${joinData.team?.slug || joinData.team?.id || ''}`);
+            setMessage('Successfully joined! Redirecting...');
+
+            // Redirect to appropriate welcome page for progressive engagement
+            if (joinData.team?.isCompany) {
+              router.push(`/en/welcome/c/${joinData.team?.slug || joinData.team?.id || ''}`);
+            } else {
+              router.push(`/en/welcome/team/${joinData.team?.slug || joinData.team?.id || ''}`);
+            }
             setLoading(false);
             return;
           } else {
-            // Team join failed but signup succeeded - log the error but continue
-            console.error('Failed to join team after signup');
+            // Join failed but signup succeeded - log the error but continue
+            console.error('Failed to join team/company after signup');
           }
         } catch (err) {
           console.error('Error joining team after signup:', err);

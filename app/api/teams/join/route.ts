@@ -45,7 +45,33 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invite code is required' }, { status: 400 })
         }
 
-        // Find the invite
+        // First, check if it's a company invite
+        const { data: company, error: companyError } = await supabase
+            .from('companies')
+            .select('id, name, slug')
+            .eq('invite_code', inviteCode)
+            .single()
+
+        if (company) {
+            // It's a company invite! Assign the user to this company
+            const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ company_id: company.id })
+                .eq('user_id', user.id)
+
+            if (updateError) {
+                console.error('Error assigning user to company:', updateError)
+                return NextResponse.json({ error: 'Failed to join company' }, { status: 500 })
+            }
+
+            return NextResponse.json({
+                success: true,
+                team: { id: company.id, name: company.name, slug: company.slug, isCompany: true },
+                message: 'Successfully joined the company portal!'
+            })
+        }
+
+        // If not a company invite, check if it's a team invite
         const { data: invite, error: inviteError } = await supabase
             .from('team_invites')
             .select(`

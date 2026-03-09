@@ -2636,3 +2636,148 @@ export async function refreshMarketingEntryAnalytics(
         error: `Auto-fetch not available for ${platform}. Please enter analytics manually.`
     }
 }
+
+// ========================================
+// COMPANIES / PORTALS / WIDGETS
+// ========================================
+
+export interface CompanyAdmin {
+    id: string
+    name: string
+    website: string | null
+    slug: string | null
+    description: string | null
+    video_url: string | null
+    logo_url: string | null
+    is_invite_only: boolean
+    invite_code: string | null
+    theme_color: string | null
+    created_at: string
+}
+
+export async function getCompaniesAdmin(): Promise<CompanyAdmin[]> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { data, error } = await adminClient
+        .from('companies')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error) {
+        console.error('Error fetching companies:', error)
+        return []
+    }
+    return data || []
+}
+
+export async function createCompanyAdmin(input: {
+    name: string
+    website?: string
+    slug?: string
+    description?: string
+    video_url?: string
+    logo_url?: string
+    is_invite_only?: boolean
+    invite_code?: string
+    theme_color?: string
+}): Promise<{ success: boolean; company?: CompanyAdmin; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    // Find the 'daniiba' user to own this company
+    const { data: adminUsers } = await adminClient
+        .from('profiles')
+        .select('user_id')
+        .ilike('display_name', 'daniiba')
+        .limit(1)
+
+    const creatorId = adminUsers && adminUsers.length > 0 ? adminUsers[0].user_id : null
+
+    if (!creatorId) {
+        return { success: false, error: 'Could not find the daniiba user to own this company.' }
+    }
+
+    const { data, error } = await adminClient
+        .from('companies')
+        .insert({
+            user_id: creatorId,
+            name: input.name,
+            website: input.website || null,
+            slug: input.slug || null,
+            description: input.description || null,
+            video_url: input.video_url || null,
+            logo_url: input.logo_url || null,
+            is_invite_only: input.is_invite_only !== undefined ? input.is_invite_only : true,
+            invite_code: input.invite_code || null,
+            theme_color: input.theme_color || '#10B981'
+        })
+        .select()
+        .single()
+
+    if (error) {
+        if (error.code === '23505') {
+            return { success: false, error: 'A company with this slug or invite code already exists.' }
+        }
+        console.error('Error creating company:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true, company: data }
+}
+
+export async function updateCompanyAdmin(
+    id: string,
+    input: Partial<CompanyAdmin>
+): Promise<{ success: boolean; company?: CompanyAdmin; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+
+    const { data, error } = await adminClient
+        .from('companies')
+        .update(input)
+        .eq('id', id)
+        .select()
+        .single()
+
+    if (error) {
+        if (error.code === '23505') {
+            return { success: false, error: 'A company with this slug or invite code already exists.' }
+        }
+        console.error('Error updating company:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true, company: data }
+}
+
+export async function deleteCompanyAdmin(id: string): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient
+        .from('companies')
+        .delete()
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error deleting company:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
