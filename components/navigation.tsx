@@ -9,6 +9,9 @@ import { useAuth } from "@/contexts/AuthContext"
 import { supabase } from "@/lib/supabase/client"
 import { Button } from "./ui/button"
 import TopTeamsBanner from "@/components/TopTeamsBanner"
+import { LanguageSelector } from "./LanguageSelector"
+import { useTranslations } from "next-intl"
+
 
 interface NavigationProps {
   variant?: 'default' | 'dashboard'
@@ -20,6 +23,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const [profileUrl, setProfileUrl] = useState<string>('/')
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations('Navigation')
 
   // Use centralized auth context
   const { user, signOut } = useAuth()
@@ -50,6 +54,15 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
     fetchProfileUrl()
   }, [user])
 
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMenuOpen])
+
   const handleLogout = async () => {
     await signOut()
     setProfileUrl('/')
@@ -59,13 +72,13 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   }
 
   const navLinks = [
-    { href: '/teams', label: 'Rankings' },
-    { href: '/discord-bot', label: 'Discord Bot' },
-    { href: '/report', label: 'Report' },
-    { href: '/transparency', label: 'Transparency' },
-    { href: '/map', label: 'Map' },
-    { href: '/business', label: 'Business' },
-    { href: '/blog', label: 'Blog' },
+    { href: '/teams', label: t('rankings') },
+    { href: '/discord-bot', label: t('discord_bot') },
+    { href: '/report', label: t('report') },
+    { href: '/transparency', label: t('transparency') },
+    { href: '/map', label: t('map') },
+    { href: '/business', label: t('business') },
+    { href: '/blog', label: t('blog') },
   ]
 
   return (
@@ -98,11 +111,13 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
         {/* Desktop CTA / User */}
         <div className="hidden md:flex justify-self-end col-start-3 items-center gap-4">
+          <LanguageSelector />
           {user ? (
             <div className="flex items-center gap-2">
+
               <Link href={profileUrl}>
                 <Button className="bg-brand-yellow text-black border-2 border-black hover:bg-white hover:text-black font-bold font-candu uppercase text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none translate-y-0 transition-all active:translate-y-1">
-                  Profile
+                  {t('profile')}
                 </Button>
               </Link>
               <button
@@ -114,9 +129,9 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
               </button>
             </div>
           ) : (
-            <Link href="/auth/user/login">
+            <Link href="/login">
               <Button className="bg-black text-white border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
-                Login
+                {t('login')}
               </Button>
             </Link>
           )}
@@ -152,25 +167,29 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
                 </Link>
               )
             })}
+
+            <LanguageSelector variant="mobile" />
+
             <div className="h-px bg-black/10 my-2" />
+
             {user ? (
               <div className="space-y-4">
                 <Link href={profileUrl} onClick={() => setIsMenuOpen(false)} className="w-full">
                   <Button className="w-full bg-brand-yellow text-black border-2 border-black font-bold font-candu uppercase text-xl py-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    Go to Profile
+                    {t('go_to_profile')}
                   </Button>
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full text-center py-2 font-bold text-red-600 hover:bg-red-50 rounded-md"
                 >
-                  Log Out
+                  {t('log_out')}
                 </button>
               </div>
             ) : (
               <Link href="/auth/user/login" onClick={() => setIsMenuOpen(false)} className="w-full">
                 <Button className="w-full bg-black text-white font-bold font-candu uppercase text-xl py-6 border-2 border-transparent">
-                  Login
+                  {t('login')}
                 </Button>
               </Link>
             )}
@@ -180,4 +199,5 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
     </header>
   )
 }
+
 

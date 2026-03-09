@@ -21,6 +21,7 @@ import Navigation from "@/components/navigation";
 import { useEffect, useState } from "react";
 import { ReviewsSection } from "@/components/reviews-section";
 import { supabase } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
 
 interface DiscordTeam {
     id: string;
@@ -32,6 +33,7 @@ interface DiscordTeam {
 const BOT_INVITE_URL = "https://discord.com/oauth2/authorize?client_id=1471135568690806825";
 
 export default function BotLandingPage() {
+    const t = useTranslations('DiscordBot');
     const [stats, setStats] = useState({
         totalServers: "0",
         treesPlanted: "0",
@@ -108,17 +110,17 @@ export default function BotLandingPage() {
                             <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
 
                                 <h1 className="font-candu text-black uppercase text-[42px] sm:text-6xl md:text-7xl leading-[1.05]">
-                                    <span className="font-extrabold block">Grow Your </span>
-                                    <span className="font-extrabold text-brand-navy">Server's Forest</span>
+                                    <span className="font-extrabold block">{t('hero_title_line1')} </span>
+                                    <span className="font-extrabold text-brand-navy">{t('hero_title_line2')}</span>
                                 </h1>
                                 <p className="text-lg md:text-xl text-neutral-800 max-w-xl leading-relaxed">
-                                    Track your server's environmental impact in real-time. Compete on global leaderboards and turn every message into a tree planted.
+                                    {t('hero_desc')}
                                 </p>
                                 <div className="flex flex-wrap gap-4 pt-4">
                                     <Button asChild size="lg" className="bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-black font-bold h-16 px-8 rounded-full shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all text-xl">
                                         <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
                                             <MessageSquare className="w-6 h-6 mr-2" />
-                                            Add to Discord
+                                            {t('add_bot')}
                                         </Link>
                                     </Button>
                                     <Button asChild variant="outline" size="lg" className="bg-white hover:bg-neutral-50 text-black border-2 border-black font-bold h-16 px-8 rounded-full shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all text-xl">
@@ -209,15 +211,15 @@ export default function BotLandingPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
                             <div className="text-center md:border-r-2 md:border-white/10">
                                 <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.totalServers}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">Servers Onboarded</div>
+                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_servers')}</div>
                             </div>
                             <div className="text-center md:border-r-2 md:border-white/10">
                                 <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.treesPlanted}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">Total Trees Funded</div>
+                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_trees')}</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.activeUsers}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">Active Tree Planters</div>
+                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_messages')}</div>
                             </div>
                         </div>
                     </div>
@@ -227,8 +229,8 @@ export default function BotLandingPage() {
                 <section id="features" className="py-32 bg-white text-black">
                     <div className="container mx-auto px-6">
                         <div className="text-center max-w-3xl mx-auto mb-20">
-                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-6">Built for Discord Communities</h2>
-                            <p className="text-xl text-neutral-600">The first-ever Discord bot that rewards community activity with real-world reforestation.</p>
+                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-6">{t('features_title')}</h2>
+                            <p className="text-xl text-neutral-600">{t('features_desc')}</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -325,23 +327,23 @@ export default function BotLandingPage() {
                 <section className="py-32 bg-brand-yellow text-black border-y-4 border-black">
                     <div className="container mx-auto px-6">
                         <div className="max-w-4xl mx-auto">
-                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-16 text-center">3 Steps to start</h2>
+                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-16 text-center">{t('how_title')}</h2>
 
                             <div className="space-y-12">
                                 <StepItem
                                     number="01"
-                                    title="Add the Bot"
-                                    description="Click the 'Add to Discord' button to invite IdleForest to your server. No complex configuration needed."
+                                    title={t('step1_title')}
+                                    description={t('step1_desc')}
                                 />
                                 <StepItem
                                     number="02"
-                                    title="Connect Members"
-                                    description="Members use the IdleForest desktop app or browser extension to fund trees while their computers are idle."
+                                    title={t('step2_title')}
+                                    description={t('step2_desc')}
                                 />
                                 <StepItem
                                     number="03"
-                                    title="Watch it Grow"
-                                    description="Receive daily impact reports and see your server climb the global leaderboards."
+                                    title={t('step3_title')}
+                                    description={t('step3_desc')}
                                 />
                             </div>
                         </div>
@@ -356,17 +358,17 @@ export default function BotLandingPage() {
 
                     <div className="container mx-auto px-6 relative z-10 text-center">
                         <h2 className="font-candu text-[42px] md:text-7xl font-extrabold uppercase mb-8 leading-tight">
-                            Make Your Server <br /> <span className="text-brand-yellow">One in a Million</span>
+                            {t('cta_title')}
                         </h2>
                         <p className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto mb-12">
-                            Join the growing ecosystem of Discord servers making a tangible difference for our planet.
+                            {t('cta_desc')}
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                             <Button asChild size="lg" className="w-full sm:w-auto bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-none transition-all text-xl">
                                 <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
                                     <MessageSquare className="w-6 h-6 mr-2" />
-                                    Add to Discord
+                                    {t('add_bot')}
                                 </Link>
                             </Button>
                             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none transition-all text-xl">

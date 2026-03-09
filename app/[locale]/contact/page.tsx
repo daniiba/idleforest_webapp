@@ -18,6 +18,9 @@ import { Turnstile } from '@marsidev/react-turnstile';
 // Icons
 import { Mail, Phone, MapPin, Send, Building, ArrowRight, CalendarDays } from "lucide-react"; // Added Send, Building, and CalendarDays icons
 
+// i18n
+import { useTranslations } from "next-intl";
+
 // Reusable Slide-In Animation Component (copied from BusinessPage for self-containment)
 const SlideIn = ({
   children,
@@ -45,6 +48,8 @@ const SlideIn = ({
 
 // Main Contact Page Component
 export default function ContactPage() {
+  const t = useTranslations('Contact');
+
   // State for the contact form fields
   const [formData, setFormData] = useState({
     name: '',
@@ -134,10 +139,10 @@ export default function ContactPage() {
           <div className="text-center mb-12 lg:mb-16">
             <SlideIn direction="down">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-brand-yellow to-green-500 text-transparent bg-clip-text">
-                Get In Touch
+                {t('title')}
               </h1>
               <p className="text-lg lg:text-xl text-neutral-300 max-w-2xl mx-auto">
-                Have questions, feedback, or interested in enterprise solutions? We'd love to hear from you.
+                {t('description')}
               </p>
             </SlideIn>
           </div>
@@ -150,20 +155,20 @@ export default function ContactPage() {
               <SlideIn direction="left" delay={0.1}>
                 <Card className="bg-neutral-900/80 backdrop-blur-sm border border-neutral-700/60 shadow-xl shadow-brand-yellow/10 rounded-lg">
                   <CardHeader>
-                    <CardTitle className="text-2xl font-semibold text-white">Send us a message</CardTitle>
+                    <CardTitle className="text-2xl font-semibold text-white">{t('form_title')}</CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
                     <form onSubmit={handleSubmit} className="space-y-5">
                       {/* Name Input */}
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1">Full Name</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1">{t('name_label')}</label>
                         <Input
                           id="name"
                           name="name"
                           type="text"
                           value={formData.name}
                           onChange={handleChange}
-                          placeholder="Your Name"
+                          placeholder={t('name_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           required
                           disabled={isSubmitting}
@@ -172,14 +177,14 @@ export default function ContactPage() {
 
                       {/* Email Input */}
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">Email Address</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">{t('email_label')}</label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
                           value={formData.email}
                           onChange={handleChange}
-                          placeholder="you@example.com"
+                          placeholder={t('email_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           required
                           disabled={isSubmitting}
@@ -188,14 +193,14 @@ export default function ContactPage() {
 
                       {/* Company Name Input */}
                       <div>
-                        <label htmlFor="companyName" className="block text-sm font-medium text-neutral-300 mb-1">Company Name</label>
+                        <label htmlFor="companyName" className="block text-sm font-medium text-neutral-300 mb-1">{t('company_label')}</label>
                         <Input
                           id="companyName"
                           name="companyName"
                           type="text"
                           value={formData.companyName}
                           onChange={handleChange}
-                          placeholder="Your Company Inc."
+                          placeholder={t('company_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           disabled={isSubmitting}
                         />
@@ -203,14 +208,14 @@ export default function ContactPage() {
 
                       {/* Company Size Input */}
                       <div>
-                        <label htmlFor="companySize" className="block text-sm font-medium text-neutral-300 mb-1">Company Size</label>
+                        <label htmlFor="companySize" className="block text-sm font-medium text-neutral-300 mb-1">{t('size_label')}</label>
                         <Input
                           id="companySize"
                           name="companySize"
                           type="text"
                           value={formData.companySize}
                           onChange={handleChange}
-                          placeholder="e.g., 1-10, 50-200, 1000+"
+                          placeholder={t('size_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           disabled={isSubmitting}
                         />
@@ -218,14 +223,14 @@ export default function ContactPage() {
 
                       {/* Location Input */}
                       <div>
-                        <label htmlFor="location" className="block text-sm font-medium text-neutral-300 mb-1">Location (City, Country)</label>
+                        <label htmlFor="location" className="block text-sm font-medium text-neutral-300 mb-1">{t('location_label')}</label>
                         <Input
                           id="location"
                           name="location"
                           type="text"
                           value={formData.location}
                           onChange={handleChange}
-                          placeholder="e.g., London, UK"
+                          placeholder={t('location_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           disabled={isSubmitting}
                         />
@@ -233,14 +238,14 @@ export default function ContactPage() {
 
                       {/* Subject Input (Optional) */}
                       <div>
-                        <label htmlFor="subject" className="block text-sm font-medium text-neutral-300 mb-1">Subject <span className="text-neutral-500">(Optional)</span></label>
+                        <label htmlFor="subject" className="block text-sm font-medium text-neutral-300 mb-1">{t('subject_label')} <span className="text-neutral-500">{t('subject_optional')}</span></label>
                         <Input
                           id="subject"
                           name="subject"
                           type="text"
                           value={formData.subject}
                           onChange={handleChange}
-                          placeholder="e.g., Enterprise Inquiry"
+                          placeholder={t('subject_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow"
                           disabled={isSubmitting}
                         />
@@ -248,14 +253,14 @@ export default function ContactPage() {
 
                       {/* Message Textarea */}
                       <div>
-                        <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Your Message</label>
+                        <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">{t('message_label')}</label>
                         <Textarea
                           id="message"
                           name="message"
                           rows={5}
                           value={formData.message}
                           onChange={handleChange}
-                          placeholder="Type your message here..."
+                          placeholder={t('message_placeholder')}
                           className="bg-neutral-800 border-neutral-600 placeholder-neutral-500 text-white focus:border-brand-yellow focus:ring-brand-yellow min-h-[100px]" // Added min-h
                           required
                           disabled={isSubmitting}
@@ -271,10 +276,10 @@ export default function ContactPage() {
                         />
 
                         {submitStatus === 'success' && (
-                          <p className="text-sm text-brand-yellow mb-3">✓ Message sent successfully! We'll get back to you soon.</p>
+                          <p className="text-sm text-brand-yellow mb-3">{t('success_msg')}</p>
                         )}
                         {submitStatus === 'error' && (
-                          <p className="text-sm text-red-500 mb-3">✗ Oops! Something went wrong. Please try again.</p>
+                          <p className="text-sm text-red-500 mb-3">{t('error_msg')}</p>
                         )}
                         <Button
                           type="submit"
@@ -288,11 +293,11 @@ export default function ContactPage() {
                                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                 className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
                               />
-                              Sending...
+                              {t('sending')}
                             </>
                           ) : (
                             <>
-                              Send Message <Send className="h-4 w-4" />
+                              {t('send')} <Send className="h-4 w-4" />
                             </>
                           )}
                         </Button>
@@ -308,7 +313,7 @@ export default function ContactPage() {
               <SlideIn direction="right" delay={0.2}>
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-2xl font-semibold text-white mb-4">Contact Information</h2>
+                    <h2 className="text-2xl font-semibold text-white mb-4">{t('info_title')}</h2>
 
                   </div>
 
@@ -318,11 +323,11 @@ export default function ContactPage() {
                       <Mail className="h-5 w-5 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Email Us</h3>
+                      <h3 className="font-semibold text-white">{t('email_us')}</h3>
                       <a href="mailto:support@idleforest.com" className="text-brand-yellow hover:text-brand-yellow transition-colors break-all">
                         support@idleforest.com
                       </a>
-                      <p className="text-sm text-neutral-400 mt-1">General inquiries & support</p>
+                      <p className="text-sm text-neutral-400 mt-1">{t('general_inquiries')}</p>
                     </div>
                   </div>
 
@@ -332,11 +337,11 @@ export default function ContactPage() {
                       <CalendarDays className="h-5 w-5 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Book a Meeting</h3>
+                      <h3 className="font-semibold text-white">{t('book_meeting')}</h3>
                       <a href="https://calendly.com/idleforest" target="_blank" rel="noopener noreferrer" className="text-brand-yellow hover:text-brand-yellow transition-colors">
-                        Schedule a call with us
+                        {t('schedule_call')}
                       </a>
-                      <p className="text-sm text-neutral-400 mt-1">Find a time that works for you</p>
+                      <p className="text-sm text-neutral-400 mt-1">{t('find_time')}</p>
                     </div>
                   </div>
 

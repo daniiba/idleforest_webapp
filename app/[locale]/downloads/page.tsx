@@ -1,28 +1,26 @@
+'use client'
+
 import Navigation from "@/components/navigation";
 import {
   ChromeStoreButton,
   EdgeStoreButton
 } from "@/components/browser-buttons";
-import Head from 'next/head';
-import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Monitor, Download } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const DownloadsPage = () => {
+  const t = useTranslations('Downloads');
+
   return (
     <div className="min-h-screen bg-brand-gray text-white">
-      <Head>
-        <title>Downloads - IdleForest</title>
-        <meta name="description" content="Download IdleForest for your desktop or browser. Start planting trees today!" />
-      </Head>
       <Navigation />
       <main className="min-h-screen">
 
         {/* Header Section */}
         <section className="relative overflow-hidden pt-10 pb-20">
-          {/* Decorative wavy background */}
           <Image
             src="/Vector (Stroke).svg"
             alt=""
@@ -33,19 +31,17 @@ const DownloadsPage = () => {
           />
           <div className="container mx-auto px-6 relative z-10 text-center">
             <h1 className="font-candu text-black uppercase text-[38px] sm:text-5xl md:text-6xl leading-[1.05] mb-6">
-              <span className="font-extrabold">DOWNLOAD IDLEFOREST</span>
+              <span className="font-extrabold">{t('title')}</span>
             </h1>
             <p className="text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
-              Get started with IdleForest on your preferred platform. Choose from our desktop applications for an enhanced experience or our lightweight browser extensions.
+              {t('description')}
             </p>
           </div>
         </section>
 
-        {/* Desktop Applications Section (Replicated from Landing Page) */}
+        {/* Desktop Applications Section */}
         <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24 pb-20">
           <div className="container mx-auto px-6">
-
-
             <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
               {/* Windows Card */}
               <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
@@ -56,7 +52,7 @@ const DownloadsPage = () => {
                   WINDOWS
                 </h3>
                 <p className="text-neutral-800 mb-8 max-w-sm">
-                  Download IdleForest for Windows to start making a difference with your idle computing power.
+                  {t('windows_desc')}
                 </p>
                 <Button
                   asChild
@@ -69,7 +65,7 @@ const DownloadsPage = () => {
                     rel="noopener noreferrer"
                   >
                     <Download className="h-5 w-5" />
-                    Download for Windows
+                    {t('download_windows')}
                   </Link>
                 </Button>
               </div>
@@ -83,7 +79,7 @@ const DownloadsPage = () => {
                   MAC OS
                 </h3>
                 <p className="text-neutral-800 mb-8 max-w-sm">
-                  Download IdleForest for macOS to contribute to reforestation efforts while your computer is idle.
+                  {t('mac_desc')}
                 </p>
                 <Button
                   asChild
@@ -96,7 +92,7 @@ const DownloadsPage = () => {
                     rel="noopener noreferrer"
                   >
                     <Download className="h-5 w-5" />
-                    Download for Mac OS
+                    {t('download_mac')}
                   </Link>
                 </Button>
               </div>
@@ -109,10 +105,10 @@ const DownloadsPage = () => {
           <div className="container mx-auto px-6 text-black">
             <div className="text-center mb-10">
               <h2 className="font-rethink-sans text-[30px] sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-                Browser Extensions
+                {t('browser_heading')}
               </h2>
               <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
-                Lightweight and easy to install in your favorite browser.
+                {t('browser_desc')}
               </p>
             </div>
 

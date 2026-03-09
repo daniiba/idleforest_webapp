@@ -5,6 +5,7 @@ import { Shield, Lock, FileText, Users, Globe, AlertCircle, CheckCircle2, Extern
 import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 // FAQ Schema for GEO (Generative Engine Optimization)
 // Targets safety/trust queries like "Is IdleForest safe?" or "Does IdleForest sell my data?"
@@ -48,6 +49,8 @@ const faqSchema = {
 };
 
 export default function TransparencyPage() {
+  const t = useTranslations('Transparency');
+
   return (
     <>
       <Navigation />
@@ -62,13 +65,13 @@ export default function TransparencyPage() {
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-brand-navy text-brand-yellow px-4 py-2 rounded-md mb-6">
                 <Shield className="h-5 w-5" />
-                <span className="font-bold text-sm uppercase">Full Transparency</span>
+                <span className="font-bold text-sm uppercase">{t('badge')}</span>
               </div>
               <h1 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold mb-6">
-                How Your Bandwidth Is Used
+                {t('hero_title')}
               </h1>
               <p className="text-lg md:text-xl text-neutral-800 max-w-3xl mx-auto">
-                We believe in complete transparency. Here's exactly who uses your idle bandwidth, what they do with it, and the legal protections we provide.
+                {t('hero_desc')}
               </p>
             </div>
           </div>
@@ -80,10 +83,10 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Why Distributed Networks Are Greener
+                  {t('env_title')}
                 </h2>
                 <p className="text-lg max-w-3xl mx-auto">
-                  Yes, companies need data. But <strong>how</strong> they get that data matters for the environment. Distributed networks like Olostep are significantly more eco-friendly than traditional data centers.
+                  {t('env_desc')}
                 </p>
               </div>
 
@@ -95,29 +98,29 @@ export default function TransparencyPage() {
                       <span className="text-3xl">🏭</span>
                     </div>
                     <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
-                      Traditional Data Centers
+                      {t('dc_title')}
                     </h3>
                   </div>
                   <ul className="space-y-3 text-neutral-800">
                     <li className="flex items-start gap-2">
                       <span className="font-bold text-red-600">✗</span>
-                      <span><strong>Massive energy consumption:</strong> Data centers use 1-2% of global electricity</span>
+                      <span>{t('dc_energy')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="font-bold text-red-600">✗</span>
-                      <span><strong>24/7 cooling systems:</strong> Up to 40% of energy goes to cooling alone</span>
+                      <span>{t('dc_cooling')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="font-bold text-red-600">✗</span>
-                      <span><strong>Dedicated infrastructure:</strong> Servers running solely for web scraping</span>
+                      <span>{t('dc_infra')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="font-bold text-red-600">✗</span>
-                      <span><strong>Water usage:</strong> Millions of gallons per day for cooling</span>
+                      <span>{t('dc_water')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="font-bold text-red-600">✗</span>
-                      <span><strong>E-waste:</strong> Hardware replaced every 3-5 years</span>
+                      <span>{t('dc_waste')}</span>
                     </li>
                   </ul>
                 </Card>
@@ -129,25 +132,25 @@ export default function TransparencyPage() {
                       <Image src="/logo.png" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
                     </div>
                     <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
-                      Distributed Networks
+                      {t('dn_title')}
                     </h3>
                   </div>
                   <ul className="space-y-3 text-neutral-800">
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span><strong>Zero new infrastructure:</strong> Uses existing devices already running</span>
+                      <span>{t('dn_infra')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span><strong>No additional cooling:</strong> Devices use ambient cooling</span>
+                      <span>{t('dn_cooling')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span><strong>Idle resource utilization:</strong> Bandwidth that would otherwise be wasted</span>
+                      <span>{t('dn_idle')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span><strong>No water consumption:</strong> Zero dedicated cooling infrastructure</span>
+                      <span>{t('dn_water')}</span>
                     </li>
 
                   </ul>
@@ -157,28 +160,28 @@ export default function TransparencyPage() {
               {/* Impact Statistics */}
               <div className="bg-brand-yellow border-2 border-brand-yellow p-8 md:p-10">
                 <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold text-center mb-8 text-black">
-                  Estimated Environmental Savings
+                  {t('savings_title')}
                 </h3>
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
                   <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">~85%</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">LESS ENERGY PER REQUEST</div>
-                    <p className="text-xs text-neutral-600 mt-2">No dedicated servers or cooling infrastructure needed</p>
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('energy_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('energy_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('energy_desc')}</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">~95%</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">LESS WATER USAGE</div>
-                    <p className="text-xs text-neutral-600 mt-2">No water-intensive cooling systems required</p>
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('water_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('water_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('water_desc')}</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">~75%</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">LOWER CARBON FOOTPRINT</div>
-                    <p className="text-xs text-neutral-600 mt-2">Reduced manufacturing and operational emissions</p>
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('carbon_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('carbon_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('carbon_desc')}</p>
                   </div>
                 </div>
                 <div className="bg-brand-gray border-2 border-black p-6 text-center">
                   <p className="text-neutral-800 leading-relaxed">
-                    <strong className="text-black">The bottom line:</strong> Modern systems rely on web data. With IdleForest, we reduce the costs of traditional data center systems by <strong className="text-black">80–90%</strong> through distributed networks like Olostep, then plant more trees than needed to offset the remaining footprint—making the entire process <strong className="text-black">net negative</strong>.
+                    <strong className="text-black">{t('bottom_line')}</strong> {t('bottom_line_desc')}
                   </p>
                 </div>
               </div>
@@ -193,10 +196,10 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Our Approved Client
+                  {t('client_title')}
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
-                  We work exclusively with one vetted partner to ensure the highest standards of security and ethical use.
+                  {t('client_desc')}
                 </p>
               </div>
 
@@ -209,14 +212,14 @@ export default function TransparencyPage() {
                     <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-2">
                       Olostep
                     </h3>
-                    <p className="text-neutral-800 font-bold mb-2">Web Data API for Applications</p>
+                    <p className="text-neutral-800 font-bold mb-2">{t('olostep_subtitle')}</p>
                     <a
                       href="https://www.olostep.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-brand-navy hover:underline font-bold"
                     >
-                      Visit Olostep.com
+                      {t('visit_olostep')}
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   </div>
@@ -224,33 +227,33 @@ export default function TransparencyPage() {
 
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-bold text-lg mb-2">What Olostep Does:</h4>
+                    <h4 className="font-bold text-lg mb-2">{t('what_olostep_does')}</h4>
                     <p className="text-neutral-800 leading-relaxed">
-                      Olostep provides a web data API that helps companies and developers access clean, structured web data. They fetch publicly available information from websites to power applications, research tools, and business intelligence platforms.
+                      {t('what_olostep_does_desc')}
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-lg mb-2">How Your Bandwidth Is Used:</h4>
+                    <h4 className="font-bold text-lg mb-2">{t('how_bandwidth_used')}</h4>
                     <p className="text-neutral-800 leading-relaxed mb-3">
-                      Your idle bandwidth is used to fetch publicly accessible websites in a <strong>sessionless manner, ensuring no personal data is transmitted</strong>. This means:
+                      {t('how_bandwidth_desc')}
                     </p>
                     <ul className="space-y-2 ml-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-brand-navy flex-shrink-0 mt-0.5" />
-                        <span className="text-neutral-800">No cookies, login credentials, or personal information are ever sent</span>
+                        <span className="text-neutral-800">{t('no_cookies')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-brand-navy flex-shrink-0 mt-0.5" />
-                        <span className="text-neutral-800">Only publicly available web pages are accessed (the same content anyone can see)</span>
+                        <span className="text-neutral-800">{t('public_only')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-brand-navy flex-shrink-0 mt-0.5" />
-                        <span className="text-neutral-800">Requests are isolated from your browsing session and personal data</span>
+                        <span className="text-neutral-800">{t('isolated')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-brand-navy flex-shrink-0 mt-0.5" />
-                        <span className="text-neutral-800">Your IP address is used only to make standard web requests, similar to normal browsing</span>
+                        <span className="text-neutral-800">{t('ip_usage')}</span>
                       </li>
                     </ul>
                   </div>
@@ -260,10 +263,10 @@ export default function TransparencyPage() {
               {/* Who Uses Olostep */}
               <div className="bg-brand-gray border-2 border-black p-8 md:p-10">
                 <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-6 text-center">
-                  Who Uses Olostep's Services
+                  {t('who_uses')}
                 </h3>
                 <p className="text-neutral-800 mb-6 text-center">
-                  Olostep serves legitimate AI startups and technology companies. Here are some of their verified customers:
+                  {t('who_uses_desc')}
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
@@ -301,7 +304,7 @@ export default function TransparencyPage() {
                 </div>
 
                 <p className="text-sm text-neutral-600 text-center italic">
-                  These companies use Olostep to power AI research, lead generation, market analysis, and other legitimate business intelligence applications.
+                  {t('who_uses_note')}
                 </p>
               </div>
             </div>
@@ -314,7 +317,7 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  What Types of Searches Are Performed
+                  {t('searches_title')}
                 </h2>
               </div>
 
@@ -323,9 +326,9 @@ export default function TransparencyPage() {
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-2">Business Intelligence</h3>
+                      <h3 className="font-bold text-lg mb-2">{t('bi_title')}</h3>
                       <p className="text-sm">
-                        Gathering publicly available company information, contact details, and market data for sales and research purposes.
+                        {t('bi_desc')}
                       </p>
                     </div>
                   </div>
@@ -335,9 +338,9 @@ export default function TransparencyPage() {
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-2">Price Monitoring</h3>
+                      <h3 className="font-bold text-lg mb-2">{t('price_title')}</h3>
                       <p className="text-sm">
-                        Tracking product prices across e-commerce websites to help businesses stay competitive and consumers find the best deals.
+                        {t('price_desc')}
                       </p>
                     </div>
                   </div>
@@ -347,9 +350,9 @@ export default function TransparencyPage() {
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-2">Deep Research</h3>
+                      <h3 className="font-bold text-lg mb-2">{t('research_title')}</h3>
                       <p className="text-sm">
-                        AI powered deep research for healthcare, pharma and financial industries.
+                        {t('research_desc')}
                       </p>
                     </div>
                   </div>
@@ -359,9 +362,9 @@ export default function TransparencyPage() {
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-2">Content Monitoring</h3>
+                      <h3 className="font-bold text-lg mb-2">{t('content_title')}</h3>
                       <p className="text-sm">
-                        Tracking changes to websites, job postings, news articles, and other public content for business and research purposes.
+                        {t('content_desc')}
                       </p>
                     </div>
                   </div>
@@ -372,27 +375,27 @@ export default function TransparencyPage() {
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-6 w-6 text-brand-navy flex-shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-bold text-lg mb-2">What We DON'T Do:</h4>
+                    <h4 className="font-bold text-lg mb-2">{t('dont_do_title')}</h4>
                     <ul className="space-y-2 text-neutral-800">
                       <li className="flex items-start gap-2">
                         <span className="font-bold">✗</span>
-                        <span>Access password-protected or private content</span>
+                        <span>{t('dont_password')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold">✗</span>
-                        <span>Perform illegal activities or access restricted websites</span>
+                        <span>{t('dont_illegal')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold">✗</span>
-                        <span>Send spam, conduct DDoS attacks, or engage in malicious behavior</span>
+                        <span>{t('dont_spam')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold">✗</span>
-                        <span>Access or transmit your personal data, cookies, or login credentials</span>
+                        <span>{t('dont_personal')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold">✗</span>
-                        <span>Violate website terms of service or engage in unauthorized scraping</span>
+                        <span>{t('dont_tos')}</span>
                       </li>
                     </ul>
                   </div>
@@ -408,10 +411,10 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Your Legal Protections
+                  {t('legal_title')}
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
-                  We take your legal protection seriously. Here are the safeguards in place to protect you.
+                  {t('legal_desc')}
                 </p>
               </div>
 
@@ -423,23 +426,23 @@ export default function TransparencyPage() {
                     </div>
                     <div>
                       <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
-                        1. Contractual Liability Protection
+                        {t('liability_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
-                        <strong>IdleForest assumes full legal responsibility</strong> for all traffic generated through our network. Our Terms of Service explicitly state that:
+                        {t('liability_desc')}
                       </p>
                       <ul className="space-y-2 ml-6 text-neutral-800">
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>You are not liable for the content or nature of requests made through your connection</span>
+                          <span>{t('liability_1')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>IdleForest indemnifies users against any legal claims arising from network usage</span>
+                          <span>{t('liability_2')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>We maintain comprehensive liability insurance to cover potential legal issues</span>
+                          <span>{t('liability_3')}</span>
                         </li>
                       </ul>
                     </div>
@@ -453,27 +456,27 @@ export default function TransparencyPage() {
                     </div>
                     <div>
                       <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
-                        2. Strict Client Vetting Process
+                        {t('vetting_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
-                        We only work with Olostep, a legitimate business that has been thoroughly vetted:
+                        {t('vetting_desc')}
                       </p>
                       <ul className="space-y-2 ml-6 text-neutral-800">
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>Olostep is a registered company with verified business credentials</span>
+                          <span>{t('vetting_1')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>Their use cases are limited to legitimate web data collection for AI and business intelligence</span>
+                          <span>{t('vetting_2')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>We have a legal agreement that prohibits illegal activities and ensures compliance with all applicable laws</span>
+                          <span>{t('vetting_3')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>Olostep's code is open source and can be audited for security and compliance</span>
+                          <span>{t('vetting_4')}</span>
                         </li>
                       </ul>
                     </div>
@@ -487,27 +490,27 @@ export default function TransparencyPage() {
                     </div>
                     <div>
                       <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
-                        3. Traffic Monitoring & Compliance
+                        {t('monitoring_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
-                        We actively monitor all network traffic to ensure compliance:
+                        {t('monitoring_desc')}
                       </p>
                       <ul className="space-y-2 ml-6 text-neutral-800">
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>Automated systems flag suspicious or unauthorized traffic patterns</span>
+                          <span>{t('monitoring_1')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>All requests are logged and can be audited if needed</span>
+                          <span>{t('monitoring_2')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>We maintain a blocklist of prohibited websites and activities</span>
+                          <span>{t('monitoring_3')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>Any violation of our acceptable use policy results in immediate termination of the client relationship</span>
+                          <span>{t('monitoring_4')}</span>
                         </li>
                       </ul>
                     </div>
@@ -521,27 +524,27 @@ export default function TransparencyPage() {
                     </div>
                     <div>
                       <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
-                        4. GDPR & Data Protection Compliance
+                        {t('gdpr_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
-                        As a European-based service, we comply with GDPR and other data protection regulations:
+                        {t('gdpr_desc')}
                       </p>
                       <ul className="space-y-2 ml-6 text-neutral-800">
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>No personal data is collected, stored, or transmitted through the network</span>
+                          <span>{t('gdpr_1')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>All web requests are sessionless and isolated from your personal browsing</span>
+                          <span>{t('gdpr_2')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>You can opt out at any time by uninstalling the extension or desktop app</span>
+                          <span>{t('gdpr_3')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-bold">•</span>
-                          <span>We maintain detailed privacy policies and data processing agreements</span>
+                          <span>{t('gdpr_4')}</span>
                         </li>
                       </ul>
                     </div>
@@ -558,36 +561,36 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Additional Security Measures
+                  {t('security_title')}
                 </h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">🔒 Encrypted Connections</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('encrypted_title')}</h3>
                   <p className="text-neutral-800 text-sm">
-                    All traffic is encrypted using industry-standard TLS/SSL protocols to prevent interception or tampering.
+                    {t('encrypted_desc')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">🛡️ Isolated Execution</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('isolated_title')}</h3>
                   <p className="text-neutral-800 text-sm">
-                    Requests run in isolated environments with no access to your cookies, local storage, or browsing history.
+                    {t('isolated_desc')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">📊 Transparent Logging</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('logging_title')}</h3>
                   <p className="text-neutral-800 text-sm">
-                    All network activity is logged and available for your review. You can see exactly what requests are being made.
+                    {t('logging_desc')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">🔍 Open Source Code</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('opensource_title')}</h3>
                   <p className="text-neutral-800 text-sm mb-3">
-                    Our extension and desktop app are open source, allowing independent security researchers to audit our code.
+                    {t('opensource_desc')}
                   </p>
                   <a
                     href="https://github.com/daniiba/idleforest"
@@ -595,22 +598,22 @@ export default function TransparencyPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-brand-navy hover:underline font-bold text-sm"
                   >
-                    View on GitHub
+                    {t('view_github')}
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 </Card>
 
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">⚡ Bandwidth Controls</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('bandwidth_title')}</h3>
                   <p className="text-neutral-800 text-sm">
-                    You have full control over how much bandwidth is used. Set limits or pause sharing at any time.
+                    {t('bandwidth_desc')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-gray border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-3">🚫 Instant Opt-Out</h3>
+                  <h3 className="font-bold text-lg mb-3">{t('optout_title')}</h3>
                   <p className="text-neutral-800 text-sm">
-                    You can stop sharing your bandwidth immediately by pausing or uninstalling the app—no questions asked.
+                    {t('optout_desc')}
                   </p>
                 </Card>
               </div>
@@ -624,36 +627,36 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Transparency FAQ
+                  {t('faq_title')}
                 </h2>
               </div>
 
               <div className="space-y-4">
                 <Card className="bg-brand-yellow border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-2">Can I see what websites are being accessed through my connection?</h3>
+                  <h3 className="font-bold text-lg mb-2">{t('faq_see_q')}</h3>
                   <p className="text-neutral-800">
-                    Yes! We're working on a transparency dashboard that will show you anonymized statistics about the types of requests being made. In the meantime, you can review our open-source code to see exactly how the system works.
+                    {t('faq_see_a')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-yellow border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-2">What if Olostep's customers use the data for harmful purposes?</h3>
+                  <h3 className="font-bold text-lg mb-2">{t('faq_harmful_q')}</h3>
                   <p className="text-neutral-800">
-                    Olostep's customers are vetted AI and business intelligence companies using publicly available data for legitimate purposes. Olostep has strict terms of service prohibiting illegal or harmful use. If any customer violates these terms, they are immediately terminated. Additionally, we only access publicly available information—the same content anyone can view in a web browser.
+                    {t('faq_harmful_a')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-yellow border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-2">How do I know you won't add more clients in the future without telling me?</h3>
+                  <h3 className="font-bold text-lg mb-2">{t('faq_more_q')}</h3>
                   <p className="text-neutral-800">
-                    We commit to updating this transparency page whenever we add new approved clients. You'll receive an email notification about any changes, and you can always opt out if you're not comfortable with new partnerships. Transparency is core to our mission.
+                    {t('faq_more_a')}
                   </p>
                 </Card>
 
                 <Card className="bg-brand-yellow border-2 border-black p-6">
-                  <h3 className="font-bold text-lg mb-2">Is my internet service provider (ISP) aware of this activity?</h3>
+                  <h3 className="font-bold text-lg mb-2">{t('faq_isp_q')}</h3>
                   <p className="text-neutral-800">
-                    From your ISP's perspective, the traffic looks like normal web browsing. It's encrypted HTTPS traffic to legitimate websites. There's nothing unusual or suspicious about it. Many users already share bandwidth through similar services without any issues.
+                    {t('faq_isp_a')}
                   </p>
                 </Card>
               </div>
@@ -666,23 +669,23 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-6">
-                Still Have Questions?
+                {t('still_questions')}
               </h2>
               <p className="text-lg mb-8">
-                We're committed to complete transparency. If you have any concerns or questions about how your bandwidth is used, we're here to help.
+                {t('still_questions_desc')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 bg-brand-yellow text-black font-bold px-8 py-4 rounded-full hover:bg-white transition-colors"
                 >
-                  Contact Us
+                  {t('contact_us')}
                 </Link>
                 <Link
                   href="/"
                   className="inline-flex items-center justify-center gap-2 border-2 border-brand-yellow text-brand-yellow font-bold px-8 py-4 rounded-full hover:bg-brand-yellow hover:text-black transition-colors"
                 >
-                  Back to Home
+                  {t('back_home')}
                 </Link>
               </div>
             </div>

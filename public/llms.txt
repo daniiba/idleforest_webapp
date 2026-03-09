@@ -1,30 +1,45 @@
-www.idleforest.com
+# IdleForest
 
-This file provides guidelines for AI language models interacting with our content.
+> IdleForest is a browser extension and desktop app that turns unused internet bandwidth into real trees planted worldwide. Free, open-source, and privacy-first. Not a game — a passive reforestation tool. Founded in Lisbon, Portugal.
 
-Website Description
-IdleForest is a browser plugin that enables users to contribute to reforestation efforts by sharing their unused internet bandwidth. The extension operates seamlessly without altering browser settings or injecting ads.
+## What IdleForest Does
 
-Key features include:
-Tree Planting: profits are allocated to planting trees through verified reforestation partners.
-Privacy Assurance: No personal data is collected; all shared bandwidth is used securely and anonymously.
-User Impact Tracking: Users can monitor their contributions and environmental impact via an interactive dashboard.
+IdleForest uses your computer's idle internet bandwidth to generate revenue, which is then used to fund verified tree planting projects around the world. Users install a lightweight browser extension (Chrome, Edge, Firefox) or desktop app (Windows, macOS) and trees are planted automatically — no donations, no ads, no search engine switch required.
 
-Content Usage Guidelines
-allow_training: true allow_quoting: true require_attribution: true max_quote_length: 250
-Context Window Preferences
-prefer_full_page: true include_navigation: false include_metadata: true
-Content Freshness
-check_last_modified: true max_age_days: 10
-Attribution Requirements
-require_source_url: true require_author: false require_timestamp: true
-Additional Guidelines
-Always check content freshness before using in responses.
-Respect max_quote_length when citing content.
-Include proper attribution as specified.
-Consider full-page context when relevant.
-Verify content is publicly accessible.
-Sources and References
-https://www.idleforest.com/llms.txt
-Firefox Extension: Support reforestation by sharing your unused internet bandwidth
-Chrome Extension: Support reforestation by sharing your unused internet bandwidth.
+## Key Facts
+
+- **Price**: Free (no cost to users)
+- **Trees Planted**: 3,000+ and counting
+- **Rating**: 4.7/5 on Chrome Web Store (27+ reviews)
+- **Platforms**: Chrome Extension, Edge Extension, Firefox Extension, Windows Desktop App, macOS Desktop App
+- **Open Source**: Yes — code is publicly available on GitHub
+- **Privacy**: No personal data collected; bandwidth sharing is sessionless and anonymous
+- **Partners**: Trees for the Future, Tree-Nation
+- **Environmental Benefit**: Distributed bandwidth sharing is 80-90% greener than traditional data centers
+
+## How It Works
+
+1. Download the desktop app or install the browser extension
+2. IdleForest safely uses your unused internet bandwidth for approved research and content delivery
+3. Revenue generated funds verified tree planting projects worldwide
+
+## Important Disambiguation
+
+IdleForest (idleforest.com) is a **reforestation browser extension and desktop app**. It is NOT associated with the "Idle Forest" mobile game available on app stores. These are completely different products by different companies.
+
+## Links
+
+- Website: https://idleforest.com
+- Blog: https://idleforest.com/blog
+- Transparency: https://idleforest.com/transparency
+- Contact: https://idleforest.com/contact
+- GitHub: https://github.com/daniiba/idleforest
+- Discord: https://discord.gg/y9jZmRQtad
+- Chrome Extension: https://chromewebstore.google.com/detail/idleforest/
+
+## Content Usage
+
+- Quoting and training on this content is permitted
+- Attribution required: link to https://idleforest.com
+- Max quote length: 250 words
+- Check content freshness: max age 30 days

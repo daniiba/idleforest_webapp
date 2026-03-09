@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import Link from "next/link"
 import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface Team {
 	id: string
@@ -45,6 +46,7 @@ type RankingCategory = 'allTime' | 'users' | 'teams' | 'fastestGrowing'
 const supabase = createClient()
 
 export default function TeamsPage() {
+	const t = useTranslations('Teams')
 	const [teams, setTeams] = useState<Team[]>([])
 	const [profiles, setProfiles] = useState<RankedProfile[]>([])
 	const [searchQuery, setSearchQuery] = useState('')
@@ -359,23 +361,23 @@ export default function TeamsPage() {
 	const formatPoints = (n: number) => Math.round(n).toLocaleString()
 
 	const rankingCategories = [
-		{ key: 'allTime', label: 'All Time', icon: Trophy },
-		{ key: 'users', label: 'Top Users', icon: Flame },
-		{ key: 'teams', label: 'Top Teams', icon: Zap },
-		{ key: 'fastestGrowing', label: 'Fastest Growing', icon: TrendingUp },
+		{ key: 'allTime', label: t('all_time'), icon: Trophy },
+		{ key: 'users', label: t('top_users'), icon: Flame },
+		{ key: 'teams', label: t('top_teams_label'), icon: Zap },
+		{ key: 'fastestGrowing', label: t('fastest_growing'), icon: TrendingUp },
 	] as const
 
 	const timePeriods = [
-		{ key: 'daily', label: 'Today' },
-		{ key: 'weekly', label: 'This Week' },
-		{ key: 'monthly', label: 'This Month' },
+		{ key: 'daily', label: t('period_today') },
+		{ key: 'weekly', label: t('period_week') },
+		{ key: 'monthly', label: t('period_month') },
 	] as const
 
 	const getPeriodLabel = () => {
 		switch (timePeriod) {
-			case 'daily': return 'Today'
-			case 'weekly': return 'This Week'
-			case 'monthly': return 'This Month'
+			case 'daily': return t('period_today')
+			case 'weekly': return t('period_week')
+			case 'monthly': return t('period_month')
 		}
 	}
 
@@ -421,7 +423,7 @@ export default function TeamsPage() {
 							<div className="relative w-full max-w-xl">
 								<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
 								<input
-									placeholder="Search Teams"
+									placeholder={t('placeholder_search')}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="w-full pl-10 pr-4 py-4 border-2 border-black bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-2"
@@ -432,7 +434,7 @@ export default function TeamsPage() {
 						{/* Grid */}
 						{isLoading ? (
 							<div className="flex justify-center items-center min-h-[200px]">
-								<p className="text-neutral-500 font-bold">Loading teams...</p>
+								<p className="text-neutral-500 font-bold">{t('loading_teams')}</p>
 							</div>
 						) : filteredTeams.length > 0 ? (
 							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -454,7 +456,7 @@ export default function TeamsPage() {
 												)}
 												<div className="flex-1 min-w-0">
 													<h2 className="text-lg font-bold truncate text-black">{team.name}</h2>
-													<p className="mt-1 text-xs text-neutral-500">Created {formatCreated(team.created_at)}</p>
+													<p className="mt-1 text-xs text-neutral-500">{t('created')} {formatCreated(team.created_at)}</p>
 												</div>
 												<div className="flex items-center bg-brand-yellow border-2 border-black px-2 py-1 flex-shrink-0">
 													<Trophy size={14} className="mr-1 text-black" />
@@ -467,9 +469,9 @@ export default function TeamsPage() {
 							</div>
 						) : (
 							<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
-								<h2 className="text-xl font-bold mb-2 text-black">No Teams Found</h2>
+								<h2 className="text-xl font-bold mb-2 text-black">{t('no_teams')}</h2>
 								<p className="text-neutral-500">
-									{searchQuery ? "No teams match your search" : "Create a team to get started"}
+									{searchQuery ? t('no_teams_search') : t('create_team_prompt')}
 								</p>
 							</div>
 						)}
@@ -520,7 +522,7 @@ export default function TeamsPage() {
 
 						{isLoading ? (
 							<div className="flex justify-center items-center min-h-[200px]">
-								<p className="text-neutral-500 font-bold">Loading rankings...</p>
+								<p className="text-neutral-500 font-bold">{t('loading_rankings')}</p>
 							</div>
 						) : (
 							<>
@@ -528,7 +530,7 @@ export default function TeamsPage() {
 								{rankingCategory === 'allTime' && (
 									<>
 										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">All-Time User Rankings</p>
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('all_time_rankings_label')}</p>
 										</div>
 										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 											{profiles.map((profile, idx) => (
@@ -543,14 +545,14 @@ export default function TeamsPage() {
 															<h3 className="text-base md:text-lg font-bold truncate text-black">{profile.display_name}</h3>
 														</div>
 														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">Points</p>
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{t('points')}</p>
 															<p className="text-base md:text-lg font-extrabold text-black tabular-nums">{formatPoints(profile.total_points)}</p>
 														</div>
 													</div>
 												</Link>
 											))}
 											{profiles.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">No users found</p>
+												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_users')}</p>
 											)}
 										</div>
 									</>
@@ -560,7 +562,7 @@ export default function TeamsPage() {
 								{rankingCategory === 'users' && (
 									<>
 										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Top Earners - {getPeriodLabel()}</p>
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_earners_label')} - {getPeriodLabel()}</p>
 										</div>
 										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 											{periodTopUsers.map((user, idx) => (
@@ -582,7 +584,7 @@ export default function TeamsPage() {
 												</Link>
 											))}
 											{periodTopUsers.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">No data for this period</p>
+												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_data')}</p>
 											)}
 										</div>
 									</>
@@ -592,7 +594,7 @@ export default function TeamsPage() {
 								{rankingCategory === 'teams' && (
 									<>
 										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Top Teams - {getPeriodLabel()}</p>
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_teams_label')} - {getPeriodLabel()}</p>
 										</div>
 										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 											{periodTopTeams.map((team, idx) => (
@@ -621,7 +623,7 @@ export default function TeamsPage() {
 												</Link>
 											))}
 											{periodTopTeams.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">No data for this period</p>
+												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_data')}</p>
 											)}
 										</div>
 									</>
@@ -631,7 +633,7 @@ export default function TeamsPage() {
 								{rankingCategory === 'fastestGrowing' && (
 									<>
 										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">Fastest Growing (New Members) - {getPeriodLabel()}</p>
+											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('fastest_growing_label')} - {getPeriodLabel()}</p>
 										</div>
 										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 											{fastestGrowingTeams.map((team, idx) => (
@@ -652,11 +654,11 @@ export default function TeamsPage() {
 															)}
 															<div className="min-w-0">
 																<h3 className="text-base md:text-lg font-bold truncate text-black">{team.team_name}</h3>
-																<p className="text-xs text-neutral-500 font-medium">{team.member_count} members total</p>
+																<p className="text-xs text-neutral-500 font-medium">{team.member_count} {t('members_total')}</p>
 															</div>
 														</div>
 														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">New Members</p>
+															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{t('new_members')}</p>
 															<p className="text-base md:text-lg font-extrabold text-purple-600 tabular-nums">
 																+{team.member_growth || 0}
 															</p>
@@ -665,7 +667,7 @@ export default function TeamsPage() {
 												</Link>
 											))}
 											{fastestGrowingTeams.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">No teams gained members this period</p>
+												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_teams_gained')}</p>
 											)}
 										</div>
 									</>

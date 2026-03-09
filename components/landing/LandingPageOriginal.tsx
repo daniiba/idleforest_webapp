@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, CheckCircle2, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { EmailForm } from "@/components/email-form";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
@@ -16,6 +17,7 @@ import { SmartCTA } from "@/components/smart-cta";
 import TopTeamsBanner from "@/components/TopTeamsBanner";
 
 export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
+    const t = useTranslations("Landing");
     const [stats, setStats] = useState({
         totalUsers: 0,
         totalRequests: 0,
@@ -89,14 +91,14 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                     <Image src="/europelogo.svg" alt="European Union flag" width={74} height={62} />
                                 </div>
                                 <h1 className="font-candu text-black uppercase text-[38px] sm:text-5xl md:text-6xl leading-[1.05]">
-                                    <span className="font-extrabold">TURN YOUR IDLE </span>
+                                    <span className="font-extrabold">{t('hero.title_line1')} </span>
                                     <br className="hidden sm:block" />
-                                    <span className="font-extrabold">INTERNET INTO </span>
+                                    <span className="font-extrabold">{t('hero.title_line2')} </span>
                                     <br className="hidden sm:block" />
-                                    <span className="font-extrabold">REAL TREES </span>
+                                    <span className="font-extrabold">{t('hero.title_line3')} </span>
                                 </h1>
                                 <p className="text-base md:text-lg text-neutral-800 max-w-xl">
-                                    Our desktop app safely uses your unused bandwidth to fund tree planting around the world. Join thousands making an environmental impact while your computer is idle.
+                                    {t('hero.description')}
                                 </p>
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
@@ -104,13 +106,13 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                 </div>
                                 <ul className="mt-2 space-y-2 text-sm text-neutral-800">
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> 100% Safe & Secure
+                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.safe_secure')}
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> No Performance Impact
+                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.no_impact')}
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> Plant trees automatically
+                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.auto_plant')}
                                     </li>
                                 </ul>
                             </div>
@@ -152,10 +154,10 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                         {/* Heading */}
                         <div className="text-center mt-6">
                             <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                                How it works
+                                {t('how_it_works.heading')}
                             </h2>
                             <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
-                                Three simple steps to start making an environmental impact with your unused internet connection.
+                                {t('how_it_works.subheading')}
                             </p>
                         </div>
 
@@ -179,36 +181,37 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                             <div>
                                 <div className="text-6xl font-extrabold">1.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
-                                    Install Extension
+                                    {t('how_it_works.step1_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
-                                    Add our lightweight Chrome extension in seconds. No registration or setup required.
+                                    {t('how_it_works.step1_desc')}
                                 </p>
                             </div>
                             <div>
                                 <div className="text-6xl font-extrabold">2.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
-                                    Share Unused Bandwidth
+                                    {t('how_it_works.step2_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
-                                    Your idle internet connection is securely used for approved research and content delivery—replacing traditional data centers that consume massive amounts of energy and water.{" "}
+                                    {t('how_it_works.step2_desc')} {" "}
                                     <Link href="/transparency" className="font-bold underline hover:text-black">
-                                        See how we're 80-90% greener than server farms
+                                        {t('how_it_works.step2_link')}
                                     </Link>
                                 </p>
                             </div>
                             <div>
                                 <div className="text-6xl font-extrabold">3.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
-                                    We Plant Trees
+                                    {t('how_it_works.step3_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
-                                    Revenue generated funds verified tree planting projects worldwide. Track your impact in real-time.
+                                    {t('how_it_works.step3_desc')}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </section>
+
 
                 {/* DESKTOP APPS */}
                 <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24">
@@ -527,6 +530,108 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                     </div>
                 </section>
             </main>
+
+            {/* FAQPage Schema for Google rich results */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": [
+                            {
+                                "@type": "Question",
+                                "name": "How do I get started with IdleForest?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome, Edge, or Firefox. It runs in the background and starts planting trees automatically using your idle bandwidth."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Why does the extension ask for 'read and change all data on all pages' permission?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "We don't read or access any data from the websites you visit. The extension uses your unused bandwidth by fetching websites in a sessionless manner, ensuring no personal data is transmitted. The broad permission is a technical limitation of how browser extensions work — browsers don't offer a more granular option. Our code is open source so you can verify this yourself."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Is IdleForest safe to use?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Yes! IdleForest is completely safe. We use industry-standard security practices and our code is open source for full transparency. Your unused bandwidth is only used for approved research and content delivery purposes. We never access your personal data, browsing history, or any sensitive information."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Will IdleForest slow down my internet?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "No. IdleForest only uses your idle bandwidth — the internet capacity you're not actively using. If you're streaming, gaming, or doing anything that requires bandwidth, IdleForest automatically scales back to ensure your activities aren't affected."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "How are trees actually planted?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world through partners like Trees for the Future and Tree-Nation. You can track your personal contribution in real-time through your dashboard."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Do I need to keep my browser open?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Not if you use the Desktop App for Windows or Mac — it runs in the background independently of your browser. If you choose to use the Browser Extension only, then your browser needs to be open to contribute."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "I'm concerned about supporting AI companies. Why should I use IdleForest?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "AI companies will collect web data regardless. The question is how. Traditional web scraping uses massive data centers consuming enormous amounts of electricity and water. Distributed networks like the one IdleForest uses are 80-90% more environmentally friendly than traditional data centers. By using IdleForest, you're helping make an existing industry significantly greener while funding reforestation."
+                                }
+                            }
+                        ]
+                    })
+                }}
+            />
+
+            {/* HowTo Schema */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "HowTo",
+                        "name": "How to Plant Trees for Free with IdleForest",
+                        "description": "Three simple steps to start making an environmental impact with your unused internet connection.",
+                        "step": [
+                            {
+                                "@type": "HowToStep",
+                                "position": 1,
+                                "name": "Download Desktop App",
+                                "text": "Download the IdleForest desktop app for Windows or Mac. It runs quietly in the background, utilizing idle resources to plant trees."
+                            },
+                            {
+                                "@type": "HowToStep",
+                                "position": 2,
+                                "name": "Share Unused Bandwidth",
+                                "text": "Your idle internet connection is securely used for approved research and content delivery — replacing traditional data centers that consume massive amounts of energy and water. This approach is 80-90% greener than server farms."
+                            },
+                            {
+                                "@type": "HowToStep",
+                                "position": 3,
+                                "name": "We Plant Trees",
+                                "text": "Revenue generated funds verified tree planting projects worldwide. Track your impact in real-time through your dashboard."
+                            }
+                        ]
+                    })
+                }}
+            />
         </>
     );
 }
