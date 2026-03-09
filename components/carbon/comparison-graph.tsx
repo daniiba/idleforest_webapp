@@ -16,17 +16,19 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useTranslations } from "next-intl";
 
 interface ComparisonGraphProps {
     data: CarbonData;
 }
 
 export function ComparisonGraph({ data }: ComparisonGraphProps) {
+    const t = useTranslations("CarbonFootprint.graph");
     const IDLE_FOREST_OFFSET_KG = 200; // Average per user per year
 
     const chartData = [
         {
-            label: "IdleForest (1 Yr)",
+            label: t("idleforest_label"),
             emissions: IDLE_FOREST_OFFSET_KG,
             fill: "#E0F146", // brand.yellow
             type: "idleforest"
@@ -41,10 +43,10 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
 
     const chartConfig = {
         emissions: {
-            label: "CO2 Emissions (kg)",
+            label: t("co2_emissions"),
         },
         idleforest: {
-            label: "IdleForest (1 Yr)",
+            label: t("idleforest_label"),
             color: "#E0F146",
         },
         app: {
@@ -56,7 +58,7 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
     return (
         <div className="bg-brand-gray border-2 border-black p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <h3 className="font-rethink-sans text-2xl font-extrabold mb-8 text-black text-center uppercase">
-                Yearly Impact Comparison
+                {t("title")}
             </h3>
 
             <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
@@ -117,7 +119,7 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
             </div>
 
             <p className="text-sm text-neutral-600 text-center mt-6 border-t-2 border-black/5 pt-4 font-medium">
-                *IdleForest offsets ~200kg CO2/year on average per user.
+                {t("offset_note")}
             </p>
         </div>
     );

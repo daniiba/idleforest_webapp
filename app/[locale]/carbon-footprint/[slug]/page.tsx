@@ -8,6 +8,8 @@ import { SmartCTA } from "@/components/smart-cta";
 import { ArrowLeft, Gamepad2, Users, Monitor } from "lucide-react";
 import Link from "next/link";
 import Navigation from "@/components/navigation";
+import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
 interface PageProps {
     params: {
@@ -17,17 +19,18 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const data = getCarbonData(params.slug);
+    const t = await getTranslations("CarbonFootprint");
 
     if (!data) {
         return {
-            title: "Not Found",
-            description: "The requested page was not found.",
+            title: t("page.not_found_title"),
+            description: t("page.not_found_desc"),
         };
     }
 
     return {
-        title: `Carbon Footprint of ${data.app_name} | IdleForest`,
-        description: `Discover the environmental impact of using ${data.app_name}. Calculate your CO2 emissions and see how many trees are needed to offset them.`,
+        title: t("page.seo_title", { app: data.app_name }),
+        description: t("page.seo_desc", { app: data.app_name }),
         alternates: {
             canonical: `https://idleforest.com/carbon-footprint/${params.slug}`,
         },
@@ -43,10 +46,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default function CarbonFootprintPage({ params }: PageProps) {
     const data = getCarbonData(params.slug);
+    const t = useTranslations("CarbonFootprint");
 
     if (!data) {
         notFound();
     }
+
+    const t_human = t(`items.${data.slug}.human_equivalent`);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -54,25 +60,25 @@ export default function CarbonFootprintPage({ params }: PageProps) {
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": `What is the carbon footprint of ${data.app_name}?`,
+                "name": t("page.faq_q1", { app: data.app_name }),
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": `Using ${data.app_name} for just one hour generates approximately ${data.co2_per_hour_grams}g of CO2. This is equivalent to ${data.human_equivalent.toLowerCase()}.`
+                    "text": t("page.faq_a1", { app: data.app_name, grams: data.co2_per_hour_grams, equivalent: t_human.toLowerCase() })
                 }
             },
             {
                 "@type": "Question",
-                "name": `How many trees do I need to plant to offset ${data.app_name}?`,
+                "name": t("page.faq_q2", { app: data.app_name }),
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": `To offset a year of typical usage of ${data.app_name} (approx. ${data.yearly_impact_kg}kg of CO2), you would need to plant about ${data.trees_to_offset} trees.`
+                    "text": t("page.faq_a2", { app: data.app_name, kg: data.yearly_impact_kg, trees: data.trees_to_offset })
                 }
             }
         ]
     };
 
     return (
-        <div className="min-h-screen bg-brand-gray pt-32 pb-12 font-inter">
+        <div className="min-h-screen bg-brand-gray  pb-12 font-inter">
             <Navigation />
             <script
                 type="application/ld+json"
@@ -86,7 +92,7 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                         className="inline-flex items-center text-neutral-600 hover:text-black transition-colors font-medium"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Home
+                        {t("page.back_to_home")}
                     </Link>
                 </div>
 
@@ -114,16 +120,16 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                                 })()}
                             </div>
                             <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
-                                Carbon Footprint of <span className="text-brand-yellow bg-black px-2">{data.app_name}</span>
+                                {t("page.carbon_footprint_of")} <span className="text-brand-yellow bg-black px-2">{data.app_name}</span>
                             </h1>
                         </div>
 
 
 
                         <p className="text-xl text-neutral-800 mb-8 leading-relaxed max-w-2xl">
-                            Did you know that using {data.app_name} for just one hour generates{" "}
-                            <strong className="text-black bg-brand-yellow/30 px-1 rounded">{data.co2_per_hour_grams}g of CO2</strong>?
-                            {' '}That's equivalent to {data.human_equivalent.toLowerCase()}.
+                            {t("page.did_you_know", { app: data.app_name })}{" "}
+                            <strong className="text-black bg-brand-yellow/30 px-1 rounded">{data.co2_per_hour_grams}{t("page.g_of_co2")}</strong>?
+                            {' '}{t("page.thats_equivalent_to", { equivalent: t_human.toLowerCase() })}
                         </p>
 
 
@@ -139,7 +145,7 @@ export default function CarbonFootprintPage({ params }: PageProps) {
 
                         <div className="mt-16 pt-12 border-t-2 border-black/10">
                             <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-8">
-                                Compare with Related Apps
+                                {t("page.compare_with_related")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {getRelatedCarbonData(data.slug, data.category).map((related) => (
@@ -172,16 +178,16 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                                                 </h3>
                                             </div>
                                             <span className="text-[10px] font-bold uppercase tracking-widest bg-brand-yellow text-black px-2 py-1 border border-black">
-                                                {related.category}
+                                                {t(`categories.${related.category}`)}
                                             </span>
                                         </div>
                                         <div className="space-y-1">
                                             <p className="text-base font-bold text-neutral-900 flex items-center gap-2">
                                                 <span className="w-2 h-2 bg-black rounded-full"></span>
-                                                {related.co2_per_hour_grams}g CO2 / hour
+                                                {related.co2_per_hour_grams}{t("page.g_co2_hour")}
                                             </p>
                                             <p className="text-sm text-neutral-600 pl-4">
-                                                Requires <span className="font-bold text-black">{related.trees_to_offset} trees/yr</span> to offset
+                                                {t("page.requires")} <span className="font-bold text-black">{related.trees_to_offset} {t("page.trees_yr_to_offset")}</span>
                                             </p>
                                         </div>
                                     </Link>
@@ -194,11 +200,10 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                     <div className="lg:col-span-4 space-y-8">
                         <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
-                                About IdleForest
+                                {t("page.about_idleforest")}
                             </h3>
                             <p className="text-neutral-900 mb-6 leading-relaxed">
-                                IdleForest is a passive browser extension that plants trees while you browse, game, or stream.
-                                It uses your unused internet bandwidth to fund reforestation projects.
+                                {t("page.about_desc")}
                             </p>
 
                             <SmartCTA className="w-full text-black" showLearnMore={false} forceVertical={true} buttonVariant="inverse" />
@@ -206,15 +211,15 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                             <div className="mt-6 text-sm text-neutral-800 border-t-2 border-black/10 pt-4 font-medium">
                                 <p className="mb-2 flex items-center gap-2">
                                     <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
-                                    Free to use
+                                    {t("page.free_to_use")}
                                 </p>
                                 <p className="mb-2 flex items-center gap-2">
                                     <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
-                                    No account required
+                                    {t("page.no_account")}
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
-                                    Open source
+                                    {t("page.open_source")}
                                 </p>
                             </div>
                         </div>
