@@ -49,6 +49,7 @@ export const config = {
     // - api/webhooks (external webhook endpoints)
     // - discord/bot-added (discord related paths)
     // - images and other static assets
-    '/((?!_next/static|_next/image|favicon.ico|api/webhooks|discord/bot-added|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // - sitemap and robots
+    '/((?!_next/static|_next/image|favicon.ico|sitemap\\.xml|robots\\.txt|api/webhooks|discord/bot-added|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
