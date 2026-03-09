@@ -173,7 +173,7 @@ export default function PublicProfilePage() {
                     .from('user_daily_stats')
                     .select('date, total_points_snapshot, points_gained_that_day')
                     .eq('user_id', profile.user_id)
-                    .order('date', { ascending: true })
+                    .order('date', { ascending: false })
                     .limit(30)
 
                 if (dailyStats) {

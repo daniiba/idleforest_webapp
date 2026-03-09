@@ -24,16 +24,24 @@ export function PointsHistoryChart({
 }: PointsHistoryChartProps) {
     const [showDailyGain, setShowDailyGain] = useState(false)
 
+    const parseDateOnly = (value: string) => {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+        if (!match) return new Date(value)
+
+        const [, year, month, day] = match
+        return new Date(Number(year), Number(month) - 1, Number(day))
+    }
+
     if (!data || data.length === 0) {
         return null
     }
 
     // Sort by date and format for display
     const chartData = [...data]
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .sort((a, b) => parseDateOnly(a.date).getTime() - parseDateOnly(b.date).getTime())
         .map(item => ({
             ...item,
-            dateLabel: new Date(item.date).toLocaleDateString(undefined, {
+            dateLabel: parseDateOnly(item.date).toLocaleDateString(undefined, {
                 month: 'short',
                 day: 'numeric'
             }),
