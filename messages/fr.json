@@ -397,6 +397,55 @@
         "about_desc": "IdleForest est une extension de navigateur passive qui plante des arbres pendant que vous naviguez, jouez ou streamez. Elle utilise votre bande passante inutilisée pour financer des projets de reforestation.",
         "free_to_use": "Gratuit à utiliser",
         "no_account": "Aucun compte requis",
-        "open_source": "Open source"
+        "open_source": "Open source",
+        "progress_title": "Notre Progrès de Plantation",
+        "progress_desc": "Suivi de notre impact de reforestation avec nos partenaires",
+        "total_contributions": "Contributions Totales",
+        "trees_planted_progress": "Arbres Plantés",
+        "est_donation": "Valeur Est. des Dons (USD)",
+        "impact_milestones": "Jalons d'Impact",
+        "latest": "Dernier",
+        "trees": "arbres",
+        "view_certificate": "Voir le Certificat",
+        "historical_title": "Performance Historique d'Idleforest",
+        "historical_desc": "Suivi des indicateurs clés de performance au fil du temps",
+        "granularity": "Granularité :",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel",
+        "total_requests": "Total des Requêtes",
+        "active_nodes": "Nœuds Actifs",
+        "total_earnings": "Total des Gains",
+        "trees_planted_chart": "Arbres Plantés",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Projets de Reforestation Eden – Madagascar"
+            },
+            "if-kenya": {
+                "name": "Initiative Forestière Mondiale – Kenya"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Kenya"
+            },
+            "tftf-senegal": {
+                "name": "Projets TFTF – Sénégal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Montagnes Rwenzori, Ouganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Agroforesterie au Cameroun"
+            },
+            "tn-syzygium": {
+                "name": "Replantation de la forêt brûlée de Mkussu",
+                "description": "Restauration de la réserve forestière naturelle de Mkussu dans le district de Lushoto après les dégâts causés par les incendies."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Planter pour arrêter la pauvreté",
+                "description": "Aider les communautés rurales à mettre en œuvre l'agroforesterie pour lutter contre la pauvreté."
+            },
+            "default_contribution": "Contribution de {partner}",
+            "default_impact": "A planté {trees} arbres avec {partner} pour soutenir la reforestation."
+        }
     }
 }

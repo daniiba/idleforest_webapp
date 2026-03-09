@@ -20,7 +20,7 @@
     "Landing": {
         "hero": {
             "title_line1": "CONVIERTE TU",
-            "title_line2": "INTERNET INACTIVO EN",
+            "title_line2": "INTERNET SIN USAR EN",
             "title_line3": "ÁRBOLES REALES",
             "description": "Nuestra app de escritorio usa tu ancho de banda libre de forma segura para financiar la plantación de árboles en todo el mundo. Únete a miles que generan impacto ambiental mientras su ordenador está inactivo.",
             "safe_secure": "100% Seguro y Protegido",
@@ -34,7 +34,7 @@
             "step1_title": "Instala la Extensión",
             "step1_desc": "Añade nuestra ligera extensión de Chrome en segundos. Sin registro ni configuración necesarios.",
             "step2_title": "Comparte Ancho de Banda",
-            "step2_desc": "Tu conexión a internet inactiva se usa de forma segura para investigación aprobada y distribución de contenido, reemplazando centros de datos tradicionales que consumen enormes cantidades de energía y agua.",
+            "step2_desc": "Tu conexión a internet no utilizada se usa de forma segura para investigación aprobada y distribución de contenido, reemplazando centros de datos tradicionales que consumen enormes cantidades de energía y agua.",
             "step2_link": "Descubre cómo somos 80-90% más ecológicos que las granjas de servidores",
             "step3_title": "Plantamos Árboles",
             "step3_desc": "Los ingresos generados financian proyectos verificados de plantación de árboles en todo el mundo. Rastrea tu impacto en tiempo real."
@@ -90,7 +90,7 @@
             "safe_a3": "Para detalles completos sobre quién usa tu ancho de banda y cómo te protegemos legalmente, visita nuestra",
             "safe_link": "Página de Transparencia",
             "slow_q": "¿Esto ralentizará mi internet?",
-            "slow_a1": "No. IdleForest solo usa tu ancho de banda inactivo—la capacidad de internet que no estás usando activamente.",
+            "slow_a1": "No. IdleForest solo usa tu ancho de banda no utilizado—la capacidad de internet que no estás usando activamente.",
             "slow_a2": "Nuestra extensión está diseñada para tener cero impacto en tu experiencia de navegación. Si estás viendo streaming, jugando o haciendo algo que requiere ancho de banda, IdleForest se reduce automáticamente para asegurar que tus actividades no se vean afectadas.",
             "trees_q": "¿Cómo se plantan los árboles realmente?",
             "trees_a1": "Cuando usas IdleForest, tu ancho de banda compartido genera ingresos. Usamos el 100% de nuestras ganancias para financiar proyectos verificados de plantación de árboles en todo el mundo.",
@@ -125,7 +125,7 @@
     "Transparency": {
         "badge": "Transparencia Total",
         "hero_title": "Cómo Se Usa Tu Ancho de Banda",
-        "hero_desc": "Creemos en la transparencia completa. Aquí tienes exactamente quién usa tu ancho de banda inactivo, qué hacen con él y las protecciones legales que proporcionamos.",
+        "hero_desc": "Creemos en la transparencia completa. Aquí tienes exactamente quién usa tu ancho de banda no utilizado, qué hacen con él y las protecciones legales que proporcionamos.",
         "env_title": "Por Qué las Redes Distribuidas Son Más Ecológicas",
         "env_desc": "Sí, las empresas necesitan datos. Pero cómo obtienen esos datos importa para el medio ambiente. Las redes distribuidas como Olostep son significativamente más ecológicas que los centros de datos tradicionales.",
         "dc_title": "Centros de Datos Tradicionales",
@@ -158,7 +158,7 @@
         "what_olostep_does": "Qué Hace Olostep:",
         "what_olostep_does_desc": "Olostep proporciona una API de datos web que ayuda a empresas y desarrolladores a acceder a datos web limpios y estructurados. Obtienen información disponible públicamente de sitios web para potenciar aplicaciones, herramientas de investigación y plataformas de inteligencia empresarial.",
         "how_bandwidth_used": "Cómo se Usa Tu Ancho de Banda:",
-        "how_bandwidth_desc": "Tu ancho de banda inactivo se usa para obtener sitios web accesibles públicamente de forma sin sesión, asegurando que no se transmitan datos personales. Esto significa:",
+        "how_bandwidth_desc": "Tu ancho de banda no utilizado se usa para obtener sitios web accesibles públicamente de forma sin sesión, asegurando que no se transmitan datos personales. Esto significa:",
         "no_cookies": "Nunca se envían cookies, credenciales de inicio de sesión ni información personal",
         "public_only": "Solo se accede a páginas web disponibles públicamente (el mismo contenido que cualquiera puede ver)",
         "isolated": "Las solicitudes están aisladas de tu sesión de navegación y datos personales",
@@ -397,6 +397,55 @@
         "about_desc": "IdleForest es una extensión de navegador pasiva que planta árboles mientras navegas, juegas o transmites. Usa tu ancho de banda de internet no utilizado para financiar proyectos de reforestación.",
         "free_to_use": "Gratis de usar",
         "no_account": "No requiere cuenta",
-        "open_source": "Código abierto"
+        "open_source": "Código abierto",
+        "progress_title": "Nuestro Progreso de Plantación",
+        "progress_desc": "Rastreando nuestro impacto de reforestación con nuestros socios",
+        "total_contributions": "Contribuciones Totales",
+        "trees_planted_progress": "Árboles Plantados",
+        "est_donation": "Valor Est. de Donación (USD)",
+        "impact_milestones": "Hitos de Impacto",
+        "latest": "Último",
+        "trees": "árboles",
+        "view_certificate": "Ver Certificado",
+        "historical_title": "Rendimiento Histórico de Idleforest",
+        "historical_desc": "Rastreando indicadores clave de rendimiento a lo largo del tiempo",
+        "granularity": "Granularidad:",
+        "daily": "Diario",
+        "weekly": "Semanal",
+        "monthly": "Mensual",
+        "total_requests": "Solicitudes Totales",
+        "active_nodes": "Nodos Activos",
+        "total_earnings": "Ganancias Totales",
+        "trees_planted_chart": "Árboles Plantados",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Proyectos de Reforestación Eden – Madagascar"
+            },
+            "if-kenya": {
+                "name": "Iniciativa Forestal Global – Kenia"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Kenia"
+            },
+            "tftf-senegal": {
+                "name": "Proyectos TFTF – Senegal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Montañas Rwenzori, Uganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Agroforestería en Camerún"
+            },
+            "tn-syzygium": {
+                "name": "Replantando el Bosque Mkussu quemado",
+                "description": "Restaurando la Reserva Forestal Natural Mkussu en el Distrito de Lushoto después de los daños por incendio."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Plantar para detener la pobreza",
+                "description": "Ayudando a las comunidades rurales a implementar la agroforestería para combatir la pobreza."
+            },
+            "default_contribution": "Contribución de {partner}",
+            "default_impact": "Plantó {trees} árboles con {partner} para apoyar la reforestación."
+        }
     }
 }

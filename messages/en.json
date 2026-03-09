@@ -397,6 +397,55 @@
         "about_desc": "IdleForest is a passive browser extension that plants trees while you browse, game, or stream. It uses your unused internet bandwidth to fund reforestation projects.",
         "free_to_use": "Free to use",
         "no_account": "No account required",
-        "open_source": "Open source"
+        "open_source": "Open source",
+        "progress_title": "Our Tree Planting Progress",
+        "progress_desc": "Tracking our reforestation impact with our partners",
+        "total_contributions": "Total Contributions",
+        "trees_planted_progress": "Trees Planted",
+        "est_donation": "Est. Donation Value (USD)",
+        "impact_milestones": "Impact Milestones",
+        "latest": "Latest",
+        "trees": "trees",
+        "view_certificate": "View Certificate",
+        "historical_title": "Historical Performance of Idleforest",
+        "historical_desc": "Tracking key performance indicators over time",
+        "granularity": "Granularity:",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "total_requests": "Total Requests",
+        "active_nodes": "Active Nodes",
+        "total_earnings": "Total Earnings",
+        "trees_planted_chart": "Trees Planted",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Eden Reforestation Projects – Madagascar"
+            },
+            "if-kenya": {
+                "name": "Global Forest Initiative – Kenya"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Kenya"
+            },
+            "tftf-senegal": {
+                "name": "TFTF Projects – Senegal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Rwenzori Mountains, Uganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Cameroon Agroforestry"
+            },
+            "tn-syzygium": {
+                "name": "Replanting the burnt Mkussu Forest",
+                "description": "Restoring the Mkussu Nature Forest Reserve in Lushoto District after fire damage."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Plant to Stop Poverty",
+                "description": "Helping rural communities implement agroforestry to combat poverty."
+            },
+            "default_contribution": "{partner} Contribution",
+            "default_impact": "Planted {trees} trees with {partner} to support reforestation."
+        }
     }
 }

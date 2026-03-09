@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer } from "@/components/ui/chart"
 import { plantingsData } from "@/lib/plantings"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { useTranslations } from "next-intl"
 
 interface HistoricalDataProps {
   data: {
@@ -16,6 +17,7 @@ interface HistoricalDataProps {
 }
 
 export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
+  const t = useTranslations('Report')
   const isMobile = useIsMobile()
   const [visibleMetrics, setVisibleMetrics] = useState({
     requests: true,
@@ -115,22 +117,22 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
 
   const config = {
     requests: {
-      label: "Total Requests",
+      label: t('total_requests'),
       color: "#0B101F", // brand-navy for line
       description: "Number of total requests"
     },
     nodes: {
-      label: "Active Nodes",
+      label: t('active_nodes'),
       color: "#3A4563", // navy variant for better contrast on gray
       description: "Number of active nodes"
     },
     earnings: {
-      label: "Total Earnings",
+      label: t('total_earnings'),
       color: "#B8C33C", // even darker brand yellow for earnings
       description: "Cumulative earnings"
     },
     trees: {
-      label: "Trees Planted",
+      label: t('trees_planted_chart'),
       color: "#8C9931", // darkest yellow variant to clearly differ from earnings
       description: "Number of trees planted (donations)"
     }
@@ -214,13 +216,13 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
   return (
     <Card className="bg-white text-brand-navy border border-brand-navy/10 rounded-xl shadow-sm sm:shadow-md ring-1 ring-black/5">
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="font-bold text-xl sm:text-2xl">Historical Performance of Idleforest</CardTitle>
+        <CardTitle className="font-bold text-xl sm:text-2xl">{t('historical_title')}</CardTitle>
         <div className="space-y-2">
-          <p className="text-brand-navy/80 text-sm sm:text-base">Tracking key performance indicators over time</p>
+          <p className="text-brand-navy/80 text-sm sm:text-base">{t('historical_desc')}</p>
           {/* Granularity controls */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-xs text-brand-navy/70">Granularity:</span>
-            {(["daily","weekly","monthly"] as const).map((g) => (
+            <span className="text-xs text-brand-navy/70">{t('granularity')}</span>
+            {(["daily", "weekly", "monthly"] as const).map((g) => (
               <button
                 key={g}
                 type="button"
@@ -229,11 +231,11 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
                 aria-pressed={granularity === g}
                 style={{ borderColor: "#3A4563", color: "#3A4563" }}
               >
-                {g.charAt(0).toUpperCase() + g.slice(1)}
+                {t(g)}
               </button>
             ))}
           </div>
-         
+
           {/* Mobile compact toggles */}
           <div className="sm:hidden flex flex-wrap gap-2 pt-1">
             {Object.entries(config).map(([key, value]) => {
@@ -259,115 +261,115 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
         <div className="w-full overflow-x-auto">
           <div className="min-w-[320px] w-full">
             <ChartContainer config={config} className="aspect-auto h-[260px] sm:h-[420px]">
-          <AreaChart
-            data={chartData}
-            margin={{ left: 0, right: 0, top: isMobile ? 10 : 20, bottom: isMobile ? 0 : 10 }}
-            className="w-full h-full"
-            onClick={handleChartClick}
-          >
-            <CartesianGrid vertical={false} horizontal={false} stroke="rgba(11,16,31,0.08)" />
-            <XAxis
-              dataKey="period"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={isMobile ? 20 : 8}
-              tick={{ fill: "rgba(11,16,31,0.8)", fontSize: isMobile ? 10 : 12 }}
-            />
-            <YAxis 
-              yAxisId="requests"
-              orientation="left"
-              tickLine={false}
-              axisLine={false}
-              tick={false}
-              width={0}
-            />
-            <YAxis 
-              yAxisId="nodes"
-              orientation="left"
-              tickLine={false}
-              axisLine={false}
-              tick={false}
-              width={0}
-            />
-            <YAxis 
-              yAxisId="earnings"
-              orientation="right"
-              tickLine={false}
-              axisLine={false}
-              tick={false}
-              width={0}
-            />
-            <YAxis 
-              yAxisId="trees"
-              orientation="right"
-              tickLine={false}
-              axisLine={false}
-              tick={false}
-              width={0}
-            />
-          {isMobile ? (
-            <Tooltip
-              content={<CustomTooltip />}
-              active={isTooltipPinned}
-              label={isTooltipPinned && pinnedIndex != null ? chartData[pinnedIndex]?.period : undefined}
-              payload={isTooltipPinned ? buildPayloadForIndex(pinnedIndex) : undefined}
-            />
-          ) : (
-            <Tooltip content={<CustomTooltip />} />
-          )}
-          {!isMobile && (
-            <Legend 
-              onClick={handleLegendClick}
-              iconType="circle"
-              wrapperStyle={{ paddingTop: "1rem", color: "#0B101F", cursor: "pointer" }}
-            />
-          )}
-          <Area
-            yAxisId="requests"
-            type="monotone"
-            dataKey="requests"
-            name={config.requests.label}
-            stroke={config.requests.color}
-            fill={config.requests.color}
-            fillOpacity={visibleMetrics.requests ? 0.1 : 0}
-            strokeOpacity={visibleMetrics.requests ? 1 : 0}
-            strokeWidth={2}
-          />
-          <Area
-            yAxisId="nodes"
-            type="monotone"
-            dataKey="nodes"
-            name={config.nodes.label}
-            stroke={config.nodes.color}
-            fill={config.nodes.color}
-            fillOpacity={visibleMetrics.nodes ? 0.12 : 0}
-            strokeOpacity={visibleMetrics.nodes ? 1 : 0}
-            strokeWidth={2.25}
-          />
-          <Area
-            yAxisId="earnings"
-            type="monotone"
-            dataKey="earnings"
-            name={config.earnings.label}
-            stroke={config.earnings.color}
-            fill={config.earnings.color}
-            fillOpacity={visibleMetrics.earnings ? 0.1 : 0}
-            strokeOpacity={visibleMetrics.earnings ? 1 : 0}
-            strokeWidth={2}
-          />
-            <Area
-              yAxisId="trees"
-              type="monotone"
-              dataKey="trees"
-              name={config.trees.label}
-              stroke={config.trees.color}
-              fill={config.trees.color}
-              fillOpacity={visibleMetrics.trees ? 0.12 : 0}
-              strokeOpacity={visibleMetrics.trees ? 1 : 0}
-              strokeWidth={2}
-            />
-        </AreaChart>
+              <AreaChart
+                data={chartData}
+                margin={{ left: 0, right: 0, top: isMobile ? 10 : 20, bottom: isMobile ? 0 : 10 }}
+                className="w-full h-full"
+                onClick={handleChartClick}
+              >
+                <CartesianGrid vertical={false} horizontal={false} stroke="rgba(11,16,31,0.08)" />
+                <XAxis
+                  dataKey="period"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={isMobile ? 20 : 8}
+                  tick={{ fill: "rgba(11,16,31,0.8)", fontSize: isMobile ? 10 : 12 }}
+                />
+                <YAxis
+                  yAxisId="requests"
+                  orientation="left"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={false}
+                  width={0}
+                />
+                <YAxis
+                  yAxisId="nodes"
+                  orientation="left"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={false}
+                  width={0}
+                />
+                <YAxis
+                  yAxisId="earnings"
+                  orientation="right"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={false}
+                  width={0}
+                />
+                <YAxis
+                  yAxisId="trees"
+                  orientation="right"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={false}
+                  width={0}
+                />
+                {isMobile ? (
+                  <Tooltip
+                    content={<CustomTooltip />}
+                    active={isTooltipPinned}
+                    label={isTooltipPinned && pinnedIndex != null ? chartData[pinnedIndex]?.period : undefined}
+                    payload={isTooltipPinned ? buildPayloadForIndex(pinnedIndex) : undefined}
+                  />
+                ) : (
+                  <Tooltip content={<CustomTooltip />} />
+                )}
+                {!isMobile && (
+                  <Legend
+                    onClick={handleLegendClick}
+                    iconType="circle"
+                    wrapperStyle={{ paddingTop: "1rem", color: "#0B101F", cursor: "pointer" }}
+                  />
+                )}
+                <Area
+                  yAxisId="requests"
+                  type="monotone"
+                  dataKey="requests"
+                  name={config.requests.label}
+                  stroke={config.requests.color}
+                  fill={config.requests.color}
+                  fillOpacity={visibleMetrics.requests ? 0.1 : 0}
+                  strokeOpacity={visibleMetrics.requests ? 1 : 0}
+                  strokeWidth={2}
+                />
+                <Area
+                  yAxisId="nodes"
+                  type="monotone"
+                  dataKey="nodes"
+                  name={config.nodes.label}
+                  stroke={config.nodes.color}
+                  fill={config.nodes.color}
+                  fillOpacity={visibleMetrics.nodes ? 0.12 : 0}
+                  strokeOpacity={visibleMetrics.nodes ? 1 : 0}
+                  strokeWidth={2.25}
+                />
+                <Area
+                  yAxisId="earnings"
+                  type="monotone"
+                  dataKey="earnings"
+                  name={config.earnings.label}
+                  stroke={config.earnings.color}
+                  fill={config.earnings.color}
+                  fillOpacity={visibleMetrics.earnings ? 0.1 : 0}
+                  strokeOpacity={visibleMetrics.earnings ? 1 : 0}
+                  strokeWidth={2}
+                />
+                <Area
+                  yAxisId="trees"
+                  type="monotone"
+                  dataKey="trees"
+                  name={config.trees.label}
+                  stroke={config.trees.color}
+                  fill={config.trees.color}
+                  fillOpacity={visibleMetrics.trees ? 0.12 : 0}
+                  strokeOpacity={visibleMetrics.trees ? 1 : 0}
+                  strokeWidth={2}
+                />
+              </AreaChart>
             </ChartContainer>
           </div>
         </div>

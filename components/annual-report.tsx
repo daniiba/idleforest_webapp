@@ -5,8 +5,10 @@ import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ExternalLink, Target, Trees } from "lucide-react"
 import Link from "next/link"
 import { plantingsData, PlantingEvent, Receipt } from "@/lib/plantings"
+import { useTranslations } from "next-intl"
 
 export default function CharityCommitments() {
+  const t = useTranslations('Report')
   // Calculate totals
   const totalTrees = plantingsData.events.reduce((sum, e) => sum + e.trees, 0);
 
@@ -38,12 +40,12 @@ export default function CharityCommitments() {
 
     return {
       date: event.date,
-      description: project?.name || `${partner?.name} Contribution`,
+      description: project ? t(`projects.${project.id}.name`) : t('projects.default_contribution', { partner: partner?.name || '' }),
       trees: event.trees,
-      impact: project?.description || `Planted ${event.trees} trees with ${partner?.name} to support reforestation.`,
+      impact: project?.description ? t(`projects.${project.id}.description`) : t('projects.default_impact', { trees: event.trees, partner: partner?.name || '' }),
       receipt: receipt ? {
         url: receipt.url || receipt.filePath,
-        label: "View Certificate"
+        label: t('view_certificate')
       } : null,
       image: image
     };
@@ -56,27 +58,27 @@ export default function CharityCommitments() {
           <CardHeader className="px-0 pt-0">
             <CardTitle className="flex items-center gap-3 text-2xl font-rethink-sans font-bold text-black">
               <Target className="h-8 w-8 text-black" />
-              Our Tree Planting Progress
+              {t('progress_title')}
             </CardTitle>
             <CardDescription className="text-neutral-600 text-base mt-2 font-medium">
-              Tracking our reforestation impact with our partners
+              {t('progress_desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="px-0">
             <div className="space-y-8">
               <div className="space-y-6 bg-brand-gray/30 p-6 border-2 border-black/10">
-                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">Total Contributions</h3>
+                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">{t('total_contributions')}</h3>
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm font-bold text-black">
-                      <span>Trees Planted</span>
+                      <span>{t('trees_planted_progress')}</span>
                       <span>{totalTrees} <span className="text-neutral-500">/ {goalTrees}</span></span>
                     </div>
                     <Progress value={Math.min((totalTrees / goalTrees) * 100, 100)} className="h-4 bg-white border-2 border-black rounded-full [&>div]:bg-brand-green" />
                   </div>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm font-bold text-black">
-                      <span>Est. Donation Value (USD)</span>
+                      <span>{t('est_donation')}</span>
                       <span>${totalDonations.toFixed(2)} <span className="text-neutral-500">/ ${goalDonation}</span></span>
                     </div>
                     <Progress value={Math.min((totalDonations / goalDonation) * 100, 100)} className="h-4 bg-white border-2 border-black rounded-full [&>div]:bg-brand-yellow" />
@@ -85,7 +87,7 @@ export default function CharityCommitments() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">Impact Milestones</h3>
+                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">{t('impact_milestones')}</h3>
                 <div className="space-y-6">
                   {milestones.map((milestone, index) => (
                     <div key={index} className="group border-2 border-black bg-white p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:-translate-y-1">
@@ -93,13 +95,13 @@ export default function CharityCommitments() {
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <h4 className="font-bold text-black text-lg">{milestone.description}</h4>
-                            {index === 0 && <span className="px-2 py-0.5 border border-black bg-brand-yellow text-black text-xs font-bold uppercase tracking-wider">Latest</span>}
+                            {index === 0 && <span className="px-2 py-0.5 border border-black bg-brand-yellow text-black text-xs font-bold uppercase tracking-wider">{t('latest')}</span>}
                           </div>
                           <p className="text-sm font-medium text-neutral-600">{new Date(milestone.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                         </div>
                         <div className="flex items-center bg-brand-green/20 px-3 py-1.5 border border-black self-start">
                           <Trees className="h-4 w-4 mr-2 text-black" />
-                          <span className="text-sm font-bold text-black">{milestone.trees} trees</span>
+                          <span className="text-sm font-bold text-black">{milestone.trees} {t('trees')}</span>
                         </div>
                       </div>
 

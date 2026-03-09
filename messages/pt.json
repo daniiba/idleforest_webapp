@@ -20,9 +20,9 @@
     "Landing": {
         "hero": {
             "title_line1": "TRANSFORME SUA",
-            "title_line2": "INTERNET OCIOSA EM",
+            "title_line2": "INTERNET NÃO UTILIZADA EM",
             "title_line3": "ÁRVORES REAIS",
-            "description": "Nosso app de desktop usa sua largura de banda ociosa com segurança para financiar o plantio de árvores ao redor do mundo. Junte-se a milhares que geram impacto ambiental enquanto seu computador está parado.",
+            "description": "Nosso app de desktop usa sua largura de banda não utilizada com segurança para financiar o plantio de árvores ao redor do mundo. Junte-se a milhares que geram impacto ambiental enquanto seu computador está parado.",
             "safe_secure": "100% Seguro e Protegido",
             "no_impact": "Sem Impacto no Desempenho",
             "auto_plant": "Plante árvores automaticamente"
@@ -90,7 +90,7 @@
             "safe_a3": "Para detalhes completos sobre quem usa sua largura de banda e como te protegemos legalmente, visite nossa",
             "safe_link": "Página de Transparência",
             "slow_q": "Isso vai deixar minha internet lenta?",
-            "slow_a1": "Não. O IdleForest usa apenas sua largura de banda ociosa—a capacidade de internet que você não está usando ativamente.",
+            "slow_a1": "Não. O IdleForest usa apenas sua largura de banda não utilizada—a capacidade de internet que você não está usando ativamente.",
             "slow_a2": "Nossa extensão é projetada para ter zero impacto na sua experiência de navegação. Se você estiver assistindo streaming, jogando ou fazendo algo que requer largura de banda, o IdleForest reduz automaticamente para garantir que suas atividades não sejam afetadas.",
             "trees_q": "Como as árvores são realmente plantadas?",
             "trees_a1": "Quando você usa o IdleForest, sua largura de banda compartilhada gera receita. Usamos 100% dos nossos lucros para financiar projetos verificados de plantio de árvores ao redor do mundo.",
@@ -397,6 +397,55 @@
         "about_desc": "IdleForest é uma extensão passiva de navegador que planta árvores enquanto você navega, joga ou transmite. Ela usa a largura de banda de internet não utilizada para financiar projetos de reflorestamento.",
         "free_to_use": "Gratuito para usar",
         "no_account": "Nenhuma conta necessária",
-        "open_source": "Código aberto"
+        "open_source": "Código aberto",
+        "progress_title": "Nosso Progresso de Plantio",
+        "progress_desc": "Acompanhando nosso impacto de reflorestamento com nossos parceiros",
+        "total_contributions": "Contribuições Totais",
+        "trees_planted_progress": "Árvores Plantadas",
+        "est_donation": "Valor Est. de Doação (USD)",
+        "impact_milestones": "Marcos de Impacto",
+        "latest": "Mais Recente",
+        "trees": "árvores",
+        "view_certificate": "Ver Certificado",
+        "historical_title": "Desempenho Histórico do Idleforest",
+        "historical_desc": "Acompanhando indicadores-chave de desempenho ao longo do tempo",
+        "granularity": "Granularidade:",
+        "daily": "Diário",
+        "weekly": "Semanal",
+        "monthly": "Mensal",
+        "total_requests": "Solicitações Totais",
+        "active_nodes": "Nós Ativos",
+        "total_earnings": "Ganhos Totais",
+        "trees_planted_chart": "Árvores Plantadas",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Projetos de Reflorestamento Eden – Madagascar"
+            },
+            "if-kenya": {
+                "name": "Iniciativa Florestal Global – Quênia"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Quênia"
+            },
+            "tftf-senegal": {
+                "name": "Projetos TFTF – Senegal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Montanhas Rwenzori, Uganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Agrofloresta em Camarões"
+            },
+            "tn-syzygium": {
+                "name": "Replantio da Floresta Mkussu queimada",
+                "description": "Restaurando a Reserva Florestal Natural Mkussu no Distrito de Lushoto após danos causados por incêndios."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Plantar para Combater a Pobreza",
+                "description": "Ajudando comunidades rurais a implementar a agrofloresta para combater a pobreza."
+            },
+            "default_contribution": "Contribuição de {partner}",
+            "default_impact": "Plantou {trees} árvores com {partner} para apoiar o reflorestamento."
+        }
     }
 }

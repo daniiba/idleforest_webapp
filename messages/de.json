@@ -397,6 +397,55 @@
         "about_desc": "IdleForest ist eine passive Browser-Erweiterung, die Bäume pflanzt, während Sie surfen, spielen oder streamen. Sie nutzt ungenutzte Internetbandbreite, um Aufforstungsprojekte zu finanzieren.",
         "free_to_use": "Kostenlos nutzbar",
         "no_account": "Kein Konto erforderlich",
-        "open_source": "Open Source"
+        "open_source": "Open Source",
+        "progress_title": "Unser Baumpflanz-Fortschritt",
+        "progress_desc": "Verfolgung unserer Aufforstungswirkung mit unseren Partnern",
+        "total_contributions": "Gesamtbeiträge",
+        "trees_planted_progress": "Gepflanzte Bäume",
+        "est_donation": "Gesch. Spendenwert (USD)",
+        "impact_milestones": "Wirkungs-Meilensteine",
+        "latest": "Neueste",
+        "trees": "Bäume",
+        "view_certificate": "Zertifikat Ansehen",
+        "historical_title": "Historische Leistung von Idleforest",
+        "historical_desc": "Verfolgung der wichtigsten Leistungsindikatoren über die Zeit",
+        "granularity": "Granularität:",
+        "daily": "Täglich",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich",
+        "total_requests": "Gesamtanfragen",
+        "active_nodes": "Aktive Knoten",
+        "total_earnings": "Gesamteinnahmen",
+        "trees_planted_chart": "Gepflanzte Bäume",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Eden Aufforstungsprojekte – Madagaskar"
+            },
+            "if-kenya": {
+                "name": "Globale Waldinitiative – Kenia"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Kenia"
+            },
+            "tftf-senegal": {
+                "name": "TFTF Projekte – Senegal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Rwenzori-Berge, Uganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Agroforstwirtschaft in Kamerun"
+            },
+            "tn-syzygium": {
+                "name": "Wiederbepflanzung des verbrannten Mkussu-Waldes",
+                "description": "Wiederherstellung des Mkussu Naturwaldreservats im Distrikt Lushoto nach Brandschäden."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Pflanzen gegen Armut",
+                "description": "Unterstützung ländlicher Gemeinden bei der Umsetzung von Agroforstwirtschaft zur Bekämpfung der Armut."
+            },
+            "default_contribution": "{partner} Beitrag",
+            "default_impact": "Hat {trees} Bäume mit {partner} gepflanzt, um die Aufforstung zu unterstützen."
+        }
     }
 }
