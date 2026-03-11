@@ -77,7 +77,7 @@ export default async function CompanyWidgetPage({
                             boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)'
                         }}
                     >
-                        Join the Company
+                        Plant trees with {company.name}
                     </a>
 
                     <div className="mt-6 flex items-center justify-center gap-2 text-xs font-bold text-neutral-400">
