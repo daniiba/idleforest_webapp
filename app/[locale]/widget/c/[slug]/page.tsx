@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { TreePine } from 'lucide-react'
+import { TreePine, Users } from 'lucide-react'
 
 // Basic standalone Layout for Widget to override the root layout's header/footer if needed
 // Actually, since it's an app dir, we can rely on standard page layout, 
@@ -24,6 +24,20 @@ export default async function CompanyWidgetPage({
 
     if (error || !company) {
         return notFound()
+    }
+
+    // Fetch members and points for social proof
+    const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('total_points')
+        .eq('company_id', company.id)
+
+    let memberCount = 0
+    let totalPoints = 0
+
+    if (!profilesError && profiles) {
+        memberCount = profiles.length
+        totalPoints = profiles.reduce((acc, p) => acc + (p.total_points || 0), 0)
     }
 
     const themeColor = company.theme_color || '#10B981'
@@ -66,6 +80,21 @@ export default async function CompanyWidgetPage({
                     <p className="text-sm font-semibold text-neutral-600 mb-6">
                         {company.description || 'Join our company portal to start planting real trees together!'}
                     </p>
+
+                    {(memberCount > 0 || totalPoints > 0) && (
+                        <div className="flex w-full items-center justify-center gap-2 mb-6 divide-x-2 divide-neutral-200 bg-neutral-50 py-3 rounded-xl border-2 border-neutral-200">
+                            <div className="flex flex-col items-center px-4 w-1/2">
+                                <Users className="h-5 w-5 text-brand-navy mb-1" />
+                                <span className="font-extrabold text-xl text-black leading-none mb-1">{memberCount}</span>
+                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Members</span>
+                            </div>
+                            <div className="flex flex-col items-center px-4 w-1/2">
+                                <TreePine className="h-5 w-5 text-green-600 mb-1" />
+                                <span className="font-extrabold text-xl text-black leading-none mb-1">{totalPoints.toLocaleString()}</span>
+                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Points</span>
+                            </div>
+                        </div>
+                    )}
 
                     <a
                         href={joinUrl}

@@ -129,7 +129,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
               </button>
             </div>
           ) : (
-            <Link href="/login">
+            <Link href="/auth/user/login">
               <Button className="bg-black text-white border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
                 {t('login')}
               </Button>

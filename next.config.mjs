@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'ufsnmvbmgwvkhirfnptm.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'd1yei2z3i6k35z.cloudfront.net',
+      },
     ],
   },
   async rewrites() {
