@@ -69,94 +69,60 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return { languages: alternates }
   }
 
-  const posts = blogPosts.map((post) => ({
-    url: `https://idleforest.com/blog/${post.node.slug}`,
+  // Helper to generate entries for all languages for a given path
+  const generateLocalizedUrls = (path: string, options: { lastModified: Date; changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly'; priority: number }, translated = true) => {
+    if (!translated) {
+      return [{
+        url: `https://idleforest.com${path}`,
+        ...options
+      }]
+    }
+
+    const alternates = getAlternates(path)
+    return locales.map(locale => {
+      const prefix = locale === 'en' ? '' : `/${locale}`
+      return {
+        url: `https://idleforest.com${prefix}${path}`,
+        alternates,
+        ...options
+      }
+    })
+  }
+
+  const posts = blogPosts.flatMap((post) => generateLocalizedUrls(`/blog/${post.node.slug}`, {
     lastModified: new Date(post.node.publishedAt),
-    changeFrequency: 'monthly' as const,
+    changeFrequency: 'monthly',
     priority: 0.7,
-    alternates: getAlternates(`/blog/${post.node.slug}`)
-  }))
+  }, false))
 
-  const carbonPages = carbonSlugs.map((slug) => ({
-    url: `https://idleforest.com/carbon-footprint/${slug}`,
+  const carbonPages = carbonSlugs.flatMap((slug) => generateLocalizedUrls(`/carbon-footprint/${slug}`, {
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.8,
-    alternates: getAlternates(`/carbon-footprint/${slug}`)
   }))
 
-  const routes = [
-    {
-      url: 'https://idleforest.com',
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 1,
-      alternates: getAlternates('')
-    },
-    {
-      url: 'https://idleforest.com/blog',
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-      alternates: getAlternates('/blog')
-    },
-    {
-      url: 'https://idleforest.com/ecosia',
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-      alternates: getAlternates('/ecosia')
-    },
-    {
-      url: 'https://idleforest.com/transparency',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-      alternates: getAlternates('/transparency')
-    },
-    {
-      url: 'https://idleforest.com/discord-bot',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-      alternates: getAlternates('/discord-bot')
-    },
-    {
-      url: 'https://idleforest.com/downloads',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-      alternates: getAlternates('/downloads')
-    },
-    {
-      url: 'https://idleforest.com/contact',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-      alternates: getAlternates('/contact')
-    },
-    {
-      url: 'https://idleforest.com/terms',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.4,
-      alternates: getAlternates('/terms')
-    },
-    {
-      url: 'https://idleforest.com/report',
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-      alternates: getAlternates('/report')
-    },
-    {
-      url: 'https://idleforest.com/compare/idleforest-vs-ecosia-vs-treeclicks',
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-      alternates: getAlternates('/compare/idleforest-vs-ecosia-vs-treeclicks')
-    },
+  type RouteOption = {
+    path: string;
+    changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly';
+    priority: number;
+    lastModified: Date;
+    translated?: boolean;
+  }
+
+  const routesOptions: RouteOption[] = [
+    { path: '', changeFrequency: 'daily', priority: 1, lastModified: new Date() },
+    { path: '/blog', changeFrequency: 'daily', priority: 0.8, lastModified: new Date(), translated: false },
+    { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: new Date() },
+    { path: '/transparency', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
+    { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: new Date() },
+    { path: '/downloads', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
+    { path: '/contact', changeFrequency: 'monthly', priority: 0.5, lastModified: new Date() },
+    { path: '/terms', changeFrequency: 'monthly', priority: 0.4, lastModified: new Date() },
+    { path: '/report', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date() },
+    { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date() },
   ]
+  
+  const routes = routesOptions.flatMap(({ path, translated, ...options }) => generateLocalizedUrls(path, options, translated !== false))
 
   return [...routes, ...posts, ...carbonPages]
 }
