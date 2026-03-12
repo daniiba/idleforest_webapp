@@ -121,7 +121,7 @@ export default function CompanySettingsPanel({
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-bold uppercase tracking-wider text-black block">Slug (URL)</label>
                                 <input
@@ -166,7 +166,7 @@ export default function CompanySettingsPanel({
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-bold uppercase tracking-wider text-black block">Theme Color</label>
                                 <div className="flex items-center gap-2">
@@ -174,13 +174,13 @@ export default function CompanySettingsPanel({
                                         type="color"
                                         value={formData.theme_color}
                                         onChange={e => setFormData({ ...formData, theme_color: e.target.value })}
-                                        className="h-10 w-10 border-2 border-black p-0 cursor-pointer"
+                                        className="h-10 w-10 shrink-0 border-2 border-black p-0 cursor-pointer"
                                     />
                                     <input
                                         type="text"
                                         value={formData.theme_color}
                                         onChange={e => setFormData({ ...formData, theme_color: e.target.value })}
-                                        className="flex-1 px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                        className="flex-1 min-w-0 px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
                                     />
                                 </div>
                             </div>
@@ -191,7 +191,7 @@ export default function CompanySettingsPanel({
                                         type="checkbox"
                                         checked={formData.is_invite_only}
                                         onChange={e => setFormData({ ...formData, is_invite_only: e.target.checked })}
-                                        className="w-5 h-5 border-2 border-black accent-black focus:ring-0"
+                                        className="w-5 h-5 shrink-0 border-2 border-black accent-black focus:ring-0"
                                     />
                                     <span className="text-sm">Require invite code?</span>
                                 </div>
