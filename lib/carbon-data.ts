@@ -65,7 +65,7 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 2,
         idleforest_pitch: "AI is smart. You should be too. Offset your prompts.",
         slug: "chatgpt",
-        icon_slug: "openai",
+        icon_slug: "ollama",
     },
     {
         app_name: "Zoom",
