@@ -344,6 +344,13 @@ export default function BotLandingPage() {
                                     number="03"
                                     title={t('step3_title')}
                                     description={t('step3_desc')}
+                                    ctaLabel={t('step3_cta')}
+                                    ctaHref="/downloads#desktop-apps"
+                                />
+                                <StepItem
+                                    number="04"
+                                    title={t('step4_title')}
+                                    description={t('step4_desc')}
                                 />
                             </div>
                         </div>
@@ -401,7 +408,19 @@ function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNod
     );
 }
 
-function StepItem({ number, title, description }: { number: string, title: string, description: string }) {
+function StepItem({
+    number,
+    title,
+    description,
+    ctaLabel,
+    ctaHref
+}: {
+    number: string,
+    title: string,
+    description: string,
+    ctaLabel?: string,
+    ctaHref?: string
+}) {
     return (
         <div className="flex gap-8 group">
             <div className="flex-shrink-0 text-5xl md:text-7xl font-black text-black/10 group-hover:text-black transition-colors duration-500 font-rethink-sans">
@@ -410,6 +429,11 @@ function StepItem({ number, title, description }: { number: string, title: strin
             <div className="pt-2 md:pt-4">
                 <h3 className="font-candu text-3xl font-extrabold uppercase mb-3">{title}</h3>
                 <p className="text-lg text-neutral-800 leading-relaxed max-w-xl">{description}</p>
+                {ctaLabel && ctaHref && (
+                    <Button asChild className="mt-5 bg-black text-brand-yellow hover:bg-brand-navy rounded-full px-6 py-5 font-bold">
+                        <Link href={ctaHref}>{ctaLabel}</Link>
+                    </Button>
+                )}
             </div>
         </div>
     );
