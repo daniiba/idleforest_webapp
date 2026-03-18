@@ -47,6 +47,8 @@ export default async function RootLayout({
 }>) {
     const locale = await getLocale();
     const messages = await getMessages();
+    const pinterestTagId = process.env.PINTEREST_TAG_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID;
+
     return (
         <html lang={locale}>
             <head>
@@ -100,6 +102,19 @@ fbq('track', 'PageView');
         }
         `}
                 </Script>
+                {pinterestTagId ? (
+                    <Script id="pinterest-tag" strategy="afterInteractive">
+                        {`
+        !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+        n=window.pintrk;n.queue=[],n.version='3.0';var
+        t=document.createElement('script');t.async=!0,t.src=e;var
+        r=document.getElementsByTagName('script')[0];r.parentNode.insertBefore(t,r)}}
+        ('https://s.pinimg.com/ct/core.js');
+        pintrk('load', '${pinterestTagId}');
+        pintrk('page');
+        `}
+                    </Script>
+                ) : null}
                 <Script src="https://cdn.ywxi.net/js/1.js" strategy="afterInteractive" />
                 <Script src="https://widgets.tree-nation.com/js/widgets/v2/widgets.min.js" strategy="afterInteractive" />
                 <Script src="https://cdn.tinystats.net/scripts/capi.js" strategy="afterInteractive" />

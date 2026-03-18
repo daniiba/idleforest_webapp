@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Apple } from "lucide-react";
+import { trackPinterestEvent } from "@/lib/pinterest/client";
 
 // --- Icons (Using simple SVGs as placeholders - replace with actual icons/images) ---
 
@@ -22,6 +23,12 @@ export const ChromeStoreButton = () => (
     href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
     target="_blank"
     rel="noopener noreferrer"
+    onClick={() => {
+      trackPinterestEvent({
+        eventName: 'lead',
+        eventSourceUrl: 'https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk',
+      });
+    }}
     className="inline-flex items-center gap-3 bg-brand-yellow hover:bg-brand-yellow text-gray-900 text-lg h-14 px-8 rounded-md transition-all"
   >
     {/* Use your actual image path */}
@@ -50,6 +57,12 @@ export const EdgeStoreButton = () => (
     href="https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
     target="_blank"
     rel="noopener noreferrer"
+    onClick={() => {
+      trackPinterestEvent({
+        eventName: 'lead',
+        eventSourceUrl: 'https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb',
+      });
+    }}
     className="inline-flex items-center gap-3 bg-brand-yellow hover:bg-brand-yellow text-gray-900 text-lg h-14 px-8 rounded-md transition-all"
   >
     {/* Use your actual image path */}
@@ -108,6 +121,11 @@ export const MacDownloadButton = () => {
     // Create a temporary link to trigger the download
     const downloadUrl = "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip";
 
+    trackPinterestEvent({
+      eventName: 'lead',
+      eventSourceUrl: downloadUrl,
+    });
+
     // Open the download in a new tab
     window.open(downloadUrl, '_blank');
 
@@ -139,6 +157,11 @@ export const WindowsDownloadButton = () => {
     e.preventDefault();
     // Create a temporary link to trigger the download
     const downloadUrl = "https://ufsnmvbmgwvkhirfnptm.supabase.co/storage/v1/object/sign/idleforest/idleforest.zip?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV80M2VjMmViMC1lMzZjLTRkODQtYWQ3Ni0wYjNhYzg2ZTkxNWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpZGxlZm9yZXN0L2lkbGVmb3Jlc3QuemlwIiwiaWF0IjoxNzUwMDE1NjA3LCJleHAiOjI3MTAwMDYwMDd9.oi_qgeqfi2KzHLVPKlwMCR5hQy41TveR8e7dD3-jZj8";
+
+    trackPinterestEvent({
+      eventName: 'lead',
+      eventSourceUrl: downloadUrl,
+    });
 
     // Open the download in a new tab
     window.open(downloadUrl, '_blank');

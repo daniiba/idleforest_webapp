@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
+import { trackPinterestEvent } from '@/lib/pinterest/client';
 
 interface InviteInfo {
   teamName: string;
@@ -106,6 +107,11 @@ function SignupForm() {
     if (data.user && data.session) {
       // User is signed up and logged in
       setMessage('Signup successful!');
+      trackPinterestEvent({
+        eventName: 'signup',
+        email,
+        externalId: data.user.id,
+      });
 
       // If there's an invite code, join the team/company
       if (inviteCode) {

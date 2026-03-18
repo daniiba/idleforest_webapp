@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+import { trackPinterestEvent } from '@/lib/pinterest/client';
 
 export default function BusinessSignupPage() {
   const router = useRouter();
@@ -66,6 +67,11 @@ export default function BusinessSignupPage() {
         // await supabase.auth.admin.deleteUser(signUpData.user.id) // Example, DO NOT use directly on client
         setError(result.error || 'Failed to create company profile after signup. Please contact support.');
       } else {
+        trackPinterestEvent({
+          eventName: 'signup',
+          email,
+          externalId: signUpData.user.id,
+        });
         setMessage('Signup successful! Please check your email to confirm your account. Then you can log in.');
         // Optionally, clear the form or redirect to a success/login page
         // router.push('/auth/business/login');
