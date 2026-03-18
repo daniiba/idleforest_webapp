@@ -6,6 +6,7 @@ import { Chrome, Monitor, Apple, Globe, Download, ArrowRight } from "lucide-reac
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 import { cn } from "@/lib/utils";
 import { EmailForm } from "@/components/email-form";
+import { trackPinterestEvent } from "@/lib/pinterest/client";
 
 import { DeviceDetection } from "@/lib/device-detection";
 
@@ -30,6 +31,13 @@ export function SmartCTA({
         ? "w-full sm:w-auto bg-black text-brand-yellow font-bold hover:bg-black/80 rounded-full px-8 py-6 justify-center"
         : "w-full sm:w-auto bg-brand-yellow text-black font-bold hover:text-brand-yellow rounded-full px-8 py-6 justify-center";
 
+    const trackLead = (eventSourceUrl: string) => {
+        trackPinterestEvent({
+            eventName: "lead",
+            eventSourceUrl,
+        });
+    };
+
     return (
         <div className={cn("flex flex-col w-full sm:w-auto items-stretch gap-3", className)}>
             {/* Mobile Chrome: Show "Add to Desktop" */}
@@ -40,6 +48,7 @@ export function SmartCTA({
                         className="flex items-center justify-center w-full sm:w-auto"
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => trackLead("https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk")}
                     >
                         <Chrome className="h-8 w-8 mr-2" />
                         Add to Desktop
@@ -80,6 +89,11 @@ export function SmartCTA({
                                 className="flex items-center justify-center gap-2 w-full sm:w-auto"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => trackLead(
+                                    isMac
+                                        ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
+                                        : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe"
+                                )}
                             >
                                 {isMac ? (
                                     <Apple className="h-8 w-8" />
@@ -110,6 +124,11 @@ export function SmartCTA({
                                     className="flex items-center justify-center w-full sm:w-auto"
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={() => trackLead(
+                                        isEdge
+                                            ? "https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
+                                            : "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                                    )}
                                 >
                                     {isEdge ? (
                                         <Globe className="h-8 w-8" />

@@ -15,6 +15,7 @@ import { DeviceDetection } from "@/lib/device-detection";
 import { ReviewsSection } from "@/components/reviews-section";
 import { SmartCTA } from "@/components/smart-cta";
 import TopTeamsBanner from "@/components/TopTeamsBanner";
+import { trackPinterestEvent } from "@/lib/pinterest/client";
 
 export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const t = useTranslations("Landing");
@@ -246,6 +247,10 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        onClick={() => trackPinterestEvent({
+                                            eventName: "lead",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
+                                        })}
                                     >
                                         <Download className="h-5 w-5" />
                                         Download for Windows
@@ -273,6 +278,10 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        onClick={() => trackPinterestEvent({
+                                            eventName: "lead",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip",
+                                        })}
                                     >
                                         <Download className="h-5 w-5" />
                                         Download for Mac OS
