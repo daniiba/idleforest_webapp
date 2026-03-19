@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: t("page.seo_title", { app: data.app_name }),
         description: t("page.seo_desc", { app: data.app_name }),
         alternates: {
-            canonical: `https://idleforest.com/carbon-footprint/${params.slug}`,
+            canonical: `https://www.idleforest.com/carbon-footprint/${params.slug}`,
         },
         keywords: [
             `carbon footprint of ${data.app_name}`,

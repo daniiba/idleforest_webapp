@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: "Ecosia Financial Data & Historical Tree Planting Report",
     description: "Comprehensive analysis of Ecosia's financial data, historical tree planting records, and expense breakdowns with interactive charts and metrics.",
     type: "website",
-    url: "https://idleforest.com/ecosia",
+    url: "https://www.idleforest.com/ecosia",
   },
   twitter: {
     card: "summary_large_image",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "Comprehensive analysis of Ecosia's financial data, historical tree planting records, and expense breakdowns.",
   },
   alternates: {
-    canonical: "https://idleforest.com/ecosia",
+    canonical: "https://www.idleforest.com/ecosia",
   },
 };
 
@@ -112,7 +112,7 @@ const Index = () => {
             "@type": "Dataset",
             "name": "Ecosia Financial Data and Historical Tree Planting Report",
             "description": "Comprehensive financial data and historical records of Ecosia's tree planting efforts, including income reports, expense breakdowns, and environmental impact metrics.",
-            "url": "https://idleforest.com/ecosia",
+            "url": "https://www.idleforest.com/ecosia",
             "keywords": [
               "ecosia financial data",
               "ecosia historical data",
@@ -124,7 +124,7 @@ const Index = () => {
             "creator": {
               "@type": "Organization",
               "name": "IdleForest",
-              "url": "https://idleforest.com"
+              "url": "https://www.idleforest.com"
             },
             "temporalCoverage": "2020/..",
             "spatialCoverage": {

@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.forEach(locale => {
       // For 'en', the path is exactly the base path. Others get the prefix.
       const prefix = locale === 'en' ? '' : `/${locale}`
-      alternates[locale] = `https://idleforest.com${prefix}${path}`
+      alternates[locale] = `https://www.idleforest.com${prefix}${path}`
     })
     return { languages: alternates }
   }
@@ -73,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const generateLocalizedUrls = (path: string, options: { lastModified: Date; changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly'; priority: number }, translated = true) => {
     if (!translated) {
       return [{
-        url: `https://idleforest.com${path}`,
+        url: `https://www.idleforest.com${path}`,
         ...options
       }]
     }
@@ -82,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return locales.map(locale => {
       const prefix = locale === 'en' ? '' : `/${locale}`
       return {
-        url: `https://idleforest.com${prefix}${path}`,
+        url: `https://www.idleforest.com${prefix}${path}`,
         alternates,
         ...options
       }

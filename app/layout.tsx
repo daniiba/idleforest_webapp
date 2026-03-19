@@ -37,7 +37,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
     title: "Plant Trees For Free While Browsing | IdleForest - Passive Reforestation",
     description: "Plant trees automatically without changing how you browse. IdleForest's browser extension uses idle bandwidth to fund reforestation—no donations, no search engine switch required.",
-    metadataBase: new URL('https://idleforest.com'),
+    metadataBase: new URL('https://www.idleforest.com'),
 };
 
 export default async function RootLayout({
