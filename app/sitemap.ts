@@ -119,7 +119,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/contact', changeFrequency: 'monthly', priority: 0.5, lastModified: new Date() },
     { path: '/terms', changeFrequency: 'monthly', priority: 0.4, lastModified: new Date() },
     { path: '/report', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date() },
-    { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date() },
+    { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date(), translated: false },
   ]
   
   const routes = routesOptions.flatMap(({ path, translated, ...options }) => generateLocalizedUrls(path, options, translated !== false))

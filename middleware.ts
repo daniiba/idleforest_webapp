@@ -20,6 +20,15 @@ export async function middleware(request: NextRequest) {
     return await updateSession(request);
   }
 
+  // Redirect localized blog/compare routes to English (base) route (308 Permanent Redirect)
+  const localeMatch = pathname.match(/^\/(es|de|pt|fr)\/(blog|compare)($|\/)/);
+  if (localeMatch) {
+    const newPath = pathname.replace(/^\/(es|de|pt|fr)/, '');
+    const url = request.nextUrl.clone();
+    url.pathname = newPath;
+    return NextResponse.redirect(url, 308);
+  }
+
   // 1. Run i18n middleware
   const response = handleI18nRouting(request);
 
