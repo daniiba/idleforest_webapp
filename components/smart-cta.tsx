@@ -31,10 +31,11 @@ export function SmartCTA({
         ? "w-full sm:w-auto bg-black text-brand-yellow font-bold hover:bg-black/80 rounded-full px-8 py-6 justify-center"
         : "w-full sm:w-auto bg-brand-yellow text-black font-bold hover:text-brand-yellow rounded-full px-8 py-6 justify-center";
 
-    const trackLead = (eventSourceUrl: string) => {
+    const trackLead = (eventSourceUrl: string, leadType?: string) => {
         trackPinterestEvent({
             eventName: "lead",
             eventSourceUrl,
+            customData: leadType ? { lead_type: leadType } : undefined,
         });
     };
 
@@ -48,7 +49,7 @@ export function SmartCTA({
                         className="flex items-center justify-center w-full sm:w-auto"
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() => trackLead("https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk")}
+                        onClick={() => trackLead("https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk", "Extension Download - Mobile Chrome")}
                     >
                         <Chrome className="h-8 w-8 mr-2" />
                         Add to Desktop
@@ -92,7 +93,8 @@ export function SmartCTA({
                                 onClick={() => trackLead(
                                     isMac
                                         ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
-                                        : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe"
+                                        : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
+                                    isMac ? "Desktop Download - Mac" : "Desktop Download - Windows"
                                 )}
                             >
                                 {isMac ? (
@@ -127,7 +129,8 @@ export function SmartCTA({
                                     onClick={() => trackLead(
                                         isEdge
                                             ? "https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
-                                            : "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                                            : "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk",
+                                        isEdge ? "Extension Download - Edge" : "Extension Download - Chrome"
                                     )}
                                 >
                                     {isEdge ? (

@@ -279,6 +279,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                         onClick={() => trackPinterestEvent({
                                             eventName: "lead",
                                             eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
+                                            customData: { lead_type: 'Desktop Download - Windows' }
                                         })}
                                     >
                                         <Download className="h-5 w-5" />
@@ -310,6 +311,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                         onClick={() => trackPinterestEvent({
                                             eventName: "lead",
                                             eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip",
+                                            customData: { lead_type: 'Desktop Download - Mac' }
                                         })}
                                     >
                                         <Download className="h-5 w-5" />

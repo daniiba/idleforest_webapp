@@ -27,6 +27,7 @@ export const ChromeStoreButton = () => (
       trackPinterestEvent({
         eventName: 'lead',
         eventSourceUrl: 'https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk',
+        customData: { lead_type: 'Extension Download - Chrome' },
       });
     }}
     className="inline-flex items-center gap-3 bg-brand-yellow hover:bg-brand-yellow text-gray-900 text-lg h-14 px-8 rounded-md transition-all"
@@ -61,6 +62,7 @@ export const EdgeStoreButton = () => (
       trackPinterestEvent({
         eventName: 'lead',
         eventSourceUrl: 'https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb',
+        customData: { lead_type: 'Extension Download - Edge' },
       });
     }}
     className="inline-flex items-center gap-3 bg-brand-yellow hover:bg-brand-yellow text-gray-900 text-lg h-14 px-8 rounded-md transition-all"
@@ -124,6 +126,7 @@ export const MacDownloadButton = () => {
     trackPinterestEvent({
       eventName: 'lead',
       eventSourceUrl: downloadUrl,
+      customData: { lead_type: 'Desktop Download - Mac' },
     });
 
     // Open the download in a new tab
@@ -161,6 +164,7 @@ export const WindowsDownloadButton = () => {
     trackPinterestEvent({
       eventName: 'lead',
       eventSourceUrl: downloadUrl,
+      customData: { lead_type: 'Desktop Download - Windows' },
     });
 
     // Open the download in a new tab

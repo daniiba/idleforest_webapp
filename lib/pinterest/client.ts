@@ -8,6 +8,7 @@ type PinterestTrackInput = {
     eventId?: string;
     eventSourceUrl?: string;
     externalId?: string | null;
+    customData?: Record<string, any>;
 };
 
 type PinterestTrackPayload = {
@@ -17,6 +18,7 @@ type PinterestTrackPayload = {
     eventName: PinterestEventName;
     eventSourceUrl: string;
     externalId?: string;
+    customData?: Record<string, any>;
 };
 
 function readCookie(name: string) {
@@ -78,7 +80,18 @@ export function trackPinterestEvent(input: PinterestTrackInput) {
     const eventSourceUrl = getEventSourceUrl(input.eventSourceUrl);
 
     if (typeof window.pintrk === 'function') {
-        window.pintrk('track', input.eventName);
+        if (input.email) {
+            window.pintrk('set', { em: input.email });
+        }
+
+        const dataObj = input.customData && Object.keys(input.customData).length > 0 ? input.customData : undefined;
+        // Pinterest accepts the standard event data object as the third argument, and options (like event_id) as the fourth.
+        if (dataObj) {
+            window.pintrk('track', input.eventName, dataObj, { event_id: eventId });
+        } else {
+            // No custom data, just pass the options with event_id
+            window.pintrk('track', input.eventName, undefined, { event_id: eventId });
+        }
     }
 
     void sendPinterestConversion({
@@ -88,6 +101,7 @@ export function trackPinterestEvent(input: PinterestTrackInput) {
         eventName: input.eventName,
         eventSourceUrl,
         externalId: input.externalId ?? undefined,
+        customData: input.customData,
     });
 
     return eventId;

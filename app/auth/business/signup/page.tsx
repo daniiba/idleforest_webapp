@@ -71,6 +71,7 @@ export default function BusinessSignupPage() {
           eventName: 'signup',
           email,
           externalId: signUpData.user.id,
+          customData: { lead_type: 'Business Signup Complete' },
         });
         setMessage('Signup successful! Please check your email to confirm your account. Then you can log in.');
         // Optionally, clear the form or redirect to a success/login page

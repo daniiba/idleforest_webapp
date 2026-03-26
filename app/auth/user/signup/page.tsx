@@ -111,6 +111,7 @@ function SignupForm() {
         eventName: 'signup',
         email,
         externalId: data.user.id,
+        customData: { lead_type: 'User Signup Complete' },
       });
 
       // If there's an invite code, join the team/company

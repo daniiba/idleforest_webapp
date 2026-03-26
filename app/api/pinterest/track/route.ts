@@ -10,6 +10,7 @@ type PinterestTrackRequest = {
     eventName?: PinterestEventName;
     eventSourceUrl?: string;
     externalId?: string;
+    customData?: Record<string, any>;
 };
 
 function hashValue(value?: string) {
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
                     event_time: Math.floor(Date.now() / 1000),
                     partner_name: 'direct',
                     user_data: userData,
+                    custom_data: body.customData ? body.customData : undefined,
                 },
             ],
         }),
