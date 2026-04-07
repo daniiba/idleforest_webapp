@@ -2,7 +2,7 @@
 
 // Essential React/Next.js imports
 import { useState } from "react";
-import Link from "next/link"; // Although not used directly for links here, good practice to keep
+import { Link } from "@/navigation"; // Use localized Link
 
 // UI Components (assuming these paths are correct)
 import { Button } from "@/components/ui/button";

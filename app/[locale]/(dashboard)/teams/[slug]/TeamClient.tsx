@@ -4,8 +4,8 @@ import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card } from "@/components/ui/card"
 import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Chrome, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
+import { useParams } from "next/navigation"
+import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"

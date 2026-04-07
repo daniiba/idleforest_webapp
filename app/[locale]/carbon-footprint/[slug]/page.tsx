@@ -6,7 +6,7 @@ import { ComparisonGraph } from "@/components/carbon/comparison-graph";
 import { TrustSection } from "@/components/carbon/trust-section";
 import { SmartCTA } from "@/components/smart-cta";
 import { ArrowLeft, Gamepad2, Users, Monitor } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";

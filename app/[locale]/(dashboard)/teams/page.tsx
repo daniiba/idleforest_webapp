@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
-import Link from "next/link"
+import { Link } from "@/navigation";
 import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar } from "lucide-react"
 import { useTranslations } from "next-intl"
 

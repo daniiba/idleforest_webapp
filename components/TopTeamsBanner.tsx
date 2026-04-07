@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
-import Link from "next/link"
+import { Link } from "@/navigation"
 import { Flame, Users } from "lucide-react"
 
 interface PeriodTeamStat {

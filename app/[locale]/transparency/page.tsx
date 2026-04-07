@@ -2,7 +2,7 @@
 
 import Navigation from "@/components/navigation";
 import { Shield, Lock, FileText, Users, Globe, AlertCircle, CheckCircle2, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";

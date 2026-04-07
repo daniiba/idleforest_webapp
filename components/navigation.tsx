@@ -1,10 +1,9 @@
 'use client'
 
 import { Menu, X, LogOut } from "lucide-react"
-import Link from "next/link"
+import { Link, usePathname, useRouter } from "@/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { supabase } from "@/lib/supabase/client"
 import { Button } from "./ui/button"
