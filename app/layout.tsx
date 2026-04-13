@@ -141,6 +141,10 @@ fbq('track', 'PageView');
                         })
                     }}
                 />
+
+                <script src="https://cdn.1clickimpact.com/v1/badge.js"
+                    data-badge-id="W8034005"
+                    data-theme="light"></script>
             </head>
             <body
                 className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} antialiased`}
