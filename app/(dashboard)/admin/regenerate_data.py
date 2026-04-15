@@ -11,9 +11,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_FILE = os.path.join(BASE_DIR, 'chrome-store-data.json')
 
 # Input files - using the (3) versions as requested
-INSTALLS_FILE = os.path.join(BASE_DIR, 'Installs_ofdclafhpmccdddnmfalihgkahgiomjk (3).csv')
-UNINSTALLS_FILE = os.path.join(BASE_DIR, 'Uninstalls_ofdclafhpmccdddnmfalihgkahgiomjk (3).csv')
-WEEKLY_USERS_FILE = os.path.join(BASE_DIR, 'Weekly users over time_ofdclafhpmccdddnmfalihgkahgiomjk (3).csv')
+INSTALLS_FILE = os.path.join(BASE_DIR, 'Installs_ofdclafhpmccdddnmfalihgkahgiomjk.csv')
+UNINSTALLS_FILE = os.path.join(BASE_DIR, 'Uninstalls_ofdclafhpmccdddnmfalihgkahgiomjk.csv')
+WEEKLY_USERS_FILE = os.path.join(BASE_DIR, 'Weekly users over time_ofdclafhpmccdddnmfalihgkahgiomjk.csv')
 
 # Find the latest desktop export file
 desktop_files = [f for f in os.listdir(BASE_DIR) if f.startswith('export-weekly-active-users-waus') and f.endswith('.csv')]

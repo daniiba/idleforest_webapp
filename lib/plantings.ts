@@ -99,9 +99,9 @@ export const plantingsData: PlantingsData = {
   projects: [
     { id: "tn-eden-madagascar", name: "Eden Reforestation Projects – Madagascar", partnerId: "tree-nation", countryCode: "MG" },
     { id: "if-kenya", name: "Global Forest Initiative – Kenya", partnerId: "tree-nation", countryCode: "KE" },
-    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE" },
-    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN" },
-    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG" },
+    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://cdn.1clickimpact.com/projects/trees-kenya-fgp/main.jpg"] },
+    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://cdn.1clickimpact.com/projects/trees-senegal-ggw/main.jpg"] },
+    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://cdn.1clickimpact.com/projects/trees-uganda-fgp/main.jpg"] },
     { id: "pod-cameroon", name: "POD – Cameroon Agroforestry", partnerId: "pod", countryCode: "CM" },
     {
       id: "tn-syzygium",

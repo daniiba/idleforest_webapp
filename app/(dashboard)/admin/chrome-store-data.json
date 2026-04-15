@@ -137,44 +137,62 @@
         },
         {
             "month": "Feb 2026",
-            "installs": 33,
-            "uninstalls": 13,
-            "netGrowth": 20,
+            "installs": 133,
+            "uninstalls": 37,
+            "netGrowth": 96,
             "wauStart": 558,
-            "wauEnd": 558,
-            "wauAvg": 559
+            "wauEnd": 578,
+            "wauAvg": 553
+        },
+        {
+            "month": "Mar 2026",
+            "installs": 206,
+            "uninstalls": 80,
+            "netGrowth": 126,
+            "wauStart": 582,
+            "wauEnd": 654,
+            "wauAvg": 620
+        },
+        {
+            "month": "Apr 2026",
+            "installs": 79,
+            "uninstalls": 20,
+            "netGrowth": 59,
+            "wauStart": 661,
+            "wauEnd": 664,
+            "wauAvg": 647
         }
     ],
     "desktopData": [
         {
-            "month": "Nov 2025",
-            "wauAvg": 0
-        },
-        {
-            "month": "Dec 2025",
-            "wauAvg": 24
-        },
-        {
             "month": "Jan 2026",
-            "wauAvg": 50
+            "wauAvg": 49
         },
         {
             "month": "Feb 2026",
-            "wauAvg": 32
+            "wauAvg": 57
+        },
+        {
+            "month": "Mar 2026",
+            "wauAvg": 62
+        },
+        {
+            "month": "Apr 2026",
+            "wauAvg": 64
         }
     ],
     "totals": {
-        "totalInstalls": 1218,
-        "totalUninstalls": 471,
-        "netUsers": 747,
-        "currentWau": 558,
-        "peakWau": 564,
-        "peakWauDate": "Jan 29, 2026"
+        "totalInstalls": 1603,
+        "totalUninstalls": 595,
+        "netUsers": 1008,
+        "currentWau": 664,
+        "peakWau": 664,
+        "peakWauDate": "Apr 13, 2026"
     },
     "yearOverYear": {
-        "wauGrowth": "279x",
-        "wauGrowthPercent": 27800,
+        "wauGrowth": "332x",
+        "wauGrowthPercent": 33100,
         "startWau": 2,
-        "endWau": 558
+        "endWau": 664
     }
 }
