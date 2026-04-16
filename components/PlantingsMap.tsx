@@ -25,6 +25,7 @@ export default function PlantingsMap() {
     partnerId: string;
     trees: number;
     lastDate: string | null;
+    externalRef: string | null;
     eventsCount: number;
     receiptsCount: number;
     receipts: ReceiptLite[];
@@ -198,6 +199,7 @@ export default function PlantingsMap() {
                 partnerId: p.partnerId as string,
                 trees: Number(p.trees ?? 0),
                 lastDate: (p.lastDate as string) || null,
+                externalRef: (p.externalRef as string) || null,
                 eventsCount: Number(p.eventsCount ?? 0),
                 receiptsCount: Number(p.receiptsCount ?? 0),
                 receipts: (p.receipts as any[])?.map((r) => ({
@@ -328,6 +330,14 @@ export default function PlantingsMap() {
                     <span>{selected.project.partner}</span>
                     <span className="mx-1 text-gray-500">•</span>
                     <span>{selected.project.lastDate ? new Date(selected.project.lastDate).toLocaleDateString() : "No date"}</span>
+                    {selected.project.externalRef && (
+                      <>
+                        <span className="mx-1 text-gray-500">•</span>
+                        <a href={selected.project.externalRef} target="_blank" rel="noreferrer" className="text-brand-yellow hover:underline">
+                          View Original Project
+                        </a>
+                      </>
+                    )}
                   </div>
 
                   {/* Metrics */}
@@ -456,7 +466,17 @@ export default function PlantingsMap() {
                         <div className="flex flex-col gap-1.5">
                           <div className="min-w-0 w-full">
                             <div className="text-sm font-semibold text-white">{p.projectName}</div>
-                            <div className="text-[11px] text-gray-400">{p.partner} • {p.lastDate ? new Date(p.lastDate).toLocaleDateString() : "No date"}</div>
+                            <div className="text-[11px] text-gray-400">
+                              {p.partner} • {p.lastDate ? new Date(p.lastDate).toLocaleDateString() : "No date"}
+                              {p.externalRef && (
+                                <>
+                                  <span className="mx-1">•</span>
+                                  <a href={p.externalRef} target="_blank" rel="noreferrer" className="text-brand-yellow hover:underline">
+                                    Original Project
+                                  </a>
+                                </>
+                              )}
+                            </div>
                           </div>
                           <div className="text-[12px] text-brand-yellow font-semibold">{p.trees.toLocaleString()} trees</div>
                         </div>

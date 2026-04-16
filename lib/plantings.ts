@@ -376,6 +376,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
       partnerId: string;
       trees: number;
       lastDate: string | null;
+      externalRef: string | null;
       receipts: Receipt[];
       speciesAggregate: { name: string; count: number }[];
       images: string[];
@@ -425,6 +426,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
       partnerId: project.partnerId,
       trees: totalTrees,
       lastDate,
+      externalRef: project.externalRef ?? null,
       receipts,
       speciesAggregate,
       images,
@@ -447,6 +449,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
       partnerId: string;
       trees: number;
       lastDate: string | null;
+      externalRef: string | null;
       receipts: Receipt[];
       speciesAggregate: { name: string; count: number }[];
       images: string[];
@@ -459,6 +462,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
       partnerId: p.partnerId,
       trees: p.trees,
       lastDate: p.lastDate,
+      externalRef: p.externalRef,
       receiptsCount: p.receiptsCount,
       eventsCount: p.eventsCount,
       receipts: p.receipts.map((r: Receipt) => ({
