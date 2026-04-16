@@ -65,6 +65,7 @@ export type PlantingEvent = {
   lat?: number; // optional precise event coords
   lng?: number;
   receiptId?: string; // FK -> Receipt.id
+  receiptIds?: string[]; // Multiple FKs for bundled events
   amount?: number;
   currency?: string;
   companyId?: string; // future: FK -> public.companies.id
@@ -276,40 +277,18 @@ export const plantingsData: PlantingsData = {
       receiptId: "tn-2026-01-23",
     },
     {
-      id: "evt-1ci-2025-07-14-20",
-      date: "2025-07-14",
-      trees: 20,
-      partnerId: "tftf",
-      projectId: "tftf-senegal",
-      countryCode: "SN",
-      receiptId: "1ci-2025-07-14-20",
-    },
-    {
-      id: "evt-1ci-2025-09-03-290",
+      id: "evt-1ci-2025-09-03-571",
       date: "2025-09-03",
-      trees: 290,
+      trees: 571,
       partnerId: "tftf",
       projectId: "tftf-senegal",
       countryCode: "SN",
-      receiptId: "1ci-2025-09-03-290",
-    },
-    {
-      id: "evt-1ci-2025-09-03-176",
-      date: "2025-09-03",
-      trees: 176,
-      partnerId: "tftf",
-      projectId: "tftf-senegal",
-      countryCode: "SN",
-      receiptId: "1ci-2025-09-03-176",
-    },
-    {
-      id: "evt-1ci-2025-09-03-85",
-      date: "2025-09-03",
-      trees: 85,
-      partnerId: "tftf",
-      projectId: "tftf-senegal",
-      countryCode: "SN",
-      receiptId: "1ci-2025-09-03-85",
+      receiptIds: [
+        "1ci-2025-07-14-20",
+        "1ci-2025-09-03-290",
+        "1ci-2025-09-03-176",
+        "1ci-2025-09-03-85"
+      ],
       species: [{ name: "Food trees", count: 85 }],
     },
   ],
@@ -532,7 +511,7 @@ export function aggregateProjects(data: PlantingsData): ProjectAggregate[] {
     const events = data.events.filter((e) => e.projectId === project.id);
     const totalTrees = events.reduce((sum, e) => sum + e.trees, 0);
     const lastDate = events.length > 0 ? events.map((e) => e.date).sort().slice(-1)[0] : null;
-    const receiptIds = new Set(events.map((e) => e.receiptId).filter(Boolean) as string[]);
+    const receiptIds = new Set(events.flatMap((e) => [e.receiptId, ...(e.receiptIds || [])]).filter(Boolean) as string[]);
     const receipts = Array.from(receiptIds)
       .map((rid) => data.receipts.find((r) => r.id === rid))
       .filter((r): r is Receipt => Boolean(r));

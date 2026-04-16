@@ -60,6 +60,6 @@ export const config = {
     // - discord/bot-added (discord related paths)
     // - images and other static assets
     // - sitemap and robots
-    '/((?!_next/static|_next/image|favicon.ico|sitemap\\.xml|robots\\.txt|api/webhooks|discord/bot-added|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap\\.xml|robots\\.txt|api/webhooks|discord/bot-added|.*\\.(?:svg|png|jpg|jpeg|gif|webp|pdf|mp4|txt|json)$).*)',
   ],
 }

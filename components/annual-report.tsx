@@ -30,7 +30,11 @@ export default function CharityCommitments() {
   const milestones = plantingsData.events.map((event) => {
     const project = plantingsData.projects.find(p => p.id === event.projectId);
     const partner = plantingsData.partners.find(p => p.id === event.partnerId);
-    const receipt = event.receiptId ? plantingsData.receipts.find(r => r.id === event.receiptId) : undefined;
+    
+    // Resolve multiple receipts if available, otherwise single receipt
+    const eventReceipts = event.receiptIds 
+      ? event.receiptIds.map(rid => plantingsData.receipts.find(r => r.id === rid)).filter(Boolean) as Receipt[]
+      : (event.receiptId ? [plantingsData.receipts.find(r => r.id === event.receiptId)].filter(Boolean) as Receipt[] : []);
 
     // Determine image based on project/partner or default
     let image: string | undefined = undefined;
@@ -43,10 +47,10 @@ export default function CharityCommitments() {
       description: project ? t(`projects.${project.id}.name`) : t('projects.default_contribution', { partner: partner?.name || '' }),
       trees: event.trees,
       impact: project?.description ? t(`projects.${project.id}.description`) : t('projects.default_impact', { trees: event.trees, partner: partner?.name || '' }),
-      receipt: receipt ? {
-        url: receipt.url || receipt.filePath,
+      receipts: eventReceipts.map(r => ({
+        url: r.url || r.filePath,
         label: t('view_certificate')
-      } : null,
+      })),
       image: image
     };
   }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -116,23 +120,26 @@ export default function CharityCommitments() {
                       )}
 
                       <p className="text-neutral-800 font-medium leading-relaxed mb-6">{milestone.impact}</p>
-                      {milestone.receipt && milestone.receipt.url && (
-                        <div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-white text-black border-2 border-black hover:bg-black hover:text-brand-yellow rounded-none font-bold transition-colors"
-                            asChild
-                          >
-                            <a
-                              href={milestone.receipt.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                      {milestone.receipts && milestone.receipts.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {milestone.receipts.map((receipt, i) => receipt.url && (
+                            <Button
+                              key={i}
+                              variant="outline"
+                              size="sm"
+                              className="bg-white text-black border-2 border-black hover:bg-black hover:text-brand-yellow rounded-none font-bold transition-colors"
+                              asChild
                             >
-                              <ExternalLink className="mr-2 h-3.5 w-3.5" />
-                              {milestone.receipt.label}
-                            </a>
-                          </Button>
+                              <a
+                                href={receipt.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLink className="mr-2 h-3.5 w-3.5" />
+                                {milestone.receipts.length > 1 ? `${receipt.label} ${i + 1}` : receipt.label}
+                              </a>
+                            </Button>
+                          ))}
                         </div>
                       )}
                     </div>
