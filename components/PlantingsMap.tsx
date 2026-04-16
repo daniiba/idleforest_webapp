@@ -413,19 +413,19 @@ export default function PlantingsMap() {
                   )}
 
                   {/* Images gallery */}
-               {/*    {selected.project.images && selected.project.images.length > 0 && (
+                  {selected.project.images && selected.project.images.length > 0 && (
                     <div className="mt-4">
                       <div className="text-xs text-brand-yellow/80 mb-1">Images</div>
                       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                         {selected.project.images.slice(0, 4).map((src: string, idx: number) => (
                           <div key={`${src}-${idx}`} className="relative w-full pt-[56%] rounded-md overflow-hidden border border-gray-800 bg-gray-900">
-                          
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={src} alt="Project image" className="absolute inset-0 h-full w-full object-cover" />
                           </div>
                         ))}
                       </div>
                     </div>
-                  )} */}
+                  )}
                 </>
               ) : (
                 // Spot with multiple projects
