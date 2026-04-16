@@ -98,12 +98,12 @@ export const plantingsData: PlantingsData = {
     { code: "UG", name: "Uganda", lat: 1.373333, lng: 32.290275 },
   ],
   projects: [
-    { id: "tn-eden-madagascar", name: "Eden Reforestation Projects – Madagascar", partnerId: "tree-nation", countryCode: "MG" },
-    { id: "if-kenya", name: "Global Forest Initiative – Kenya", partnerId: "tree-nation", countryCode: "KE" },
-    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-kenya-fgp%2F1.jpg&w=1920&q=50"] },
-    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-senegal-ggw%2F1.jpg&w=1920&q=50"] },
-    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-uganda-fgp%2F1.jpg&w=1920&q=50"] },
-    { id: "pod-cameroon", name: "POD – Cameroon Agroforestry", partnerId: "pod", countryCode: "CM" },
+    { id: "tn-eden-madagascar", name: "Eden Reforestation Projects – Madagascar", partnerId: "tree-nation", countryCode: "MG", externalRef: "https://tree-nation.com/projects/eden-reforestation-projects-madagascar" },
+    { id: "if-kenya", name: "Global Forest Initiative – Kenya", partnerId: "tree-nation", countryCode: "KE", externalRef: "https://tree-nation.com/projects/global-forest-initiative-kenya" },
+    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-kenya-fgp%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/projects/trees-kenya-fgp" },
+    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-senegal-ggw%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/projects/trees-senegal-ggw" },
+    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-uganda-fgp%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/projects/trees-uganda-fgp" },
+    { id: "pod-cameroon", name: "POD – Cameroon Agroforestry", partnerId: "pod", countryCode: "CM", externalRef: "https://1clickimpact.com/projects/trees-cameroon-fgp" },
     {
       id: "tn-syzygium",
       name: "Replanting the burnt Mkussu Forest",
@@ -406,7 +406,7 @@ export function toGeoJSONProjectsByLocation(data: PlantingsData): GeoJSON.Featur
     const speciesAggregate = Array.from(speciesCount.entries()).map(([name, count]) => ({ name, count }));
 
     // images placeholder; can be customized per project later
-    const images: string[] = project.images ?? ["/preview.png"];
+    const images: string[] = project.images ?? [];
 
     const entry = buckets.get(key) ?? {
       lng,
@@ -560,7 +560,7 @@ export function toGeoJSONProjects(data: PlantingsData): GeoJSON.FeatureCollectio
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
     // Simple image list (placeholders for now)
-    const images: string[] = project.images ?? ["/preview.png"]; // use project images or placeholder
+    const images: string[] = project.images ?? []; // use project images or placeholder
     return {
       type: "Feature",
       geometry: { type: "Point", coordinates: [lng, lat] },
