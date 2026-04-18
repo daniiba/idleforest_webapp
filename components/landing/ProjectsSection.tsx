@@ -48,7 +48,7 @@ export default function ProjectsSection() {
                     </p>
                 </div>
 
-                <div className="mt-12 grid gap-6 lg:grid-cols-3">
+                <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
                     {projects.map((project) => {
                         const projectMeta = plantingsData.projects.find(
                             (item) => item.id === project.projectId
@@ -61,9 +61,9 @@ export default function ProjectsSection() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={t(`${project.key}.title`)}
-                                className="group block"
+                                className="group block h-full"
                             >
-                                <article className="overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
+                                <article className="flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
                                     {project.imageSrc ? (
                                         <div className="relative h-52">
                                             <Image
@@ -86,9 +86,9 @@ export default function ProjectsSection() {
                                         </div>
                                     )}
 
-                                    <div className="space-y-4 p-6">
+                                    <div className="flex flex-1 flex-col space-y-4 p-6">
                                         <div className="flex items-start justify-between gap-4">
-                                            <div>
+                                            <div className="min-w-0 flex-1">
                                                 <div className="flex items-center gap-2">
                                                     <h3 className="text-2xl font-extrabold leading-tight">
                                                         {t(`${project.key}.title`)}
@@ -100,17 +100,17 @@ export default function ProjectsSection() {
                                                 </p>
                                             </div>
 
-                                            <div className="min-w-[96px] rounded-2xl border-2 border-black bg-brand-yellow px-3 py-3 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                            <div className="flex w-[128px] shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow px-3 py-3 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                                                 <div className="font-candu text-3xl leading-none text-black">
                                                     {(projectStats[project.projectId]?.trees ?? 0).toLocaleString()}
                                                 </div>
-                                                <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-black/70">
+                                                <div className="mt-2 w-full text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-black/70">
                                                     {t("trees_planted_label")}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2 border-t border-black/10 pt-4 text-sm text-neutral-700">
+                                        <div className="mt-auto space-y-2 border-t border-black/10 pt-4 text-sm text-neutral-700">
                                             <div className="flex items-center gap-2">
                                                 <Leaf className="h-4 w-4 text-brand-navy" />
                                                 <span>{t(`${project.key}.partner`)}</span>
