@@ -25,7 +25,43 @@
       "description": "Our desktop app safely uses your unused bandwidth to fund tree planting around the world. Join thousands making an environmental impact while your computer is idle.",
       "safe_secure": "100% Safe & Secure",
       "no_impact": "No Performance Impact",
-      "auto_plant": "Plant trees automatically"
+      "auto_plant": "Plant trees automatically",
+      "security_label": "Security",
+      "privacy_label": "Privacy",
+      "performance_label": "Low Impact",
+      "security_detail": "Your data is safe.",
+      "privacy_detail": "No personal information collected.",
+      "performance_detail": "Resource-friendly and won't interfere with your computer's performance."
+    },
+    "projects": {
+      "eyebrow": "Where We Plant",
+      "heading": "Projects we work with",
+      "subheading": "We fund verified reforestation work through trusted planting partners and publish our impact as it grows.",
+      "trees_planted_label": "Trees planted",
+      "kisumu": {
+        "title": "Kisumu 7 - Awach",
+        "description": "Community-led agroforestry work in western Kenya that helps restore degraded land while supporting local livelihoods.",
+        "partner": "Trees for the Future",
+        "location": "Kisumu, Kenya",
+        "focus": "Agroforestry and long-term land restoration",
+        "visual_title": "Kisumu"
+      },
+      "mkussu": {
+        "title": "Replanting the burnt Mkussu Forest",
+        "description": "A restoration project focused on bringing back native forest cover in Lushoto after fire damage.",
+        "partner": "Tree-Nation",
+        "location": "Lushoto District, Tanzania",
+        "focus": "Native forest recovery after wildfire",
+        "visual_title": "Mkussu"
+      },
+      "poverty": {
+        "title": "Plant to Stop Poverty",
+        "description": "An agroforestry project that helps rural communities restore land, grow useful tree cover, and strengthen long-term economic resilience.",
+        "partner": "Tree-Nation",
+        "location": "Tanzania",
+        "focus": "Agroforestry and poverty reduction",
+        "visual_title": "Poverty"
+      }
     },
     "how_it_works": {
       "heading": "How it works",

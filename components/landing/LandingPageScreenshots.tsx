@@ -4,7 +4,7 @@ import { Link } from "@/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, CheckCircle2, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple, ChevronLeft, ChevronRight } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { useEffect, useState } from "react";
 
@@ -16,6 +16,8 @@ import { SmartCTA } from "@/components/smart-cta";
 import TopTeamsBanner from "@/components/TopTeamsBanner";
 import { useTranslations } from "next-intl";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
+import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
+import ProjectsSection from "@/components/landing/ProjectsSection";
 
 export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const [stats, setStats] = useState({
@@ -126,17 +128,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                     {/* CTAs based on Device/Browser */}
                                     <SmartCTA className="text-black" deviceInfo={deviceInfo} />
                                 </div>
-                                <ul className="mt-2 space-y-2 text-sm text-neutral-800">
-                                    <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.safe_secure')}
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.no_impact')}
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-black" /> {t('hero.auto_plant')}
-                                    </li>
-                                </ul>
+                                <HeroTrustSignals />
                             </div>
                             {/* HERO ART PLACEHOLDER */}
                             <div className="relative w-full flex items-center justify-center">
@@ -167,7 +159,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                     </div>
                 </section>
 
-                {/* ROADMAP / WHAT WE ACHIEVED */}
+                <ProjectsSection />
 
                 {/* HOW IT WORKS */}
                 <section id="how-it-works" className="relative bg-brand-yellow text-black scroll-mt-24">

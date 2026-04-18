@@ -25,7 +25,43 @@
       "description": "Notre application de bureau utilise en toute sécurité votre bande passante inutilisée pour financer la plantation d'arbres dans le monde entier. Rejoignez des milliers de personnes qui ont un impact environnemental pendant que leur ordinateur est inactif.",
       "safe_secure": "100% Sûr et Sécurisé",
       "no_impact": "Aucun Impact sur les Performances",
-      "auto_plant": "Plantez des arbres automatiquement"
+      "auto_plant": "Plantez des arbres automatiquement",
+      "security_label": "Sécurité",
+      "privacy_label": "Vie privée",
+      "performance_label": "Faible impact",
+      "security_detail": "Vos données sont en sécurité.",
+      "privacy_detail": "Aucune information personnelle n'est collectée.",
+      "performance_detail": "L'application est légère et n'interfère pas avec les performances de votre ordinateur."
+    },
+    "projects": {
+      "eyebrow": "Où Nous Plantons",
+      "heading": "Les projets avec lesquels nous travaillons",
+      "subheading": "Nous finançons des projets de reforestation vérifiés via des partenaires de plantation de confiance et publions notre impact au fil du temps.",
+      "trees_planted_label": "Arbres plantés",
+      "kisumu": {
+        "title": "Kisumu 7 - Awach",
+        "description": "Un projet d'agroforesterie mené par les communautés dans l'ouest du Kenya pour restaurer les terres dégradées et soutenir les moyens de subsistance locaux.",
+        "partner": "Trees for the Future",
+        "location": "Kisumu, Kenya",
+        "focus": "Agroforesterie et restauration durable des terres",
+        "visual_title": "Kisumu"
+      },
+      "mkussu": {
+        "title": "Replantation de la forêt brûlée de Mkussu",
+        "description": "Un projet de restauration visant à rétablir le couvert forestier natif de Lushoto après les dégâts causés par les incendies.",
+        "partner": "Tree-Nation",
+        "location": "District de Lushoto, Tanzanie",
+        "focus": "Restauration de la forêt native après incendie",
+        "visual_title": "Mkussu"
+      },
+      "poverty": {
+        "title": "Plant to Stop Poverty",
+        "description": "Un projet d'agroforesterie qui aide les communautés rurales à restaurer les terres, développer une couverture arborée utile et renforcer leur résilience économique sur le long terme.",
+        "partner": "Tree-Nation",
+        "location": "Tanzanie",
+        "focus": "Agroforesterie et réduction de la pauvreté",
+        "visual_title": "Poverty"
+      }
     },
     "how_it_works": {
       "heading": "Comment ça marche",

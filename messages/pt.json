@@ -25,7 +25,43 @@
       "description": "Nosso app de desktop usa sua largura de banda não utilizada com segurança para financiar o plantio de árvores ao redor do mundo. Junte-se a milhares que geram impacto ambiental enquanto seu computador está parado.",
       "safe_secure": "100% Seguro e Protegido",
       "no_impact": "Sem Impacto no Desempenho",
-      "auto_plant": "Plante árvores automaticamente"
+      "auto_plant": "Plante árvores automaticamente",
+      "security_label": "Segurança",
+      "privacy_label": "Privacidade",
+      "performance_label": "Baixo Impacto",
+      "security_detail": "Seus dados estão seguros.",
+      "privacy_detail": "Nenhuma informação pessoal é coletada.",
+      "performance_detail": "Leve e sem interferir no desempenho do seu computador."
+    },
+    "projects": {
+      "eyebrow": "Onde Plantamos",
+      "heading": "Projetos com os quais trabalhamos",
+      "subheading": "Financiamos reflorestamento verificado por meio de parceiros confiáveis de plantio e publicamos nosso impacto conforme ele cresce.",
+      "trees_planted_label": "Árvores plantadas",
+      "kisumu": {
+        "title": "Kisumu 7 - Awach",
+        "description": "Trabalho de agrofloresta liderado pela comunidade no oeste do Quênia para restaurar terras degradadas e apoiar meios de vida locais.",
+        "partner": "Trees for the Future",
+        "location": "Kisumu, Quênia",
+        "focus": "Agrofloresta e restauração do solo a longo prazo",
+        "visual_title": "Kisumu"
+      },
+      "mkussu": {
+        "title": "Replantio da Floresta Mkussu queimada",
+        "description": "Um projeto de restauração focado em recuperar a cobertura florestal nativa em Lushoto após danos causados por incêndios.",
+        "partner": "Tree-Nation",
+        "location": "Distrito de Lushoto, Tanzânia",
+        "focus": "Recuperação de floresta nativa após incêndio",
+        "visual_title": "Mkussu"
+      },
+      "poverty": {
+        "title": "Plant to Stop Poverty",
+        "description": "Um projeto de agrofloresta que ajuda comunidades rurais a restaurar a terra, ampliar a cobertura arbórea útil e fortalecer a resiliência econômica no longo prazo.",
+        "partner": "Tree-Nation",
+        "location": "Tanzânia",
+        "focus": "Agrofloresta e redução da pobreza",
+        "visual_title": "Poverty"
+      }
     },
     "how_it_works": {
       "heading": "Como funciona",

@@ -25,7 +25,43 @@
       "description": "Unsere Desktop-App nutzt sicher deine ungenutzte Bandbreite, um das Pflanzen von Bäumen weltweit zu finanzieren. Schließe dich Tausenden an, die Umweltwirkung erzielen, während ihr Computer im Leerlauf ist.",
       "safe_secure": "100% Sicher und Geschützt",
       "no_impact": "Keine Leistungseinbußen",
-      "auto_plant": "Pflanze Bäume automatisch"
+      "auto_plant": "Pflanze Bäume automatisch",
+      "security_label": "Sicherheit",
+      "privacy_label": "Datenschutz",
+      "performance_label": "Geringe Last",
+      "security_detail": "Deine Daten sind sicher.",
+      "privacy_detail": "Keine persönlichen Informationen werden gesammelt.",
+      "performance_detail": "Ressourcenschonend und ohne spürbare Auswirkung auf die Leistung deines Computers."
+    },
+    "projects": {
+      "eyebrow": "Wo Wir Pflanzen",
+      "heading": "Projekte, mit denen wir arbeiten",
+      "subheading": "Wir finanzieren verifizierte Aufforstungsprojekte über vertrauenswürdige Partner und veröffentlichen unsere Wirkung transparent.",
+      "trees_planted_label": "Bäume gepflanzt",
+      "kisumu": {
+        "title": "Kisumu 7 - Awach",
+        "description": "Gemeinschaftsgetragene Agroforstwirtschaft in Westkenia, die geschädigte Flächen wiederherstellt und lokale Lebensgrundlagen stärkt.",
+        "partner": "Trees for the Future",
+        "location": "Kisumu, Kenia",
+        "focus": "Agroforstwirtschaft und langfristige Renaturierung",
+        "visual_title": "Kisumu"
+      },
+      "mkussu": {
+        "title": "Wiederbepflanzung des verbrannten Mkussu-Waldes",
+        "description": "Ein Wiederherstellungsprojekt zur Rückkehr nativer Waldflächen in Lushoto nach Brandschäden.",
+        "partner": "Tree-Nation",
+        "location": "Distrikt Lushoto, Tansania",
+        "focus": "Wiederherstellung nativer Wälder nach Feuer",
+        "visual_title": "Mkussu"
+      },
+      "poverty": {
+        "title": "Plant to Stop Poverty",
+        "description": "Ein Agroforstprojekt, das ländlichen Gemeinden hilft, Flächen wiederherzustellen, nützliche Baumbestände aufzubauen und langfristige wirtschaftliche Resilienz zu stärken.",
+        "partner": "Tree-Nation",
+        "location": "Tansania",
+        "focus": "Agroforstwirtschaft und Armutsbekämpfung",
+        "visual_title": "Poverty"
+      }
     },
     "how_it_works": {
       "heading": "So funktioniert's",
