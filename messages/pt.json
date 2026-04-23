@@ -662,7 +662,31 @@
       "faq_a1": "Usar o(a) {app} por apenas uma hora gera aproximadamente {grams}g de CO2. Isso equivale a {equivalent}.",
       "faq_q2": "Quantas árvores preciso de plantar para compensar o(a) {app}?",
       "faq_a2": "Para compensar um ano de uso típico do(a) {app} (aprox. {kg}kg de CO2), terias de plantar cerca de {trees} árvores.",
-      "bitcoin_comparison_note": "*As transações de Bitcoin são calculadas por uso, medindo CO2 por transação em vez de por hora."
+      "bitcoin_comparison_note": "*As transações de Bitcoin são calculadas por uso, medindo CO2 por transação em vez de por hora.",
+      "why_this_page_matters": "Por que esta página é importante",
+      "searches_this_page_should_answer": "Pesquisas que esta página deve responder",
+      "more_questions_about": "Mais perguntas sobre a pegada de carbono do(a) {app}",
+      "explore_the_cluster": "Explorar o cluster da pegada de carbono",
+      "featured_carbon_guides": "Guias de carbono em destaque",
+      "carbon_footprint_cluster_hub": "Hub do Cluster da Pegada de Carbono",
+      "digital_carbon_footprint_hub": "Guias e calculadoras da pegada de carbono digital",
+      "hub_intro": "Compare a pegada de carbono dos aplicativos, ferramentas de IA, jogos, navegadores e plataformas de streaming que as pessoas usam todos os dias. Use estas páginas para estimar emissões, entender a metodologia e encontrar maneiras simples de compensar sua pegada digital.",
+      "explore_ai_emissions": "Explorar emissões da IA",
+      "explore_streaming": "Explorar streaming",
+      "explore_digital_footprint": "Explorar pegada digital",
+      "featured_pages_eyebrow": "Páginas em destaque",
+      "best_places_to_start": "Melhores lugares para começar",
+      "all_carbon_pages": "Todas as páginas de carbono",
+      "browse_by_category": "Navegar por categoria",
+      "recommended_pages": "Páginas recomendadas",
+      "explore_related_guides": "Explorar calculadoras e guias relacionados",
+      "view_leaderboard": "Ver Classificação",
+      "leaderboard_breadcrumb": "Classificação",
+      "leaderboard_eyebrow": "Classificação de Emissões",
+      "leaderboard_title_pt1": "As Maiores",
+      "leaderboard_title_pt2": "Pegadas",
+      "leaderboard_title_pt3": "de Carbono",
+      "leaderboard_desc": "Classificadas das maiores para as menores emissões. Descobre quais plataformas consomem mais energia e geram os níveis mais altos de CO2 durante o teu uso diário."
     }
   }
 }

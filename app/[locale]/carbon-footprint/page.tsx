@@ -130,7 +130,7 @@ export default async function CarbonFootprintHubPage() {
                                 href="/carbon-footprint/leaderboard"
                                 className="inline-flex items-center gap-2 border-2 border-black bg-brand-gray text-black px-4 py-3 font-bold uppercase tracking-wide hover:-translate-y-0.5 transition-transform"
                             >
-                                View Leaderboard
+                                {t("page.view_leaderboard")}
                                 <ArrowRight className="w-4 h-4" />
                             </Link>
                         </div>

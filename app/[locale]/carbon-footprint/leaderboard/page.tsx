@@ -36,19 +36,19 @@ export default async function LeaderboardPage() {
                         {t("page.carbon_footprint_cluster_hub")}
                     </Link>
                     <span>/</span>
-                    <span className="text-black">Leaderboard</span>
+                    <span className="text-black">{t("page.leaderboard_breadcrumb")}</span>
                 </div>
 
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-10 text-center">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
-                            Emissions Leaderboard
+                            {t("page.leaderboard_eyebrow")}
                         </p>
                         <h1 className="font-candu text-[42px] sm:text-6xl uppercase text-black mb-6 leading-none">
-                            The Heaviest <span className="text-brand-yellow bg-black px-2 mx-1">Carbon</span> Footprints
+                            {t("page.leaderboard_title_pt1")} <span className="text-brand-yellow bg-black px-2 mx-1">{t("page.leaderboard_title_pt2")}</span> {t("page.leaderboard_title_pt3")}
                         </h1>
                         <p className="text-lg text-neutral-800 leading-relaxed">
-                            Ranked from highest to lowest emissions. Find out which platforms are consuming the most energy and generating the highest levels of CO2 during your daily usage.
+                            {t("page.leaderboard_desc")}
                         </p>
                     </div>
 

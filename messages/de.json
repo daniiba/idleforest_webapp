@@ -662,7 +662,31 @@
       "faq_a1": "Die Nutzung von {app} für nur eine Stunde erzeugt etwa {grams}g CO2. Das entspricht {equivalent}.",
       "faq_q2": "Wie viele Bäume muss ich pflanzen, um {app} auszugleichen?",
       "faq_a2": "Um ein Jahr typischer Nutzung von {app} (ca. {kg}kg CO2) auszugleichen, müsstest du etwa {trees} Bäume pflanzen.",
-      "bitcoin_comparison_note": "*Bitcoin-Transaktionen werden pro Nutzung berechnet, CO2 wird pro Transaktion und nicht pro Stunde gemessen."
+      "bitcoin_comparison_note": "*Bitcoin-Transaktionen werden pro Nutzung berechnet, CO2 wird pro Transaktion und nicht pro Stunde gemessen.",
+      "why_this_page_matters": "Warum diese Seite wichtig ist",
+      "searches_this_page_should_answer": "Suchen, die diese Seite beantworten sollte",
+      "more_questions_about": "Weitere Fragen zum CO2-Fußabdruck von {app}",
+      "explore_the_cluster": "Erkunde den CO2-Fußabdruck-Cluster",
+      "featured_carbon_guides": "Empfohlene CO2-Leitfäden",
+      "carbon_footprint_cluster_hub": "CO2-Fußabdruck Cluster Hub",
+      "digital_carbon_footprint_hub": "Digitale CO2-Fußabdruck Leitfäden und Rechner",
+      "hub_intro": "Vergleiche den CO2-Fußabdruck von Apps, KI-Tools, Spielen, Browsern und Streaming-Plattformen, die Menschen täglich nutzen. Nutze diese Seiten, um Emissionen zu schätzen, die Methodik zu verstehen und einfache Wege zu finden, deinen digitalen Fußabdruck auszugleichen.",
+      "explore_ai_emissions": "KI-Emissionen erkunden",
+      "explore_streaming": "Streaming erkunden",
+      "explore_digital_footprint": "Digitalen Fußabdruck erkunden",
+      "featured_pages_eyebrow": "Empfohlene Seiten",
+      "best_places_to_start": "Die besten Startpunkte",
+      "all_carbon_pages": "Alle CO2-Seiten",
+      "browse_by_category": "Nach Kategorie durchsuchen",
+      "recommended_pages": "Empfohlene Seiten",
+      "explore_related_guides": "Verwandte Rechner und Leitfäden erkunden",
+      "view_leaderboard": "Rangliste ansehen",
+      "leaderboard_breadcrumb": "Rangliste",
+      "leaderboard_eyebrow": "Emissions-Rangliste",
+      "leaderboard_title_pt1": "Die Schwersten",
+      "leaderboard_title_pt2": "CO2",
+      "leaderboard_title_pt3": "Fußabdrücke",
+      "leaderboard_desc": "Gelistet von den höchsten zu den niedrigsten Emissionen. Finde heraus, welche Plattformen bei der täglichen Nutzung die meiste Energie verbrauchen und am meisten CO2 erzeugen."
     }
   }
 }

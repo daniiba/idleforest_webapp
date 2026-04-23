@@ -679,7 +679,14 @@
       "all_carbon_pages": "All carbon pages",
       "browse_by_category": "Browse by category",
       "recommended_pages": "Recommended pages",
-      "explore_related_guides": "Explore related calculators and guides"
+      "explore_related_guides": "Explore related calculators and guides",
+      "view_leaderboard": "View Leaderboard",
+      "leaderboard_breadcrumb": "Leaderboard",
+      "leaderboard_eyebrow": "Emissions Leaderboard",
+      "leaderboard_title_pt1": "The Heaviest",
+      "leaderboard_title_pt2": "Carbon",
+      "leaderboard_title_pt3": "Footprints",
+      "leaderboard_desc": "Ranked from highest to lowest emissions. Find out which platforms are consuming the most energy and generating the highest levels of CO2 during your daily usage."
     }
   }
 }

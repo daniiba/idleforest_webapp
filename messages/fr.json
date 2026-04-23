@@ -662,7 +662,31 @@
       "faq_a1": "Utiliser {app} pendant seulement une heure génère environ {grams}g de CO2. Ce qui équivaut à {equivalent}.",
       "faq_q2": "Combien d'arbres dois-je planter pour compenser {app} ?",
       "faq_a2": "Pour compenser une année d'utilisation typique de {app} (environ {kg}kg de CO2), vous devriez planter environ {trees} arbres.",
-      "bitcoin_comparison_note": "*Les transactions Bitcoin sont calculées par utilisation, mesurant le CO2 par transaction plutôt que par heure."
+      "bitcoin_comparison_note": "*Les transactions Bitcoin sont calculées par utilisation, mesurant le CO2 par transaction plutôt que par heure.",
+      "why_this_page_matters": "Pourquoi cette page est importante",
+      "searches_this_page_should_answer": "Questions auxquelles cette page devrait répondre",
+      "more_questions_about": "Plus de questions sur l'empreinte carbone de {app}",
+      "explore_the_cluster": "Explorer le cluster de l'empreinte carbone",
+      "featured_carbon_guides": "Guides carbone en vedette",
+      "carbon_footprint_cluster_hub": "Hub du Cluster de l'Empreinte Carbone",
+      "digital_carbon_footprint_hub": "Guides et calculateurs de l'empreinte carbone numérique",
+      "hub_intro": "Comparez l'empreinte carbone des applications, outils d'IA, jeux, navigateurs et plateformes de streaming que les gens utilisent tous les jours. Utilisez ces pages pour estimer les émissions, comprendre la méthodologie et trouver des moyens simples de compenser votre empreinte numérique.",
+      "explore_ai_emissions": "Explorer les émissions de l'IA",
+      "explore_streaming": "Explorer le streaming",
+      "explore_digital_footprint": "Explorer l'empreinte numérique",
+      "featured_pages_eyebrow": "Pages en vedette",
+      "best_places_to_start": "Les meilleurs points de départ",
+      "all_carbon_pages": "Toutes les pages carbone",
+      "browse_by_category": "Parcourir par catégorie",
+      "recommended_pages": "Pages recommandées",
+      "explore_related_guides": "Explorer les calculateurs et guides associés",
+      "view_leaderboard": "Voir le Classement",
+      "leaderboard_breadcrumb": "Classement",
+      "leaderboard_eyebrow": "Classement des Émissions",
+      "leaderboard_title_pt1": "Les Plus Lourdes",
+      "leaderboard_title_pt2": "Empreintes",
+      "leaderboard_title_pt3": "Carbone",
+      "leaderboard_desc": "Classées des émissions les plus élevées aux plus faibles. Découvrez quelles plateformes consomment le plus d'énergie et génèrent les plus hauts niveaux de CO2 lors de votre utilisation quotidienne."
     }
   }
 }
