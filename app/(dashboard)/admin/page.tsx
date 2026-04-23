@@ -52,13 +52,15 @@ const EmailPreview = ({ html, subject, className = "" }: { html: string; subject
 
 
 // Hardcoded Financial Data
+const COST_BREAKDOWN = [
+    { category: 'Tech Fix Fee', amount: 300.00 },
+    { category: 'Salary Cost', amount: 180.00 },
+]
+
 const FINANCIAL_DATA = {
-    totalCosts: 980.00, // Fixed costs only
+    totalCosts: COST_BREAKDOWN.reduce((sum, cost) => sum + cost.amount, 0),
     marketingSpent: 700.00, // Actual marketing spent so far (for CAC)
-    costBreakdown: [
-        { category: 'Tech Fix Fee', amount: 300.00 },
-        { category: 'Salary Cost', amount: 680.00 },
-    ],
+    costBreakdown: COST_BREAKDOWN,
 }
 
 // Chart Configs
@@ -3582,4 +3584,3 @@ export default function AdminPage() {
         </div >
     )
 }
-

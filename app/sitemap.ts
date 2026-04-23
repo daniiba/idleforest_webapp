@@ -112,6 +112,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routesOptions: RouteOption[] = [
     { path: '', changeFrequency: 'daily', priority: 1, lastModified: new Date() },
     { path: '/blog', changeFrequency: 'daily', priority: 0.8, lastModified: new Date(), translated: false },
+    { path: '/carbon-footprint', changeFrequency: 'weekly', priority: 0.85, lastModified: new Date() },
+    { path: '/carbon-footprint/ai', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
+    { path: '/carbon-footprint/streaming', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
+    { path: '/carbon-footprint/digital-carbon-footprint', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: new Date() },
     { path: '/transparency', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
     { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: new Date() },

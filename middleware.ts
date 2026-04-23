@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   // Skip i18n for API routes, specific paths, and non-locale app routes
   // Only skip i18n for app-internal routes (API, auth, game, dashboard pages)
-  const skipI18nPaths = ['/api', '/auth', '/game', '/install', '/extension-auth', '/onboarding', '/create-team', '/test-donation', '/claim-tree', '/share', '/download-success', '/stats', '/profile', '/admin'];
+  const skipI18nPaths = ['/api', '/auth', '/game', '/install', '/extension-auth', '/onboarding', '/create-team', '/test-donation', '/claim-tree', '/share', '/download-success', '/stats', '/profile', '/admin', '/record'];
   if (skipI18nPaths.some(path => pathname.startsWith(path))) {
     return await updateSession(request);
   }

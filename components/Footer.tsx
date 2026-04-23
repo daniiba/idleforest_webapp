@@ -63,6 +63,7 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 text-center">Popular Carbon Footprints</p>
           <div className="flex flex-wrap gap-x-6 gap-y-3 justify-center text-xs text-gray-400">
+            <Link href="/carbon-footprint" className="hover:text-brand-yellow transition-colors duration-200 font-semibold">Carbon Hub</Link>
             <Link href="/carbon-footprint/chatgpt" className="hover:text-brand-yellow transition-colors duration-200">ChatGPT</Link>
             <Link href="/carbon-footprint/tiktok" className="hover:text-brand-yellow transition-colors duration-200">TikTok</Link>
             <Link href="/carbon-footprint/fortnite" className="hover:text-brand-yellow transition-colors duration-200">Fortnite</Link>

@@ -1,3 +1,14 @@
+export interface CarbonSeoFaq {
+    question: string;
+    answer: string;
+}
+
+export interface CarbonSeoContent {
+    intro: string;
+    searchTopics: string[];
+    faq: CarbonSeoFaq[];
+}
+
 export interface CarbonData {
     app_name: string;
     category: string;
@@ -9,6 +20,7 @@ export interface CarbonData {
     idleforest_pitch: string;
     slug: string;
     icon_slug?: string; // Optional override for SimpleIcons (e.g. "googlechrome" for "google-chrome")
+    seo?: CarbonSeoContent;
 }
 
 export function getIconUrl(data: CarbonData): string {
@@ -43,6 +55,26 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 2,
         idleforest_pitch: "Offset your binge-watching automatically.",
         slug: "netflix",
+        seo: {
+            intro: "Netflix has strong impression volume already, but weak click-through. That usually means the page needs better search-intent alignment around streaming emissions and per-hour viewing questions.",
+            searchTopics: [
+                "netflix carbon footprint",
+                "netflix co2 emissions",
+                "co2 emissions per hour netflix streaming",
+                "netflix annual carbon emissions",
+                "netflix streaming co2 emissions per hour"
+            ],
+            faq: [
+                {
+                    question: "What is Netflix's carbon footprint?",
+                    answer: "Netflix emissions come from streaming infrastructure, network delivery, and the device you watch on. Total impact increases with watch time, resolution, and the energy mix powering your hardware and data delivery."
+                },
+                {
+                    question: "How much CO2 does streaming Netflix create per hour?",
+                    answer: "Per-hour estimates vary by methodology, so it helps to be clear about assumptions and to estimate impact based on actual viewing habits rather than a single fixed number."
+                }
+            ]
+        }
     },
     {
         app_name: "TikTok",
@@ -54,6 +86,26 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 5,
         idleforest_pitch: "Scroll guilt-free by planting trees in the background.",
         slug: "tiktok",
+        seo: {
+            intro: "TikTok's footprint comes from video delivery, device energy use, and the time people spend scrolling. This page gives a simple way to understand how short-form video can add up over time.",
+            searchTopics: [
+                "tiktok carbon footprint",
+                "tiktok annual carbon emissions",
+                "tiktok annual co2 emissions",
+                "tiktok carbon emissions",
+                "tiktok co2 emissions"
+            ],
+            faq: [
+                {
+                    question: "What is TikTok's carbon footprint?",
+                    answer: "TikTok's footprint depends on video delivery, device energy use, and time spent scrolling. IdleForest estimates the impact with a simple usage-based calculator so visitors can understand and offset their own viewing habits."
+                },
+                {
+                    question: "Why does short-form video still create emissions?",
+                    answer: "Even short videos rely on data transfer, device energy, and cloud infrastructure. Frequent autoplay and endless scrolling can add up surprisingly quickly over a year."
+                }
+            ]
+        }
     },
     {
         app_name: "ChatGPT",
@@ -66,6 +118,26 @@ export const CARBON_DATA: CarbonData[] = [
         idleforest_pitch: "AI is smart. You should be too. Offset your prompts.",
         slug: "chatgpt",
         icon_slug: "ollama",
+        seo: {
+            intro: "ChatGPT uses energy for every request, response, and supporting system behind the model. This page helps explain how everyday AI use contributes to digital emissions.",
+            searchTopics: [
+                "carbon footprint of chatgpt",
+                "chatgpt co2",
+                "chatgpt co2 emissions per query",
+                "how much carbon does chatgpt emit",
+                "what is the carbon footprint of chatgpt"
+            ],
+            faq: [
+                {
+                    question: "How much CO2 does ChatGPT produce?",
+                    answer: "The exact number depends on model size, hardware efficiency, and how many prompts are generated. The true footprint varies, which is why it helps to look at practical usage-based estimates rather than a single universal number."
+                },
+                {
+                    question: "Why should ChatGPT link to broader AI emissions content?",
+                    answer: "People often start with ChatGPT and then want to understand AI energy use more broadly. Looking at both the specific tool and the wider topic gives a clearer picture of how AI affects emissions."
+                }
+            ]
+        }
     },
     {
         app_name: "Zoom",
@@ -77,6 +149,25 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 3,
         idleforest_pitch: "Remote work saves commutes but burns energy. Make your meetings carbon neutral.",
         slug: "zoom",
+        seo: {
+            intro: "Zoom meetings use energy for video delivery, networking, and the devices involved in every call. This page explains how work-related digital habits contribute to a broader digital carbon footprint.",
+            searchTopics: [
+                "zoom carbon footprint",
+                "carbon footprint of a zoom call",
+                "carbon footprint of zoom",
+                "zoom carbon emissions"
+            ],
+            faq: [
+                {
+                    question: "What is the carbon footprint of a Zoom call?",
+                    answer: "A Zoom call uses emissions from video delivery, networking, and device power. The more participants, longer call times, and higher video quality you use, the higher the total impact becomes."
+                },
+                {
+                    question: "Does remote work eliminate meeting emissions?",
+                    answer: "Remote work can reduce commuting emissions, but video meetings still require electricity and data transfer. That is why it makes sense to measure both the savings and the remaining digital footprint."
+                }
+            ]
+        }
     },
     {
         app_name: "Instagram",
@@ -88,6 +179,25 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 2,
         idleforest_pitch: "Offset your scroll time without changing your habits.",
         slug: "instagram",
+        seo: {
+            intro: "Instagram's footprint comes from media delivery, mobile device power use, and the energy needed to store and serve content at global scale. This page puts that impact into everyday terms.",
+            searchTopics: [
+                "instagram carbon footprint",
+                "carbon footprint of instagram",
+                "how much energy does instagram use",
+                "instagram carbon"
+            ],
+            faq: [
+                {
+                    question: "What is Instagram's carbon footprint?",
+                    answer: "Instagram's footprint comes from video and image delivery, mobile device power use, and the energy required to store and serve content globally. Time spent in the app matters more than most users expect."
+                },
+                {
+                    question: "Why can social media still have a measurable climate impact?",
+                    answer: "Social platforms may feel lightweight, but billions of photos, videos, and ad impressions require data centers, networks, and devices to stay active all the time."
+                }
+            ]
+        }
     },
     {
         app_name: "Bitcoin (1 Tx)",
@@ -110,6 +220,26 @@ export const CARBON_DATA: CarbonData[] = [
         trees_to_offset: 1,
         idleforest_pitch: "Watch videos while planting a real forest.",
         slug: "youtube",
+        seo: {
+            intro: "YouTube's footprint comes from video processing, storage, network delivery, and the electricity used by the devices people stream on. This page explains how those pieces add up over time.",
+            searchTopics: [
+                "youtube annual carbon emissions",
+                "youtube annual co2 emissions",
+                "annual co2 emissions from youtube streaming",
+                "youtube carbon footprint",
+                "carbon footprint of youtube"
+            ],
+            faq: [
+                {
+                    question: "What is YouTube's carbon footprint?",
+                    answer: "YouTube's impact comes from video processing, content delivery, storage, and the electricity used by the devices people stream on. Long watch sessions and higher video quality increase the total footprint."
+                },
+                {
+                    question: "Why do YouTube emissions often get discussed as annual totals?",
+                    answer: "Streaming happens at enormous scale, so annual estimates help people understand how quickly everyday viewing habits add up across a year instead of focusing only on single sessions."
+                }
+            ]
+        }
     },
     {
         app_name: "Twitch",
@@ -258,6 +388,24 @@ export function getCarbonData(slug: string): CarbonData | undefined {
 
 export function getAllSlugs(): string[] {
     return CARBON_DATA.map((data) => data.slug);
+}
+
+export function getCarbonCategories(): { category: string; items: CarbonData[] }[] {
+    const grouped = CARBON_DATA.reduce<Record<string, CarbonData[]>>((acc, item) => {
+        acc[item.category] = acc[item.category] || [];
+        acc[item.category].push(item);
+        return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([category, items]) => ({
+        category,
+        items: items.sort((a, b) => a.app_name.localeCompare(b.app_name)),
+    }));
+}
+
+export function getFeaturedCarbonPages(limit: number = 6): CarbonData[] {
+    const featuredSlugs = ["chatgpt", "instagram", "tiktok", "youtube", "netflix", "zoom"];
+    return CARBON_DATA.filter((item) => featuredSlugs.includes(item.slug)).slice(0, limit);
 }
 
 export function getRelatedCarbonData(currentSlug: string, category: string, limit: number = 3): CarbonData[] {

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCarbonData, getAllSlugs, getRelatedCarbonData, getIconUrl } from "@/lib/carbon-data";
+import { getCarbonData, getRelatedCarbonData, getIconUrl, getFeaturedCarbonPages } from "@/lib/carbon-data";
 import { CalculatorWidget } from "@/components/carbon/calculator-widget";
 import { ComparisonGraph } from "@/components/carbon/comparison-graph";
 import { TrustSection } from "@/components/carbon/trust-section";
@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             `co2 emissions of ${data.app_name}`,
             "digital carbon footprint",
             "offset carbon emissions",
+            ...(data.seo?.searchTopics || []),
         ],
     };
 }
@@ -53,28 +54,61 @@ export default function CarbonFootprintPage({ params }: PageProps) {
     }
 
     const t_human = t(`items.${data.slug}.human_equivalent`);
+    const clusterLinks = [
+        {
+            title: "Digital Carbon Footprint Hub",
+            description: "Explore every carbon-footprint page and compare the biggest digital emission sources.",
+            href: "/carbon-footprint",
+        },
+        {
+            title: "AI carbon footprint",
+            description: "Use this parent page to connect ChatGPT with broader AI emissions searches.",
+            href: "/carbon-footprint/ai",
+        },
+        {
+            title: "Streaming carbon footprint",
+            description: "Compare streaming platforms like YouTube, Netflix, and Twitch side by side.",
+            href: "/carbon-footprint/streaming",
+        },
+        {
+            title: "Digital carbon footprint",
+            description: "Understand the broader concept behind app, browser, work, and AI emissions.",
+            href: "/carbon-footprint/digital-carbon-footprint",
+        },
+    ].filter((item) => item.href !== `/carbon-footprint/${data.slug}`);
+    const featuredGuides = getFeaturedCarbonPages().filter((page) => page.slug !== data.slug).slice(0, 3);
+
+    const faqEntities = [
+        {
+            "@type": "Question",
+            "name": t("page.faq_q1", { app: data.app_name }),
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": t("page.faq_a1", { app: data.app_name, grams: data.co2_per_hour_grams, equivalent: t_human.toLowerCase() })
+            }
+        },
+        {
+            "@type": "Question",
+            "name": t("page.faq_q2", { app: data.app_name }),
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": t("page.faq_a2", { app: data.app_name, kg: data.yearly_impact_kg, trees: data.trees_to_offset })
+            }
+        },
+        ...(data.seo?.faq || []).map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: item.answer,
+            },
+        })),
+    ];
 
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": t("page.faq_q1", { app: data.app_name }),
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": t("page.faq_a1", { app: data.app_name, grams: data.co2_per_hour_grams, equivalent: t_human.toLowerCase() })
-                }
-            },
-            {
-                "@type": "Question",
-                "name": t("page.faq_q2", { app: data.app_name }),
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": t("page.faq_a2", { app: data.app_name, kg: data.yearly_impact_kg, trees: data.trees_to_offset })
-                }
-            }
-        ]
+        "mainEntity": faqEntities
     };
 
     return (
@@ -132,6 +166,31 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                             {' '}{t("page.thats_equivalent_to", { equivalent: t_human.toLowerCase() })}
                         </p>
 
+                        {data.seo && (
+                            <div className="mb-10 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                    {t("page.why_this_page_matters")}
+                                </p>
+                                <p className="text-lg text-neutral-800 leading-relaxed mb-6">
+                                    {data.seo.intro}
+                                </p>
+                                <div>
+                                    <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                        {t("page.searches_this_page_should_answer")}
+                                    </h2>
+                                    <div className="flex flex-wrap gap-2">
+                                        {data.seo.searchTopics.map((topic) => (
+                                            <span
+                                                key={topic}
+                                                className="border border-black bg-brand-gray px-3 py-2 text-sm font-semibold text-black"
+                                            >
+                                                {topic}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="mb-12">
                             <CalculatorWidget data={data} />
@@ -142,6 +201,61 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                         </div>
 
                         <TrustSection category={data.category} />
+
+                        {data.seo?.faq?.length ? (
+                            <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
+                                <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                                    {t("page.more_questions_about", { app: data.app_name })}
+                                </h2>
+                                <div className="space-y-4">
+                                    {data.seo.faq.map((item) => (
+                                        <div key={item.question} className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                            <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-3">
+                                                {item.question}
+                                            </h3>
+                                            <p className="text-neutral-700 leading-relaxed">{item.answer}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+
+                        <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
+                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                                {t("page.explore_the_cluster")}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {clusterLinks.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    >
+                                        <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.title}</h3>
+                                        <p className="text-neutral-700 leading-relaxed">{item.description}</p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
+                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                                {t("page.featured_carbon_guides")}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {featuredGuides.map((guide) => (
+                                    <Link
+                                        key={guide.slug}
+                                        href={`/carbon-footprint/${guide.slug}`}
+                                        className="border-2 border-black bg-brand-gray p-5 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    >
+                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">{guide.category}</div>
+                                        <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{guide.app_name}</h3>
+                                        <p className="text-neutral-700 text-sm leading-relaxed">{guide.seo?.intro || guide.idleforest_pitch}</p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
 
                         <div className="mt-16 pt-12 border-t-2 border-black/10">
                             <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-8">

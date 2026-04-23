@@ -662,7 +662,24 @@
       "faq_a1": "Using {app} for just one hour generates approximately {grams}g of CO2. This is equivalent to {equivalent}.",
       "faq_q2": "How many trees do I need to plant to offset {app}?",
       "faq_a2": "To offset a year of typical usage of {app} (approx. {kg}kg of CO2), you would need to plant about {trees} trees.",
-      "bitcoin_comparison_note": "*Bitcoin transactions are calculated per usage, measuring CO2 per transaction rather than per hour."
+      "bitcoin_comparison_note": "*Bitcoin transactions are calculated per usage, measuring CO2 per transaction rather than per hour.",
+      "why_this_page_matters": "Why this page matters",
+      "searches_this_page_should_answer": "Searches this page should answer",
+      "more_questions_about": "More questions about {app}'s carbon footprint",
+      "explore_the_cluster": "Explore the carbon footprint cluster",
+      "featured_carbon_guides": "Featured carbon guides",
+      "carbon_footprint_cluster_hub": "Carbon footprint cluster hub",
+      "digital_carbon_footprint_hub": "Digital carbon footprint guides and calculators",
+      "hub_intro": "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use these pages to estimate emissions, understand the methodology, and find simple ways to offset your digital footprint.",
+      "explore_ai_emissions": "Explore AI emissions",
+      "explore_streaming": "Explore streaming",
+      "explore_digital_footprint": "Explore digital footprint",
+      "featured_pages_eyebrow": "Featured pages",
+      "best_places_to_start": "Best places to start",
+      "all_carbon_pages": "All carbon pages",
+      "browse_by_category": "Browse by category",
+      "recommended_pages": "Recommended pages",
+      "explore_related_guides": "Explore related calculators and guides"
     }
   }
 }
