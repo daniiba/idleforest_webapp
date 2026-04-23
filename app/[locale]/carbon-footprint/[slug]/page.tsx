@@ -42,6 +42,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             "offset carbon emissions",
             ...(data.seo?.searchTopics || []),
         ],
+        openGraph: {
+            images: [
+                {
+                    url: `/api/og/carbon?slug=${data.slug}`,
+                    width: 1200,
+                    height: 630,
+                }
+            ]
+        }
     };
 }
 
