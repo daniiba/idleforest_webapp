@@ -46,34 +46,34 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                     "ai carbon footprint",
                     "streaming carbon footprint"
                 ],
-                eyebrow: "Carbon footprint cluster hub",
-                intro: "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use this hub to move from broad definitions into practical calculators, comparisons, and methodology-backed guides.",
+                eyebrow: "Carbon footprint hub",
+                intro: "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use this hub to understand the biggest digital habits, open focused calculators, and compare common activities.",
                 sections: [
                     {
-                        title: "Start with the biggest daily habits",
+                        title: "Start with the habits you use most",
                         body: "The most useful entry points are usually the behaviors people repeat every day: streaming, AI prompts, meetings, social feeds, and long browser sessions."
                     },
                     {
-                        title: "Use the cluster to narrow intent",
-                        body: "This hub is designed to help people move from broad queries like digital carbon footprint into more specific searches such as ChatGPT emissions or Netflix versus YouTube."
+                        title: "Move from broad topics to specific tools",
+                        body: "Start with a broad topic like digital carbon footprint, then jump into the app page or comparison that best matches the tool or habit you actually use."
                     },
                     {
-                        title: "Read the estimate as directional guidance",
+                        title: "Use the estimates as practical guidance",
                         body: "These pages are built to compare common digital behaviors, not to reproduce proprietary vendor accounting line by line."
                     }
                 ],
                 playbook: [
                     {
-                        title: "Own the parent topic",
-                        body: "This page should tell users and search engines that the cluster covers AI, streaming, work, browsing, social, crypto, and gaming emissions in one coherent system."
+                        title: "Compare the biggest digital categories",
+                        body: "This hub brings AI, streaming, work, browsing, social, crypto, and gaming pages together so you can see where different digital habits sit."
                     },
                     {
-                        title: "Route people to the best calculators",
-                        body: "The strongest next clicks are usually the highest-demand app pages and the most intuitive comparison pages."
+                        title: "Jump to the calculator that matches your routine",
+                        body: "The best next step is usually the app page or comparison page that reflects the tool, platform, or habit you spend the most time with."
                     },
                     {
-                        title: "Show breadth without going thin",
-                        body: "The cluster performs best when a smaller number of pages are clearly deeper, better sourced, and easier to navigate than generic competitor templates."
+                        title: "Use comparisons to make tradeoffs clearer",
+                        body: "Side-by-side comparisons help you understand which two related habits are likely to differ most in daily impact."
                     }
                 ],
                 faq: [
@@ -98,34 +98,34 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                     "KI CO2-Fußabdruck",
                     "Streaming CO2-Fußabdruck"
                 ],
-                eyebrow: "CO2-Fußabdruck-Cluster-Hub",
-                intro: "Vergleiche den CO2-Fußabdruck von Apps, KI-Tools, Spielen, Browsern und Streaming-Plattformen, die Menschen täglich nutzen. Dieser Hub führt von allgemeinen Definitionen zu praktischen Rechnern, Vergleichen und methodisch erklärten Leitfäden.",
+                eyebrow: "CO2-Fußabdruck-Hub",
+                intro: "Vergleiche den CO2-Fußabdruck von Apps, KI-Tools, Spielen, Browsern und Streaming-Plattformen, die Menschen täglich nutzen. Dieser Hub hilft dir, die größten digitalen Gewohnheiten zu verstehen, passende Rechner zu öffnen und typische Aktivitäten direkt zu vergleichen.",
                 sections: [
                     {
-                        title: "Beginne mit den größten täglichen Gewohnheiten",
+                        title: "Beginne mit den Gewohnheiten, die du am meisten nutzt",
                         body: "Die nützlichsten Einstiege sind meist Verhaltensweisen, die Menschen jeden Tag wiederholen: Streaming, KI-Prompts, Meetings, Social-Feeds und lange Browsing-Sessions."
                     },
                     {
-                        title: "Nutze den Cluster zur Eingrenzung der Suchintention",
-                        body: "Dieser Hub hilft dabei, von breiten Suchanfragen wie digitaler CO2-Fußabdruck zu konkreteren Themen wie ChatGPT-Emissionen oder Netflix versus YouTube zu gelangen."
+                        title: "Wechsle von breiten Themen zu konkreten Tools",
+                        body: "Starte mit einem breiten Thema wie digitaler CO2-Fußabdruck und springe dann zu der App- oder Vergleichsseite, die am besten zu deinem tatsächlichen Tool oder deiner Gewohnheit passt."
                     },
                     {
-                        title: "Lies die Schätzung als Richtwert",
+                        title: "Nutze die Schätzungen als praktische Orientierung",
                         body: "Diese Seiten sind dafür gebaut, typische digitale Verhaltensweisen zu vergleichen und nicht proprietäre Anbieterabrechnungen exakt nachzubilden."
                     }
                 ],
                 playbook: [
                     {
-                        title: "Das Elternthema besetzen",
-                        body: "Diese Seite soll Nutzern und Suchmaschinen zeigen, dass der Cluster KI-, Streaming-, Arbeits-, Browsing-, Social-, Krypto- und Gaming-Emissionen in einem zusammenhängenden System abdeckt."
+                        title: "Die wichtigsten digitalen Kategorien vergleichen",
+                        body: "Dieser Hub bringt Seiten zu KI, Streaming, Arbeit, Browsing, Social Media, Krypto und Gaming zusammen, damit du die Unterschiede zwischen digitalen Gewohnheiten schneller einordnen kannst."
                     },
                     {
-                        title: "Menschen zu den besten Rechnern führen",
-                        body: "Die stärksten nächsten Klicks sind meist die gefragtesten App-Seiten und die naheliegendsten Vergleichsseiten."
+                        title: "Direkt zum passenden Rechner springen",
+                        body: "Der beste nächste Schritt ist meist die App- oder Vergleichsseite, die das Tool, die Plattform oder die Gewohnheit abbildet, mit der du die meiste Zeit verbringst."
                     },
                     {
-                        title: "Breite zeigen, ohne dünn zu werden",
-                        body: "Der Cluster funktioniert am besten, wenn eine kleinere Zahl von Seiten klar tiefer, besser belegt und leichter navigierbar ist als generische Wettbewerbsseiten."
+                        title: "Vergleiche für klarere Entscheidungen nutzen",
+                        body: "Direkte Vergleiche helfen dir zu verstehen, welche zwei verwandten Gewohnheiten sich im Alltag am stärksten unterscheiden."
                     }
                 ],
                 faq: [
@@ -150,34 +150,34 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                     "huella de carbono de IA",
                     "huella de carbono del streaming"
                 ],
-                eyebrow: "Hub del clúster de huella de carbono",
-                intro: "Compara la huella de carbono de las apps, herramientas de IA, juegos, navegadores y plataformas de streaming que la gente usa cada día. Este hub te lleva de las definiciones generales a calculadoras prácticas, comparaciones y guías con metodología.",
+                eyebrow: "Hub de huella de carbono",
+                intro: "Compara la huella de carbono de las apps, herramientas de IA, juegos, navegadores y plataformas de streaming que la gente usa cada día. Este hub te ayuda a entender los hábitos digitales que más pesan, abrir calculadoras concretas y comparar actividades comunes.",
                 sections: [
                     {
-                        title: "Empieza por los hábitos diarios más importantes",
+                        title: "Empieza por los hábitos que más repites",
                         body: "Los mejores puntos de entrada suelen ser los comportamientos que la gente repite todos los días: streaming, prompts de IA, reuniones, feeds sociales y largas sesiones de navegación."
                     },
                     {
-                        title: "Usa el clúster para afinar la intención de búsqueda",
-                        body: "Este hub ayuda a pasar de consultas amplias como huella de carbono digital a búsquedas más concretas como emisiones de ChatGPT o Netflix frente a YouTube."
+                        title: "Pasa de temas amplios a herramientas concretas",
+                        body: "Empieza por un tema general como huella de carbono digital y luego entra en la página de app o comparación que mejor represente la herramienta o el hábito que realmente usas."
                     },
                     {
-                        title: "Lee la estimación como una guía direccional",
+                        title: "Usa la estimación como orientación práctica",
                         body: "Estas páginas están pensadas para comparar comportamientos digitales comunes, no para reproducir línea por línea la contabilidad propietaria de un proveedor."
                     }
                 ],
                 playbook: [
                     {
-                        title: "Dominar el tema padre",
-                        body: "Esta página debe mostrar a usuarios y buscadores que el clúster cubre emisiones de IA, streaming, trabajo, navegación, social, cripto y gaming dentro de un mismo sistema."
+                        title: "Comparar las principales categorías digitales",
+                        body: "Este hub reúne páginas sobre IA, streaming, trabajo, navegación, social, cripto y gaming para que puedas ver mejor cómo se diferencian esos hábitos digitales."
                     },
                     {
-                        title: "Llevar a la gente a las mejores calculadoras",
-                        body: "Los siguientes clics más fuertes suelen ser las páginas de apps con mayor demanda y las comparativas más intuitivas."
+                        title: "Ir directo a la calculadora más útil",
+                        body: "El siguiente paso más útil suele ser la página de app o comparación que refleje la herramienta, la plataforma o el hábito al que dedicas más tiempo."
                     },
                     {
-                        title: "Mostrar amplitud sin caer en páginas finas",
-                        body: "El clúster funciona mejor cuando un número menor de páginas es claramente más profundo, mejor citado y más fácil de navegar que las plantillas genéricas de la competencia."
+                        title: "Usar comparaciones para aclarar diferencias",
+                        body: "Las comparaciones directas ayudan a entender qué dos hábitos relacionados pueden separarse más en su impacto diario."
                     }
                 ],
                 faq: [
@@ -202,34 +202,34 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                     "pegada de carbono da IA",
                     "pegada de carbono do streaming"
                 ],
-                eyebrow: "Hub do cluster de pegada de carbono",
-                intro: "Compara a pegada de carbono das apps, ferramentas de IA, jogos, browsers e plataformas de streaming que as pessoas usam todos os dias. Este hub leva-te de definições gerais a calculadoras práticas, comparações e guias com metodologia.",
+                eyebrow: "Hub da pegada de carbono",
+                intro: "Compara a pegada de carbono das apps, ferramentas de IA, jogos, browsers e plataformas de streaming que as pessoas usam todos os dias. Este hub ajuda-te a perceber os hábitos digitais com maior impacto, abrir calculadoras mais focadas e comparar atividades comuns.",
                 sections: [
                     {
-                        title: "Começa pelos maiores hábitos diários",
+                        title: "Começa pelos hábitos que mais repetes",
                         body: "Os pontos de entrada mais úteis costumam ser os comportamentos que as pessoas repetem todos os dias: streaming, prompts de IA, reuniões, feeds sociais e longas sessões de navegação."
                     },
                     {
-                        title: "Usa o cluster para afinar a intenção de pesquisa",
-                        body: "Este hub ajuda a passar de pesquisas amplas como pegada de carbono digital para temas mais concretos como emissões do ChatGPT ou Netflix versus YouTube."
+                        title: "Passa de temas amplos para ferramentas concretas",
+                        body: "Começa com um tema geral como pegada de carbono digital e depois entra na página da app ou da comparação que melhor representa a ferramenta ou o hábito que usas de facto."
                     },
                     {
-                        title: "Lê a estimativa como uma orientação direcional",
+                        title: "Usa a estimativa como orientação prática",
                         body: "Estas páginas foram feitas para comparar comportamentos digitais comuns e não para reproduzir linha a linha a contabilidade proprietária de um fornecedor."
                     }
                 ],
                 playbook: [
                     {
-                        title: "Dominar o tema principal",
-                        body: "Esta página deve mostrar a utilizadores e motores de busca que o cluster cobre emissões de IA, streaming, trabalho, navegação, social, cripto e gaming num sistema coerente."
+                        title: "Comparar as principais categorias digitais",
+                        body: "Este hub junta páginas de IA, streaming, trabalho, navegação, social, cripto e gaming para te ajudar a perceber melhor como esses hábitos digitais se diferenciam."
                     },
                     {
-                        title: "Levar as pessoas às melhores calculadoras",
-                        body: "Os cliques seguintes mais fortes costumam ser as páginas de apps com maior procura e as comparações mais intuitivas."
+                        title: "Ir direto para a calculadora mais útil",
+                        body: "O passo seguinte mais útil costuma ser a página da app ou da comparação que reflete a ferramenta, a plataforma ou o hábito em que passas mais tempo."
                     },
                     {
-                        title: "Mostrar amplitude sem cair em páginas fracas",
-                        body: "O cluster funciona melhor quando um número menor de páginas é claramente mais profundo, melhor suportado por fontes e mais fácil de navegar do que templates genéricos da concorrência."
+                        title: "Usar comparações para clarificar diferenças",
+                        body: "As comparações diretas ajudam-te a perceber quais dois hábitos relacionados podem divergir mais no impacto do dia a dia."
                     }
                 ],
                 faq: [
@@ -254,34 +254,34 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                     "empreinte carbone de l'IA",
                     "empreinte carbone du streaming"
                 ],
-                eyebrow: "Hub du cluster d'empreinte carbone",
-                intro: "Comparez l'empreinte carbone des applications, outils d'IA, jeux, navigateurs et plateformes de streaming utilisés au quotidien. Ce hub vous fait passer des définitions générales à des calculateurs pratiques, comparaisons et guides appuyés sur une méthodologie.",
+                eyebrow: "Hub de l'empreinte carbone",
+                intro: "Comparez l'empreinte carbone des applications, outils d'IA, jeux, navigateurs et plateformes de streaming utilisés au quotidien. Ce hub vous aide à comprendre les usages numériques les plus lourds, à ouvrir des calculateurs ciblés et à comparer des activités courantes.",
                 sections: [
                     {
-                        title: "Commencez par les habitudes quotidiennes les plus lourdes",
+                        title: "Commencez par les habitudes que vous répétez le plus",
                         body: "Les meilleurs points d'entrée sont souvent les comportements que l'on répète chaque jour : streaming, prompts IA, réunions, flux sociaux et longues sessions de navigation."
                     },
                     {
-                        title: "Utilisez le cluster pour affiner l'intention de recherche",
-                        body: "Ce hub aide à passer de requêtes larges comme empreinte carbone numérique à des recherches plus précises comme émissions de ChatGPT ou Netflix contre YouTube."
+                        title: "Passez des grands thèmes aux outils concrets",
+                        body: "Commencez par un thème large comme l'empreinte carbone numérique, puis ouvrez la page application ou comparaison qui correspond le mieux à l'outil ou à l'usage que vous avez réellement."
                     },
                     {
-                        title: "Lisez l'estimation comme un repère directionnel",
+                        title: "Utilisez l'estimation comme repère pratique",
                         body: "Ces pages sont conçues pour comparer des comportements numériques courants, et non pour reproduire ligne par ligne la comptabilité propriétaire d'un fournisseur."
                     }
                 ],
                 playbook: [
                     {
-                        title: "Occuper le sujet parent",
-                        body: "Cette page doit montrer aux utilisateurs et aux moteurs de recherche que le cluster couvre les émissions liées à l'IA, au streaming, au travail, à la navigation, au social, à la crypto et au gaming dans un même système."
+                        title: "Comparer les grandes catégories numériques",
+                        body: "Ce hub rassemble les pages IA, streaming, travail, navigation, social, crypto et gaming pour vous aider à situer plus facilement ces différents usages numériques."
                     },
                     {
-                        title: "Orienter vers les meilleurs calculateurs",
-                        body: "Les clics suivants les plus forts sont généralement les pages d'applications les plus demandées et les comparaisons les plus intuitives."
+                        title: "Aller directement au calculateur le plus utile",
+                        body: "L'étape suivante la plus utile est généralement la page application ou comparaison qui reflète l'outil, la plateforme ou l'usage auquel vous consacrez le plus de temps."
                     },
                     {
-                        title: "Montrer de l'ampleur sans devenir superficiel",
-                        body: "Le cluster fonctionne mieux lorsqu'un nombre plus réduit de pages est clairement plus profond, mieux sourcé et plus simple à parcourir que les modèles génériques des concurrents."
+                        title: "Utiliser les comparaisons pour clarifier les écarts",
+                        body: "Les comparaisons directes vous aident à comprendre quels deux usages proches peuvent le plus diverger dans leur impact quotidien."
                     }
                 ],
                 faq: [
@@ -306,13 +306,13 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "AI Carbon Footprint: Emissions from Artificial Intelligence | IdleForest",
                 seoDescription: "Understand the carbon footprint of AI models like ChatGPT and everyday AI use. Learn how inference, hardware, and data-center overhead shape digital emissions.",
                 queryChips: ["ai carbon footprint", "carbon footprint of chatgpt", "llm emissions", "ai co2"],
-                eyebrow: "AI emissions hub",
-                intro: "Artificial intelligence offers incredible capabilities, but those systems also require heavy compute infrastructure. This hub is built to connect broad AI emissions searches to practical calculator pages and clearer methodology.",
+                eyebrow: "AI emissions guide",
+                intro: "Artificial intelligence offers incredible capabilities, but it also relies on heavy compute infrastructure. Use this guide to understand what drives AI emissions and compare the tools you actually use.",
                 categoryFilter: ["AI"],
                 sections: [
                     {
-                        title: "Training and inference are different search intents",
-                        body: "Training headlines explain the scale of model development, while most consumer searches are really about inference: repeated everyday use of tools like ChatGPT."
+                        title: "Training and everyday use are different questions",
+                        body: "Training headlines show the scale of model development, while most people really want to understand everyday inference: repeated use of tools like ChatGPT."
                     },
                     {
                         title: "Hardware and cooling still matter",
@@ -321,26 +321,26 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Start with inference, not just training headlines",
-                        body: "Most consumer search demand sits around everyday tools like ChatGPT, so the hub should explain how repeated inference accumulates over time."
+                        title: "Start with everyday AI use",
+                        body: "For most people, the main question is repeated use of tools like ChatGPT rather than one-off training headlines."
                     },
                     {
-                        title: "Connect infrastructure to usage behavior",
-                        body: "People want to understand why AI feels heavier than a normal web request. Tie prompts, model size, accelerator use, and cooling into one explanation."
+                        title: "Connect prompts to infrastructure",
+                        body: "Prompt volume, model size, accelerator hardware, and cooling all shape the footprint together."
                     },
                     {
-                        title: "Route visitors to the strongest proof page",
-                        body: "This hub should repeatedly point people toward the ChatGPT leaf page and future AI benchmark pages."
+                        title: "Open the closest matching tool page",
+                        body: "After the overview, jump to the calculator page for the AI tool you use most."
                     }
                 ],
                 faq: [
                     {
-                        question: "Why is AI carbon footprint content hard to rank with thin pages?",
-                        answer: "Because searchers want explanation, methodology, and context. A thin hub rarely competes well unless it clearly adds original framing or data."
+                        question: "Why isn't there one simple AI number?",
+                        answer: "Because emissions vary with model size, hardware, prompt volume, and how often you use the tool."
                     },
                     {
-                        question: "What should this AI hub help people do?",
-                        answer: "It should help them understand the major drivers of AI emissions, then move them into the calculator page that best matches the query."
+                        question: "What should I do after reading this guide?",
+                        answer: "Start with the biggest drivers, then open the calculator page that matches the AI tool you use."
                     }
                 ],
                 featuredComparisonPairs: []
@@ -350,13 +350,13 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "KI-CO2-Fußabdruck: Emissionen künstlicher Intelligenz | IdleForest",
                 seoDescription: "Verstehe den CO2-Fußabdruck von KI-Modellen wie ChatGPT und alltäglicher KI-Nutzung. Erfahre, wie Inferenz, Hardware und Rechenzentrums-Overhead digitale Emissionen formen.",
                 queryChips: ["KI CO2-Fußabdruck", "ChatGPT CO2-Fußabdruck", "LLM Emissionen", "KI CO2"],
-                eyebrow: "Hub für KI-Emissionen",
-                intro: "Künstliche Intelligenz bietet enorme Möglichkeiten, benötigt aber auch rechenintensive Infrastruktur. Dieser Hub verbindet breite Suchanfragen zu KI-Emissionen mit praktischen Rechnerseiten und verständlicher Methodik.",
+                eyebrow: "Leitfaden zu KI-Emissionen",
+                intro: "Künstliche Intelligenz bietet enorme Möglichkeiten, nutzt aber auch rechenintensive Infrastruktur. Nutze diesen Leitfaden, um die wichtigsten Treiber von KI-Emissionen zu verstehen und die Tools zu vergleichen, die du wirklich verwendest.",
                 categoryFilter: ["AI"],
                 sections: [
                     {
-                        title: "Training und Inferenz sind unterschiedliche Suchintentionen",
-                        body: "Schlagzeilen zum Training zeigen die Größe der Modellentwicklung, während sich die meisten Verbrauchersuchen in Wahrheit auf Inferenz beziehen: die wiederholte tägliche Nutzung von Tools wie ChatGPT."
+                        title: "Training und Alltagsnutzung sind unterschiedliche Fragen",
+                        body: "Schlagzeilen zum Training zeigen die Größe der Modellentwicklung, während die meisten Menschen eigentlich die alltägliche Inferenz verstehen wollen: die wiederholte Nutzung von Tools wie ChatGPT."
                     },
                     {
                         title: "Hardware und Kühlung zählen weiterhin",
@@ -365,26 +365,26 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Mit Inferenz beginnen, nicht nur mit Trainings-Schlagzeilen",
-                        body: "Der Großteil der Verbrauchernachfrage dreht sich um Alltagstools wie ChatGPT. Der Hub sollte daher erklären, wie sich wiederholte Inferenz über die Zeit aufsummiert."
+                        title: "Mit der alltäglichen KI-Nutzung beginnen",
+                        body: "Für die meisten Menschen geht es vor allem um die wiederholte Nutzung von Tools wie ChatGPT und nicht um einmalige Schlagzeilen zum Training."
                     },
                     {
-                        title: "Infrastruktur mit Nutzungsverhalten verbinden",
-                        body: "Menschen wollen verstehen, warum KI schwerer wirkt als eine normale Webanfrage. Verbinde Prompts, Modellgröße, Beschleuniger und Kühlung in einer Erklärung."
+                        title: "Prompts mit Infrastruktur verbinden",
+                        body: "Prompt-Menge, Modellgröße, Beschleuniger-Hardware und Kühlung prägen den Fußabdruck gemeinsam."
                     },
                     {
-                        title: "Besucher zur stärksten Beweis-Seite führen",
-                        body: "Dieser Hub sollte immer wieder auf die ChatGPT-Seite und künftige KI-Benchmark-Seiten verweisen."
+                        title: "Die passendste Tool-Seite öffnen",
+                        body: "Nach dem Überblick ist der beste nächste Schritt meist die Rechnerseite für das KI-Tool, das du am häufigsten nutzt."
                     }
                 ],
                 faq: [
                     {
-                        question: "Warum ist dünner Inhalt zum KI-CO2-Fußabdruck schwer zu ranken?",
-                        answer: "Weil Suchende Erklärung, Methodik und Kontext wollen. Ein dünner Hub konkurriert selten gut, wenn er nicht klar eigene Einordnung oder Daten bietet."
+                        question: "Warum gibt es nicht die eine einfache KI-Zahl?",
+                        answer: "Weil Emissionen je nach Modellgröße, Hardware, Prompt-Menge und Nutzungshäufigkeit variieren."
                     },
                     {
-                        question: "Wobei sollte dieser KI-Hub helfen?",
-                        answer: "Er sollte die wichtigsten Treiber von KI-Emissionen erklären und dann zur Rechnerseite führen, die am besten zur Suchanfrage passt."
+                        question: "Was sollte ich nach diesem Leitfaden tun?",
+                        answer: "Beginne mit den größten Treibern und öffne dann die Rechnerseite für das KI-Tool, das du tatsächlich nutzt."
                     }
                 ],
                 featuredComparisonPairs: []
@@ -394,13 +394,13 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Huella de carbono de la IA: emisiones de la inteligencia artificial | IdleForest",
                 seoDescription: "Entiende la huella de carbono de modelos de IA como ChatGPT y del uso cotidiano de la IA. Aprende cómo la inferencia, el hardware y la sobrecarga del centro de datos influyen en las emisiones digitales.",
                 queryChips: ["huella de carbono de la IA", "huella de carbono de ChatGPT", "emisiones de LLM", "IA CO2"],
-                eyebrow: "Hub de emisiones de IA",
-                intro: "La inteligencia artificial ofrece capacidades enormes, pero también necesita infraestructura de cómputo intensiva. Este hub conecta búsquedas amplias sobre emisiones de IA con páginas de cálculo prácticas y una metodología más clara.",
+                eyebrow: "Guía de emisiones de la IA",
+                intro: "La inteligencia artificial ofrece capacidades enormes, pero también depende de infraestructura de cómputo intensiva. Usa esta guía para entender qué impulsa las emisiones de la IA y comparar las herramientas que realmente utilizas.",
                 categoryFilter: ["AI"],
                 sections: [
                     {
-                        title: "Entrenamiento e inferencia responden a intenciones distintas",
-                        body: "Los titulares sobre entrenamiento muestran la escala del desarrollo de modelos, mientras que la mayoría de búsquedas de usuarios realmente tratan sobre inferencia: el uso cotidiano repetido de herramientas como ChatGPT."
+                        title: "Entrenamiento y uso cotidiano son preguntas distintas",
+                        body: "Los titulares sobre entrenamiento muestran la escala del desarrollo de modelos, mientras que la mayoría de personas realmente quiere entender la inferencia cotidiana: el uso repetido de herramientas como ChatGPT."
                     },
                     {
                         title: "El hardware y la refrigeración siguen importando",
@@ -409,26 +409,26 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Empieza por la inferencia, no solo por los titulares sobre entrenamiento",
-                        body: "La mayor parte de la demanda de búsqueda de usuarios gira en torno a herramientas diarias como ChatGPT, así que el hub debe explicar cómo la inferencia repetida se acumula con el tiempo."
+                        title: "Empieza por el uso cotidiano de la IA",
+                        body: "Para la mayoría de personas, la pregunta principal es el uso repetido de herramientas como ChatGPT y no los titulares puntuales sobre entrenamiento."
                     },
                     {
-                        title: "Conecta la infraestructura con el comportamiento de uso",
-                        body: "La gente quiere entender por qué la IA parece más pesada que una petición web normal. Une prompts, tamaño del modelo, aceleradores y refrigeración en una sola explicación."
+                        title: "Conecta los prompts con la infraestructura",
+                        body: "El volumen de prompts, el tamaño del modelo, el hardware acelerador y la refrigeración influyen juntos en la huella."
                     },
                     {
-                        title: "Lleva al visitante a la página con más evidencia",
-                        body: "Este hub debe dirigir repetidamente a la página de ChatGPT y a futuras páginas de benchmarks de IA."
+                        title: "Abre la página de la herramienta más cercana",
+                        body: "Después de este resumen, el mejor paso suele ser abrir la calculadora de la herramienta de IA que más usas."
                     }
                 ],
                 faq: [
                     {
-                        question: "¿Por qué es difícil posicionar contenido fino sobre huella de carbono de la IA?",
-                        answer: "Porque los usuarios buscan explicación, metodología y contexto. Un hub fino rara vez compite bien si no aporta un enfoque o datos realmente propios."
+                        question: "¿Por qué no existe una sola cifra simple para la IA?",
+                        answer: "Porque las emisiones cambian según el tamaño del modelo, el hardware, el volumen de prompts y la frecuencia de uso."
                     },
                     {
-                        question: "¿Qué debería ayudar a hacer este hub de IA?",
-                        answer: "Debería ayudar a entender los grandes impulsores de las emisiones de la IA y luego llevar a la calculadora que mejor encaje con la búsqueda."
+                        question: "¿Qué debería hacer después de leer esta guía?",
+                        answer: "Empieza por los factores que más pesan y luego abre la calculadora de la herramienta de IA que realmente usas."
                     }
                 ],
                 featuredComparisonPairs: []
@@ -438,13 +438,13 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Pegada de carbono da IA: emissões da inteligência artificial | IdleForest",
                 seoDescription: "Compreende a pegada de carbono de modelos de IA como o ChatGPT e do uso diário de IA. Aprende como a inferência, o hardware e a sobrecarga do centro de dados moldam as emissões digitais.",
                 queryChips: ["pegada de carbono da IA", "pegada de carbono do ChatGPT", "emissões de LLM", "IA CO2"],
-                eyebrow: "Hub de emissões de IA",
-                intro: "A inteligência artificial oferece capacidades impressionantes, mas também exige infraestrutura de computação intensiva. Este hub liga pesquisas amplas sobre emissões de IA a páginas de cálculo práticas e a uma metodologia mais clara.",
+                eyebrow: "Guia de emissões de IA",
+                intro: "A inteligência artificial oferece capacidades impressionantes, mas também depende de infraestrutura de computação intensiva. Usa este guia para perceber o que mais pesa nas emissões de IA e comparar as ferramentas que realmente usas.",
                 categoryFilter: ["AI"],
                 sections: [
                     {
-                        title: "Treino e inferência respondem a intenções diferentes",
-                        body: "As manchetes sobre treino mostram a escala do desenvolvimento dos modelos, enquanto a maioria das pesquisas dos utilizadores diz realmente respeito à inferência: o uso repetido no dia a dia de ferramentas como o ChatGPT."
+                        title: "Treino e uso diário são perguntas diferentes",
+                        body: "As manchetes sobre treino mostram a escala do desenvolvimento dos modelos, enquanto a maioria das pessoas quer perceber a inferência do dia a dia: o uso repetido de ferramentas como o ChatGPT."
                     },
                     {
                         title: "Hardware e arrefecimento continuam a contar",
@@ -453,26 +453,26 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Começa pela inferência, não apenas pelas manchetes sobre treino",
-                        body: "A maior parte da procura dos utilizadores gira em torno de ferramentas diárias como o ChatGPT, por isso o hub deve explicar como a inferência repetida se acumula ao longo do tempo."
+                        title: "Começa pelo uso diário da IA",
+                        body: "Para a maior parte das pessoas, a questão principal é o uso repetido de ferramentas como o ChatGPT e não as manchetes pontuais sobre treino."
                     },
                     {
-                        title: "Liga a infraestrutura ao comportamento de utilização",
-                        body: "As pessoas querem perceber porque a IA parece mais pesada do que um pedido web normal. Junta prompts, dimensão do modelo, aceleradores e arrefecimento numa só explicação."
+                        title: "Liga os prompts à infraestrutura",
+                        body: "Volume de prompts, dimensão do modelo, hardware acelerador e arrefecimento moldam a pegada em conjunto."
                     },
                     {
-                        title: "Leva os visitantes para a página mais forte",
-                        body: "Este hub deve apontar repetidamente para a página do ChatGPT e para futuras páginas de benchmark de IA."
+                        title: "Abre a página da ferramenta mais próxima",
+                        body: "Depois deste resumo, o melhor passo costuma ser abrir a calculadora da ferramenta de IA que usas mais."
                     }
                 ],
                 faq: [
                     {
-                        question: "Porque é difícil posicionar conteúdo fraco sobre a pegada de carbono da IA?",
-                        answer: "Porque quem procura quer explicação, metodologia e contexto. Um hub fraco raramente compete bem se não acrescentar enquadramento próprio ou dados."
+                        question: "Porque não existe um único número simples para a IA?",
+                        answer: "Porque as emissões variam com a dimensão do modelo, o hardware, o volume de prompts e a frequência de utilização."
                     },
                     {
-                        question: "Em que deve ajudar este hub de IA?",
-                        answer: "Deve ajudar a perceber os principais motores das emissões de IA e depois encaminhar para a calculadora que melhor corresponde à pesquisa."
+                        question: "O que devo fazer depois de ler este guia?",
+                        answer: "Começa pelos fatores com maior impacto e depois abre a calculadora da ferramenta de IA que realmente usas."
                     }
                 ],
                 featuredComparisonPairs: []
@@ -482,13 +482,13 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Empreinte carbone de l'IA : émissions de l'intelligence artificielle | IdleForest",
                 seoDescription: "Comprenez l'empreinte carbone de modèles d'IA comme ChatGPT et des usages quotidiens de l'IA. Découvrez comment l'inférence, le matériel et la surcharge des centres de données façonnent les émissions numériques.",
                 queryChips: ["empreinte carbone de l'IA", "empreinte carbone de ChatGPT", "émissions des LLM", "IA CO2"],
-                eyebrow: "Hub des émissions liées à l'IA",
-                intro: "L'intelligence artificielle offre des capacités remarquables, mais elle exige aussi une infrastructure de calcul intensive. Ce hub relie les recherches générales sur les émissions de l'IA à des pages de calcul pratiques et à une méthodologie plus claire.",
+                eyebrow: "Guide des émissions liées à l'IA",
+                intro: "L'intelligence artificielle offre des capacités remarquables, mais elle dépend aussi d'une infrastructure de calcul intensive. Utilisez ce guide pour comprendre ce qui pèse le plus dans les émissions de l'IA et comparer les outils que vous utilisez réellement.",
                 categoryFilter: ["AI"],
                 sections: [
                     {
-                        title: "Entraînement et inférence répondent à des intentions différentes",
-                        body: "Les gros titres sur l'entraînement montrent l'ampleur du développement des modèles, alors que la plupart des recherches d'utilisateurs portent en réalité sur l'inférence : l'usage répété au quotidien d'outils comme ChatGPT."
+                        title: "Entraînement et usage quotidien sont deux questions différentes",
+                        body: "Les gros titres sur l'entraînement montrent l'ampleur du développement des modèles, alors que la plupart des gens veulent surtout comprendre l'inférence au quotidien : l'usage répété d'outils comme ChatGPT."
                     },
                     {
                         title: "Le matériel et le refroidissement comptent toujours",
@@ -497,26 +497,26 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Commencer par l'inférence, pas seulement par les gros titres sur l'entraînement",
-                        body: "La majorité de la demande des utilisateurs concerne des outils du quotidien comme ChatGPT. Le hub doit donc expliquer comment l'inférence répétée s'accumule dans le temps."
+                        title: "Commencer par l'usage quotidien de l'IA",
+                        body: "Pour la plupart des gens, la vraie question concerne l'usage répété d'outils comme ChatGPT, et non les gros titres ponctuels sur l'entraînement."
                     },
                     {
-                        title: "Relier l'infrastructure au comportement d'usage",
-                        body: "Les gens veulent comprendre pourquoi l'IA semble plus lourde qu'une requête web classique. Reliez prompts, taille du modèle, accélérateurs et refroidissement dans une seule explication."
+                        title: "Relier les prompts à l'infrastructure",
+                        body: "Le volume de prompts, la taille du modèle, le matériel accélérateur et le refroidissement influencent l'empreinte ensemble."
                     },
                     {
-                        title: "Orienter les visiteurs vers la page la plus forte",
-                        body: "Ce hub doit orienter régulièrement vers la page ChatGPT et vers de futures pages de benchmark IA."
+                        title: "Ouvrir la page de l'outil le plus proche",
+                        body: "Après cette vue d'ensemble, la meilleure étape suivante est souvent d'ouvrir le calculateur de l'outil d'IA que vous utilisez le plus."
                     }
                 ],
                 faq: [
                     {
-                        question: "Pourquoi un contenu superficiel sur l'empreinte carbone de l'IA est-il difficile à positionner ?",
-                        answer: "Parce que les chercheurs veulent de l'explication, de la méthodologie et du contexte. Un hub superficiel rivalise rarement bien sans cadrage original ou données utiles."
+                        question: "Pourquoi n'y a-t-il pas un seul chiffre simple pour l'IA ?",
+                        answer: "Parce que les émissions varient selon la taille du modèle, le matériel, le volume de prompts et la fréquence d'usage."
                     },
                     {
-                        question: "Que doit permettre ce hub IA ?",
-                        answer: "Il doit aider à comprendre les principaux moteurs des émissions de l'IA, puis orienter vers le calculateur qui correspond le mieux à la requête."
+                        question: "Que faire après avoir lu ce guide ?",
+                        answer: "Commencez par les facteurs les plus importants, puis ouvrez le calculateur de l'outil d'IA que vous utilisez réellement."
                     }
                 ],
                 featuredComparisonPairs: []
@@ -531,8 +531,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Streaming Carbon Footprint: YouTube, Netflix, Spotify | IdleForest",
                 seoDescription: "Compare the carbon emissions of major streaming platforms and everyday viewing habits. Understand how devices, resolution, and autoplay shape the footprint.",
                 queryChips: ["streaming carbon footprint", "netflix emissions", "youtube carbon footprint", "spotify co2"],
-                eyebrow: "Streaming emissions hub",
-                intro: "Streaming looks simple from the front end, but every viewing session depends on delivery infrastructure, transmission networks, and the device doing the playback. This hub is meant to connect that bigger picture to individual calculator pages.",
+                eyebrow: "Streaming emissions guide",
+                intro: "Streaming feels simple, but every session depends on platform infrastructure, networks, and the device doing playback. Use this guide to compare common streaming habits and then jump into the service you use most.",
                 categoryFilter: ["Streaming"],
                 sections: [
                     {
@@ -546,16 +546,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Frame the device as part of the answer",
-                        body: "Streaming searchers often assume the platform is the whole story, but playback device and resolution can change the footprint materially."
+                        title: "Include the device in the picture",
+                        body: "Phones, TVs, laptops, and consoles can change the footprint even when the service stays the same."
                     },
                     {
-                        title: "Use the hub to segment intent",
-                        body: "Long-form video, short-form feeds, music streaming, and live streams are related but not identical search intents. This hub should make those lanes clearer."
+                        title: "Separate different streaming habits",
+                        body: "Long-form video, short-form feeds, music streaming, and live streams may look similar on the surface but can differ a lot in real use."
                     },
                     {
-                        title: "Promote the strongest compare pages",
-                        body: "Comparisons like Netflix vs YouTube or YouTube vs TikTok are natural next clicks and help strengthen the cluster when they are genuinely useful."
+                        title: "Use comparisons when choosing between services",
+                        body: "Side-by-side comparisons like Netflix vs YouTube or YouTube vs TikTok are most useful when you are deciding between two specific habits."
                     }
                 ],
                 faq: [
@@ -564,8 +564,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "The biggest swing factors are often watch time, resolution, autoplay behavior, and the device used for playback."
                     },
                     {
-                        question: "Why is a streaming parent page useful?",
-                        answer: "It helps connect broad streaming queries to the specific calculators and comparisons that best match the actual viewing habit."
+                        question: "How should I compare streaming apps?",
+                        answer: "Start with the kind of watching or listening you do most, then open the calculator or comparison page that matches it."
                     }
                 ],
                 featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"]]
@@ -575,8 +575,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Streaming-CO2-Fußabdruck: YouTube, Netflix, Spotify | IdleForest",
                 seoDescription: "Vergleiche die CO2-Emissionen großer Streaming-Plattformen und typischer Sehgewohnheiten. Verstehe, wie Geräte, Auflösung und Autoplay den Fußabdruck beeinflussen.",
                 queryChips: ["Streaming CO2-Fußabdruck", "Netflix Emissionen", "YouTube CO2-Fußabdruck", "Spotify CO2"],
-                eyebrow: "Hub für Streaming-Emissionen",
-                intro: "Streaming wirkt an der Oberfläche einfach, doch jede Sitzung hängt von Auslieferungsinfrastruktur, Übertragungsnetzen und dem Gerät ab, das die Wiedergabe übernimmt. Dieser Hub verbindet dieses größere Bild mit einzelnen Rechnerseiten.",
+                eyebrow: "Leitfaden zu Streaming-Emissionen",
+                intro: "Streaming wirkt einfach, doch jede Sitzung hängt von Plattform-Infrastruktur, Netzwerken und dem Wiedergabegerät ab. Nutze diesen Leitfaden, um typische Streaming-Gewohnheiten zu vergleichen und dann zum Dienst zu springen, den du am meisten nutzt.",
                 categoryFilter: ["Streaming"],
                 sections: [
                     {
@@ -590,16 +590,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Das Gerät als Teil der Antwort zeigen",
-                        body: "Wer nach Streaming sucht, nimmt oft an, dass nur die Plattform zählt. Tatsächlich können Wiedergabegerät und Auflösung den Fußabdruck deutlich verändern."
+                        title: "Das Gerät mitdenken",
+                        body: "Handys, Fernseher, Laptops und Konsolen können den Fußabdruck verändern, selbst wenn derselbe Dienst genutzt wird."
                     },
                     {
-                        title: "Den Hub zur Segmentierung der Suchintention nutzen",
-                        body: "Langformatiges Video, Kurzvideo-Feeds, Musikstreaming und Livestreams sind verwandt, aber keine identischen Suchintentionen. Dieser Hub sollte diese Unterschiede klarer machen."
+                        title: "Unterschiedliche Streaming-Gewohnheiten trennen",
+                        body: "Langformatiges Video, Kurzvideo-Feeds, Musikstreaming und Livestreams wirken ähnlich, können sich in der tatsächlichen Nutzung aber deutlich unterscheiden."
                     },
                     {
-                        title: "Die stärksten Vergleichsseiten hervorheben",
-                        body: "Vergleiche wie Netflix vs YouTube oder YouTube vs TikTok sind natürliche nächste Klicks und stärken den Cluster, wenn sie wirklich hilfreich sind."
+                        title: "Vergleiche für konkrete Entscheidungen nutzen",
+                        body: "Direkte Vergleiche wie Netflix vs YouTube oder YouTube vs TikTok helfen vor allem dann, wenn du zwischen zwei konkreten Gewohnheiten abwägst."
                     }
                 ],
                 faq: [
@@ -608,8 +608,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Die größten Einflussfaktoren sind oft Sehzeit, Auflösung, Autoplay-Verhalten und das Wiedergabegerät."
                     },
                     {
-                        question: "Warum ist eine übergeordnete Streaming-Seite nützlich?",
-                        answer: "Sie verbindet breite Streaming-Suchanfragen mit den konkreten Rechnern und Vergleichen, die am besten zur tatsächlichen Sehgewohnheit passen."
+                        question: "Wie sollte ich Streaming-Apps vergleichen?",
+                        answer: "Beginne mit der Art des Schauens oder Hörens, die bei dir am häufigsten vorkommt, und öffne dann den passenden Rechner oder Vergleich."
                     }
                 ],
                 featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"]]
@@ -619,8 +619,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Huella de carbono del streaming: YouTube, Netflix, Spotify | IdleForest",
                 seoDescription: "Compara las emisiones de carbono de las principales plataformas de streaming y de los hábitos de consumo más comunes. Entiende cómo influyen el dispositivo, la resolución y el autoplay.",
                 queryChips: ["huella de carbono del streaming", "emisiones de Netflix", "huella de carbono de YouTube", "Spotify CO2"],
-                eyebrow: "Hub de emisiones del streaming",
-                intro: "El streaming parece simple desde la superficie, pero cada sesión depende de la infraestructura de entrega, las redes de transmisión y el dispositivo que reproduce el contenido. Este hub conecta ese contexto con las calculadoras individuales.",
+                eyebrow: "Guía de emisiones del streaming",
+                intro: "El streaming parece simple, pero cada sesión depende de la infraestructura de la plataforma, las redes y el dispositivo que reproduce el contenido. Usa esta guía para comparar hábitos de streaming y luego entrar en el servicio que más utilizas.",
                 categoryFilter: ["Streaming"],
                 sections: [
                     {
@@ -634,16 +634,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Presentar el dispositivo como parte de la respuesta",
-                        body: "Quien busca sobre streaming suele pensar que la plataforma es toda la historia, pero el dispositivo y la resolución pueden cambiar mucho la huella."
+                        title: "Incluir el dispositivo en la ecuación",
+                        body: "Móviles, televisores, portátiles y consolas pueden cambiar la huella incluso cuando el servicio es el mismo."
                     },
                     {
-                        title: "Usar el hub para segmentar la intención",
-                        body: "Vídeo largo, feeds de vídeo corto, música en streaming y directos son intenciones relacionadas, pero no idénticas. Este hub debe dejar esas diferencias más claras."
+                        title: "Separar hábitos de streaming diferentes",
+                        body: "Vídeo largo, feeds de vídeo corto, música en streaming y directos pueden parecer parecidos, pero cambian bastante en el uso real."
                     },
                     {
-                        title: "Promocionar las comparativas más fuertes",
-                        body: "Comparaciones como Netflix vs YouTube o YouTube vs TikTok son clics siguientes naturales y fortalecen el clúster cuando realmente aportan valor."
+                        title: "Usar comparaciones para elegir entre servicios",
+                        body: "Comparaciones directas como Netflix vs YouTube o YouTube vs TikTok son más útiles cuando estás decidiendo entre dos hábitos concretos."
                     }
                 ],
                 faq: [
@@ -652,8 +652,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Los factores que más suelen mover la cifra son el tiempo de visionado, la resolución, el autoplay y el dispositivo usado para reproducir."
                     },
                     {
-                        question: "¿Por qué es útil una página padre de streaming?",
-                        answer: "Ayuda a conectar consultas generales sobre streaming con las calculadoras y comparaciones que mejor representan el hábito real de consumo."
+                        question: "¿Cómo debería comparar apps de streaming?",
+                        answer: "Empieza por el tipo de consumo que más repites y luego abre la calculadora o comparación que mejor lo represente."
                     }
                 ],
                 featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"]]
@@ -663,8 +663,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Pegada de carbono do streaming: YouTube, Netflix, Spotify | IdleForest",
                 seoDescription: "Compara as emissões de carbono das principais plataformas de streaming e dos hábitos de consumo mais comuns. Percebe como o dispositivo, a resolução e o autoplay moldam a pegada.",
                 queryChips: ["pegada de carbono do streaming", "emissões da Netflix", "pegada de carbono do YouTube", "Spotify CO2"],
-                eyebrow: "Hub de emissões do streaming",
-                intro: "O streaming parece simples à superfície, mas cada sessão depende da infraestrutura de entrega, das redes de transmissão e do dispositivo que faz a reprodução. Este hub liga esse contexto às calculadoras individuais.",
+                eyebrow: "Guia de emissões do streaming",
+                intro: "O streaming parece simples, mas cada sessão depende da infraestrutura da plataforma, das redes e do dispositivo que faz a reprodução. Usa este guia para comparar hábitos de streaming e depois entrar no serviço que mais usas.",
                 categoryFilter: ["Streaming"],
                 sections: [
                     {
@@ -678,16 +678,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Mostrar o dispositivo como parte da resposta",
-                        body: "Quem pesquisa sobre streaming tende a assumir que a plataforma é toda a história, mas o dispositivo de reprodução e a resolução podem alterar bastante a pegada."
+                        title: "Incluir o dispositivo na equação",
+                        body: "Telemóveis, televisões, portáteis e consolas podem alterar a pegada mesmo quando o serviço é o mesmo."
                     },
                     {
-                        title: "Usar o hub para segmentar a intenção",
-                        body: "Vídeo longo, feeds de vídeo curto, música em streaming e diretos são intenções relacionadas, mas não idênticas. Este hub deve tornar essas diferenças mais claras."
+                        title: "Separar hábitos de streaming diferentes",
+                        body: "Vídeo longo, feeds de vídeo curto, música em streaming e diretos podem parecer parecidos, mas variam bastante no uso real."
                     },
                     {
-                        title: "Promover as comparações mais fortes",
-                        body: "Comparações como Netflix vs YouTube ou YouTube vs TikTok são cliques seguintes naturais e fortalecem o cluster quando são realmente úteis."
+                        title: "Usar comparações para escolher entre serviços",
+                        body: "Comparações diretas como Netflix vs YouTube ou YouTube vs TikTok são mais úteis quando estás a decidir entre dois hábitos concretos."
                     }
                 ],
                 faq: [
@@ -696,8 +696,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Os fatores que mais costumam mexer no valor são o tempo de visualização, a resolução, o autoplay e o dispositivo usado na reprodução."
                     },
                     {
-                        question: "Porque é útil uma página principal de streaming?",
-                        answer: "Ajuda a ligar pesquisas amplas sobre streaming às calculadoras e comparações que melhor representam o hábito real de consumo."
+                        question: "Como devo comparar apps de streaming?",
+                        answer: "Começa pelo tipo de consumo que mais repetes e depois abre a calculadora ou comparação que melhor o representa."
                     }
                 ],
                 featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"]]
@@ -707,8 +707,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Empreinte carbone du streaming : YouTube, Netflix, Spotify | IdleForest",
                 seoDescription: "Comparez les émissions carbone des principales plateformes de streaming et des habitudes de visionnage courantes. Comprenez comment l'appareil, la résolution et l'autoplay influencent l'empreinte.",
                 queryChips: ["empreinte carbone du streaming", "émissions de Netflix", "empreinte carbone de YouTube", "Spotify CO2"],
-                eyebrow: "Hub des émissions du streaming",
-                intro: "Le streaming paraît simple en surface, mais chaque session dépend de l'infrastructure de diffusion, des réseaux de transmission et de l'appareil qui assure la lecture. Ce hub relie ce contexte aux calculateurs individuels.",
+                eyebrow: "Guide des émissions du streaming",
+                intro: "Le streaming paraît simple, mais chaque session dépend de l'infrastructure de la plateforme, des réseaux et de l'appareil qui assure la lecture. Utilisez ce guide pour comparer les habitudes de streaming puis ouvrir le service que vous utilisez le plus.",
                 categoryFilter: ["Streaming"],
                 sections: [
                     {
@@ -722,16 +722,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Montrer que l'appareil fait partie de la réponse",
-                        body: "Les chercheurs supposent souvent que la plateforme explique tout, alors que l'appareil de lecture et la résolution peuvent modifier fortement l'empreinte."
+                        title: "Inclure l'appareil dans l'équation",
+                        body: "Téléphones, téléviseurs, ordinateurs portables et consoles peuvent modifier l'empreinte même quand le service reste le même."
                     },
                     {
-                        title: "Utiliser le hub pour segmenter l'intention",
-                        body: "Vidéo longue, flux de vidéos courtes, musique en streaming et live sont liés mais ne répondent pas à la même intention. Ce hub doit clarifier ces différences."
+                        title: "Séparer les différents usages du streaming",
+                        body: "Vidéo longue, flux de vidéos courtes, musique en streaming et live peuvent sembler proches, mais diffèrent beaucoup dans l'usage réel."
                     },
                     {
-                        title: "Mettre en avant les comparaisons les plus fortes",
-                        body: "Des comparaisons comme Netflix vs YouTube ou YouTube vs TikTok constituent des clics suivants naturels et renforcent le cluster lorsqu'elles sont réellement utiles."
+                        title: "Utiliser les comparaisons pour choisir entre services",
+                        body: "Des comparaisons directes comme Netflix vs YouTube ou YouTube vs TikTok sont surtout utiles quand vous hésitez entre deux usages concrets."
                     }
                 ],
                 faq: [
@@ -740,8 +740,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Les principaux facteurs sont souvent le temps de visionnage, la résolution, l'autoplay et l'appareil utilisé pour la lecture."
                     },
                     {
-                        question: "Pourquoi une page parent sur le streaming est-elle utile ?",
-                        answer: "Elle aide à relier les recherches générales sur le streaming aux calculateurs et comparaisons qui correspondent le mieux à l'usage réel."
+                        question: "Comment comparer des apps de streaming ?",
+                        answer: "Commencez par le type de visionnage ou d'écoute que vous répétez le plus, puis ouvrez le calculateur ou la comparaison qui lui correspond."
                     }
                 ],
                 featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"]]
@@ -756,8 +756,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "What Is a Digital Carbon Footprint? Definition and Guide | IdleForest",
                 seoDescription: "Learn what a digital carbon footprint is and how browsing, meetings, social media, and everyday internet use contribute to emissions.",
                 queryChips: ["digital carbon footprint", "internet emissions", "reduce digital footprint", "carbon footprint of internet"],
-                eyebrow: "Digital sustainability hub",
-                intro: "A digital carbon footprint is the emissions impact created by the devices, networks, and data centers supporting your online activity. This hub is designed to connect that broad concept to practical pages about browsing, work, and social habits.",
+                eyebrow: "Digital emissions guide",
+                intro: "A digital carbon footprint is the emissions impact created by the devices, networks, and data centers behind your online activity. Use this guide to connect that broad idea to everyday browsing, work, and social habits.",
                 categoryFilter: ["Browsing", "Social", "Work"],
                 sections: [
                     {
@@ -771,16 +771,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Own the definition query",
-                        body: "This page should act as the conceptual parent for browsing, work, and social emissions rather than just another thin collection page."
+                        title: "Start with the activities you repeat most",
+                        body: "Use this page as a simple overview, then jump into the calculator that best matches your browsing, meeting, or social habit."
                     },
                     {
                         title: "Translate abstract infrastructure into habits",
-                        body: "Searchers want to know how meetings, tabs, feeds, and media habits turn into emissions. This page should make that link explicit."
+                        body: "People want to know how meetings, tabs, feeds, and media habits turn into emissions. This page should make that link explicit."
                     },
                     {
-                        title: "Point to the most practical next steps",
-                        body: "The strongest child pages for this hub are usually Chrome, Zoom, Google Meet, and the biggest social or video habits."
+                        title: "Follow the biggest next steps",
+                        body: "The most useful next pages are usually browsers, meetings, and the social or video habits that take the most time."
                     }
                 ],
                 faq: [
@@ -800,8 +800,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Was ist ein digitaler CO2-Fußabdruck? Definition und Leitfaden | IdleForest",
                 seoDescription: "Erfahre, was ein digitaler CO2-Fußabdruck ist und wie Browsing, Meetings, Social Media und alltägliche Internetnutzung zu Emissionen beitragen.",
                 queryChips: ["digitaler CO2-Fußabdruck", "Internet Emissionen", "digitalen Fußabdruck reduzieren", "CO2-Fußabdruck des Internets"],
-                eyebrow: "Hub für digitale Nachhaltigkeit",
-                intro: "Ein digitaler CO2-Fußabdruck ist die Emissionswirkung, die durch Geräte, Netzwerke und Rechenzentren entsteht, welche deine Online-Aktivitäten ermöglichen. Dieser Hub verbindet das breite Konzept mit praktischen Seiten zu Browsing, Arbeit und Social-Gewohnheiten.",
+                eyebrow: "Leitfaden zu digitalen Emissionen",
+                intro: "Ein digitaler CO2-Fußabdruck ist die Emissionswirkung von Geräten, Netzwerken und Rechenzentren hinter deinen Online-Aktivitäten. Nutze diesen Leitfaden, um das breite Thema mit alltäglichem Browsing, Arbeit und Social-Gewohnheiten zu verbinden.",
                 categoryFilter: ["Browsing", "Social", "Work"],
                 sections: [
                     {
@@ -815,16 +815,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Die Definitions-Suchanfrage besetzen",
-                        body: "Diese Seite sollte als konzeptionelle Elternseite für Emissionen aus Browsing, Arbeit und Social Media dienen und nicht nur als weitere dünne Sammlungsseite."
+                        title: "Mit den Gewohnheiten anfangen, die du am häufigsten wiederholst",
+                        body: "Nutze diese Seite als einfachen Überblick und springe dann in den Rechner, der am besten zu deinem Browsing, deinen Meetings oder deinen Social-Gewohnheiten passt."
                     },
                     {
                         title: "Abstrakte Infrastruktur in Gewohnheiten übersetzen",
-                        body: "Suchende wollen wissen, wie Meetings, Tabs, Feeds und Mediengewohnheiten zu Emissionen werden. Diese Seite sollte diese Verbindung deutlich machen."
+                        body: "Menschen wollen wissen, wie Meetings, Tabs, Feeds und Mediengewohnheiten zu Emissionen werden. Diese Seite sollte diese Verbindung deutlich machen."
                     },
                     {
-                        title: "Auf die praktischsten nächsten Schritte verweisen",
-                        body: "Die stärksten Unterseiten für diesen Hub sind meist Chrome, Zoom, Google Meet und die größten Social- oder Video-Gewohnheiten."
+                        title: "Den wichtigsten nächsten Schritten folgen",
+                        body: "Die nützlichsten nächsten Seiten sind meist Browser, Meetings sowie die Social- oder Video-Gewohnheiten, die am meisten Zeit einnehmen."
                     }
                 ],
                 faq: [
@@ -844,8 +844,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "¿Qué es una huella de carbono digital? Definición y guía | IdleForest",
                 seoDescription: "Aprende qué es una huella de carbono digital y cómo la navegación, las reuniones, las redes sociales y el uso diario de internet contribuyen a las emisiones.",
                 queryChips: ["huella de carbono digital", "emisiones de internet", "reducir huella digital", "huella de carbono de internet"],
-                eyebrow: "Hub de sostenibilidad digital",
-                intro: "La huella de carbono digital es el impacto en emisiones creado por los dispositivos, redes y centros de datos que sostienen tu actividad online. Este hub conecta ese concepto amplio con páginas prácticas sobre navegación, trabajo y hábitos sociales.",
+                eyebrow: "Guía de emisiones digitales",
+                intro: "La huella de carbono digital es el impacto en emisiones creado por los dispositivos, redes y centros de datos detrás de tu actividad online. Usa esta guía para conectar esa idea general con hábitos cotidianos de navegación, trabajo y redes sociales.",
                 categoryFilter: ["Browsing", "Social", "Work"],
                 sections: [
                     {
@@ -859,16 +859,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Ganar la consulta de definición",
-                        body: "Esta página debe actuar como padre conceptual de las emisiones de navegación, trabajo y social, y no como otra simple página de colección."
+                        title: "Empieza por las actividades que más repites",
+                        body: "Usa esta página como una vista general sencilla y luego entra en la calculadora que mejor encaje con tu hábito de navegación, reuniones o redes sociales."
                     },
                     {
                         title: "Traducir infraestructura abstracta en hábitos",
-                        body: "Los usuarios quieren saber cómo reuniones, pestañas, feeds y hábitos de medios se convierten en emisiones. Esta página debe explicarlo de forma directa."
+                        body: "La gente quiere saber cómo reuniones, pestañas, feeds y hábitos de consumo se convierten en emisiones. Esta página debe explicarlo de forma directa."
                     },
                     {
-                        title: "Apuntar a los siguientes pasos más prácticos",
-                        body: "Las páginas hijas más fuertes de este hub suelen ser Chrome, Zoom, Google Meet y los mayores hábitos sociales o de vídeo."
+                        title: "Sigue los siguientes pasos más importantes",
+                        body: "Las páginas más útiles para seguir suelen ser navegadores, reuniones y los hábitos sociales o de vídeo a los que dedicas más tiempo."
                     }
                 ],
                 faq: [
@@ -888,8 +888,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "O que é uma pegada de carbono digital? Definição e guia | IdleForest",
                 seoDescription: "Aprende o que é uma pegada de carbono digital e como a navegação, as reuniões, as redes sociais e o uso diário da internet contribuem para as emissões.",
                 queryChips: ["pegada de carbono digital", "emissões da internet", "reduzir pegada digital", "pegada de carbono da internet"],
-                eyebrow: "Hub de sustentabilidade digital",
-                intro: "A pegada de carbono digital é o impacto em emissões criado pelos dispositivos, redes e centros de dados que suportam a tua atividade online. Este hub liga esse conceito amplo a páginas práticas sobre navegação, trabalho e hábitos sociais.",
+                eyebrow: "Guia de emissões digitais",
+                intro: "A pegada de carbono digital é o impacto em emissões criado pelos dispositivos, redes e centros de dados por trás da tua atividade online. Usa este guia para ligar essa ideia geral a hábitos do dia a dia em navegação, trabalho e social.",
                 categoryFilter: ["Browsing", "Social", "Work"],
                 sections: [
                     {
@@ -903,16 +903,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Ganhar a pesquisa de definição",
-                        body: "Esta página deve funcionar como a página conceptual principal para emissões de navegação, trabalho e social, em vez de ser apenas mais uma coleção fraca."
+                        title: "Começa pelas atividades que mais repetes",
+                        body: "Usa esta página como visão geral simples e depois entra na calculadora que melhor corresponde ao teu hábito de navegação, reuniões ou redes sociais."
                     },
                     {
                         title: "Traduzir infraestrutura abstrata em hábitos",
-                        body: "Quem pesquisa quer perceber como reuniões, separadores, feeds e hábitos de consumo se transformam em emissões. Esta página deve tornar essa ligação explícita."
+                        body: "As pessoas querem perceber como reuniões, separadores, feeds e hábitos de consumo se transformam em emissões. Esta página deve tornar essa ligação explícita."
                     },
                     {
-                        title: "Apontar para os próximos passos mais práticos",
-                        body: "As páginas-filhas mais fortes deste hub costumam ser Chrome, Zoom, Google Meet e os maiores hábitos sociais ou de vídeo."
+                        title: "Segue os próximos passos mais importantes",
+                        body: "As páginas mais úteis para continuar costumam ser browsers, reuniões e os hábitos sociais ou de vídeo em que passas mais tempo."
                     }
                 ],
                 faq: [
@@ -932,8 +932,8 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 seoTitle: "Qu'est-ce qu'une empreinte carbone numérique ? Définition et guide | IdleForest",
                 seoDescription: "Découvrez ce qu'est une empreinte carbone numérique et comment la navigation, les réunions, les réseaux sociaux et l'usage quotidien d'internet contribuent aux émissions.",
                 queryChips: ["empreinte carbone numérique", "émissions d'internet", "réduire son empreinte numérique", "empreinte carbone d'internet"],
-                eyebrow: "Hub de durabilité numérique",
-                intro: "L'empreinte carbone numérique correspond à l'impact en émissions créé par les appareils, les réseaux et les centres de données qui soutiennent votre activité en ligne. Ce hub relie ce concept large à des pages pratiques sur la navigation, le travail et les usages sociaux.",
+                eyebrow: "Guide des émissions numériques",
+                intro: "L'empreinte carbone numérique correspond à l'impact en émissions des appareils, réseaux et centres de données derrière votre activité en ligne. Utilisez ce guide pour relier cette idée générale à des usages quotidiens de navigation, de travail et de réseaux sociaux.",
                 categoryFilter: ["Browsing", "Social", "Work"],
                 sections: [
                     {
@@ -947,16 +947,16 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 ],
                 playbook: [
                     {
-                        title: "Occuper la requête de définition",
-                        body: "Cette page doit servir de parent conceptuel pour les émissions liées à la navigation, au travail et au social, plutôt que d'être une simple page de collection supplémentaire."
+                        title: "Commencer par les activités que vous répétez le plus",
+                        body: "Utilisez cette page comme vue d'ensemble simple, puis ouvrez le calculateur qui correspond le mieux à vos habitudes de navigation, de réunion ou de réseaux sociaux."
                     },
                     {
                         title: "Traduire l'infrastructure abstraite en habitudes",
-                        body: "Les chercheurs veulent comprendre comment réunions, onglets, flux et habitudes médias deviennent des émissions. Cette page doit rendre ce lien explicite."
+                        body: "Les gens veulent comprendre comment réunions, onglets, flux et habitudes médias deviennent des émissions. Cette page doit rendre ce lien explicite."
                     },
                     {
-                        title: "Orienter vers les prochaines étapes les plus utiles",
-                        body: "Les pages filles les plus fortes pour ce hub sont généralement Chrome, Zoom, Google Meet et les principaux usages sociaux ou vidéo."
+                        title: "Suivre les prochaines étapes les plus utiles",
+                        body: "Les pages les plus utiles pour continuer sont généralement les navigateurs, les réunions et les usages sociaux ou vidéo qui prennent le plus de temps."
                     }
                 ],
                 faq: [

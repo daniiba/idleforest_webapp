@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CarbonFootprintHubPage({ params }: PageProps) {
     const t = await getTranslations("CarbonFootprint");
     const hub = await getCarbonHub("overview", params.locale);
-    const showEnglishEnhancements = params.locale === "en";
     const categories = await getCarbonCategories();
     const featuredPages = (await getFeaturedCarbonPages()).map((page) => localizeCarbonData(page, params.locale));
     const allPages = categories
@@ -47,6 +46,29 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
         href: buildComparisonPath(slugA, slugB),
         label: `${allPages.find((page) => page.slug === slugA)?.app_name || slugA} vs ${allPages.find((page) => page.slug === slugB)?.app_name || slugB}`,
     }));
+    const heroCards = [
+        {
+            href: "/carbon-footprint/ai",
+            title: t("page.hub_cards.ai.title"),
+            description: t("page.hub_cards.ai.description"),
+            icon: <Leaf className="w-5 h-5" />,
+            className: "border-2 border-black bg-brand-yellow p-5 text-neutral-900",
+        },
+        {
+            href: "/carbon-footprint/streaming",
+            title: t("page.hub_cards.streaming.title"),
+            description: t("page.hub_cards.streaming.description"),
+            icon: <Trees className="w-5 h-5" />,
+            className: "border-2 border-black bg-white p-5 text-neutral-700",
+        },
+        {
+            href: "/carbon-footprint/digital-carbon-footprint",
+            title: t("page.hub_cards.work.title"),
+            description: t("page.hub_cards.work.description"),
+            icon: <Leaf className="w-5 h-5" />,
+            className: "border-2 border-black bg-white p-5 text-neutral-700",
+        },
+    ];
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -95,57 +117,27 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                            <div className="border-2 border-black bg-brand-yellow p-5">
-                                <div className="flex items-center gap-2 font-bold text-black mb-2">
-                                    <Leaf className="w-5 h-5" />
-                                    {t("page.hub_cards.ai.title")}
-                                </div>
-                                <p className="text-sm text-neutral-900">
-                                    {t("page.hub_cards.ai.description")}
-                                </p>
-                            </div>
-                            <div className="border-2 border-black bg-white p-5">
-                                <div className="flex items-center gap-2 font-bold text-black mb-2">
-                                    <Trees className="w-5 h-5" />
-                                    {t("page.hub_cards.streaming.title")}
-                                </div>
-                                <p className="text-sm text-neutral-700">
-                                    {t("page.hub_cards.streaming.description")}
-                                </p>
-                            </div>
-                            <div className="border-2 border-black bg-white p-5">
-                                <div className="flex items-center gap-2 font-bold text-black mb-2">
-                                    <Leaf className="w-5 h-5" />
-                                    {t("page.hub_cards.work.title")}
-                                </div>
-                                <p className="text-sm text-neutral-700">
-                                    {t("page.hub_cards.work.description")}
-                                </p>
-                            </div>
+                            {heroCards.map((card) => (
+                                <Link
+                                    key={card.href}
+                                    href={card.href}
+                                    className={`${card.className} group hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all`}
+                                >
+                                    <div className="flex items-center justify-between gap-3 mb-2">
+                                        <div className="flex items-center gap-2 font-bold text-black">
+                                            {card.icon}
+                                            {card.title}
+                                        </div>
+                                        <ArrowRight className="w-4 h-4 shrink-0 text-black transition-transform group-hover:translate-x-1" />
+                                    </div>
+                                    <p className="text-sm leading-relaxed">
+                                        {card.description}
+                                    </p>
+                                </Link>
+                            ))}
                         </div>
 
                         <div className="flex flex-wrap gap-3">
-                            <Link
-                                href="/carbon-footprint/ai"
-                                className="inline-flex items-center gap-2 border-2 border-black bg-black text-brand-yellow px-4 py-3 font-bold uppercase tracking-wide hover:-translate-y-0.5 transition-transform"
-                            >
-                                {t("page.explore_ai_emissions")}
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
-                            <Link
-                                href="/carbon-footprint/streaming"
-                                className="inline-flex items-center gap-2 border-2 border-black bg-white text-black px-4 py-3 font-bold uppercase tracking-wide hover:-translate-y-0.5 transition-transform"
-                            >
-                                {t("page.explore_streaming")}
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
-                            <Link
-                                href="/carbon-footprint/digital-carbon-footprint"
-                                className="inline-flex items-center gap-2 border-2 border-black bg-white text-black px-4 py-3 font-bold uppercase tracking-wide hover:-translate-y-0.5 transition-transform"
-                            >
-                                {t("page.explore_digital_footprint")}
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
                             <Link
                                 href="/carbon-footprint/leaderboard"
                                 className="inline-flex items-center gap-2 border-2 border-black bg-brand-gray text-black px-4 py-3 font-bold uppercase tracking-wide hover:-translate-y-0.5 transition-transform"
@@ -157,11 +149,10 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {showEnglishEnhancements ? (
                 <section className="mb-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] gap-6">
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Cluster strategy</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{hub?.title || "How this hub should help rankings"}</h2>
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_strategy_eyebrow")}</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{hub?.title || t("page.overview_strategy_title_fallback")}</h2>
                         <div className="space-y-4">
                             {(hub?.playbook || []).map((item) => (
                                 <div key={item.title} className="rounded-lg border border-black/10 bg-brand-gray p-4">
@@ -173,8 +164,8 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
 
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Highest estimated footprints</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">Where to start</h2>
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_top_emitters_eyebrow")}</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.overview_top_emitters_title")}</h2>
                         <div className="space-y-4">
                             {topEmitters.map((page, index) => (
                                 <Link
@@ -193,7 +184,6 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                         </div>
                     </div>
                 </section>
-                ) : null}
 
                 <section className="mb-12">
                     <div className="flex items-end justify-between gap-4 mb-6">
@@ -245,11 +235,11 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {showEnglishEnhancements ? (
+                {comparisonShortcuts.length ? (
                 <section className="mb-12">
                     <div className="mb-6">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">Comparison shortcuts</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black">Best supporting comparisons</h2>
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">{t("page.overview_comparisons_eyebrow")}</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black">{t("page.overview_comparisons_title")}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -261,10 +251,10 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                             >
                                 <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-2">{comparison.label}</h3>
                                 <p className="text-neutral-700 leading-relaxed mb-4">
-                                    Use these comparison pages to branch into side-by-side decision-making without leaving the carbon footprint cluster.
+                                    {t("page.overview_comparisons_description")}
                                 </p>
                                 <span className="inline-flex items-center gap-1 text-sm font-bold text-black">
-                                    Open comparison <ArrowRight className="w-4 h-4" />
+                                    {t("page.open_comparison")} <ArrowRight className="w-4 h-4" />
                                 </span>
                             </Link>
                         ))}

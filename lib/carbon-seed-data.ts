@@ -108,7 +108,7 @@ const BASE_CARBON_SEED_DATA = [
         "slug": "netflix",
         "seo_content": {
             "en": {
-                "intro": "Netflix streaming impact comes from data centers, content delivery networks, and your own viewing hardware. As resolutions hit 4K, the carbon cost per hour of entertainment continues to grow.",
+                "intro": "Netflix's carbon footprint comes from data centers, content delivery networks, and the device you watch on. If you're comparing Netflix emissions per hour, the biggest drivers are watch time, video quality, and whether you stream on a phone, laptop, TV, or console.",
                 "methodology_title": "How this Netflix estimate is built",
                 "methodology_summary": "The Netflix estimate is based on one hour of video streaming and reflects both digital infrastructure and the device used to watch the content.",
                 "methodology_bullets": [
@@ -292,7 +292,7 @@ const BASE_CARBON_SEED_DATA = [
         "icon_slug": "ollama",
         "seo_content": {
             "en": {
-                "intro": "ChatGPT uses energy for every request, response, and supporting system behind the model. This page helps explain how everyday AI use contributes to digital emissions.",
+                "intro": "ChatGPT's carbon footprint comes from every request, response, and supporting system behind the model. If you're asking how much CO2 ChatGPT produces, the answer depends on model size, response length, and how often you use it.",
                 "methodology_title": "How this ChatGPT estimate is built",
                 "methodology_summary": "This estimate converts repeated AI interactions into an hourly footprint by combining model inference demand with the surrounding data-center overhead.",
                 "methodology_bullets": [
@@ -391,7 +391,7 @@ const BASE_CARBON_SEED_DATA = [
         "slug": "zoom",
         "seo_content": {
             "en": {
-                "intro": "Zoom meetings provide environmental benefits by reducing travel, but they still require massive network and server power to connect participants globally.",
+                "intro": "A Zoom call can avoid travel emissions, but it still has a carbon footprint of its own. If you're estimating Zoom call emissions, the main factors are meeting length, participant count, camera use, and the device each person joins from.",
                 "methodology_title": "How this Zoom estimate is built",
                 "methodology_summary": "The Zoom estimate reflects one hour of video calling per participant and is shaped by both the streaming layer and the device handling the meeting.",
                 "methodology_bullets": [
@@ -653,7 +653,7 @@ const BASE_CARBON_SEED_DATA = [
         "slug": "youtube",
         "seo_content": {
             "en": {
-                "intro": "YouTube delivers billions of hours of video daily. The energy used for content processing and global streaming adds up across millions of devices.",
+                "intro": "YouTube's carbon footprint adds up across content processing, global delivery networks, and the device used for playback. If you're comparing YouTube emissions per hour or the CO2 cost of video streaming, watch time, resolution, and autoplay matter most.",
                 "methodology_title": "How this YouTube estimate is built",
                 "methodology_summary": "This estimate reflects one hour of YouTube viewing and bundles together platform infrastructure, network delivery, and playback on a consumer device.",
                 "methodology_bullets": [
@@ -1370,7 +1370,7 @@ const BASE_CARBON_SEED_DATA = [
         "icon_slug": "googlemeet",
         "seo_content": {
             "en": {
-                "intro": "Google Meet's browser-based video calls rely on Google's efficient data centers, yet the cumulative energy for global meetings remains significant.",
+                "intro": "Google Meet video calls rely on efficient Google infrastructure, but the combined energy use of meetings still adds up quickly. If you're comparing Google Meet with Zoom or estimating video meeting CO2, the biggest factors are call length, participant count, cameras on, and device choice.",
                 "faq": [
                     {
                         "question": "Does Google Meet use a lot of data?",

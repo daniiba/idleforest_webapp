@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ExternalLink, Gamepad2, Monitor, U
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
-import { buildComparisonPath, buildLocalizedAlternates, getLocalizedPath, getLocalizedUrl } from "@/lib/carbon-routing";
+import { buildComparisonPath, buildLocalizedAlternates, getLocalizedUrl } from "@/lib/carbon-routing";
 
 interface PageProps {
     params: {
@@ -246,47 +246,13 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                         {data.seo && (
                             <div className="mb-10 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
-                                    {t("page.why_this_page_matters")}
-                                </p>
-                                <p className="text-lg text-neutral-800 leading-relaxed mb-6">
+                                <p className="text-lg text-neutral-800 leading-relaxed">
                                     {data.seo.intro}
                                 </p>
-                                {data.seo.searchTopics?.length ? (
-                                    <div className="flex flex-wrap gap-2">
-                                        {data.seo.searchTopics.slice(0, 5).map((intent) => (
-                                            <span
-                                                key={intent}
-                                                className="inline-flex items-center rounded-full border border-black/10 bg-brand-gray px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-neutral-700"
-                                            >
-                                                {intent}
-                                            </span>
-                                        ))}
-                                    </div>
-                                ) : null}
                             </div>
                         )}
 
-                        <div className="mb-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)] gap-6 items-start">
-                            {data.seo?.searchTopics?.length ? (
-                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
-                                        {t("page.search_intent_eyebrow")}
-                                    </p>
-                                    <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
-                                        {t("page.search_intent_title")}
-                                    </h2>
-                                    <div className="space-y-3">
-                                        {data.seo.searchTopics.slice(0, 5).map((intent) => (
-                                            <div key={intent} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
-                                                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
-                                                <span>{intent}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ) : null}
-
+                        <div className="mb-12">
                             <CalculatorWidget data={data} />
                         </div>
 
@@ -543,24 +509,6 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
-                        {data.seo?.reviewer ? (
-                            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
-                                    {t("page.editorial_snapshot_eyebrow")}
-                                </p>
-                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
-                                    {t("page.trust_title")}
-                                </h3>
-                                <div className="space-y-3 text-sm leading-relaxed text-neutral-700">
-                                    <p>{t("page.trust_summary")}</p>
-                                    <p>{t("page.trust_canonical")} <span className="font-semibold text-black">{getLocalizedPath(canonicalPath, params.locale)}</span></p>
-                                    {reviewedDate ? (
-                                        <p>{t("page.trust_last_reviewed")} <span className="font-semibold text-black">{reviewedDate}</span></p>
-                                    ) : null}
-                                </div>
-                            </div>
-                        ) : null}
-
                         <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}

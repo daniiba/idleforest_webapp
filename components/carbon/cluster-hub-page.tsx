@@ -23,7 +23,6 @@ export function buildCarbonHubMetadata(hub: CarbonHubDefinition, locale: string)
 
 export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps) {
     const t = await getTranslations("CarbonFootprint");
-    const showEnglishEnhancements = locale === "en";
     const pages = (await getCarbonHubPages(hub)).map((page) => localizeCarbonData(page, locale));
     const topEmitters = [...pages]
         .sort((left, right) => right.co2_per_hour_grams - left.co2_per_hour_grams)
@@ -120,11 +119,10 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </div>
                 </section>
 
-                {showEnglishEnhancements ? (
                 <section className="mb-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] gap-6">
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Cluster playbook</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">What makes this hub worth ranking</h2>
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_playbook_eyebrow")}</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.hub_playbook_title")}</h2>
                         <div className="space-y-4">
                             {hub.playbook.map((item) => (
                                 <div key={item.title} className="rounded-lg border border-black/10 bg-brand-gray p-4">
@@ -136,8 +134,8 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </div>
 
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Highest estimated emitters</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">Best pages to enter this cluster</h2>
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_top_emitters_eyebrow")}</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.hub_top_emitters_title")}</h2>
                         <div className="space-y-4">
                             {topEmitters.map((page, index) => (
                                 <Link
@@ -156,7 +154,6 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                         </div>
                     </div>
                 </section>
-                ) : null}
 
                 <section className="mb-12">
                     <div className="mb-6">
@@ -206,11 +203,11 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </div>
                 </section>
 
-                {showEnglishEnhancements && featuredComparisons.length ? (
+                {featuredComparisons.length ? (
                     <section className="mb-12">
                         <div className="mb-6">
-                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">Comparison pathways</p>
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black">Best comparison pages in this cluster</h2>
+                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">{t("page.hub_comparisons_eyebrow")}</p>
+                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black">{t("page.hub_comparisons_title")}</h2>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -224,11 +221,11 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                         {pageA.app_name} vs {pageB.app_name}
                                     </h3>
                                     <p className="text-neutral-700 leading-relaxed mb-4">
-                                        Compare two closely related digital habits without leaving the cluster.
+                                        {t("page.hub_comparisons_description")}
                                     </p>
                                     <div className="flex items-center justify-between text-sm font-bold text-black">
                                         <span>{pageA.co2_per_hour_grams}{t("page.g_co2_hour")} vs {pageB.co2_per_hour_grams}{t("page.g_co2_hour")}</span>
-                                        <span className="inline-flex items-center gap-1">Open <ArrowRight className="w-4 h-4" /></span>
+                                        <span className="inline-flex items-center gap-1">{t("page.open_page")} <ArrowRight className="w-4 h-4" /></span>
                                     </div>
                                 </Link>
                             ))}
@@ -236,10 +233,9 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </section>
                 ) : null}
 
-                {showEnglishEnhancements ? (
                 <section className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Cluster FAQ</p>
-                    <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">Questions this hub should satisfy</h2>
+                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_faq_eyebrow")}</p>
+                    <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">{t("page.hub_faq_title")}</h2>
                     <div className="space-y-4">
                         {hub.faq.map((item) => (
                             <div key={item.question} className="rounded-lg border border-black/10 bg-brand-gray p-5">
@@ -249,7 +245,6 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                         ))}
                     </div>
                 </section>
-                ) : null}
             </div>
         </div>
     );
