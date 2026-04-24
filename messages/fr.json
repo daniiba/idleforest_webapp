@@ -1,827 +1,830 @@
 {
-  "Navigation": {
-    "download": "Télécharger",
-    "how_it_works": "Comment ça marche",
-    "impact": "Impact",
-    "about": "À propos",
-    "profile": "Profil",
-    "login": "Se connecter",
-    "rankings": "Classement",
-    "discord_bot": "Bot Discord",
-    "report": "Rapport",
-    "transparency": "Transparence",
-    "map": "Carte",
-    "business": "Entreprises",
-    "blog": "Blog",
-    "go_to_profile": "Aller au Profil",
-    "log_out": "Se déconnecter",
-    "language": "Langue"
-  },
-  "Landing": {
-    "hero": {
-      "title_line1": "TRANSFORMEZ VOTRE",
-      "title_line2": "INTERNET INUTILISÉ EN",
-      "title_line3": "VRAIS ARBRES",
-      "description": "Notre application de bureau utilise en toute sécurité votre bande passante inutilisée pour financer la plantation d'arbres dans le monde entier. Rejoignez des milliers de personnes qui ont un impact environnemental pendant que leur ordinateur est inactif.",
-      "safe_secure": "100% Sûr et Sécurisé",
-      "no_impact": "Aucun Impact sur les Performances",
-      "auto_plant": "Plantez des arbres automatiquement",
-      "security_label": "Sécurité",
-      "privacy_label": "Vie privée",
-      "performance_label": "Faible impact",
-      "security_detail": "Vos données sont en sécurité.",
-      "privacy_detail": "Aucune information personnelle n'est collectée.",
-      "performance_detail": "L'application est légère et n'interfère pas avec les performances de votre ordinateur."
+    "Navigation": {
+        "download": "Télécharger",
+        "how_it_works": "Comment ça marche",
+        "impact": "Impact",
+        "about": "À propos",
+        "profile": "Profil",
+        "login": "Se connecter",
+        "rankings": "Classement",
+        "discord_bot": "Bot Discord",
+        "report": "Rapport",
+        "transparency": "Transparence",
+        "map": "Carte",
+        "business": "Entreprises",
+        "blog": "Blog",
+        "go_to_profile": "Aller au Profil",
+        "log_out": "Se déconnecter",
+        "language": "Langue"
     },
-    "projects": {
-      "eyebrow": "Où Nous Plantons",
-      "heading": "Les projets avec lesquels nous travaillons",
-      "subheading": "Nous finançons des projets de reforestation vérifiés via des partenaires de plantation de confiance et publions notre impact au fil du temps.",
-      "trees_planted_label": "Arbres plantés",
-      "kisumu": {
-        "title": "Kisumu 7 - Awach",
-        "description": "Un projet d'agroforesterie mené par les communautés dans l'ouest du Kenya pour restaurer les terres dégradées et soutenir les moyens de subsistance locaux.",
-        "partner": "Trees for the Future",
-        "location": "Kisumu, Kenya",
-        "focus": "Agroforesterie et restauration durable des terres",
-        "visual_title": "Kisumu"
-      },
-      "mkussu": {
-        "title": "Replantation de la forêt brûlée de Mkussu",
-        "description": "Un projet de restauration visant à rétablir le couvert forestier natif de Lushoto après les dégâts causés par les incendies.",
-        "partner": "Tree-Nation",
-        "location": "District de Lushoto, Tanzanie",
-        "focus": "Restauration de la forêt native après incendie",
-        "visual_title": "Mkussu"
-      },
-      "poverty": {
-        "title": "Plant to Stop Poverty",
-        "description": "Un projet d'agroforesterie qui aide les communautés rurales à restaurer les terres, développer une couverture arborée utile et renforcer leur résilience économique sur le long terme.",
-        "partner": "Tree-Nation",
-        "location": "Tanzanie",
-        "focus": "Agroforesterie et réduction de la pauvreté",
-        "visual_title": "Poverty"
-      }
-    },
-    "how_it_works": {
-      "heading": "Comment ça marche",
-      "subheading": "Trois étapes simples pour commencer à avoir un impact environnemental avec votre connexion Internet inutilisée.",
-      "trees_planted_badge": "{count} arbres plantés par notre communauté",
-      "step1_title": "Installez l'Extension",
-      "step1_desc": "Ajoutez notre extension Chrome légère en quelques secondes. Aucune inscription ni configuration requise.",
-      "step2_title": "Partagez la Bande Passante",
-      "step2_desc": "Votre connexion Internet inactive est utilisée de manière sécurisée pour la recherche approuvée et la distribution de contenu — remplaçant les centres de données traditionnels qui consomment d'énormes quantités d'énergie et d'eau.",
-      "step2_link": "Découvrez comment nous sommes 80-90% plus écologiques que les fermes de serveurs",
-      "step3_title": "Nous Plantons des Arbres",
-      "step3_desc": "Les revenus générés financent des projets vérifiés de plantation d'arbres dans le monde entier. Suivez votre impact en temps réel."
-    },
-    "desktop_apps": {
-      "heading": "Applications de Bureau Disponibles",
-      "description": "En téléchargeant IdleForest, vous rejoignez une communauté mondiale dédiée à la reforestation et à la conservation de l'environnement.",
-      "windows_desc": "Téléchargez IdleForest pour Windows pour commencer à faire la différence avec votre puissance de calcul inactive.",
-      "mac_desc": "Téléchargez IdleForest pour macOS pour contribuer aux efforts de reforestation pendant que votre ordinateur est inactif.",
-      "download_windows": "Télécharger pour Windows",
-      "download_mac": "Télécharger pour Mac OS"
-    },
-    "impact": {
-      "heading": "Notre Impact",
-      "trees_label": "ARBRES À PLANTER",
-      "requests_label": "TOTAL DES REQUÊTES",
-      "users_label": "UTILISATEURS ACTIFS",
-      "contributions_label": "TOTAL DES CONTRIBUTIONS"
-    },
-    "achievements": {
-      "heading_line1": "Ce que nous avons accompli",
-      "heading_line2": "et où nous allons",
-      "browser_ext_title": "EXTENSION NAVIGATEUR",
-      "browser_ext_desc": "Nous avons lancé nos extensions phares pour Chrome, Firefox et Edge. Cette étape clé permet aux utilisateurs de contribuer à la reforestation lors de leur navigation quotidienne.",
-      "browser_ext_status": "TERMINÉ",
-      "desktop_title": "APPLICATION BUREAU",
-      "desktop_desc": "Notre application de bureau étend IdleForest au-delà du navigateur, permettant des contributions même lorsque vous ne naviguez pas activement.",
-      "desktop_status": "BÊTA",
-      "referral_title": "SYSTÈME DE PARRAINAGE",
-      "referral_desc": "Invitez des amis et des entreprises pour multiplier l'impact. Gagnez des arbres bonus pour les parrainages réussis.",
-      "referral_status": "EN DÉVELOPPEMENT",
-      "mobile_title": "APPLICATION MOBILE",
-      "mobile_desc": "Apportez IdleForest sur iOS et Android pour contribuer en déplacement avec une utilisation intelligente et écoénergétique.",
-      "mobile_status": "PLANIFIÉ",
-      "corporate_title": "CERTIFICATION D'IMPACT ENTREPRISE",
-      "corporate_desc": "Un programme de vérification permettant aux entreprises de certifier et de mettre en valeur leurs contributions environnementales.",
-      "corporate_status": "PLANIFIÉ"
-    },
-    "faq": {
-      "heading": "Questions Fréquentes",
-      "subheading": "Des questions ? Nous avons les réponses. Apprenez-en plus sur le fonctionnement d'IdleForest.",
-      "install_q": "Comment installer et utiliser l'extension ?",
-      "permission_q": "Pourquoi l'extension demande-t-elle la permission de « lire et modifier toutes les données » ?",
-      "permission_a1": "Nous comprenons que cette permission semble plus large que prévu. Voici ce qui se passe réellement : Nous ne lisons ni n'accédons à aucune donnée des sites web que vous visitez.",
-      "permission_a2": "L'extension utilise votre bande passante inutilisée en accédant à des sites web de manière sans session, garantissant qu'aucune donnée personnelle n'est transmise.",
-      "permission_a3": "Nous avons besoin de cette permission en raison d'une limitation technique des extensions de navigateur. Les navigateurs n'offrent pas d'option plus granulaire — elle est regroupée dans la catégorie « lire et modifier ».",
-      "permission_a4": "Votre vie privée et votre sécurité sont importantes pour nous. Nous n'utilisons que la fonctionnalité minimale nécessaire.",
-      "permission_a5": "Notre code est open source, vous pouvez l'examiner vous-même. En savoir plus sur",
-      "permission_link": "les iframes sans identifiants et leur sécurité",
-      "safe_q": "IdleForest est-il sûr à utiliser ?",
-      "safe_a1": "Oui ! IdleForest est complètement sûr. Nous utilisons des pratiques de sécurité standard et notre code est open source.",
-      "safe_a2": "Votre bande passante inutilisée n'est utilisée que pour la recherche approuvée. Nous n'accédons jamais à vos données personnelles.",
-      "safe_a3": "Pour des détails complets sur l'utilisation de votre bande passante, visitez notre",
-      "safe_link": "Page de Transparence",
-      "slow_q": "Cela va-t-il ralentir mon Internet ?",
-      "slow_a1": "Non. IdleForest n'utilise que votre bande passante inactive.",
-      "slow_a2": "Notre extension est conçue pour avoir zéro impact sur votre navigation. IdleForest se réduit automatiquement si vous avez besoin de bande passante.",
-      "trees_q": "Comment les arbres sont-ils réellement plantés ?",
-      "trees_a1": "Votre bande passante partagée génère des revenus. Nous utilisons 100% de nos bénéfices pour financer des projets vérifiés de plantation d'arbres.",
-      "trees_a2": "Nous collaborons avec Trees for the Future et Tree-Nation pour garantir que chaque arbre est planté et suivi. Vous pouvez suivre votre contribution en temps réel.",
-      "browser_q": "Dois-je garder mon navigateur ouvert ?",
-      "browser_a1": "Pour l'extension, oui — votre navigateur doit être ouvert.",
-      "browser_a2": "Nous proposons aussi des applications de bureau pour Windows et macOS qui fonctionnent en arrière-plan même quand votre navigateur est fermé.",
-      "ai_q": "Je suis préoccupé par le soutien aux entreprises d'IA. Pourquoi utiliser IdleForest ?",
-      "ai_a1": "Les entreprises d'IA collecteront des données web quoi qu'il arrive — c'est essentiel pour entraîner les modèles.",
-      "ai_a2": "La question n'est pas si la collecte a lieu, mais comment. Le web scraping traditionnel utilise des centres de données massifs responsables de 1-2% de la consommation mondiale d'électricité.",
-      "ai_a3": "Les réseaux distribués sont 80-90% plus respectueux de l'environnement que les centres de données traditionnels.",
-      "ai_a4": "En utilisant IdleForest, vous aidez à rendre une industrie existante plus verte tout en finançant la reforestation.",
-      "ai_link": "En savoir plus sur les avantages environnementaux",
-      "disclaimer": "IdleForest est une extension de navigateur et une application de bureau pour la reforestation. Non associé au jeu mobile « Idle Forest »."
-    }
-  },
-  "Footer": {
-    "product": "Produit",
-    "browser_extension": "Extension Navigateur",
-    "desktop_app": "Application Bureau",
-    "company": "Entreprise",
-    "transparency": "Transparence",
-    "contact": "Contact",
-    "terms": "Conditions d'Utilisation",
-    "resources": "Ressources",
-    "blog": "Blog",
-    "discord": "Discord",
-    "github": "GitHub",
-    "copyright": "© {year} IdleForest. Tous droits réservés.",
-    "tagline": "Transformer l'internet inutilisé en vrais arbres."
-  },
-  "Transparency": {
-    "badge": "Transparence Totale",
-    "hero_title": "Comment Votre Bande Passante Est Utilisée",
-    "hero_desc": "Nous croyons en une transparence complète. Voici exactement qui utilise votre bande passante inactive et les protections juridiques que nous fournissons.",
-    "env_title": "Pourquoi les Réseaux Distribués Sont Plus Écologiques",
-    "env_desc": "Les réseaux distribués comme Olostep sont nettement plus écologiques que les centres de données traditionnels.",
-    "dc_title": "Centres de Données Traditionnels",
-    "dc_energy": "Consommation massive d'énergie : 1-2% de l'électricité mondiale",
-    "dc_cooling": "Systèmes de refroidissement 24h/24 : Jusqu'à 40% de l'énergie pour le refroidissement",
-    "dc_infra": "Infrastructure dédiée : Serveurs fonctionnant pour le web scraping",
-    "dc_water": "Utilisation d'eau : Millions de gallons par jour",
-    "dc_waste": "Déchets électroniques : Matériel remplacé tous les 3-5 ans",
-    "dn_title": "Réseaux Distribués",
-    "dn_infra": "Zéro nouvelle infrastructure : Utilise des appareils existants",
-    "dn_cooling": "Pas de refroidissement supplémentaire : Refroidissement ambiant",
-    "dn_idle": "Utilisation des ressources inactives : Bande passante autrement gaspillée",
-    "dn_water": "Aucune consommation d'eau : Zéro infrastructure de refroidissement",
-    "savings_title": "Économies Environnementales Estimées",
-    "energy_pct": "~85%",
-    "energy_label": "MOINS D'ÉNERGIE PAR REQUÊTE",
-    "energy_desc": "Pas besoin de serveurs dédiés ni de refroidissement",
-    "water_pct": "~95%",
-    "water_label": "MOINS D'UTILISATION D'EAU",
-    "water_desc": "Pas de systèmes de refroidissement intensifs en eau",
-    "carbon_pct": "~75%",
-    "carbon_label": "EMPREINTE CARBONE RÉDUITE",
-    "carbon_desc": "Réduction des émissions de fabrication et d'exploitation",
-    "bottom_line": "En résumé :",
-    "bottom_line_desc": "Avec IdleForest, nous réduisons les coûts des centres de données de 80-90% grâce aux réseaux distribués, puis plantons plus d'arbres que nécessaire pour compenser — rendant le processus net négatif.",
-    "client_title": "Notre Client Approuvé",
-    "client_desc": "Nous travaillons exclusivement avec un partenaire vérifié pour garantir les plus hauts standards de sécurité et d'utilisation éthique.",
-    "olostep_subtitle": "API de Données Web pour Applications",
-    "visit_olostep": "Visiter Olostep.com",
-    "what_olostep_does": "Ce Que Fait Olostep :",
-    "what_olostep_does_desc": "Olostep fournit une API de données web qui aide les entreprises à accéder à des données web propres et structurées.",
-    "how_bandwidth_used": "Comment Votre Bande Passante Est Utilisée :",
-    "how_bandwidth_desc": "Votre bande passante inactive est utilisée pour accéder à des sites web publics de manière sans session. Cela signifie :",
-    "no_cookies": "Aucun cookie, identifiant ou information personnelle n'est envoyé",
-    "public_only": "Seules les pages web publiques sont consultées",
-    "isolated": "Les requêtes sont isolées de votre session de navigation",
-    "ip_usage": "Votre IP n'est utilisée que pour des requêtes web standard",
-    "who_uses": "Qui Utilise les Services d'Olostep",
-    "who_uses_desc": "Olostep sert des startups IA légitimes et des entreprises technologiques.",
-    "who_uses_note": "Ces entreprises utilisent Olostep pour la recherche en IA, la génération de leads et l'analyse de marché.",
-    "searches_title": "Types de Recherches Effectuées",
-    "bi_title": "Veille Stratégique",
-    "bi_desc": "Collecte d'informations commerciales publiques à des fins de vente et de recherche.",
-    "price_title": "Suivi des Prix",
-    "price_desc": "Suivi des prix sur les sites de commerce électronique.",
-    "research_title": "Recherche Approfondie",
-    "research_desc": "Recherche alimentée par l'IA pour la santé, la pharma et la finance.",
-    "content_title": "Surveillance du Contenu",
-    "content_desc": "Suivi des changements sur les sites web et offres d'emploi.",
-    "dont_do_title": "Ce Que Nous NE Faisons PAS :",
-    "dont_password": "Accéder à du contenu protégé par mot de passe",
-    "dont_illegal": "Effectuer des activités illégales",
-    "dont_spam": "Envoyer du spam ou mener des attaques DDoS",
-    "dont_personal": "Accéder à vos données personnelles ou cookies",
-    "dont_tos": "Violer les conditions d'utilisation des sites web",
-    "legal_title": "Vos Protections Juridiques",
-    "legal_desc": "Nous prenons votre protection juridique au sérieux.",
-    "liability_title": "1. Protection de Responsabilité Contractuelle",
-    "liability_desc": "IdleForest assume l'entière responsabilité juridique pour tout le trafic généré via notre réseau.",
-    "liability_1": "Vous n'êtes pas responsable des requêtes effectuées via votre connexion",
-    "liability_2": "IdleForest indemnise les utilisateurs contre toute réclamation juridique",
-    "liability_3": "Nous maintenons une assurance responsabilité complète",
-    "vetting_title": "2. Vérification Stricte des Clients",
-    "vetting_desc": "Nous travaillons uniquement avec Olostep, une entreprise légitime vérifiée :",
-    "vetting_1": "Olostep est une entreprise enregistrée avec des références vérifiées",
-    "vetting_2": "Cas d'utilisation limités à la collecte légitime de données web",
-    "vetting_3": "Accord juridique interdisant les activités illégales",
-    "vetting_4": "Code open source auditable",
-    "monitoring_title": "3. Surveillance du Trafic et Conformité",
-    "monitoring_desc": "Nous surveillons activement tout le trafic réseau :",
-    "monitoring_1": "Systèmes automatisés signalant le trafic suspect",
-    "monitoring_2": "Toutes les requêtes sont enregistrées et auditables",
-    "monitoring_3": "Liste de blocage des sites et activités interdites",
-    "monitoring_4": "Violation = résiliation immédiate du client",
-    "gdpr_title": "4. Conformité RGPD et Protection des Données",
-    "gdpr_desc": "En tant que service européen, nous respectons le RGPD :",
-    "gdpr_1": "Aucune donnée personnelle collectée, stockée ou transmise",
-    "gdpr_2": "Requêtes web sans session et isolées",
-    "gdpr_3": "Désinscription possible à tout moment",
-    "gdpr_4": "Politiques de confidentialité détaillées",
-    "security_title": "Mesures de Sécurité Supplémentaires",
-    "encrypted_title": "🔒 Connexions Chiffrées",
-    "encrypted_desc": "Tout le trafic est chiffré via TLS/SSL.",
-    "isolated_title": "🛡️ Exécution Isolée",
-    "isolated_desc": "Requêtes en environnements isolés sans accès à vos données.",
-    "logging_title": "📊 Journalisation Transparente",
-    "logging_desc": "Toute l'activité réseau est journalisée et consultable.",
-    "opensource_title": "🔍 Code Open Source",
-    "opensource_desc": "Extension et application open source, auditables par des chercheurs indépendants.",
-    "view_github": "Voir sur GitHub",
-    "bandwidth_title": "⚡ Contrôles de Bande Passante",
-    "bandwidth_desc": "Contrôle total sur la bande passante utilisée.",
-    "optout_title": "🚫 Désinscription Instantanée",
-    "optout_desc": "Arrêtez le partage immédiatement en désinstallant l'application.",
-    "faq_title": "FAQ Transparence",
-    "faq_see_q": "Puis-je voir les sites consultés via ma connexion ?",
-    "faq_see_a": "Oui ! Un tableau de bord de transparence est en préparation. En attendant, consultez notre code open source.",
-    "faq_harmful_q": "Et si les clients utilisent les données à des fins nuisibles ?",
-    "faq_harmful_a": "Les clients d'Olostep sont des entreprises vérifiées utilisant des données publiques. Toute violation entraîne une résiliation immédiate.",
-    "faq_more_q": "Comment saurai-je si vous ajoutez d'autres clients ?",
-    "faq_more_a": "Cette page sera mise à jour et vous serez notifié par e-mail. Vous pouvez toujours vous désinscrire.",
-    "faq_isp_q": "Mon FAI est-il au courant ?",
-    "faq_isp_a": "Le trafic ressemble à une navigation web normale — du HTTPS chiffré vers des sites légitimes.",
-    "still_questions": "Encore des Questions ?",
-    "still_questions_desc": "Nous sommes là pour vous aider avec toute question sur l'utilisation de votre bande passante.",
-    "contact_us": "Contactez-Nous",
-    "back_home": "Retour à l'Accueil"
-  },
-  "Contact": {
-    "title": "Contactez-Nous",
-    "description": "Questions, commentaires ou intéressé par des solutions entreprise ? Nous serions ravis de vous entendre.",
-    "form_title": "Envoyez-nous un message",
-    "name_label": "Nom Complet",
-    "name_placeholder": "Votre Nom",
-    "email_label": "Adresse E-mail",
-    "email_placeholder": "vous@exemple.com",
-    "company_label": "Nom de l'Entreprise",
-    "company_placeholder": "Votre Entreprise SARL",
-    "size_label": "Taille de l'Entreprise",
-    "size_placeholder": "ex., 1-10, 50-200, 1000+",
-    "location_label": "Localisation (Ville, Pays)",
-    "location_placeholder": "ex., Paris, France",
-    "subject_label": "Sujet",
-    "subject_optional": "(Facultatif)",
-    "subject_placeholder": "ex., Demande Entreprise",
-    "message_label": "Votre Message",
-    "message_placeholder": "Tapez votre message ici...",
-    "success_msg": "✓ Message envoyé ! Nous vous répondrons bientôt.",
-    "error_msg": "✗ Oups ! Quelque chose s'est mal passé. Réessayez.",
-    "sending": "Envoi en cours...",
-    "send": "Envoyer le Message",
-    "info_title": "Informations de Contact",
-    "email_us": "Écrivez-Nous",
-    "general_inquiries": "Demandes générales et support",
-    "book_meeting": "Réserver une Réunion",
-    "schedule_call": "Planifiez un appel avec nous",
-    "find_time": "Trouvez un créneau qui vous convient"
-  },
-  "Downloads": {
-    "title": "TÉLÉCHARGER IDLEFOREST",
-    "description": "Commencez avec IdleForest sur votre plateforme préférée. Choisissez nos applications de bureau ou nos extensions de navigateur légères.",
-    "windows_desc": "Téléchargez IdleForest pour Windows pour faire la différence avec votre puissance de calcul inactive.",
-    "mac_desc": "Téléchargez IdleForest pour macOS pour contribuer à la reforestation.",
-    "download_windows": "Télécharger pour Windows",
-    "download_mac": "Télécharger pour Mac OS",
-    "browser_heading": "Extensions Navigateur",
-    "browser_desc": "Légères et faciles à installer dans votre navigateur préféré."
-  },
-  "Business": {
-    "hero_title_line1": "Améliorez Passivement Votre Score ESG et",
-    "hero_title_line2": "Reboisez la Planète",
-    "hero_desc": "Transformez la bande passante inutilisée de votre entreprise en impact environnemental vérifié.",
-    "contact_us": "Contactez-Nous",
-    "features_title": "Ce Que Nous Pouvons Faire pour les Entreprises",
-    "features_desc": "Rejoignez les entreprises qui ont un impact environnemental réel tout en impliquant leurs employés.",
-    "esg_title": "Score ESG et B-Corp",
-    "esg_desc": "Améliorez vos notations ESG et B-Corp avec des données d'impact vérifiées.",
-    "image_title": "Améliorez l'Image Publique",
-    "image_desc": "Renforcez votre réputation et démontrez un engagement authentique envers la durabilité.",
-    "community_title": "Mise en Avant Communautaire",
-    "community_desc": "Gagnez en visibilité auprès de notre communauté d'utilisateurs éco-conscients.",
-    "onboarding_title": "Intégration Automatisée",
-    "onboarding_desc": "Configuration automatisée sur tout votre réseau. Déploiement léger de 130 Mo.",
-    "certificates_title": "Certificats Vérifiés",
-    "certificates_desc": "Certificats soutenus par Tree Nation. Émis annuellement ou tous les 6 mois.",
-    "donation_title": "Abondement des Dons",
-    "donation_desc": "Nous abondons vos dons jusqu'à votre objectif ESG/RSE.",
-    "download_title": "Télécharger IdleForest",
-    "download_desc": "Commencez avec IdleForest et ayez un impact environnemental positif.",
-    "windows_desc": "130 Mo. Installation silencieuse et déploiement réseau automatisé.",
-    "mac_desc": "Optimisé pour macOS Apple Silicon et Intel. Zéro impact sur les performances.",
-    "download_windows": "Télécharger pour Windows",
-    "download_mac": "Télécharger pour Mac",
-    "cert_section_title": "Certificats d'Impact Vérifiés",
-    "cert_section_desc": "Mettez en valeur votre engagement environnemental avec des certificats Tree Nation.",
-    "cert_impact": "Certificat d'Impact",
-    "cert_certifies": "Ceci certifie que",
-    "cert_contributed": "a contribué à la reforestation mondiale via IdleForest :",
-    "trees_planted": "Arbres Plantés :",
-    "co2_offset": "CO₂ Compensé :",
-    "project_locations": "Emplacements :",
-    "period": "Période :",
-    "verified_by": "Vérifié et authentifié par IdleForest",
-    "recognized_title": "Reconnu et Fiable",
-    "recognized_desc": "Certificats Tree Nation reconnus mondialement. Plus de 700 utilisateurs et entreprises.",
-    "shareable_title": "Rapports Partageables",
-    "shareable_desc": "Certificats annuels ou semestriels. Rapports PDF téléchargeables.",
-    "esg_ready_title": "Prêt pour ESG et B-Corp",
-    "esg_ready_desc": "Améliorez passivement votre score ESG avec des données d'impact vérifiées.",
-    "cta_title": "Prêt à faire la différence ?",
-    "cta_desc": "Rejoignez les entreprises utilisant IdleForest pour un impact environnemental positif."
-  },
-  "DiscordBot": {
-    "hero_title_line1": "FAITES GRANDIR LA",
-    "hero_title_line2": "FORÊT DE VOTRE SERVEUR",
-    "hero_desc": "Ajoutez le bot IdleForest à votre serveur Discord, connectez votre équipe et demandez aux membres de télécharger l'application de bureau pour faire grandir la forêt de votre communauté dans Discord.",
-    "add_bot": "Ajouter le Bot au Serveur",
-    "join_discord": "Rejoignez notre Discord",
-    "stats_servers": "SERVEURS",
-    "stats_trees": "ARBRES PLANTÉS",
-    "stats_messages": "MESSAGES SUIVIS",
-    "how_title": "Comment Ça Marche",
-    "how_desc": "Faites grandir la forêt de votre serveur en quatre étapes simples.",
-    "step1_title": "Ajoutez le Bot",
-    "step1_desc": "Invitez le bot IdleForest en un seul clic. Aucune configuration nécessaire.",
-    "step2_title": "Connectez Votre Équipe",
-    "step2_desc": "Utilisez le bot pour créer ou lier votre équipe IdleForest afin que votre serveur partage une seule forêt, un classement et un impact total.",
-    "step3_title": "Installez l'App de Bureau",
-    "step3_desc": "Demandez aux membres de télécharger l'application de bureau IdleForest et de rejoindre votre équipe. Leur activité alimente le compteur d'arbres en direct dans Discord.",
-    "step3_cta": "Télécharger l'App de Bureau",
-    "step4_title": "Regardez-la Grandir",
-    "step4_desc": "Suivez votre compteur d'arbres en direct, le classement et la croissance de la forêt dans la barre latérale Discord et avec /forest.",
-    "features_title": "Fonctionnalités",
-    "features_desc": "Tout pour gamifier la reforestation dans votre serveur Discord.",
-    "feat_leaderboard_title": "Classement du Serveur",
-    "feat_leaderboard_desc": "Voyez qui contribue le plus avec /leaderboard. Compétition amicale pour l'environnement.",
-    "feat_forest_title": "Forêt Visuelle",
-    "feat_forest_desc": "Regardez votre forêt grandir d'une graine à une forêt avec /forest.",
-    "feat_realtime_title": "Suivi en Temps Réel",
-    "feat_realtime_desc": "Chaque message contribue instantanément. Voyez votre impact grandir.",
-    "feat_privacy_title": "Confidentialité d'Abord",
-    "feat_privacy_desc": "Nous ne comptons que les messages — jamais le contenu.",
-    "feat_badges_title": "Badges de Jalons",
-    "feat_badges_desc": "Gagnez des badges en atteignant des jalons de plantation.",
-    "feat_free_title": "100% Gratuit",
-    "feat_free_desc": "Pas de premium ni de paywalls. Toutes les fonctionnalités pour tous.",
-    "top_title": "Meilleurs Serveurs Plantant des Arbres",
-    "cta_title": "Prêt à faire grandir la forêt de votre serveur ?",
-    "cta_desc": "Rejoignez des centaines de serveurs Discord qui ont déjà un impact avec le bot et l'application de bureau IdleForest.",
-    "trusted": "Fait confiance par les communautés Discord du monde entier"
-  },
-  "Map": {
-    "title": "Carte des Plantations – IdleForest",
-    "description": "Explorez la carte interactive des endroits où IdleForest a planté des arbres avec nos partenaires.",
-    "heading": "Notre carte des plantations",
-    "text": "Découvrez où nous avons planté des arbres avec des partenaires comme Trees for the Future et Tree-Nation. Cette carte est mise à jour au fur et à mesure de nos plantations."
-  },
-  "Teams": {
-    "placeholder_search": "Rechercher des Équipes",
-    "loading_teams": "Chargement des équipes...",
-    "no_teams": "Aucune équipe trouvée",
-    "no_teams_search": "Aucune équipe ne correspond à votre recherche",
-    "create_team_prompt": "Créez une équipe pour commencer",
-    "loading_rankings": "Chargement des classements...",
-    "all_time_rankings_label": "Classement Général des Utilisateurs",
-    "top_earners_label": "Meilleurs Contributeurs",
-    "top_teams_label": "Meilleures Équipes",
-    "fastest_growing": "Croissance Rapide",
-    "no_users": "Aucun utilisateur trouvé",
-    "no_data": "Aucune donnée pour cette période",
-    "fastest_growing_label": "Croissance Rapide (Nouveaux Membres)",
-    "members_total": "membres au total",
-    "no_teams_gained": "Aucune équipe n'a gagné de membres cette période",
-    "created": "Créé",
-    "period_today": "Aujourd'hui",
-    "period_week": "Cette Semaine",
-    "period_month": "Ce Mois",
-    "all_time": "Toujours",
-    "top_users": "Meilleurs Utilisateurs",
-    "points": "Points",
-    "new_members": "Nouveaux Membres"
-  },
-  "Report": {
-    "title": "Rapport Annuel & Analyses | IdleForest",
-    "description": "Consultez le rapport annuel et les analyses en direct d'IdleForest — arbres plantés, utilisateurs actifs, bande passante partagée et revenus générés pour les projets de reforestation.",
-    "annual": "Annuel",
-    "report": "Rapport",
-    "annual_report": "Rapport Annuel",
-    "analytics": "Analyses",
-    "historical_data": "Données Historiques",
-    "about_title": "À propos d'IdleForest",
-    "about_desc": "IdleForest est une extension de navigateur passive qui plante des arbres pendant que vous naviguez, jouez ou streamez. Elle utilise votre bande passante inutilisée pour financer des projets de reforestation.",
-    "free_to_use": "Gratuit à utiliser",
-    "no_account": "Aucun compte requis",
-    "open_source": "Open source",
-    "progress_title": "Notre Progrès de Plantation",
-    "progress_desc": "Suivi de notre impact de reforestation avec nos partenaires",
-    "total_contributions": "Contributions Totales",
-    "trees_planted_progress": "Arbres Plantés",
-    "est_donation": "Valeur Est. des Dons (USD)",
-    "impact_milestones": "Jalons d'Impact",
-    "latest": "Dernier",
-    "trees": "arbres",
-    "view_certificate": "Voir le Certificat",
-    "historical_title": "Performance Historique d'Idleforest",
-    "historical_desc": "Suivi des indicateurs clés de performance au fil du temps",
-    "granularity": "Granularité :",
-    "daily": "Quotidien",
-    "weekly": "Hebdomadaire",
-    "monthly": "Mensuel",
-    "total_requests": "Total des Requêtes",
-    "active_nodes": "Nœuds Actifs",
-    "total_earnings": "Total des Gains",
-    "trees_planted_chart": "Arbres Plantés",
-    "projects": {
-      "tn-eden-madagascar": {
-        "name": "Projets de Reforestation Eden – Madagascar"
-      },
-      "if-kenya": {
-        "name": "Initiative Forestière Mondiale – Kenya"
-      },
-      "tftf-kisumu7-awach": {
-        "name": "Kisumu 7 – Awach, Kenya"
-      },
-      "tftf-senegal": {
-        "name": "Projets TFTF – Sénégal"
-      },
-      "pod-dream-uganda-rwenzori": {
-        "name": "Dream International – Montagnes Rwenzori, Ouganda"
-      },
-      "pod-cameroon": {
-        "name": "POD – Agroforesterie au Cameroun"
-      },
-      "tn-syzygium": {
-        "name": "Replantation de la forêt brûlée de Mkussu",
-        "description": "Restauration de la réserve forestière naturelle de Mkussu dans le district de Lushoto après les dégâts causés par les incendies."
-      },
-      "tn-plant-to-stop-poverty": {
-        "name": "Planter pour arrêter la pauvreté",
-        "description": "Aider les communautés rurales à mettre en œuvre l'agroforesterie pour lutter contre la pauvreté."
-      },
-      "default_contribution": "Contribution de {partner}",
-      "default_impact": "A planté {trees} arbres avec {partner} pour soutenir la reforestation."
-    }
-  },
-  "CarbonFootprint": {
-    "items": {
-      "fortnite": {
-        "human_equivalent": "Conduire une voiture sur 550 km",
-        "idleforest_pitch": "Les joueurs ont une bande passante élevée. Laissez votre PC planter des arbres pendant votre sommeil."
-      },
-      "netflix": {
-        "human_equivalent": "Recharger 5 000 smartphones",
-        "idleforest_pitch": "Compensez automatiquement vos marathons de séries."
-      },
-      "tiktok": {
-        "human_equivalent": "Conduire 350 km en voiture",
-        "idleforest_pitch": "Faites défiler sans culpabilité en plantant des arbres en arrière-plan."
-      },
-      "chatgpt": {
-        "human_equivalent": "Recharger votre smartphone 3 300 fois",
-        "idleforest_pitch": "L'IA est intelligente. Vous devriez l'être aussi. Compensez vos requêtes."
-      },
-      "openai": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "zoom": {
-        "human_equivalent": "Conduire de Londres à Oxford",
-        "idleforest_pitch": "Le télétravail évite les trajets, mais consomme de l'énergie. Rendez vos réunions neutres en carbone."
-      },
-      "instagram": {
-        "human_equivalent": "Conduire 130 km dans une voiture standard",
-        "idleforest_pitch": "Compensez votre temps de navigation sans changer vos habitudes."
-      },
-      "bitcoin": {
-        "human_equivalent": "Brûler une demi-tonne de charbon",
-        "idleforest_pitch": "La crypto a un coût. IdleForest vous aide à le rembourser à la planète."
-      },
-      "youtube": {
-        "human_equivalent": "Fabriquer 2 bouteilles en plastique",
-        "idleforest_pitch": "Regardez des vidéos tout en plantant une vraie forêt."
-      },
-      "twitch": {
-        "human_equivalent": "Conduire une voiture sur 160 km",
-        "idleforest_pitch": "Soutenez vos streamers préférés sans nuire à la planète."
-      },
-      "league-of-legends": {
-        "human_equivalent": "Conduire une voiture sur 450 km",
-        "idleforest_pitch": "Transformez votre addiction aux jeux en projet de reforestation."
-      },
-      "leagueoflegends": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "google-chrome": {
-        "human_equivalent": "Recharger votre téléphone pendant un an",
-        "idleforest_pitch": "Votre navigateur est déjà ouvert. Faites-le travailler pour la Terre."
-      },
-      "googlechrome": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "minecraft": {
-        "human_equivalent": "Conduire 290 km dans une voiture à essence",
-        "idleforest_pitch": "Des blocs de construction? Construisez plutôt une forêt."
-      },
-      "fallback:gamepad": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "microsoft-teams": {
-        "human_equivalent": "Utiliser une ampoule LED pendant 3 ans sans s'arrêter",
-        "idleforest_pitch": "Les réunions s'additionnent. Compensez vos heures de bureau."
-      },
-      "fallback:users": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "twitter": {
-        "human_equivalent": "Conduire 50 km en voiture",
-        "idleforest_pitch": "Vous scrollez à l'infini ? Transformez cela en plantation verte."
-      },
-      "x": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "spotify": {
-        "human_equivalent": "Faire bouillir 5 bouilloires d'eau",
-        "idleforest_pitch": "Votre bande-son ne devrait pas coûter la Terre."
-      },
-      "roblox": {
-        "human_equivalent": "Conduire 130 km en voiture",
-        "idleforest_pitch": "Jouez ensemble, plantez ensemble."
-      },
-      "ethereum": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "google-meet": {
-        "human_equivalent": "Conduire 130 km en voiture",
-        "idleforest_pitch": "Réunion terminée. Arbres plantés."
-      },
-      "googlemeet": {
-        "human_equivalent": "",
-        "idleforest_pitch": ""
-      },
-      "snapchat": {
-        "human_equivalent": "Conduire 36 km en voiture",
-        "idleforest_pitch": "Les snaps disparaissent. Le CO2 reste. Compensez-le."
-      },
-      "reddit": {
-        "human_equivalent": "Conduire 36 km en voiture",
-        "idleforest_pitch": "Points de karma pour la planète."
-      }
-    },
-    "categories": {
-      "Gaming": "Jeux",
-      "Streaming": "Streaming",
-      "Social": "Réseaux Sociaux",
-      "AI": "IA",
-      "Work": "Travail",
-      "Crypto": "Crypto",
-      "Browsing": "Navigation"
-    },
-    "sources": {
-      "title": "Sources & Méthodologie",
-      "carbon_trust_name": "Carbon Trust : impact carbone du streaming vidéo",
-      "carbon_trust_detail": "Estime qu'une heure de vidéo à la demande en Europe représente environ 55gCO2e et note que les appareils de visionnage pèsent souvent le plus dans l'impact total.",
-      "digital_name": "AIE : centres de données et réseaux de transmission",
-      "digital_detail": "Suit l'électricité et les émissions de l'infrastructure qui soutient la navigation web, les réseaux sociaux et le travail en ligne au quotidien.",
-      "greenly_name": "California Energy Commission : efficacité énergétique du gaming sur ordinateur",
-      "greenly_detail": "Résume des mesures de la demande énergétique du jeu vidéo et montre que l'appareil, le temps d'usage et les réglages font fortement varier la consommation.",
-      "llm_name": "AIE : Energy and AI",
-      "llm_detail": "Explique comment les charges de travail d'IA tournent dans les centres de données et comment serveurs, accélérateurs et refroidissement façonnent la demande d'électricité.",
-      "bitcoin_name": "Cambridge Bitcoin Electricity Consumption Index",
-      "bitcoin_detail": "Fournit une estimation continue de la meilleure valeur disponible pour la consommation électrique du réseau Bitcoin par l'équipe de recherche sur les actifs numériques de Cambridge.",
-      "visit_source": "Voir la source",
-      "idleforest_name": "Calcul de IdleForest",
-      "idleforest_detail": "Nos calculs supposent qu'un arbre mature absorbe ~20kg de CO2 par an."
-    },
-    "graph": {
-      "title": "Comparaison de l'Impact Annuel",
-      "idleforest_label": "IdleForest (1 An)",
-      "co2_emissions": "Émissions de CO2 (kg)",
-      "offset_note": "*IdleForest compense en moyenne ~200kg de CO2/an par utilisateur."
-    },
-    "calculator": {
-      "carbon_impact": "Impact Carbone",
-      "bitcoin_note": "Les transactions Bitcoin sont calculées par utilisation, non par heure.",
-      "co2_per_tx": "CO2 par Transaction",
-      "trees_to_offset_tx": "Arbres pour compenser 1 Tx",
-      "calculate_footprint": "Calculez votre Empreinte",
-      "how_many_hours": "Combien d'heures utilisez-vous {app} par semaine ?",
-      "hrs_week": "h/semaine",
-      "yearly_emissions": "Émissions Annuelles CO2",
-      "kg": "kg",
-      "trees": "arbres",
-      "needed_to_offset": "Nécessaires pour compenser"
-    },
-    "page": {
-      "back_to_home": "Retour à l'Accueil",
-      "carbon_footprint_of": "Empreinte Carbone de",
-      "did_you_know": "Saviez-vous qu'utiliser {app} pour juste une heure génère",
-      "g_of_co2": "g de CO2 ?",
-      "thats_equivalent_to": "Cela équivaut à {equivalent}.",
-      "compare_with_related": "Comparer avec des Apps similaires",
-      "open_comparison": "Ouvrir la comparaison",
-      "read_full_report": "Lire le rapport complet sur {app}",
-      "compare_breadcrumb": "Comparer",
-      "compare_eyebrow": "Comparaison d'Empreinte Carbone",
-      "compare_seo_title": "Empreinte Carbone de {app1} vs {app2} | IdleForest",
-      "compare_seo_desc": "Comparez l'empreinte carbone de {app1} et {app2}. Découvrez laquelle génère le plus d'émissions de CO2 et comment leur impact diffère.",
-      "compare_summary_title": "Résumé",
-      "compare_summary_intro": "En comparant {app1} et {app2},",
-      "compare_summary_tie": "elles ont une empreinte carbone horaire estimée identique.",
-      "compare_summary_winner": "{winner} génère nettement plus de CO2 par heure ({winnerGrams}g) que {loser} ({loserGrams}g).",
-      "compare_summary_outro": "Les deux applications reposent sur des appareils, des réseaux et une infrastructure serveur qui contribuent à leur impact environnemental.",
-      "deep_dive_into_footprints": "Explorer leurs empreintes en détail",
-      "higher_emissions": "Émissions plus élevées",
-      "g_co2_hour": "g CO2 / heure",
-      "co2_per_hour_short": "CO2 / HEURE",
-      "co2_per_tx_short": "CO2 / TX",
-      "per_transaction": "Par transaction",
-      "requires": "Nécessite",
-      "trees_yr_to_offset": "arbres/an pour compenser",
-      "about_idleforest": "À propos d'IdleForest",
-      "about_desc": "IdleForest est une extension de navigateur passive qui plante des arbres pendant que vous naviguez, jouez ou streamez. Elle utilise votre bande passante internet inutilisée pour financer des projets de reforestation.",
-      "free_to_use": "Utilisation gratuite",
-      "no_account": "Aucun compte requis",
-      "open_source": "Open source",
-      "not_found_title": "Non trouvé",
-      "not_found_desc": "La page demandée n'a pas été trouvée.",
-      "seo_title": "Empreinte Carbone de {app} | IdleForest",
-      "seo_desc": "Découvrez l'impact environnemental de l'utilisation de {app}. Calculez vos émissions de CO2 et voyez combien d'arbres sont nécessaires pour les compenser.",
-      "faq_q1": "Quelle est l'empreinte carbone de {app} ?",
-      "faq_a1": "Utiliser {app} pendant seulement une heure génère environ {grams}g de CO2. Ce qui équivaut à {equivalent}.",
-      "faq_q2": "Combien d'arbres dois-je planter pour compenser {app} ?",
-      "faq_a2": "Pour compenser une année d'utilisation typique de {app} (environ {kg}kg de CO2), vous devriez planter environ {trees} arbres.",
-      "bitcoin_comparison_note": "*Les transactions Bitcoin sont calculées par utilisation, mesurant le CO2 par transaction plutôt que par heure.",
-      "why_this_page_matters": "Pourquoi cette page est importante",
-      "searches_this_page_should_answer": "Questions auxquelles cette page devrait répondre",
-      "per_transaction_intro": "{app} est modélisé par transaction sur cette page. Un usage typique est estimé à <strong>{grams}g de CO2</strong>. Cela est grossièrement comparable à {equivalent}.",
-      "search_intent_eyebrow": "Couverture de l'intention de recherche",
-      "search_intent_title": "Questions auxquelles cette page est conçue pour répondre",
-      "drivers_title": "Ce qui influence le plus cette estimation",
-      "assumptions_title": "Hypothèses et limites",
-      "uncertainty_note": "Note d'incertitude:",
-      "reduction_title": "Façons de réduire cette empreinte",
-      "reviewed_eyebrow": "Relu et maintenu",
-      "review_title": "Détails de la relecture éditoriale",
-      "reviewed_by_label": "Relu par:",
-      "role_label": "Rôle:",
-      "organization_label": "Organisation:",
-      "last_reviewed_label": "Dernière relecture:",
-      "editorial_note": "Nous traitons ces pages comme des guides directionnels pour le grand public. Elles sont conçues pour expliquer clairement les principaux moteurs des émissions numériques, pas pour reproduire la comptabilité propriétaire d'un fournisseur.",
-      "sources_title": "Sources et suivi de relecture",
-      "editorial_snapshot_eyebrow": "Instantané éditorial",
-      "trust_title": "Pourquoi cette page doit inspirer confiance",
-      "trust_summary": "Cette page réunit un calculateur grand public, des notes de méthode, du contexte d'incertitude et des références de sources sur la même URL.",
-      "trust_canonical": "Canonique:",
-      "trust_last_reviewed": "Dernière relecture:",
-      "supporting_comparison_page": "Page de comparaison de soutien",
-      "why_gap_title": "Pourquoi l'écart existe",
-      "action_first_title": "Sur quoi agir en premier",
-      "compare_delta_note": "<strong>{winner}</strong> est actuellement modélisé avec <strong>{delta}g de CO2</strong> de plus par unité d'usage que <strong>{lighter}</strong>.",
-      "compare_tie_note": "Ces deux produits arrivent à la même estimation dans le modèle actuel. La meilleure cible d'optimisation est donc celle à laquelle vous consacrez le plus de temps.",
-      "compare_takeaways_title": "Points clés de la comparaison",
-      "more_questions_about": "Plus de questions sur l'empreinte carbone de {app}",
-      "explore_the_cluster": "Explorer le cluster de l'empreinte carbone",
-      "featured_carbon_guides": "Guides carbone en vedette",
-      "carbon_footprint_cluster_hub": "Hub du Cluster de l'Empreinte Carbone",
-      "carbon_hub": "Carbon Hub",
-      "digital_carbon_footprint_hub": "Guides et calculateurs de l'empreinte carbone numérique",
-      "hub_title": "Guides et calculateurs de l'<highlight>empreinte carbone numérique</highlight>",
-      "hub_intro": "Comparez l'empreinte carbone des applications, outils d'IA, jeux, navigateurs et plateformes de streaming que les gens utilisent tous les jours. Utilisez ces pages pour estimer les émissions, comprendre la méthodologie et trouver des moyens simples de compenser votre empreinte numérique.",
-      "hub_cards": {
-        "ai": {
-          "title": "Empreinte carbone de l'IA",
-          "description": "Commencez par des outils d'IA comme ChatGPT, puis élargissez vers le sujet plus global des émissions de l'IA."
+    "Landing": {
+        "hero": {
+            "title_line1": "TRANSFORMEZ VOTRE",
+            "title_line2": "INTERNET INUTILISÉ EN",
+            "title_line3": "VRAIS ARBRES",
+            "description": "Notre application de bureau utilise en toute sécurité votre bande passante inutilisée pour financer la plantation d'arbres dans le monde entier. Rejoignez des milliers de personnes qui ont un impact environnemental pendant que leur ordinateur est inactif.",
+            "safe_secure": "100% Sûr et Sécurisé",
+            "no_impact": "Aucun Impact sur les Performances",
+            "auto_plant": "Plantez des arbres automatiquement",
+            "security_label": "Sécurité",
+            "privacy_label": "Vie privée",
+            "performance_label": "Faible impact",
+            "security_detail": "Vos données sont en sécurité.",
+            "privacy_detail": "Aucune information personnelle n'est collectée.",
+            "performance_detail": "L'application est légère et n'interfère pas avec les performances de votre ordinateur."
         },
-        "streaming": {
-          "title": "Empreinte du streaming",
-          "description": "Comparez Netflix, YouTube, Twitch, Spotify et l'usage des vidéos courtes."
-        },
-        "work": {
-          "title": "Travail et navigation",
-          "description": "Comprenez comment les réunions, les navigateurs et les workflows en ligne ajoutent à vos émissions numériques."
-        }
-      },
-      "explore_ai_emissions": "Explorer les émissions de l'IA",
-      "explore_streaming": "Explorer le streaming",
-      "explore_digital_footprint": "Explorer l'empreinte numérique",
-      "featured_pages_eyebrow": "Pages en vedette",
-      "best_places_to_start": "Les meilleurs points de départ",
-      "all_carbon_pages": "Toutes les pages carbone",
-      "browse_by_category": "Parcourir par catégorie",
-      "recommended_pages": "Pages recommandées",
-      "explore_related_guides": "Explorer les calculateurs et guides associés",
-      "open_page": "Ouvrir",
-      "cluster_links": {
-        "hub": {
-          "title": "Hub de l'empreinte carbone numérique",
-          "description": "Explorez toutes les pages sur l'empreinte carbone et comparez les plus grandes sources d'émissions numériques."
-        },
-        "ai": {
-          "title": "Empreinte carbone de l'IA",
-          "description": "Utilisez cette page parente pour relier ChatGPT à des recherches plus larges sur les émissions de l'IA."
-        },
-        "streaming": {
-          "title": "Empreinte carbone du streaming",
-          "description": "Comparez côte à côte des plateformes de streaming comme YouTube, Netflix et Twitch."
-        },
-        "digital_footprint": {
-          "title": "Empreinte carbone numérique",
-          "description": "Comprenez le concept global derrière les émissions des applis, navigateurs, usages professionnels et de l'IA."
-        }
-      },
-      "hubs": {
-        "ai": {
-          "title": "AI Carbon Footprint",
-          "seoTitle": "AI Carbon Footprint: Emissions from Artificial Intelligence | IdleForest",
-          "seoDescription": "Understand the carbon footprint of AI models like ChatGPT, Midjourney, and LLMs. Learn how training and inference contribute to global digital emissions.",
-          "eyebrow": "AI Emissions Hub",
-          "intro": "Artificial Intelligence offers incredible capabilities, but these systems require massive amounts of energy. From training neural networks to processing millions of daily prompts, AI's carbon footprint is growing rapidly.",
-          "sections": {
-            "trainingVsInference": {
-              "title": "Training vs. Inference",
-              "body": "Training a large language model uses thousands of GPUs running for months, creating a singular massive footprint. However, inference (the everyday use of models like ChatGPT) happens millions of times a day and adds up over time."
+        "projects": {
+            "eyebrow": "Où Nous Plantons",
+            "heading": "Les projets avec lesquels nous travaillons",
+            "subheading": "Nous finançons des projets de reforestation vérifiés via des partenaires de plantation de confiance et publions notre impact au fil du temps.",
+            "trees_planted_label": "Arbres plantés",
+            "kisumu": {
+                "title": "Kisumu 7 - Awach",
+                "description": "Un projet d'agroforesterie mené par les communautés dans l'ouest du Kenya pour restaurer les terres dégradées et soutenir les moyens de subsistance locaux.",
+                "partner": "Trees for the Future",
+                "location": "Kisumu, Kenya",
+                "focus": "Agroforesterie et restauration durable des terres",
+                "visual_title": "Kisumu"
             },
-            "hardwareAndCooling": {
-              "title": "Hardware and Cooling",
-              "body": "Data centers hosting AI hardware must be kept cool, which often requires significant water and electricity. The overall impact depends heavily on whether the data center runs on renewable energy."
-            }
-          }
-        },
-        "streaming": {
-          "title": "Streaming Carbon Footprint",
-          "seoTitle": "Streaming Carbon Footprint: YouTube, Netflix, Spotify | IdleForest",
-          "seoDescription": "Compare the carbon emissions of top streaming platforms. Estimate how binge-watching Netflix or listening to Spotify adds to your footprint.",
-          "eyebrow": "Streaming Emissions Hub",
-          "intro": "Streaming video and audio relies on complex networks to deliver high-quality media directly to your device. As resolutions increase, so does the amount of data transferred, which uses more server and network energy.",
-          "sections": {
-            "dataCentersToDevices": {
-              "title": "Data Centers to Devices",
-              "body": "Streaming's carbon footprint comes from three main sources: the data centers storing the media, the transmission networks delivering it, and the device you use to watch or listen."
+            "mkussu": {
+                "title": "Replantation de la forêt brûlée de Mkussu",
+                "description": "Un projet de restauration visant à rétablir le couvert forestier natif de Lushoto après les dégâts causés par les incendies.",
+                "partner": "Tree-Nation",
+                "location": "District de Lushoto, Tanzanie",
+                "focus": "Restauration de la forêt native après incendie",
+                "visual_title": "Mkussu"
             },
-            "audioVsVideo": {
-              "title": "Audio vs. Video",
-              "body": "Video streaming requires significantly more bandwidth than audio. Watching 4K video consumes considerably more energy and generates more emissions compared to standard definition streaming or listening to music."
+            "poverty": {
+                "title": "Plant to Stop Poverty",
+                "description": "Un projet d'agroforesterie qui aide les communautés rurales à restaurer les terres, développer une couverture arborée utile et renforcer leur résilience économique sur le long terme.",
+                "partner": "Tree-Nation",
+                "location": "Tanzanie",
+                "focus": "Agroforesterie et réduction de la pauvreté",
+                "visual_title": "Poverty"
             }
-          }
         },
-        "digitalCarbonFootprint": {
-          "title": "Digital Carbon Footprint",
-          "seoTitle": "What is a Digital Carbon Footprint? Definition & Guide | IdleForest",
-          "seoDescription": "Learn what a digital carbon footprint is and how your internet usage, emails, and Zoom meetings contribute to global carbon emissions.",
-          "eyebrow": "Digital Sustainability Hub",
-          "intro": "Every email sent, video watched, and website loaded uses a fraction of electrical energy. While individual actions seem tiny, billions of connected devices and data centers combine to form our global digital carbon footprint.",
-          "sections": {
-            "theInvisibleCloud": {
-              "title": "The Invisible Cloud",
-              "body": "When we save files to the cloud, they are actually stored on physical servers in massive data centers. These facilities run 24/7 and consume enormous amounts of electricity."
-            },
-            "howCanYouReduceIt": {
-              "title": "How Can You Reduce It?",
-              "body": "You can reduce your digital carbon footprint by keeping devices longer, streaming efficiently, closing unused browser tabs, and turning off video during meetings when appropriate."
-            }
-          }
+        "how_it_works": {
+            "heading": "Comment ça marche",
+            "subheading": "Trois étapes simples pour commencer à avoir un impact environnemental avec votre connexion Internet inutilisée.",
+            "trees_planted_badge": "{count} arbres plantés par notre communauté",
+            "step1_title": "Installez l'Extension",
+            "step1_desc": "Ajoutez notre extension Chrome légère en quelques secondes. Aucune inscription ni configuration requise.",
+            "step2_title": "Partagez la Bande Passante",
+            "step2_desc": "Votre connexion Internet inactive est utilisée de manière sécurisée pour la recherche approuvée et la distribution de contenu — remplaçant les centres de données traditionnels qui consomment d'énormes quantités d'énergie et d'eau.",
+            "step2_link": "Découvrez comment nous sommes 80-90% plus écologiques que les fermes de serveurs",
+            "step3_title": "Nous Plantons des Arbres",
+            "step3_desc": "Les revenus générés financent des projets vérifiés de plantation d'arbres dans le monde entier. Suivez votre impact en temps réel."
+        },
+        "desktop_apps": {
+            "heading": "Applications de Bureau Disponibles",
+            "description": "En téléchargeant IdleForest, vous rejoignez une communauté mondiale dédiée à la reforestation et à la conservation de l'environnement.",
+            "windows_desc": "Téléchargez IdleForest pour Windows pour commencer à faire la différence avec votre puissance de calcul inactive.",
+            "mac_desc": "Téléchargez IdleForest pour macOS pour contribuer aux efforts de reforestation pendant que votre ordinateur est inactif.",
+            "download_windows": "Télécharger pour Windows",
+            "download_mac": "Télécharger pour Mac OS"
+        },
+        "impact": {
+            "heading": "Notre Impact",
+            "trees_label": "ARBRES À PLANTER",
+            "requests_label": "TOTAL DES REQUÊTES",
+            "users_label": "UTILISATEURS ACTIFS",
+            "contributions_label": "TOTAL DES CONTRIBUTIONS"
+        },
+        "achievements": {
+            "heading_line1": "Ce que nous avons accompli",
+            "heading_line2": "et où nous allons",
+            "browser_ext_title": "EXTENSION NAVIGATEUR",
+            "browser_ext_desc": "Nous avons lancé nos extensions phares pour Chrome, Firefox et Edge. Cette étape clé permet aux utilisateurs de contribuer à la reforestation lors de leur navigation quotidienne.",
+            "browser_ext_status": "TERMINÉ",
+            "desktop_title": "APPLICATION BUREAU",
+            "desktop_desc": "Notre application de bureau étend IdleForest au-delà du navigateur, permettant des contributions même lorsque vous ne naviguez pas activement.",
+            "desktop_status": "BÊTA",
+            "referral_title": "SYSTÈME DE PARRAINAGE",
+            "referral_desc": "Invitez des amis et des entreprises pour multiplier l'impact. Gagnez des arbres bonus pour les parrainages réussis.",
+            "referral_status": "EN DÉVELOPPEMENT",
+            "mobile_title": "APPLICATION MOBILE",
+            "mobile_desc": "Apportez IdleForest sur iOS et Android pour contribuer en déplacement avec une utilisation intelligente et écoénergétique.",
+            "mobile_status": "PLANIFIÉ",
+            "corporate_title": "CERTIFICATION D'IMPACT ENTREPRISE",
+            "corporate_desc": "Un programme de vérification permettant aux entreprises de certifier et de mettre en valeur leurs contributions environnementales.",
+            "corporate_status": "PLANIFIÉ"
+        },
+        "faq": {
+            "heading": "Questions Fréquentes",
+            "subheading": "Des questions ? Nous avons les réponses. Apprenez-en plus sur le fonctionnement d'IdleForest.",
+            "install_q": "Comment installer et utiliser l'extension ?",
+            "permission_q": "Pourquoi l'extension demande-t-elle la permission de « lire et modifier toutes les données » ?",
+            "permission_a1": "Nous comprenons que cette permission semble plus large que prévu. Voici ce qui se passe réellement : Nous ne lisons ni n'accédons à aucune donnée des sites web que vous visitez.",
+            "permission_a2": "L'extension utilise votre bande passante inutilisée en accédant à des sites web de manière sans session, garantissant qu'aucune donnée personnelle n'est transmise.",
+            "permission_a3": "Nous avons besoin de cette permission en raison d'une limitation technique des extensions de navigateur. Les navigateurs n'offrent pas d'option plus granulaire — elle est regroupée dans la catégorie « lire et modifier ».",
+            "permission_a4": "Votre vie privée et votre sécurité sont importantes pour nous. Nous n'utilisons que la fonctionnalité minimale nécessaire.",
+            "permission_a5": "Notre code est open source, vous pouvez l'examiner vous-même. En savoir plus sur",
+            "permission_link": "les iframes sans identifiants et leur sécurité",
+            "safe_q": "IdleForest est-il sûr à utiliser ?",
+            "safe_a1": "Oui ! IdleForest est complètement sûr. Nous utilisons des pratiques de sécurité standard et notre code est open source.",
+            "safe_a2": "Votre bande passante inutilisée n'est utilisée que pour la recherche approuvée. Nous n'accédons jamais à vos données personnelles.",
+            "safe_a3": "Pour des détails complets sur l'utilisation de votre bande passante, visitez notre",
+            "safe_link": "Page de Transparence",
+            "slow_q": "Cela va-t-il ralentir mon Internet ?",
+            "slow_a1": "Non. IdleForest n'utilise que votre bande passante inactive.",
+            "slow_a2": "Notre extension est conçue pour avoir zéro impact sur votre navigation. IdleForest se réduit automatiquement si vous avez besoin de bande passante.",
+            "trees_q": "Comment les arbres sont-ils réellement plantés ?",
+            "trees_a1": "Votre bande passante partagée génère des revenus. Nous utilisons 100% de nos bénéfices pour financer des projets vérifiés de plantation d'arbres.",
+            "trees_a2": "Nous collaborons avec Trees for the Future et Tree-Nation pour garantir que chaque arbre est planté et suivi. Vous pouvez suivre votre contribution en temps réel.",
+            "browser_q": "Dois-je garder mon navigateur ouvert ?",
+            "browser_a1": "Pour l'extension, oui — votre navigateur doit être ouvert.",
+            "browser_a2": "Nous proposons aussi des applications de bureau pour Windows et macOS qui fonctionnent en arrière-plan même quand votre navigateur est fermé.",
+            "ai_q": "Je suis préoccupé par le soutien aux entreprises d'IA. Pourquoi utiliser IdleForest ?",
+            "ai_a1": "Les entreprises d'IA collecteront des données web quoi qu'il arrive — c'est essentiel pour entraîner les modèles.",
+            "ai_a2": "La question n'est pas si la collecte a lieu, mais comment. Le web scraping traditionnel utilise des centres de données massifs responsables de 1-2% de la consommation mondiale d'électricité.",
+            "ai_a3": "Les réseaux distribués sont 80-90% plus respectueux de l'environnement que les centres de données traditionnels.",
+            "ai_a4": "En utilisant IdleForest, vous aidez à rendre une industrie existante plus verte tout en finançant la reforestation.",
+            "ai_link": "En savoir plus sur les avantages environnementaux",
+            "disclaimer": "IdleForest est une extension de navigateur et une application de bureau pour la reforestation. Non associé au jeu mobile « Idle Forest »."
         }
-      },
-      "view_leaderboard": "Voir le Classement",
-      "leaderboard_seo_title": "Classement des Apps par Empreinte Carbone | IdleForest",
-      "leaderboard_seo_desc": "Quelles apps ont la plus forte empreinte carbone ? Explorez le classement qui compare les émissions numériques des outils IA, jeux, services de streaming et plus encore.",
-      "leaderboard_breadcrumb": "Classement",
-      "leaderboard_eyebrow": "Classement des Émissions",
-      "leaderboard_title_pt1": "Les Plus Lourdes",
-      "leaderboard_title_pt2": "Empreintes",
-      "leaderboard_title_pt3": "Carbone",
-      "leaderboard_desc": "Classées des émissions les plus élevées aux plus faibles. Découvrez quelles plateformes consomment le plus d'énergie et génèrent les plus hauts niveaux de CO2 lors de votre utilisation quotidienne."
+    },
+    "Footer": {
+        "product": "Produit",
+        "browser_extension": "Extension Navigateur",
+        "desktop_app": "Application Bureau",
+        "company": "Entreprise",
+        "transparency": "Transparence",
+        "contact": "Contact",
+        "terms": "Conditions d'Utilisation",
+        "resources": "Ressources",
+        "blog": "Blog",
+        "discord": "Discord",
+        "github": "GitHub",
+        "copyright": "© {year} IdleForest. Tous droits réservés.",
+        "tagline": "Transformer l'internet inutilisé en vrais arbres."
+    },
+    "Transparency": {
+        "badge": "Transparence Totale",
+        "hero_title": "Comment Votre Bande Passante Est Utilisée",
+        "hero_desc": "Nous croyons en une transparence complète. Voici exactement qui utilise votre bande passante inactive et les protections juridiques que nous fournissons.",
+        "env_title": "Pourquoi les Réseaux Distribués Sont Plus Écologiques",
+        "env_desc": "Les réseaux distribués comme Olostep sont nettement plus écologiques que les centres de données traditionnels.",
+        "dc_title": "Centres de Données Traditionnels",
+        "dc_energy": "Consommation massive d'énergie : 1-2% de l'électricité mondiale",
+        "dc_cooling": "Systèmes de refroidissement 24h/24 : Jusqu'à 40% de l'énergie pour le refroidissement",
+        "dc_infra": "Infrastructure dédiée : Serveurs fonctionnant pour le web scraping",
+        "dc_water": "Utilisation d'eau : Millions de gallons par jour",
+        "dc_waste": "Déchets électroniques : Matériel remplacé tous les 3-5 ans",
+        "dn_title": "Réseaux Distribués",
+        "dn_infra": "Zéro nouvelle infrastructure : Utilise des appareils existants",
+        "dn_cooling": "Pas de refroidissement supplémentaire : Refroidissement ambiant",
+        "dn_idle": "Utilisation des ressources inactives : Bande passante autrement gaspillée",
+        "dn_water": "Aucune consommation d'eau : Zéro infrastructure de refroidissement",
+        "savings_title": "Économies Environnementales Estimées",
+        "energy_pct": "~85%",
+        "energy_label": "MOINS D'ÉNERGIE PAR REQUÊTE",
+        "energy_desc": "Pas besoin de serveurs dédiés ni de refroidissement",
+        "water_pct": "~95%",
+        "water_label": "MOINS D'UTILISATION D'EAU",
+        "water_desc": "Pas de systèmes de refroidissement intensifs en eau",
+        "carbon_pct": "~75%",
+        "carbon_label": "EMPREINTE CARBONE RÉDUITE",
+        "carbon_desc": "Réduction des émissions de fabrication et d'exploitation",
+        "bottom_line": "En résumé :",
+        "bottom_line_desc": "Avec IdleForest, nous réduisons les coûts des centres de données de 80-90% grâce aux réseaux distribués, puis plantons plus d'arbres que nécessaire pour compenser — rendant le processus net négatif.",
+        "client_title": "Notre Client Approuvé",
+        "client_desc": "Nous travaillons exclusivement avec un partenaire vérifié pour garantir les plus hauts standards de sécurité et d'utilisation éthique.",
+        "olostep_subtitle": "API de Données Web pour Applications",
+        "visit_olostep": "Visiter Olostep.com",
+        "what_olostep_does": "Ce Que Fait Olostep :",
+        "what_olostep_does_desc": "Olostep fournit une API de données web qui aide les entreprises à accéder à des données web propres et structurées.",
+        "how_bandwidth_used": "Comment Votre Bande Passante Est Utilisée :",
+        "how_bandwidth_desc": "Votre bande passante inactive est utilisée pour accéder à des sites web publics de manière sans session. Cela signifie :",
+        "no_cookies": "Aucun cookie, identifiant ou information personnelle n'est envoyé",
+        "public_only": "Seules les pages web publiques sont consultées",
+        "isolated": "Les requêtes sont isolées de votre session de navigation",
+        "ip_usage": "Votre IP n'est utilisée que pour des requêtes web standard",
+        "who_uses": "Qui Utilise les Services d'Olostep",
+        "who_uses_desc": "Olostep sert des startups IA légitimes et des entreprises technologiques.",
+        "who_uses_note": "Ces entreprises utilisent Olostep pour la recherche en IA, la génération de leads et l'analyse de marché.",
+        "searches_title": "Types de Recherches Effectuées",
+        "bi_title": "Veille Stratégique",
+        "bi_desc": "Collecte d'informations commerciales publiques à des fins de vente et de recherche.",
+        "price_title": "Suivi des Prix",
+        "price_desc": "Suivi des prix sur les sites de commerce électronique.",
+        "research_title": "Recherche Approfondie",
+        "research_desc": "Recherche alimentée par l'IA pour la santé, la pharma et la finance.",
+        "content_title": "Surveillance du Contenu",
+        "content_desc": "Suivi des changements sur les sites web et offres d'emploi.",
+        "dont_do_title": "Ce Que Nous NE Faisons PAS :",
+        "dont_password": "Accéder à du contenu protégé par mot de passe",
+        "dont_illegal": "Effectuer des activités illégales",
+        "dont_spam": "Envoyer du spam ou mener des attaques DDoS",
+        "dont_personal": "Accéder à vos données personnelles ou cookies",
+        "dont_tos": "Violer les conditions d'utilisation des sites web",
+        "legal_title": "Vos Protections Juridiques",
+        "legal_desc": "Nous prenons votre protection juridique au sérieux.",
+        "liability_title": "1. Protection de Responsabilité Contractuelle",
+        "liability_desc": "IdleForest assume l'entière responsabilité juridique pour tout le trafic généré via notre réseau.",
+        "liability_1": "Vous n'êtes pas responsable des requêtes effectuées via votre connexion",
+        "liability_2": "IdleForest indemnise les utilisateurs contre toute réclamation juridique",
+        "liability_3": "Nous maintenons une assurance responsabilité complète",
+        "vetting_title": "2. Vérification Stricte des Clients",
+        "vetting_desc": "Nous travaillons uniquement avec Olostep, une entreprise légitime vérifiée :",
+        "vetting_1": "Olostep est une entreprise enregistrée avec des références vérifiées",
+        "vetting_2": "Cas d'utilisation limités à la collecte légitime de données web",
+        "vetting_3": "Accord juridique interdisant les activités illégales",
+        "vetting_4": "Code open source auditable",
+        "monitoring_title": "3. Surveillance du Trafic et Conformité",
+        "monitoring_desc": "Nous surveillons activement tout le trafic réseau :",
+        "monitoring_1": "Systèmes automatisés signalant le trafic suspect",
+        "monitoring_2": "Toutes les requêtes sont enregistrées et auditables",
+        "monitoring_3": "Liste de blocage des sites et activités interdites",
+        "monitoring_4": "Violation = résiliation immédiate du client",
+        "gdpr_title": "4. Conformité RGPD et Protection des Données",
+        "gdpr_desc": "En tant que service européen, nous respectons le RGPD :",
+        "gdpr_1": "Aucune donnée personnelle collectée, stockée ou transmise",
+        "gdpr_2": "Requêtes web sans session et isolées",
+        "gdpr_3": "Désinscription possible à tout moment",
+        "gdpr_4": "Politiques de confidentialité détaillées",
+        "security_title": "Mesures de Sécurité Supplémentaires",
+        "encrypted_title": "🔒 Connexions Chiffrées",
+        "encrypted_desc": "Tout le trafic est chiffré via TLS/SSL.",
+        "isolated_title": "🛡️ Exécution Isolée",
+        "isolated_desc": "Requêtes en environnements isolés sans accès à vos données.",
+        "logging_title": "📊 Journalisation Transparente",
+        "logging_desc": "Toute l'activité réseau est journalisée et consultable.",
+        "opensource_title": "🔍 Code Open Source",
+        "opensource_desc": "Extension et application open source, auditables par des chercheurs indépendants.",
+        "view_github": "Voir sur GitHub",
+        "bandwidth_title": "⚡ Contrôles de Bande Passante",
+        "bandwidth_desc": "Contrôle total sur la bande passante utilisée.",
+        "optout_title": "🚫 Désinscription Instantanée",
+        "optout_desc": "Arrêtez le partage immédiatement en désinstallant l'application.",
+        "faq_title": "FAQ Transparence",
+        "faq_see_q": "Puis-je voir les sites consultés via ma connexion ?",
+        "faq_see_a": "Oui ! Un tableau de bord de transparence est en préparation. En attendant, consultez notre code open source.",
+        "faq_harmful_q": "Et si les clients utilisent les données à des fins nuisibles ?",
+        "faq_harmful_a": "Les clients d'Olostep sont des entreprises vérifiées utilisant des données publiques. Toute violation entraîne une résiliation immédiate.",
+        "faq_more_q": "Comment saurai-je si vous ajoutez d'autres clients ?",
+        "faq_more_a": "Cette page sera mise à jour et vous serez notifié par e-mail. Vous pouvez toujours vous désinscrire.",
+        "faq_isp_q": "Mon FAI est-il au courant ?",
+        "faq_isp_a": "Le trafic ressemble à une navigation web normale — du HTTPS chiffré vers des sites légitimes.",
+        "still_questions": "Encore des Questions ?",
+        "still_questions_desc": "Nous sommes là pour vous aider avec toute question sur l'utilisation de votre bande passante.",
+        "contact_us": "Contactez-Nous",
+        "back_home": "Retour à l'Accueil"
+    },
+    "Contact": {
+        "title": "Contactez-Nous",
+        "description": "Questions, commentaires ou intéressé par des solutions entreprise ? Nous serions ravis de vous entendre.",
+        "form_title": "Envoyez-nous un message",
+        "name_label": "Nom Complet",
+        "name_placeholder": "Votre Nom",
+        "email_label": "Adresse E-mail",
+        "email_placeholder": "vous@exemple.com",
+        "company_label": "Nom de l'Entreprise",
+        "company_placeholder": "Votre Entreprise SARL",
+        "size_label": "Taille de l'Entreprise",
+        "size_placeholder": "ex., 1-10, 50-200, 1000+",
+        "location_label": "Localisation (Ville, Pays)",
+        "location_placeholder": "ex., Paris, France",
+        "subject_label": "Sujet",
+        "subject_optional": "(Facultatif)",
+        "subject_placeholder": "ex., Demande Entreprise",
+        "message_label": "Votre Message",
+        "message_placeholder": "Tapez votre message ici...",
+        "success_msg": "✓ Message envoyé ! Nous vous répondrons bientôt.",
+        "error_msg": "✗ Oups ! Quelque chose s'est mal passé. Réessayez.",
+        "sending": "Envoi en cours...",
+        "send": "Envoyer le Message",
+        "info_title": "Informations de Contact",
+        "email_us": "Écrivez-Nous",
+        "general_inquiries": "Demandes générales et support",
+        "book_meeting": "Réserver une Réunion",
+        "schedule_call": "Planifiez un appel avec nous",
+        "find_time": "Trouvez un créneau qui vous convient"
+    },
+    "Downloads": {
+        "title": "TÉLÉCHARGER IDLEFOREST",
+        "description": "Commencez avec IdleForest sur votre plateforme préférée. Choisissez nos applications de bureau ou nos extensions de navigateur légères.",
+        "windows_desc": "Téléchargez IdleForest pour Windows pour faire la différence avec votre puissance de calcul inactive.",
+        "mac_desc": "Téléchargez IdleForest pour macOS pour contribuer à la reforestation.",
+        "download_windows": "Télécharger pour Windows",
+        "download_mac": "Télécharger pour Mac OS",
+        "browser_heading": "Extensions Navigateur",
+        "browser_desc": "Légères et faciles à installer dans votre navigateur préféré."
+    },
+    "Business": {
+        "hero_title_line1": "Améliorez Passivement Votre Score ESG et",
+        "hero_title_line2": "Reboisez la Planète",
+        "hero_desc": "Transformez la bande passante inutilisée de votre entreprise en impact environnemental vérifié.",
+        "contact_us": "Contactez-Nous",
+        "features_title": "Ce Que Nous Pouvons Faire pour les Entreprises",
+        "features_desc": "Rejoignez les entreprises qui ont un impact environnemental réel tout en impliquant leurs employés.",
+        "esg_title": "Score ESG et B-Corp",
+        "esg_desc": "Améliorez vos notations ESG et B-Corp avec des données d'impact vérifiées.",
+        "image_title": "Améliorez l'Image Publique",
+        "image_desc": "Renforcez votre réputation et démontrez un engagement authentique envers la durabilité.",
+        "community_title": "Mise en Avant Communautaire",
+        "community_desc": "Gagnez en visibilité auprès de notre communauté d'utilisateurs éco-conscients.",
+        "onboarding_title": "Intégration Automatisée",
+        "onboarding_desc": "Configuration automatisée sur tout votre réseau. Déploiement léger de 130 Mo.",
+        "certificates_title": "Certificats Vérifiés",
+        "certificates_desc": "Certificats soutenus par Tree Nation. Émis annuellement ou tous les 6 mois.",
+        "donation_title": "Abondement des Dons",
+        "donation_desc": "Nous abondons vos dons jusqu'à votre objectif ESG/RSE.",
+        "download_title": "Télécharger IdleForest",
+        "download_desc": "Commencez avec IdleForest et ayez un impact environnemental positif.",
+        "windows_desc": "130 Mo. Installation silencieuse et déploiement réseau automatisé.",
+        "mac_desc": "Optimisé pour macOS Apple Silicon et Intel. Zéro impact sur les performances.",
+        "download_windows": "Télécharger pour Windows",
+        "download_mac": "Télécharger pour Mac",
+        "cert_section_title": "Certificats d'Impact Vérifiés",
+        "cert_section_desc": "Mettez en valeur votre engagement environnemental avec des certificats Tree Nation.",
+        "cert_impact": "Certificat d'Impact",
+        "cert_certifies": "Ceci certifie que",
+        "cert_contributed": "a contribué à la reforestation mondiale via IdleForest :",
+        "trees_planted": "Arbres Plantés :",
+        "co2_offset": "CO₂ Compensé :",
+        "project_locations": "Emplacements :",
+        "period": "Période :",
+        "verified_by": "Vérifié et authentifié par IdleForest",
+        "recognized_title": "Reconnu et Fiable",
+        "recognized_desc": "Certificats Tree Nation reconnus mondialement. Plus de 700 utilisateurs et entreprises.",
+        "shareable_title": "Rapports Partageables",
+        "shareable_desc": "Certificats annuels ou semestriels. Rapports PDF téléchargeables.",
+        "esg_ready_title": "Prêt pour ESG et B-Corp",
+        "esg_ready_desc": "Améliorez passivement votre score ESG avec des données d'impact vérifiées.",
+        "cta_title": "Prêt à faire la différence ?",
+        "cta_desc": "Rejoignez les entreprises utilisant IdleForest pour un impact environnemental positif."
+    },
+    "DiscordBot": {
+        "hero_title_line1": "FAITES GRANDIR LA",
+        "hero_title_line2": "FORÊT DE VOTRE SERVEUR",
+        "hero_desc": "Ajoutez le bot IdleForest à votre serveur Discord, connectez votre équipe et demandez aux membres de télécharger l'application de bureau pour faire grandir la forêt de votre communauté dans Discord.",
+        "add_bot": "Ajouter le Bot au Serveur",
+        "join_discord": "Rejoignez notre Discord",
+        "stats_servers": "SERVEURS",
+        "stats_trees": "ARBRES PLANTÉS",
+        "stats_messages": "MESSAGES SUIVIS",
+        "how_title": "Comment Ça Marche",
+        "how_desc": "Faites grandir la forêt de votre serveur en quatre étapes simples.",
+        "step1_title": "Ajoutez le Bot",
+        "step1_desc": "Invitez le bot IdleForest en un seul clic. Aucune configuration nécessaire.",
+        "step2_title": "Connectez Votre Équipe",
+        "step2_desc": "Utilisez le bot pour créer ou lier votre équipe IdleForest afin que votre serveur partage une seule forêt, un classement et un impact total.",
+        "step3_title": "Installez l'App de Bureau",
+        "step3_desc": "Demandez aux membres de télécharger l'application de bureau IdleForest et de rejoindre votre équipe. Leur activité alimente le compteur d'arbres en direct dans Discord.",
+        "step3_cta": "Télécharger l'App de Bureau",
+        "step4_title": "Regardez-la Grandir",
+        "step4_desc": "Suivez votre compteur d'arbres en direct, le classement et la croissance de la forêt dans la barre latérale Discord et avec /forest.",
+        "features_title": "Fonctionnalités",
+        "features_desc": "Tout pour gamifier la reforestation dans votre serveur Discord.",
+        "feat_leaderboard_title": "Classement du Serveur",
+        "feat_leaderboard_desc": "Voyez qui contribue le plus avec /leaderboard. Compétition amicale pour l'environnement.",
+        "feat_forest_title": "Forêt Visuelle",
+        "feat_forest_desc": "Regardez votre forêt grandir d'une graine à une forêt avec /forest.",
+        "feat_realtime_title": "Suivi en Temps Réel",
+        "feat_realtime_desc": "Chaque message contribue instantanément. Voyez votre impact grandir.",
+        "feat_privacy_title": "Confidentialité d'Abord",
+        "feat_privacy_desc": "Nous ne comptons que les messages — jamais le contenu.",
+        "feat_badges_title": "Badges de Jalons",
+        "feat_badges_desc": "Gagnez des badges en atteignant des jalons de plantation.",
+        "feat_free_title": "100% Gratuit",
+        "feat_free_desc": "Pas de premium ni de paywalls. Toutes les fonctionnalités pour tous.",
+        "top_title": "Meilleurs Serveurs Plantant des Arbres",
+        "cta_title": "Prêt à faire grandir la forêt de votre serveur ?",
+        "cta_desc": "Rejoignez des centaines de serveurs Discord qui ont déjà un impact avec le bot et l'application de bureau IdleForest.",
+        "trusted": "Fait confiance par les communautés Discord du monde entier"
+    },
+    "Map": {
+        "title": "Carte des Plantations – IdleForest",
+        "description": "Explorez la carte interactive des endroits où IdleForest a planté des arbres avec nos partenaires.",
+        "heading": "Notre carte des plantations",
+        "text": "Découvrez où nous avons planté des arbres avec des partenaires comme Trees for the Future et Tree-Nation. Cette carte est mise à jour au fur et à mesure de nos plantations."
+    },
+    "Teams": {
+        "placeholder_search": "Rechercher des Équipes",
+        "loading_teams": "Chargement des équipes...",
+        "no_teams": "Aucune équipe trouvée",
+        "no_teams_search": "Aucune équipe ne correspond à votre recherche",
+        "create_team_prompt": "Créez une équipe pour commencer",
+        "loading_rankings": "Chargement des classements...",
+        "all_time_rankings_label": "Classement Général des Utilisateurs",
+        "top_earners_label": "Meilleurs Contributeurs",
+        "top_teams_label": "Meilleures Équipes",
+        "fastest_growing": "Croissance Rapide",
+        "no_users": "Aucun utilisateur trouvé",
+        "no_data": "Aucune donnée pour cette période",
+        "fastest_growing_label": "Croissance Rapide (Nouveaux Membres)",
+        "members_total": "membres au total",
+        "no_teams_gained": "Aucune équipe n'a gagné de membres cette période",
+        "created": "Créé",
+        "period_today": "Aujourd'hui",
+        "period_week": "Cette Semaine",
+        "period_month": "Ce Mois",
+        "all_time": "Toujours",
+        "top_users": "Meilleurs Utilisateurs",
+        "points": "Points",
+        "new_members": "Nouveaux Membres"
+    },
+    "Report": {
+        "title": "Rapport Annuel & Analyses | IdleForest",
+        "description": "Consultez le rapport annuel et les analyses en direct d'IdleForest — arbres plantés, utilisateurs actifs, bande passante partagée et revenus générés pour les projets de reforestation.",
+        "annual": "Annuel",
+        "report": "Rapport",
+        "annual_report": "Rapport Annuel",
+        "analytics": "Analyses",
+        "historical_data": "Données Historiques",
+        "about_title": "À propos d'IdleForest",
+        "about_desc": "IdleForest est une extension de navigateur passive qui plante des arbres pendant que vous naviguez, jouez ou streamez. Elle utilise votre bande passante inutilisée pour financer des projets de reforestation.",
+        "free_to_use": "Gratuit à utiliser",
+        "no_account": "Aucun compte requis",
+        "open_source": "Open source",
+        "progress_title": "Notre Progrès de Plantation",
+        "progress_desc": "Suivi de notre impact de reforestation avec nos partenaires",
+        "total_contributions": "Contributions Totales",
+        "trees_planted_progress": "Arbres Plantés",
+        "est_donation": "Valeur Est. des Dons (USD)",
+        "impact_milestones": "Jalons d'Impact",
+        "latest": "Dernier",
+        "trees": "arbres",
+        "view_certificate": "Voir le Certificat",
+        "historical_title": "Performance Historique d'Idleforest",
+        "historical_desc": "Suivi des indicateurs clés de performance au fil du temps",
+        "granularity": "Granularité :",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel",
+        "total_requests": "Total des Requêtes",
+        "active_nodes": "Nœuds Actifs",
+        "total_earnings": "Total des Gains",
+        "trees_planted_chart": "Arbres Plantés",
+        "projects": {
+            "tn-eden-madagascar": {
+                "name": "Projets de Reforestation Eden – Madagascar"
+            },
+            "if-kenya": {
+                "name": "Initiative Forestière Mondiale – Kenya"
+            },
+            "tftf-kisumu7-awach": {
+                "name": "Kisumu 7 – Awach, Kenya"
+            },
+            "tftf-homa-bay-19": {
+                "name": "Homa Bay 19 – Ndhiwa, Kenya"
+            },
+            "tftf-senegal": {
+                "name": "Projets TFTF – Sénégal"
+            },
+            "pod-dream-uganda-rwenzori": {
+                "name": "Dream International – Montagnes Rwenzori, Ouganda"
+            },
+            "pod-cameroon": {
+                "name": "POD – Agroforesterie au Cameroun"
+            },
+            "tn-syzygium": {
+                "name": "Replantation de la forêt brûlée de Mkussu",
+                "description": "Restauration de la réserve forestière naturelle de Mkussu dans le district de Lushoto après les dégâts causés par les incendies."
+            },
+            "tn-plant-to-stop-poverty": {
+                "name": "Planter pour arrêter la pauvreté",
+                "description": "Aider les communautés rurales à mettre en œuvre l'agroforesterie pour lutter contre la pauvreté."
+            },
+            "default_contribution": "Contribution de {partner}",
+            "default_impact": "A planté {trees} arbres avec {partner} pour soutenir la reforestation."
+        }
+    },
+    "CarbonFootprint": {
+        "items": {
+            "fortnite": {
+                "human_equivalent": "Conduire une voiture sur 550 km",
+                "idleforest_pitch": "Les joueurs ont une bande passante élevée. Laissez votre PC planter des arbres pendant votre sommeil."
+            },
+            "netflix": {
+                "human_equivalent": "Recharger 5 000 smartphones",
+                "idleforest_pitch": "Compensez automatiquement vos marathons de séries."
+            },
+            "tiktok": {
+                "human_equivalent": "Conduire 350 km en voiture",
+                "idleforest_pitch": "Faites défiler sans culpabilité en plantant des arbres en arrière-plan."
+            },
+            "chatgpt": {
+                "human_equivalent": "Recharger votre smartphone 3 300 fois",
+                "idleforest_pitch": "L'IA est intelligente. Vous devriez l'être aussi. Compensez vos requêtes."
+            },
+            "openai": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "zoom": {
+                "human_equivalent": "Conduire de Londres à Oxford",
+                "idleforest_pitch": "Le télétravail évite les trajets, mais consomme de l'énergie. Rendez vos réunions neutres en carbone."
+            },
+            "instagram": {
+                "human_equivalent": "Conduire 130 km dans une voiture standard",
+                "idleforest_pitch": "Compensez votre temps de navigation sans changer vos habitudes."
+            },
+            "bitcoin": {
+                "human_equivalent": "Brûler une demi-tonne de charbon",
+                "idleforest_pitch": "La crypto a un coût. IdleForest vous aide à le rembourser à la planète."
+            },
+            "youtube": {
+                "human_equivalent": "Fabriquer 2 bouteilles en plastique",
+                "idleforest_pitch": "Regardez des vidéos tout en plantant une vraie forêt."
+            },
+            "twitch": {
+                "human_equivalent": "Conduire une voiture sur 160 km",
+                "idleforest_pitch": "Soutenez vos streamers préférés sans nuire à la planète."
+            },
+            "league-of-legends": {
+                "human_equivalent": "Conduire une voiture sur 450 km",
+                "idleforest_pitch": "Transformez votre addiction aux jeux en projet de reforestation."
+            },
+            "leagueoflegends": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "google-chrome": {
+                "human_equivalent": "Recharger votre téléphone pendant un an",
+                "idleforest_pitch": "Votre navigateur est déjà ouvert. Faites-le travailler pour la Terre."
+            },
+            "googlechrome": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "minecraft": {
+                "human_equivalent": "Conduire 290 km dans une voiture à essence",
+                "idleforest_pitch": "Des blocs de construction? Construisez plutôt une forêt."
+            },
+            "fallback:gamepad": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "microsoft-teams": {
+                "human_equivalent": "Utiliser une ampoule LED pendant 3 ans sans s'arrêter",
+                "idleforest_pitch": "Les réunions s'additionnent. Compensez vos heures de bureau."
+            },
+            "fallback:users": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "twitter": {
+                "human_equivalent": "Conduire 50 km en voiture",
+                "idleforest_pitch": "Vous scrollez à l'infini ? Transformez cela en plantation verte."
+            },
+            "x": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "spotify": {
+                "human_equivalent": "Faire bouillir 5 bouilloires d'eau",
+                "idleforest_pitch": "Votre bande-son ne devrait pas coûter la Terre."
+            },
+            "roblox": {
+                "human_equivalent": "Conduire 130 km en voiture",
+                "idleforest_pitch": "Jouez ensemble, plantez ensemble."
+            },
+            "ethereum": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "google-meet": {
+                "human_equivalent": "Conduire 130 km en voiture",
+                "idleforest_pitch": "Réunion terminée. Arbres plantés."
+            },
+            "googlemeet": {
+                "human_equivalent": "",
+                "idleforest_pitch": ""
+            },
+            "snapchat": {
+                "human_equivalent": "Conduire 36 km en voiture",
+                "idleforest_pitch": "Les snaps disparaissent. Le CO2 reste. Compensez-le."
+            },
+            "reddit": {
+                "human_equivalent": "Conduire 36 km en voiture",
+                "idleforest_pitch": "Points de karma pour la planète."
+            }
+        },
+        "categories": {
+            "Gaming": "Jeux",
+            "Streaming": "Streaming",
+            "Social": "Réseaux Sociaux",
+            "AI": "IA",
+            "Work": "Travail",
+            "Crypto": "Crypto",
+            "Browsing": "Navigation"
+        },
+        "sources": {
+            "title": "Sources & Méthodologie",
+            "carbon_trust_name": "Carbon Trust : impact carbone du streaming vidéo",
+            "carbon_trust_detail": "Estime qu'une heure de vidéo à la demande en Europe représente environ 55gCO2e et note que les appareils de visionnage pèsent souvent le plus dans l'impact total.",
+            "digital_name": "AIE : centres de données et réseaux de transmission",
+            "digital_detail": "Suit l'électricité et les émissions de l'infrastructure qui soutient la navigation web, les réseaux sociaux et le travail en ligne au quotidien.",
+            "greenly_name": "California Energy Commission : efficacité énergétique du gaming sur ordinateur",
+            "greenly_detail": "Résume des mesures de la demande énergétique du jeu vidéo et montre que l'appareil, le temps d'usage et les réglages font fortement varier la consommation.",
+            "llm_name": "AIE : Energy and AI",
+            "llm_detail": "Explique comment les charges de travail d'IA tournent dans les centres de données et comment serveurs, accélérateurs et refroidissement façonnent la demande d'électricité.",
+            "bitcoin_name": "Cambridge Bitcoin Electricity Consumption Index",
+            "bitcoin_detail": "Fournit une estimation continue de la meilleure valeur disponible pour la consommation électrique du réseau Bitcoin par l'équipe de recherche sur les actifs numériques de Cambridge.",
+            "visit_source": "Voir la source",
+            "idleforest_name": "Calcul de IdleForest",
+            "idleforest_detail": "Nos calculs supposent qu'un arbre mature absorbe ~20kg de CO2 par an."
+        },
+        "graph": {
+            "title": "Comparaison de l'Impact Annuel",
+            "idleforest_label": "IdleForest (1 An)",
+            "co2_emissions": "Émissions de CO2 (kg)",
+            "offset_note": "*IdleForest compense en moyenne ~200kg de CO2/an par utilisateur."
+        },
+        "calculator": {
+            "carbon_impact": "Impact Carbone",
+            "bitcoin_note": "Les transactions Bitcoin sont calculées par utilisation, non par heure.",
+            "co2_per_tx": "CO2 par Transaction",
+            "trees_to_offset_tx": "Arbres pour compenser 1 Tx",
+            "calculate_footprint": "Calculez votre Empreinte",
+            "how_many_hours": "Combien d'heures utilisez-vous {app} par semaine ?",
+            "hrs_week": "h/semaine",
+            "yearly_emissions": "Émissions Annuelles CO2",
+            "kg": "kg",
+            "trees": "arbres",
+            "needed_to_offset": "Nécessaires pour compenser"
+        },
+        "page": {
+            "back_to_home": "Retour à l'Accueil",
+            "carbon_footprint_of": "Empreinte Carbone de",
+            "did_you_know": "Saviez-vous qu'utiliser {app} pour juste une heure génère",
+            "g_of_co2": "g de CO2 ?",
+            "thats_equivalent_to": "Cela équivaut à {equivalent}.",
+            "compare_with_related": "Comparer avec des Apps similaires",
+            "open_comparison": "Ouvrir la comparaison",
+            "read_full_report": "Lire le rapport complet sur {app}",
+            "compare_breadcrumb": "Comparer",
+            "compare_eyebrow": "Comparaison d'Empreinte Carbone",
+            "compare_seo_title": "Empreinte Carbone de {app1} vs {app2} | IdleForest",
+            "compare_seo_desc": "Comparez l'empreinte carbone de {app1} et {app2}. Découvrez laquelle génère le plus d'émissions de CO2 et comment leur impact diffère.",
+            "compare_summary_title": "Résumé",
+            "compare_summary_intro": "En comparant {app1} et {app2},",
+            "compare_summary_tie": "elles ont une empreinte carbone horaire estimée identique.",
+            "compare_summary_winner": "{winner} génère nettement plus de CO2 par heure ({winnerGrams}g) que {loser} ({loserGrams}g).",
+            "compare_summary_outro": "Les deux applications reposent sur des appareils, des réseaux et une infrastructure serveur qui contribuent à leur impact environnemental.",
+            "deep_dive_into_footprints": "Explorer leurs empreintes en détail",
+            "higher_emissions": "Émissions plus élevées",
+            "g_co2_hour": "g CO2 / heure",
+            "co2_per_hour_short": "CO2 / HEURE",
+            "co2_per_tx_short": "CO2 / TX",
+            "per_transaction": "Par transaction",
+            "requires": "Nécessite",
+            "trees_yr_to_offset": "arbres/an pour compenser",
+            "about_idleforest": "À propos d'IdleForest",
+            "about_desc": "IdleForest est une extension de navigateur passive qui plante des arbres pendant que vous naviguez, jouez ou streamez. Elle utilise votre bande passante internet inutilisée pour financer des projets de reforestation.",
+            "free_to_use": "Utilisation gratuite",
+            "no_account": "Aucun compte requis",
+            "open_source": "Open source",
+            "not_found_title": "Non trouvé",
+            "not_found_desc": "La page demandée n'a pas été trouvée.",
+            "seo_title": "Empreinte Carbone de {app} | IdleForest",
+            "seo_desc": "Découvrez l'impact environnemental de l'utilisation de {app}. Calculez vos émissions de CO2 et voyez combien d'arbres sont nécessaires pour les compenser.",
+            "faq_q1": "Quelle est l'empreinte carbone de {app} ?",
+            "faq_a1": "Utiliser {app} pendant seulement une heure génère environ {grams}g de CO2. Ce qui équivaut à {equivalent}.",
+            "faq_q2": "Combien d'arbres dois-je planter pour compenser {app} ?",
+            "faq_a2": "Pour compenser une année d'utilisation typique de {app} (environ {kg}kg de CO2), vous devriez planter environ {trees} arbres.",
+            "bitcoin_comparison_note": "*Les transactions Bitcoin sont calculées par utilisation, mesurant le CO2 par transaction plutôt que par heure.",
+            "why_this_page_matters": "Pourquoi cette page est importante",
+            "searches_this_page_should_answer": "Questions auxquelles cette page devrait répondre",
+            "per_transaction_intro": "{app} est modélisé par transaction sur cette page. Un usage typique est estimé à <strong>{grams}g de CO2</strong>. Cela est grossièrement comparable à {equivalent}.",
+            "search_intent_eyebrow": "Couverture de l'intention de recherche",
+            "search_intent_title": "Questions auxquelles cette page est conçue pour répondre",
+            "drivers_title": "Ce qui influence le plus cette estimation",
+            "assumptions_title": "Hypothèses et limites",
+            "uncertainty_note": "Note d'incertitude:",
+            "reduction_title": "Façons de réduire cette empreinte",
+            "reviewed_eyebrow": "Relu et maintenu",
+            "review_title": "Détails de la relecture éditoriale",
+            "reviewed_by_label": "Relu par:",
+            "role_label": "Rôle:",
+            "organization_label": "Organisation:",
+            "last_reviewed_label": "Dernière relecture:",
+            "editorial_note": "Nous traitons ces pages comme des guides directionnels pour le grand public. Elles sont conçues pour expliquer clairement les principaux moteurs des émissions numériques, pas pour reproduire la comptabilité propriétaire d'un fournisseur.",
+            "sources_title": "Sources et suivi de relecture",
+            "editorial_snapshot_eyebrow": "Instantané éditorial",
+            "trust_title": "Pourquoi cette page doit inspirer confiance",
+            "trust_summary": "Cette page réunit un calculateur grand public, des notes de méthode, du contexte d'incertitude et des références de sources sur la même URL.",
+            "trust_canonical": "Canonique:",
+            "trust_last_reviewed": "Dernière relecture:",
+            "supporting_comparison_page": "Page de comparaison de soutien",
+            "why_gap_title": "Pourquoi l'écart existe",
+            "action_first_title": "Sur quoi agir en premier",
+            "compare_delta_note": "<strong>{winner}</strong> est actuellement modélisé avec <strong>{delta}g de CO2</strong> de plus par unité d'usage que <strong>{lighter}</strong>.",
+            "compare_tie_note": "Ces deux produits arrivent à la même estimation dans le modèle actuel. La meilleure cible d'optimisation est donc celle à laquelle vous consacrez le plus de temps.",
+            "compare_takeaways_title": "Points clés de la comparaison",
+            "more_questions_about": "Plus de questions sur l'empreinte carbone de {app}",
+            "explore_the_cluster": "Explorer le cluster de l'empreinte carbone",
+            "featured_carbon_guides": "Guides carbone en vedette",
+            "carbon_footprint_cluster_hub": "Hub du Cluster de l'Empreinte Carbone",
+            "carbon_hub": "Carbon Hub",
+            "digital_carbon_footprint_hub": "Guides et calculateurs de l'empreinte carbone numérique",
+            "hub_title": "Guides et calculateurs de l'<highlight>empreinte carbone numérique</highlight>",
+            "hub_intro": "Comparez l'empreinte carbone des applications, outils d'IA, jeux, navigateurs et plateformes de streaming que les gens utilisent tous les jours. Utilisez ces pages pour estimer les émissions, comprendre la méthodologie et trouver des moyens simples de compenser votre empreinte numérique.",
+            "hub_cards": {
+                "ai": {
+                    "title": "Empreinte carbone de l'IA",
+                    "description": "Commencez par des outils d'IA comme ChatGPT, puis élargissez vers le sujet plus global des émissions de l'IA."
+                },
+                "streaming": {
+                    "title": "Empreinte du streaming",
+                    "description": "Comparez Netflix, YouTube, Twitch, Spotify et l'usage des vidéos courtes."
+                },
+                "work": {
+                    "title": "Travail et navigation",
+                    "description": "Comprenez comment les réunions, les navigateurs et les workflows en ligne ajoutent à vos émissions numériques."
+                }
+            },
+            "explore_ai_emissions": "Explorer les émissions de l'IA",
+            "explore_streaming": "Explorer le streaming",
+            "explore_digital_footprint": "Explorer l'empreinte numérique",
+            "featured_pages_eyebrow": "Pages en vedette",
+            "best_places_to_start": "Les meilleurs points de départ",
+            "all_carbon_pages": "Toutes les pages carbone",
+            "browse_by_category": "Parcourir par catégorie",
+            "recommended_pages": "Pages recommandées",
+            "explore_related_guides": "Explorer les calculateurs et guides associés",
+            "open_page": "Ouvrir",
+            "cluster_links": {
+                "hub": {
+                    "title": "Hub de l'empreinte carbone numérique",
+                    "description": "Explorez toutes les pages sur l'empreinte carbone et comparez les plus grandes sources d'émissions numériques."
+                },
+                "ai": {
+                    "title": "Empreinte carbone de l'IA",
+                    "description": "Utilisez cette page parente pour relier ChatGPT à des recherches plus larges sur les émissions de l'IA."
+                },
+                "streaming": {
+                    "title": "Empreinte carbone du streaming",
+                    "description": "Comparez côte à côte des plateformes de streaming comme YouTube, Netflix et Twitch."
+                },
+                "digital_footprint": {
+                    "title": "Empreinte carbone numérique",
+                    "description": "Comprenez le concept global derrière les émissions des applis, navigateurs, usages professionnels et de l'IA."
+                }
+            },
+            "hubs": {
+                "ai": {
+                    "title": "AI Carbon Footprint",
+                    "seoTitle": "AI Carbon Footprint: Emissions from Artificial Intelligence | IdleForest",
+                    "seoDescription": "Understand the carbon footprint of AI models like ChatGPT, Midjourney, and LLMs. Learn how training and inference contribute to global digital emissions.",
+                    "eyebrow": "AI Emissions Hub",
+                    "intro": "Artificial Intelligence offers incredible capabilities, but these systems require massive amounts of energy. From training neural networks to processing millions of daily prompts, AI's carbon footprint is growing rapidly.",
+                    "sections": {
+                        "trainingVsInference": {
+                            "title": "Training vs. Inference",
+                            "body": "Training a large language model uses thousands of GPUs running for months, creating a singular massive footprint. However, inference (the everyday use of models like ChatGPT) happens millions of times a day and adds up over time."
+                        },
+                        "hardwareAndCooling": {
+                            "title": "Hardware and Cooling",
+                            "body": "Data centers hosting AI hardware must be kept cool, which often requires significant water and electricity. The overall impact depends heavily on whether the data center runs on renewable energy."
+                        }
+                    }
+                },
+                "streaming": {
+                    "title": "Streaming Carbon Footprint",
+                    "seoTitle": "Streaming Carbon Footprint: YouTube, Netflix, Spotify | IdleForest",
+                    "seoDescription": "Compare the carbon emissions of top streaming platforms. Estimate how binge-watching Netflix or listening to Spotify adds to your footprint.",
+                    "eyebrow": "Streaming Emissions Hub",
+                    "intro": "Streaming video and audio relies on complex networks to deliver high-quality media directly to your device. As resolutions increase, so does the amount of data transferred, which uses more server and network energy.",
+                    "sections": {
+                        "dataCentersToDevices": {
+                            "title": "Data Centers to Devices",
+                            "body": "Streaming's carbon footprint comes from three main sources: the data centers storing the media, the transmission networks delivering it, and the device you use to watch or listen."
+                        },
+                        "audioVsVideo": {
+                            "title": "Audio vs. Video",
+                            "body": "Video streaming requires significantly more bandwidth than audio. Watching 4K video consumes considerably more energy and generates more emissions compared to standard definition streaming or listening to music."
+                        }
+                    }
+                },
+                "digitalCarbonFootprint": {
+                    "title": "Digital Carbon Footprint",
+                    "seoTitle": "What is a Digital Carbon Footprint? Definition & Guide | IdleForest",
+                    "seoDescription": "Learn what a digital carbon footprint is and how your internet usage, emails, and Zoom meetings contribute to global carbon emissions.",
+                    "eyebrow": "Digital Sustainability Hub",
+                    "intro": "Every email sent, video watched, and website loaded uses a fraction of electrical energy. While individual actions seem tiny, billions of connected devices and data centers combine to form our global digital carbon footprint.",
+                    "sections": {
+                        "theInvisibleCloud": {
+                            "title": "The Invisible Cloud",
+                            "body": "When we save files to the cloud, they are actually stored on physical servers in massive data centers. These facilities run 24/7 and consume enormous amounts of electricity."
+                        },
+                        "howCanYouReduceIt": {
+                            "title": "How Can You Reduce It?",
+                            "body": "You can reduce your digital carbon footprint by keeping devices longer, streaming efficiently, closing unused browser tabs, and turning off video during meetings when appropriate."
+                        }
+                    }
+                }
+            },
+            "view_leaderboard": "Voir le Classement",
+            "leaderboard_seo_title": "Classement des Apps par Empreinte Carbone | IdleForest",
+            "leaderboard_seo_desc": "Quelles apps ont la plus forte empreinte carbone ? Explorez le classement qui compare les émissions numériques des outils IA, jeux, services de streaming et plus encore.",
+            "leaderboard_breadcrumb": "Classement",
+            "leaderboard_eyebrow": "Classement des Émissions",
+            "leaderboard_title_pt1": "Les Plus Lourdes",
+            "leaderboard_title_pt2": "Empreintes",
+            "leaderboard_title_pt3": "Carbone",
+            "leaderboard_desc": "Classées des émissions les plus élevées aux plus faibles. Découvrez quelles plateformes consomment le plus d'énergie et génèrent les plus hauts niveaux de CO2 lors de votre utilisation quotidienne."
+        }
     }
-  }
 }

@@ -232,7 +232,11 @@ export const plantingsData: PlantingsData = {
       partnerId: "tftf",
       projectId: "tftf-kisumu7-awach",
       countryCode: "KE",
-      receiptId: "tftf-2025-09-05",
+      receiptIds: [
+        "tftf-2025-09-05",
+        "1ci-2025-09-03-290",
+        "1ci-2025-09-03-176"
+      ],
       amount: 164,
       currency: "USD",
       species: [
@@ -285,18 +289,6 @@ export const plantingsData: PlantingsData = {
       projectId: "tftf-homa-bay-19",
       countryCode: "KE",
       receiptId: "1ci-2025-07-14-20",
-    },
-    {
-      id: "evt-1ci-2025-09-03-kisumu7",
-      date: "2025-09-03",
-      trees: 466,
-      partnerId: "tftf",
-      projectId: "tftf-kisumu7-awach",
-      countryCode: "KE",
-      receiptIds: [
-        "1ci-2025-09-03-290",
-        "1ci-2025-09-03-176"
-      ],
     },
     {
       id: "evt-1ci-2025-09-03-uganda",
