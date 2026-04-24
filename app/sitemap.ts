@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { CARBON_LOCALES, getComparisonPaths } from '@/lib/carbon-routing'
 
 interface BlogPost {
   node: {
@@ -50,13 +51,15 @@ async function getBlogPosts() {
   }
 }
 
-import { getAllSlugs } from '@/lib/carbon-data'
+import { getAllCarbonData, getAllSlugs } from '@/lib/carbon-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPosts = await getBlogPosts()
   const carbonSlugs = await getAllSlugs()
+  const carbonApps = await getAllCarbonData()
+  const carbonComparisonPaths = getComparisonPaths(carbonApps)
 
-  const locales = ['en', 'es', 'pt', 'de', 'fr']
+  const locales = [...CARBON_LOCALES]
 
   // Helper to generate alternates for a given path
   const getAlternates = (path: string) => {
@@ -101,6 +104,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  const carbonComparePages = carbonComparisonPaths.flatMap((path) => generateLocalizedUrls(path, {
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }))
+
   type RouteOption = {
     path: string;
     changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly';
@@ -116,6 +125,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/carbon-footprint/ai', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     { path: '/carbon-footprint/streaming', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     { path: '/carbon-footprint/digital-carbon-footprint', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
+    { path: '/carbon-footprint/leaderboard', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: new Date() },
     { path: '/transparency', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
     { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: new Date() },
@@ -128,5 +138,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   const routes = routesOptions.flatMap(({ path, translated, ...options }) => generateLocalizedUrls(path, options, translated !== false))
 
-  return [...routes, ...posts, ...carbonPages]
+  return [...routes, ...posts, ...carbonPages, ...carbonComparePages]
 }

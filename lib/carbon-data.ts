@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { CARBON_SEED_DATA } from "@/lib/carbon-seed-data";
 
 export interface CarbonSeoFaq {
     question: string;
@@ -11,6 +12,9 @@ export interface CarbonSeoContent {
     faq?: CarbonSeoFaq[];
     idleforest_pitch?: string;
     human_equivalent_comparison?: string;
+    methodology_title?: string;
+    methodology_summary?: string;
+    methodology_bullets?: string[];
 }
 
 export interface CarbonData {
@@ -27,10 +31,22 @@ export interface CarbonData {
     seo?: CarbonSeoContent;
 }
 
+function getSeedSeoContent(slug: string): Record<string, CarbonSeoContent> | undefined {
+    const seedEntry = CARBON_SEED_DATA.find((item) => item.slug === slug);
+    return seedEntry?.seo_content;
+}
+
 export function mapDbToCarbonData(dbRow: any): CarbonData {
     const avgUsageRaw = dbRow.avg_usage_hours_day;
     const avgUsage = avgUsageRaw === "N/A" || avgUsageRaw === null ? "N/A" : parseFloat(avgUsageRaw);
     const co2 = parseFloat(dbRow.co2_per_hour_grams);
+    const seedSeoContent = getSeedSeoContent(dbRow.slug);
+    const seoContent = seedSeoContent
+        ? {
+            ...seedSeoContent,
+            ...(dbRow.seo_content || {}),
+        }
+        : dbRow.seo_content;
     
     let yearlyImpact = 0;
     if (avgUsage !== "N/A") {
@@ -52,12 +68,14 @@ export function mapDbToCarbonData(dbRow: any): CarbonData {
         human_equivalent: dbRow.human_equivalent_comparison,
         yearly_impact_kg: Math.round(yearlyImpact * 10) / 10,
         trees_to_offset: Math.ceil(yearlyImpact / 20),
-        seo_content: dbRow.seo_content,
+        seo_content: seoContent,
     };
 }
 
 export function localizeCarbonData(data: CarbonData, locale: string): CarbonData {
-    const seo = data.seo_content?.[locale] || data.seo_content?.en;
+    const baseSeo = data.seo_content?.en;
+    const localizedSeo = data.seo_content?.[locale];
+    const seo = localizedSeo ? { ...baseSeo, ...localizedSeo } : baseSeo;
 
     if (!seo) {
         return data;

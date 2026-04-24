@@ -1,14 +1,16 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getCarbonData, getIconUrl } from "@/lib/carbon-data";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowLeft, ArrowRight, Monitor } from "lucide-react";
+import { buildComparisonPath, buildLocalizedAlternates, getLocalizedPath, normalizeComparisonSlugs } from "@/lib/carbon-routing";
 
 interface PageProps {
     params: {
         comparison: string;
+        locale: string;
     };
 }
 
@@ -16,18 +18,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const slugs = params.comparison.split('-vs-');
     if (slugs.length !== 2) return { title: "Compare Carbon Footprints" };
 
-    const data1 = await getCarbonData(slugs[0]);
-    const data2 = await getCarbonData(slugs[1]);
+    const [slugA, slugB] = normalizeComparisonSlugs(slugs[0], slugs[1]);
+    const data1 = await getCarbonData(slugA);
+    const data2 = await getCarbonData(slugB);
+    const t = await getTranslations({ locale: params.locale, namespace: "CarbonFootprint" });
 
     if (!data1 || !data2) return { title: "Not Found" };
 
     return {
-        title: `${data1.app_name} vs ${data2.app_name} Carbon Footprint | IdleForest`,
-        description: `Compare the carbon footprint of ${data1.app_name} and ${data2.app_name}. See which one generates more CO2 emissions per hour and how to offset them.`,
+        title: t("page.compare_seo_title", { app1: data1.app_name, app2: data2.app_name }),
+        description: t("page.compare_seo_desc", { app1: data1.app_name, app2: data2.app_name }),
+        alternates: buildLocalizedAlternates(buildComparisonPath(slugA, slugB), params.locale),
         openGraph: {
             images: [
                 {
-                    url: `/api/og/compare?app1=${data1.slug}&app2=${data2.slug}`,
+                    url: `/api/og/compare?app1=${data1.slug}&app2=${data2.slug}&locale=${params.locale}`,
                     width: 1200,
                     height: 630,
                 }
@@ -39,9 +44,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CompareCarbonFootprintPage({ params }: PageProps) {
     const slugs = params.comparison.split('-vs-');
     if (slugs.length !== 2) notFound();
+    if (slugs[0] === slugs[1]) notFound();
 
-    const data1 = await getCarbonData(slugs[0]);
-    const data2 = await getCarbonData(slugs[1]);
+    const [normalizedSlugA, normalizedSlugB] = normalizeComparisonSlugs(slugs[0], slugs[1]);
+    const canonicalComparison = `${normalizedSlugA}-vs-${normalizedSlugB}`;
+
+    if (canonicalComparison !== params.comparison) {
+        permanentRedirect(getLocalizedPath(buildComparisonPath(normalizedSlugA, normalizedSlugB), params.locale));
+    }
+
+    const data1 = await getCarbonData(normalizedSlugA);
+    const data2 = await getCarbonData(normalizedSlugB);
 
     if (!data1 || !data2) notFound();
 
@@ -68,7 +81,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                         {t("page.carbon_footprint_cluster_hub")}
                     </Link>
                     <span>/</span>
-                    <span className="text-black">Compare</span>
+                    <span className="text-black">{t("page.compare_breadcrumb")}</span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -76,7 +89,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                     <div className="lg:col-span-8">
                         <div className="mb-10 text-center">
                             <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
-                                Carbon Footprint Comparison
+                                {t("page.compare_eyebrow")}
                             </p>
                             <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
                                 {data1.app_name} <span className="bg-brand-yellow px-2 mx-2">vs</span> {data2.app_name}
@@ -98,11 +111,11 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                 <p className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-6">{t(`categories.${data1.category}`)}</p>
                                 <div className="mt-auto pt-6 border-t-2 border-black/10 w-full">
                                     <div className="text-5xl font-black text-black mb-2">{data1.co2_per_hour_grams}<span className="text-xl">g</span></div>
-                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">CO2 / Hour</p>
+                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">{t("page.co2_per_hour_short")}</p>
                                 </div>
                                 {isData1Worse && !isTie && (
                                     <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider px-3 py-1 border-2 border-red-800">
-                                        Higher Emissions
+                                        {t("page.higher_emissions")}
                                     </div>
                                 )}
                             </div>
@@ -127,45 +140,50 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                 <p className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-6">{t(`categories.${data2.category}`)}</p>
                                 <div className="mt-auto pt-6 border-t-2 border-black/10 w-full">
                                     <div className="text-5xl font-black text-black mb-2">{data2.co2_per_hour_grams}<span className="text-xl">g</span></div>
-                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">CO2 / Hour</p>
+                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">{t("page.co2_per_hour_short")}</p>
                                 </div>
                                 {!isData1Worse && !isTie && (
                                     <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider px-3 py-1 border-2 border-red-800">
-                                        Higher Emissions
+                                        {t("page.higher_emissions")}
                                     </div>
                                 )}
                             </div>
                         </div>
 
                         <div className="mb-12 border-2 border-black bg-white p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                            <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">Summary</h3>
+                            <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
                             <p className="text-lg text-neutral-800 leading-relaxed">
-                                When comparing <strong>{data1.app_name}</strong> and <strong>{data2.app_name}</strong>,{' '}
+                                {t("page.compare_summary_intro", { app1: data1.app_name, app2: data2.app_name })}{' '}
                                 {isTie 
-                                    ? "they have an identical estimated carbon footprint per hour of usage."
-                                    : `using ${isData1Worse ? data1.app_name : data2.app_name} generates significantly more CO2 emissions per hour (${isData1Worse ? data1.co2_per_hour_grams : data2.co2_per_hour_grams}g) compared to ${isData1Worse ? data2.app_name : data1.app_name} (${isData1Worse ? data2.co2_per_hour_grams : data1.co2_per_hour_grams}g).`
+                                    ? t("page.compare_summary_tie")
+                                    : t("page.compare_summary_winner", {
+                                        winner: isData1Worse ? data1.app_name : data2.app_name,
+                                        winnerGrams: isData1Worse ? data1.co2_per_hour_grams : data2.co2_per_hour_grams,
+                                        loser: isData1Worse ? data2.app_name : data1.app_name,
+                                        loserGrams: isData1Worse ? data2.co2_per_hour_grams : data1.co2_per_hour_grams,
+                                    })
                                 }
-                                {' '}Both applications require device power, data transfer networks, and server infrastructure which all contribute to their environmental impact.
+                                {' '}{t("page.compare_summary_outro")}
                             </p>
                         </div>
 
                         <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
                             <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
-                                Deep dive into their footprints
+                                {t("page.deep_dive_into_footprints")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Link
                                     href={`/carbon-footprint/${data1.slug}`}
                                     className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-bold group"
                                 >
-                                    Read the full {data1.app_name} report
+                                    {t("page.read_full_report", { app: data1.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                                 <Link
                                     href={`/carbon-footprint/${data2.slug}`}
                                     className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-bold group"
                                 >
-                                    Read the full {data2.app_name} report
+                                    {t("page.read_full_report", { app: data2.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </div>

@@ -5,19 +5,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CarbonHubDefinition, getCarbonHubPages } from "@/lib/carbon-hubs";
 import { getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
 import { getTranslations } from "next-intl/server";
+import { buildLocalizedAlternates } from "@/lib/carbon-routing";
 
 interface CarbonHubPageProps {
     hub: CarbonHubDefinition;
     locale: string;
 }
 
-export function buildCarbonHubMetadata(hub: CarbonHubDefinition): Metadata {
+export function buildCarbonHubMetadata(hub: CarbonHubDefinition, locale: string): Metadata {
     return {
         title: hub.seoTitle,
         description: hub.seoDescription,
-        alternates: {
-            canonical: `https://www.idleforest.com/carbon-footprint/${hub.slug}`,
-        },
+        alternates: buildLocalizedAlternates(`/carbon-footprint/${hub.slug}`, locale),
         keywords: hub.queryChips,
     };
 }

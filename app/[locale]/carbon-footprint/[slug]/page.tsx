@@ -5,10 +5,11 @@ import { CalculatorWidget } from "@/components/carbon/calculator-widget";
 import { ComparisonGraph } from "@/components/carbon/comparison-graph";
 import { TrustSection } from "@/components/carbon/trust-section";
 import { SmartCTA } from "@/components/smart-cta";
-import { ArrowLeft, Gamepad2, Users, Monitor } from "lucide-react";
+import { ArrowLeft, ArrowRight, Gamepad2, Users, Monitor } from "lucide-react";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
+import { buildComparisonPath, buildLocalizedAlternates } from "@/lib/carbon-routing";
 
 interface PageProps {
     params: {
@@ -32,9 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: t("page.seo_title", { app: data.app_name }),
         description: t("page.seo_desc", { app: data.app_name }),
-        alternates: {
-            canonical: `https://www.idleforest.com/carbon-footprint/${params.slug}`,
-        },
+        alternates: buildLocalizedAlternates(`/carbon-footprint/${params.slug}`, params.locale),
         keywords: [
             `carbon footprint of ${data.app_name}`,
             `${data.app_name} environmental impact`,
@@ -46,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             images: [
                 {
-                    url: `/api/og/carbon?slug=${data.slug}`,
+                    url: `/api/og/carbon?slug=${data.slug}&locale=${params.locale}`,
                     width: 1200,
                     height: 630,
                 }
@@ -195,6 +194,29 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                             </div>
                         )}
 
+                        {data.seo?.methodology_summary || data.seo?.methodology_bullets?.length ? (
+                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    {data.seo.methodology_title || t("sources.title")}
+                                </h2>
+                                {data.seo.methodology_summary ? (
+                                    <p className="text-neutral-800 leading-relaxed mb-5">
+                                        {data.seo.methodology_summary}
+                                    </p>
+                                ) : null}
+                                {data.seo.methodology_bullets?.length ? (
+                                    <ul className="space-y-3">
+                                        {data.seo.methodology_bullets.map((bullet) => (
+                                            <li key={bullet} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                <span>{bullet}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : null}
+                            </div>
+                        ) : null}
+
                         <div className="mb-12">
                             <CalculatorWidget data={data} />
                         </div>
@@ -270,7 +292,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 {relatedPages.map((related) => (
                                     <Link
                                         key={related.slug}
-                                        href={`/carbon-footprint/${related.slug}`}
+                                        href={buildComparisonPath(data.slug, related.slug)}
                                         className="relative block p-6 bg-white border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group duration-200"
                                     >
                                         <div className="flex justify-between items-start mb-3">
@@ -308,6 +330,10 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                             <p className="text-sm text-neutral-600 pl-4">
                                                 {t("page.requires")} <span className="font-bold text-black">{related.trees_to_offset} {t("page.trees_yr_to_offset")}</span>
                                             </p>
+                                        </div>
+                                        <div className="mt-4 pt-4 border-t border-black/10 flex items-center justify-between gap-3 text-sm font-bold text-black">
+                                            <span>{t("page.open_comparison")}</span>
+                                            <ArrowRight className="w-4 h-4 shrink-0" />
                                         </div>
                                     </Link>
                                 ))}

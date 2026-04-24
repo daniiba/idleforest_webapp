@@ -1,0 +1,64 @@
+import type { CarbonData } from "@/lib/carbon-data";
+
+const SITE_URL = "https://www.idleforest.com";
+
+export const CARBON_LOCALES = ["en", "es", "de", "pt", "fr"] as const;
+
+export function getLocalizedPath(path: string, locale: string): string {
+    return locale === "en" ? path : `/${locale}${path}`;
+}
+
+export function getLocalizedUrl(path: string, locale: string): string {
+    return `${SITE_URL}${getLocalizedPath(path, locale)}`;
+}
+
+export function buildLocalizedAlternates(path: string, locale: string) {
+    const languages = Object.fromEntries(
+        CARBON_LOCALES.map((supportedLocale) => [
+            supportedLocale,
+            getLocalizedUrl(path, supportedLocale),
+        ])
+    );
+
+    return {
+        canonical: getLocalizedUrl(path, locale),
+        languages: {
+            ...languages,
+            "x-default": getLocalizedUrl(path, "en"),
+        },
+    };
+}
+
+export function normalizeComparisonSlugs(slugA: string, slugB: string): [string, string] {
+    return [slugA, slugB].sort((left, right) => left.localeCompare(right)) as [string, string];
+}
+
+export function buildComparisonSlug(slugA: string, slugB: string): string {
+    const [normalizedA, normalizedB] = normalizeComparisonSlugs(slugA, slugB);
+    return `${normalizedA}-vs-${normalizedB}`;
+}
+
+export function buildComparisonPath(slugA: string, slugB: string): string {
+    return `/carbon-footprint/compare/${buildComparisonSlug(slugA, slugB)}`;
+}
+
+export function getComparisonPaths(items: Pick<CarbonData, "slug" | "category">[]): string[] {
+    const byCategory = items.reduce<Record<string, string[]>>((accumulator, item) => {
+        accumulator[item.category] = accumulator[item.category] || [];
+        accumulator[item.category].push(item.slug);
+        return accumulator;
+    }, {});
+
+    return Object.values(byCategory).flatMap((slugs) => {
+        const sortedSlugs = [...slugs].sort((left, right) => left.localeCompare(right));
+        const paths: string[] = [];
+
+        for (let i = 0; i < sortedSlugs.length; i += 1) {
+            for (let j = i + 1; j < sortedSlugs.length; j += 1) {
+                paths.push(buildComparisonPath(sortedSlugs[i], sortedSlugs[j]));
+            }
+        }
+
+        return paths;
+    });
+}

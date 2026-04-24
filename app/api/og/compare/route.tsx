@@ -3,12 +3,43 @@ import { getCarbonData, getIconUrl } from '@/lib/carbon-data';
 
 export const runtime = 'edge';
 
+const OG_COMPARE_COPY = {
+    en: {
+        eyebrow: 'Carbon Footprint Comparison',
+        perHour: 'CO2/hr',
+        perTransaction: 'CO2/tx',
+    },
+    es: {
+        eyebrow: 'Comparación de Huella de Carbono',
+        perHour: 'CO2/h',
+        perTransaction: 'CO2/tx',
+    },
+    fr: {
+        eyebrow: 'Comparaison d’Empreinte Carbone',
+        perHour: 'CO2/h',
+        perTransaction: 'CO2/tx',
+    },
+    de: {
+        eyebrow: 'CO2-Fußabdruck Vergleich',
+        perHour: 'CO2/h',
+        perTransaction: 'CO2/tx',
+    },
+    pt: {
+        eyebrow: 'Comparação de Pegada de Carbono',
+        perHour: 'CO2/h',
+        perTransaction: 'CO2/tx',
+    },
+} as const;
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const app1 = searchParams.get('app1');
         const app2 = searchParams.get('app2');
         if (!app1 || !app2) return new Response('Apps required', { status: 400 });
+
+        const locale = searchParams.get('locale') || 'en';
+        const copy = OG_COMPARE_COPY[locale as keyof typeof OG_COMPARE_COPY] || OG_COMPARE_COPY.en;
 
         const [data1, data2] = await Promise.all([
             getCarbonData(app1),
@@ -21,6 +52,8 @@ export async function GET(request: Request) {
 
         const iconUrl1 = getIconUrl(data1);
         const iconUrl2 = getIconUrl(data2);
+        const unit1 = data1.category === 'Crypto' ? copy.perTransaction : copy.perHour;
+        const unit2 = data2.category === 'Crypto' ? copy.perTransaction : copy.perHour;
 
         return new ImageResponse(
             (
@@ -48,7 +81,7 @@ export async function GET(request: Request) {
                             marginBottom: '40px',
                         }}
                     >
-                        Carbon Footprint Face-off
+                        {copy.eyebrow}
                     </div>
 
                     <div
@@ -82,7 +115,7 @@ export async function GET(request: Request) {
                                 <h2 style={{ fontSize: 42, fontWeight: 900, margin: 0 }}>{data1.app_name}</h2>
                             </div>
                             <div style={{ fontSize: 32, fontWeight: 700, color: '#404040' }}>
-                                {data1.co2_per_hour_grams}g CO2/hr
+                                {data1.co2_per_hour_grams}g {unit1}
                             </div>
                         </div>
 
@@ -127,7 +160,7 @@ export async function GET(request: Request) {
                                 <h2 style={{ fontSize: 42, fontWeight: 900, margin: 0 }}>{data2.app_name}</h2>
                             </div>
                             <div style={{ fontSize: 32, fontWeight: 700, color: '#404040' }}>
-                                {data2.co2_per_hour_grams}g CO2/hr
+                                {data2.co2_per_hour_grams}g {unit2}
                             </div>
                         </div>
                     </div>

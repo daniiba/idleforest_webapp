@@ -4,14 +4,21 @@ import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
 import { ArrowLeft, Monitor } from "lucide-react";
+import { buildLocalizedAlternates } from "@/lib/carbon-routing";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface PageProps {
+    params: {
+        locale: string;
+    };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const t = await getTranslations({ locale: params.locale, namespace: "CarbonFootprint" });
+
     return {
-        title: "App Carbon Footprint Leaderboard & Rankings | IdleForest",
-        description: "Which apps have the highest carbon footprint? See the leaderboard comparing the digital emissions of popular apps, AI tools, games, and streaming services.",
-        alternates: {
-            canonical: "https://www.idleforest.com/carbon-footprint/leaderboard",
-        },
+        title: t("page.leaderboard_seo_title"),
+        description: t("page.leaderboard_seo_desc"),
+        alternates: buildLocalizedAlternates("/carbon-footprint/leaderboard", params.locale),
     };
 }
 
@@ -83,7 +90,7 @@ export default async function LeaderboardPage() {
                                             </span>
                                             {isCrypto && (
                                                 <span className="text-[9px] font-bold uppercase tracking-wider bg-black text-brand-yellow px-1 py-0.5">
-                                                    Per Transaction
+                                                    {t("page.per_transaction")}
                                                 </span>
                                             )}
                                         </div>
@@ -93,7 +100,7 @@ export default async function LeaderboardPage() {
                                             {app.co2_per_hour_grams >= 1000 ? (app.co2_per_hour_grams / 1000).toLocaleString() + 'kg' : app.co2_per_hour_grams + 'g'}
                                         </div>
                                         <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-neutral-500 mt-1">
-                                            {isCrypto ? "CO2 / TX" : "CO2 / HOUR"}
+                                            {isCrypto ? t("page.co2_per_tx_short") : t("page.co2_per_hour_short")}
                                         </div>
                                     </div>
                                 </Link>

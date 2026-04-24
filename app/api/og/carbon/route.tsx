@@ -3,11 +3,42 @@ import { getCarbonData, getIconUrl } from '@/lib/carbon-data';
 
 export const runtime = 'edge';
 
+const OG_COPY = {
+    en: {
+        title: 'Carbon Footprint',
+        perHour: 'CO2 / hour',
+        perTransaction: 'CO2 / transaction',
+    },
+    es: {
+        title: 'Huella de Carbono',
+        perHour: 'CO2 / hora',
+        perTransaction: 'CO2 / transacción',
+    },
+    fr: {
+        title: 'Empreinte Carbone',
+        perHour: 'CO2 / heure',
+        perTransaction: 'CO2 / transaction',
+    },
+    de: {
+        title: 'CO2-Fußabdruck',
+        perHour: 'CO2 / Stunde',
+        perTransaction: 'CO2 / Transaktion',
+    },
+    pt: {
+        title: 'Pegada de Carbono',
+        perHour: 'CO2 / hora',
+        perTransaction: 'CO2 / transação',
+    },
+} as const;
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const slug = searchParams.get('slug');
         if (!slug) return new Response('Slug required', { status: 400 });
+
+        const locale = searchParams.get('locale') || 'en';
+        const copy = OG_COPY[locale as keyof typeof OG_COPY] || OG_COPY.en;
         
         const data = await getCarbonData(slug);
 
@@ -16,6 +47,7 @@ export async function GET(request: Request) {
         }
 
         const iconUrl = getIconUrl(data);
+        const isCrypto = data.category === 'Crypto';
 
         return new ImageResponse(
             (
@@ -73,7 +105,7 @@ export async function GET(request: Request) {
                             textAlign: 'center',
                         }}
                     >
-                        Carbon Footprint
+                        {copy.title}
                     </div>
                     
                     <div
@@ -88,7 +120,7 @@ export async function GET(request: Request) {
                             border: '4px solid #000000',
                         }}
                     >
-                        {data.co2_per_hour_grams}g CO2 / hour
+                        {data.co2_per_hour_grams}g {isCrypto ? copy.perTransaction : copy.perHour}
                     </div>
                 </div>
             ),

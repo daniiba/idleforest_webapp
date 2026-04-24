@@ -10,7 +10,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
     const hub = await getCarbonHub("digital-carbon-footprint", params.locale);
-    return buildCarbonHubMetadata(hub!);
+    return buildCarbonHubMetadata(hub!, params.locale);
 }
 
 export default async function DigitalCarbonFootprintPage({ params }: PageProps) {

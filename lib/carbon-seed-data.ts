@@ -8,6 +8,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "Fortnite's carbon footprint is driven by high-performance gaming hardware and the massive server infrastructure required for 100-player battle royale matches.",
+                "methodology_title": "How this Fortnite estimate is built",
+                "methodology_summary": "This estimate combines electricity demand from gaming hardware with the always-on network and server activity needed to run online matches.",
+                "methodology_bullets": [
+                    "The hourly figure assumes active gameplay on a PC or console rather than an idle launcher screen.",
+                    "Device power draw is the biggest variable, so older consoles and lower-power hardware may land below this estimate while gaming PCs can exceed it.",
+                    "Online multiplayer adds background server and data-transfer emissions on top of the device itself."
+                ],
                 "faq": [
                     {
                         "question": "How much CO2 does Fortnite produce per hour?",
@@ -72,6 +79,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "Netflix streaming impact comes from data centers, content delivery networks, and your own viewing hardware. As resolutions hit 4K, the carbon cost per hour of entertainment continues to grow.",
+                "methodology_title": "How this Netflix estimate is built",
+                "methodology_summary": "The Netflix estimate is based on one hour of video streaming and reflects both digital infrastructure and the device used to watch the content.",
+                "methodology_bullets": [
+                    "The starting point is a streaming emissions benchmark for video-on-demand in Europe.",
+                    "Watching in higher resolutions such as 4K usually increases data transfer and device energy use, pushing the total upward.",
+                    "A TV or gaming console often has a larger impact than a laptop or phone watching the same stream."
+                ],
                 "faq": [
                     {
                         "question": "What is Netflix's carbon footprint?",
@@ -221,6 +235,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "ChatGPT uses energy for every request, response, and supporting system behind the model. This page helps explain how everyday AI use contributes to digital emissions.",
+                "methodology_title": "How this ChatGPT estimate is built",
+                "methodology_summary": "This estimate converts repeated AI interactions into an hourly footprint by combining model inference demand with the surrounding data-center overhead.",
+                "methodology_bullets": [
+                    "Large language models run on accelerator-heavy infrastructure that consumes more energy per interaction than most ordinary web requests.",
+                    "The estimate is meant to represent active usage over time, not a single prompt in isolation.",
+                    "Real-world emissions vary with model size, response length, hardware efficiency, utilization, and the electricity mix of the data center."
+                ],
                 "faq": [
                     {
                         "question": "How much CO2 does ChatGPT produce?",
@@ -285,6 +306,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "Zoom meetings provide environmental benefits by reducing travel, but they still require massive network and server power to connect participants globally.",
+                "methodology_title": "How this Zoom estimate is built",
+                "methodology_summary": "The Zoom estimate reflects one hour of video calling per participant and is shaped by both the streaming layer and the device handling the meeting.",
+                "methodology_bullets": [
+                    "Video calls increase network traffic compared with audio-only calls, especially when cameras stay on for the full meeting.",
+                    "Participant count matters because each extra video stream adds more processing, transmission, and device energy use.",
+                    "Turning video off, lowering resolution, or using efficient hardware can reduce the hourly footprint."
+                ],
                 "faq": [
                     {
                         "question": "How much CO2 does a Zoom call produce?",
@@ -413,6 +441,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "Bitcoin transactions have a high carbon footprint due to the massive energy consumption required for the proof-of-work mining process.",
+                "methodology_title": "How this Bitcoin estimate is built",
+                "methodology_summary": "Bitcoin is treated differently from the app pages because the unit here is one transaction rather than one hour of personal screen time.",
+                "methodology_bullets": [
+                    "The estimate uses network-level energy and emissions benchmarks for Bitcoin's proof-of-work system.",
+                    "Transaction footprints are highly debated because they depend on how total mining energy is allocated across the network's activity.",
+                    "The number shown should be read as a directional estimate for the carbon cost of a transaction, not a precise meter reading."
+                ],
                 "faq": [
                     {
                         "question": "How much CO2 does one Bitcoin transaction create?",
@@ -477,6 +512,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "YouTube delivers billions of hours of video daily. The energy used for content processing and global streaming adds up across millions of devices.",
+                "methodology_title": "How this YouTube estimate is built",
+                "methodology_summary": "This estimate reflects one hour of YouTube viewing and bundles together platform infrastructure, network delivery, and playback on a consumer device.",
+                "methodology_bullets": [
+                    "YouTube behaves like other video streaming platforms, so watch quality and playback device both strongly affect the result.",
+                    "Short clips can still add up because autoplay and recommendation loops extend total viewing time.",
+                    "Watching on a phone generally uses less electricity than watching on a large TV or console."
+                ],
                 "faq": [
                     {
                         "question": "What is YouTube's carbon footprint?",
@@ -671,6 +713,13 @@ export const CARBON_SEED_DATA = [
         "seo_content": {
             "en": {
                 "intro": "Browser tabs and active background processes in Chrome consume CPU and RAM, translating to small but consistent energy usage throughout the day.",
+                "methodology_title": "How this Chrome estimate is built",
+                "methodology_summary": "The Chrome estimate focuses on active browsing behavior and background browser load rather than only the energy of a single page view.",
+                "methodology_bullets": [
+                    "Open tabs, video playback, extensions, and JavaScript-heavy websites all change how much CPU and memory the browser uses.",
+                    "Long sessions matter because modest hourly power draw compounds over a full workday.",
+                    "This estimate is most useful as a comparative signal for digital habits, not as a lab-grade measurement for one exact tab setup."
+                ],
                 "faq": [
                     {
                         "question": "Do browser tabs use energy?",

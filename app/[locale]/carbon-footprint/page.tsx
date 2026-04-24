@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import { Link } from "@/navigation";
 import { ArrowLeft, ArrowRight, Leaf, Trees } from "lucide-react";
 import { getCarbonCategories, getFeaturedCarbonPages, getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
+import { buildLocalizedAlternates } from "@/lib/carbon-routing";
 
 interface PageProps {
     params: {
@@ -17,9 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: `${t("page.digital_carbon_footprint_hub")} | IdleForest`,
         description: t("page.hub_intro"),
-        alternates: {
-            canonical: "https://www.idleforest.com/carbon-footprint",
-        },
+        alternates: buildLocalizedAlternates("/carbon-footprint", params.locale),
         keywords: [
             "digital carbon footprint",
             "ai carbon footprint",
