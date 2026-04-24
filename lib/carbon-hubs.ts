@@ -1,5 +1,11 @@
-import { getTranslations } from "next-intl/server";
 import { CarbonData, mapDbToCarbonData } from "./carbon-data";
+import {
+    CARBON_HUB_SEED_DATA,
+    CarbonHubFaqItem,
+    CarbonHubLocaleContent,
+    CarbonHubPlaybookItem,
+    CarbonHubSection,
+} from "./carbon-hub-seed-data";
 import { createClient } from "./supabase/server";
 
 export interface CarbonHubDefinition {
@@ -11,79 +17,83 @@ export interface CarbonHubDefinition {
     eyebrow: string;
     intro: string;
     categoryFilter?: string[];
-    sections: { title: string; body: string }[];
+    sections: CarbonHubSection[];
+    playbook: CarbonHubPlaybookItem[];
+    faq: CarbonHubFaqItem[];
+    featuredComparisonPairs: [string, string][];
 }
 
-interface CarbonHubConfig {
+interface CarbonHubRow {
     slug: string;
-    translationKey: string;
-    queryChips: string[];
-    categoryFilter?: string[];
-    sectionKeys: string[];
+    content: Record<string, CarbonHubLocaleContent> | null;
 }
 
-export const CARBON_HUBS: Record<string, CarbonHubConfig> = {
-    "ai": {
-        slug: "ai",
-        translationKey: "ai",
-        queryChips: ["ai carbon footprint", "carbon footprint of chatgpt", "llm emissions", "ai co2"],
-        categoryFilter: ["AI"],
-        sectionKeys: ["trainingVsInference", "hardwareAndCooling"],
-    },
-    "streaming": {
-        slug: "streaming",
-        translationKey: "streaming",
-        queryChips: ["streaming carbon footprint", "netflix emissions", "youtube carbon footprint", "spotify co2"],
-        categoryFilter: ["Streaming"],
-        sectionKeys: ["dataCentersToDevices", "audioVsVideo"],
-    },
-    "digital-carbon-footprint": {
-        slug: "digital-carbon-footprint",
-        translationKey: "digitalCarbonFootprint",
-        queryChips: ["digital carbon footprint", "internet emissions", "reduce digital footprint", "carbon footprint of internet"],
-        categoryFilter: ["Browsing", "Social", "Work"],
-        sectionKeys: ["theInvisibleCloud", "howCanYouReduceIt"],
-    }
-};
+function mergeHubLocaleContent(
+    slug: string,
+    baseContent: CarbonHubLocaleContent,
+    localizedContent?: CarbonHubLocaleContent
+): CarbonHubDefinition {
+    const merged = localizedContent ? { ...baseContent, ...localizedContent } : baseContent;
 
-export async function getCarbonHub(slug: string, locale: string = "en"): Promise<CarbonHubDefinition | undefined> {
-    const hub = CARBON_HUBS[slug];
+    return {
+        slug,
+        title: merged.title,
+        seoTitle: merged.seoTitle,
+        seoDescription: merged.seoDescription,
+        queryChips: merged.queryChips,
+        eyebrow: merged.eyebrow,
+        intro: merged.intro,
+        categoryFilter: merged.categoryFilter,
+        sections: merged.sections,
+        playbook: merged.playbook,
+        faq: merged.faq,
+        featuredComparisonPairs: merged.featuredComparisonPairs,
+    };
+}
 
-    if (!hub) {
+function getSeedCarbonHub(slug: string, locale: string): CarbonHubDefinition | undefined {
+    const seedEntry = CARBON_HUB_SEED_DATA.find((item) => item.slug === slug);
+    if (!seedEntry) {
         return undefined;
     }
 
-    const t = await getTranslations({
-        locale,
-        namespace: "CarbonFootprint.page.hubs",
-    });
+    const baseContent = seedEntry.content.en;
+    const localizedContent = seedEntry.content[locale];
+    return mergeHubLocaleContent(slug, baseContent, localizedContent);
+}
 
-    return {
-        slug: hub.slug,
-        title: t(`${hub.translationKey}.title`),
-        seoTitle: t(`${hub.translationKey}.seoTitle`),
-        seoDescription: t(`${hub.translationKey}.seoDescription`),
-        queryChips: hub.queryChips,
-        eyebrow: t(`${hub.translationKey}.eyebrow`),
-        intro: t(`${hub.translationKey}.intro`),
-        categoryFilter: hub.categoryFilter,
-        sections: hub.sectionKeys.map((sectionKey) => ({
-            title: t(`${hub.translationKey}.sections.${sectionKey}.title`),
-            body: t(`${hub.translationKey}.sections.${sectionKey}.body`),
-        })),
-    };
+export async function getCarbonHub(slug: string, locale: string = "en"): Promise<CarbonHubDefinition | undefined> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("carbon_hubs")
+        .select("slug, content")
+        .eq("slug", slug)
+        .single<CarbonHubRow>();
+
+    if (error || !data?.content) {
+        return getSeedCarbonHub(slug, locale);
+    }
+
+    const baseContent = data.content.en;
+    if (!baseContent) {
+        return getSeedCarbonHub(slug, locale);
+    }
+
+    return mergeHubLocaleContent(slug, baseContent, data.content[locale]);
 }
 
 export async function getCarbonHubPages(hub: CarbonHubDefinition): Promise<CarbonData[]> {
     const supabase = await createClient();
-    let query = supabase.from('carbon_apps').select('*');
-    
+    let query = supabase.from("carbon_apps").select("*");
+
     if (hub.categoryFilter && hub.categoryFilter.length > 0) {
-        query = query.in('category', hub.categoryFilter);
+        query = query.in("category", hub.categoryFilter);
     }
-    
+
     const { data, error } = await query;
-    if (error || !data) return [];
-    
+    if (error || !data) {
+        return [];
+    }
+
     return data.map(mapDbToCarbonData);
 }

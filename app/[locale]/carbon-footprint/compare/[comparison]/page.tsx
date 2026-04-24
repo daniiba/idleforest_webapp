@@ -4,8 +4,9 @@ import { getCarbonData, getIconUrl } from "@/lib/carbon-data";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowLeft, ArrowRight, Monitor } from "lucide-react";
-import { buildComparisonPath, buildLocalizedAlternates, getLocalizedPath, normalizeComparisonSlugs } from "@/lib/carbon-routing";
+import { ArrowLeft, ArrowRight, CheckCircle2, Monitor } from "lucide-react";
+import { buildComparisonPath, buildLocalizedAlternates, getLocalizedPath, getLocalizedUrl, isIndexableComparison, normalizeComparisonSlugs } from "@/lib/carbon-routing";
+import { getCarbonCompare } from "@/lib/carbon-compares";
 
 interface PageProps {
     params: {
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const data1 = await getCarbonData(slugA);
     const data2 = await getCarbonData(slugB);
     const t = await getTranslations({ locale: params.locale, namespace: "CarbonFootprint" });
+    const indexableComparison = isIndexableComparison(slugA, slugB);
 
     if (!data1 || !data2) return { title: "Not Found" };
 
@@ -29,6 +31,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: t("page.compare_seo_title", { app1: data1.app_name, app2: data2.app_name }),
         description: t("page.compare_seo_desc", { app1: data1.app_name, app2: data2.app_name }),
         alternates: buildLocalizedAlternates(buildComparisonPath(slugA, slugB), params.locale),
+        robots: indexableComparison ? undefined : {
+            index: false,
+            follow: true,
+        },
         openGraph: {
             images: [
                 {
@@ -59,16 +65,60 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
     if (!data1 || !data2) notFound();
 
     const t = await getTranslations("CarbonFootprint");
+    const compareEditorial = await getCarbonCompare(data1.slug, data2.slug, params.locale);
+    const indexableComparison = isIndexableComparison(data1.slug, data2.slug);
+    const canonicalPath = buildComparisonPath(data1.slug, data2.slug);
+    const comparisonUrl = getLocalizedUrl(canonicalPath, params.locale);
 
     const iconUrl1 = getIconUrl(data1);
     const iconUrl2 = getIconUrl(data2);
 
     const isData1Worse = data1.co2_per_hour_grams > data2.co2_per_hour_grams;
     const isTie = data1.co2_per_hour_grams === data2.co2_per_hour_grams;
+    const winner = isTie ? undefined : (isData1Worse ? data1 : data2);
+    const lighter = isTie ? undefined : (isData1Worse ? data2 : data1);
+    const delta = Math.abs(data1.co2_per_hour_grams - data2.co2_per_hour_grams);
+    const jsonLd = [
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+                {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "Home",
+                    item: getLocalizedUrl("/", params.locale),
+                },
+                {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: t("page.carbon_footprint_cluster_hub"),
+                    item: getLocalizedUrl("/carbon-footprint", params.locale),
+                },
+                {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: `${data1.app_name} vs ${data2.app_name}`,
+                    item: comparisonUrl,
+                },
+            ],
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: t("page.compare_seo_title", { app1: data1.app_name, app2: data2.app_name }),
+            description: t("page.compare_seo_desc", { app1: data1.app_name, app2: data2.app_name }),
+            url: comparisonUrl,
+        }
+    ];
 
     return (
         <div className="min-h-screen bg-brand-gray pb-12 font-inter">
             <Navigation />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <div className="container mx-auto px-6 pt-8">
                 {/* Breadcrumb / Back Link */}
                 <div className="mb-8 flex flex-wrap items-center gap-3 text-sm font-medium text-neutral-600">
@@ -94,6 +144,16 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
                                 {data1.app_name} <span className="bg-brand-yellow px-2 mx-2">vs</span> {data2.app_name}
                             </h1>
+                            {compareEditorial ? (
+                                <p className="mt-5 mx-auto max-w-3xl text-lg leading-relaxed text-neutral-700">
+                                    {compareEditorial.summary}
+                                </p>
+                            ) : null}
+                            {!indexableComparison ? (
+                                <p className="mt-4 inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-neutral-700">
+                                    {t("page.supporting_comparison_page")}
+                                </p>
+                            ) : null}
                         </div>
 
                         <div className="flex flex-col md:flex-row gap-6 items-stretch mb-12">
@@ -151,6 +211,9 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                         </div>
 
                         <div className="mb-12 border-2 border-black bg-white p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            {compareEditorial ? (
+                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{compareEditorial.heading}</p>
+                            ) : null}
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
                             <p className="text-lg text-neutral-800 leading-relaxed">
                                 {t("page.compare_summary_intro", { app1: data1.app_name, app2: data2.app_name })}{' '}
@@ -166,6 +229,41 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                 {' '}{t("page.compare_summary_outro")}
                             </p>
                         </div>
+
+                        {compareEditorial ? (
+                            <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.why_gap_title")}</h3>
+                                    <ul className="space-y-3">
+                                        {compareEditorial.whyItDiffers.map((reason) => (
+                                            <li key={reason} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                <span>{reason}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.action_first_title")}</h3>
+                                    <p className="text-neutral-800 leading-relaxed mb-5">{compareEditorial.actionAngle}</p>
+                                    {winner && lighter ? (
+                                        <div className="rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                            {t.rich("page.compare_delta_note", {
+                                                winner: winner.app_name,
+                                                delta,
+                                                lighter: lighter.app_name,
+                                                strong: (chunks) => <strong className="text-black">{chunks}</strong>,
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className="rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                            {t("page.compare_tie_note")}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ) : null}
 
                         <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
                             <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
@@ -192,6 +290,20 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
+                        {compareEditorial ? (
+                            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_takeaways_title")}</h3>
+                                <div className="space-y-3">
+                                    {compareEditorial.whyItDiffers.slice(0, 2).map((reason) => (
+                                        <div key={reason} className="flex items-start gap-3 text-sm leading-relaxed text-neutral-700">
+                                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
+                                            <span>{reason}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+
                         <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}

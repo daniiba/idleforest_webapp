@@ -1,4 +1,5 @@
 import type { CarbonData } from "@/lib/carbon-data";
+import { INDEXABLE_COMPARE_SLUGS } from "@/lib/carbon-compares";
 
 const SITE_URL = "https://www.idleforest.com";
 
@@ -40,6 +41,14 @@ export function buildComparisonSlug(slugA: string, slugB: string): string {
 
 export function buildComparisonPath(slugA: string, slugB: string): string {
     return `/carbon-footprint/compare/${buildComparisonSlug(slugA, slugB)}`;
+}
+
+export function isIndexableComparison(slugA: string, slugB: string): boolean {
+    return INDEXABLE_COMPARE_SLUGS.has(buildComparisonSlug(slugA, slugB));
+}
+
+export function getIndexableComparisonPaths(): string[] {
+    return Array.from(INDEXABLE_COMPARE_SLUGS).map((comparisonSlug) => `/carbon-footprint/compare/${comparisonSlug}`);
 }
 
 export function getComparisonPaths(items: Pick<CarbonData, "slug" | "category">[]): string[] {

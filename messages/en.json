@@ -466,6 +466,9 @@
       "tftf-kisumu7-awach": {
         "name": "Kisumu 7 – Awach, Kenya"
       },
+      "tftf-homa-bay-19": {
+        "name": "Homa Bay 19 – Ndhiwa, Kenya"
+      },
       "tftf-senegal": {
         "name": "TFTF Projects – Senegal"
       },
@@ -684,6 +687,32 @@
       "bitcoin_comparison_note": "*Bitcoin transactions are calculated per usage, measuring CO2 per transaction rather than per hour.",
       "why_this_page_matters": "Why this page matters",
       "searches_this_page_should_answer": "Searches this page should answer",
+      "per_transaction_intro": "{app} is modeled per transaction on this page. One typical use event is estimated at <strong>{grams}g of CO2</strong>. That is roughly comparable to {equivalent}.",
+      "search_intent_eyebrow": "Search intent coverage",
+      "search_intent_title": "Questions this page is built to answer",
+      "drivers_title": "What drives this estimate most",
+      "assumptions_title": "Assumptions and boundaries",
+      "uncertainty_note": "Uncertainty note:",
+      "reduction_title": "Ways to reduce this footprint",
+      "reviewed_eyebrow": "Reviewed and maintained",
+      "review_title": "Editorial review details",
+      "reviewed_by_label": "Reviewed by:",
+      "role_label": "Role:",
+      "organization_label": "Organization:",
+      "last_reviewed_label": "Last reviewed:",
+      "editorial_note": "We treat these pages as directional consumer guides. They are designed to explain the major drivers of digital emissions clearly, not to reproduce proprietary vendor accounting.",
+      "sources_title": "Sources and review trail",
+      "editorial_snapshot_eyebrow": "Editorial snapshot",
+      "trust_title": "Why this page should rank for trust",
+      "trust_summary": "This page combines a consumer calculator, methodology notes, uncertainty context, and source references on the same URL.",
+      "trust_canonical": "Canonical:",
+      "trust_last_reviewed": "Last reviewed:",
+      "supporting_comparison_page": "Supporting comparison page",
+      "why_gap_title": "Why the gap happens",
+      "action_first_title": "What to act on first",
+      "compare_delta_note": "<strong>{winner}</strong> is currently modeled at <strong>{delta}g CO2</strong> more per unit of use than <strong>{lighter}</strong>.",
+      "compare_tie_note": "These two products land at the same estimate in the current model, so the better optimization target is whichever one takes more of your time.",
+      "compare_takeaways_title": "Comparison takeaways",
       "more_questions_about": "More questions about {app}'s carbon footprint",
       "explore_the_cluster": "Explore the carbon footprint cluster",
       "featured_carbon_guides": "Featured carbon guides",

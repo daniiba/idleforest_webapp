@@ -1,9 +1,20 @@
 import { createClient } from "@/lib/supabase/server";
-import { CARBON_SEED_DATA } from "@/lib/carbon-seed-data";
 
 export interface CarbonSeoFaq {
     question: string;
     answer: string;
+}
+
+export interface CarbonSeoReviewer {
+    name: string;
+    role: string;
+    organization: string;
+}
+
+export interface CarbonSeoSourceReference {
+    title: string;
+    url: string;
+    note: string;
 }
 
 export interface CarbonSeoContent {
@@ -15,6 +26,13 @@ export interface CarbonSeoContent {
     methodology_title?: string;
     methodology_summary?: string;
     methodology_bullets?: string[];
+    reviewed_at?: string;
+    reviewer?: CarbonSeoReviewer;
+    key_drivers?: string[];
+    assumptions?: string[];
+    reduction_tips?: string[];
+    uncertainty?: string;
+    source_references?: CarbonSeoSourceReference[];
 }
 
 export interface CarbonData {
@@ -31,22 +49,10 @@ export interface CarbonData {
     seo?: CarbonSeoContent;
 }
 
-function getSeedSeoContent(slug: string): Record<string, CarbonSeoContent> | undefined {
-    const seedEntry = CARBON_SEED_DATA.find((item) => item.slug === slug);
-    return seedEntry?.seo_content;
-}
-
 export function mapDbToCarbonData(dbRow: any): CarbonData {
     const avgUsageRaw = dbRow.avg_usage_hours_day;
     const avgUsage = avgUsageRaw === "N/A" || avgUsageRaw === null ? "N/A" : parseFloat(avgUsageRaw);
     const co2 = parseFloat(dbRow.co2_per_hour_grams);
-    const seedSeoContent = getSeedSeoContent(dbRow.slug);
-    const seoContent = seedSeoContent
-        ? {
-            ...seedSeoContent,
-            ...(dbRow.seo_content || {}),
-        }
-        : dbRow.seo_content;
     
     let yearlyImpact = 0;
     if (avgUsage !== "N/A") {
@@ -68,7 +74,7 @@ export function mapDbToCarbonData(dbRow: any): CarbonData {
         human_equivalent: dbRow.human_equivalent_comparison,
         yearly_impact_kg: Math.round(yearlyImpact * 10) / 10,
         trees_to_offset: Math.ceil(yearlyImpact / 20),
-        seo_content: seoContent,
+        seo_content: dbRow.seo_content,
     };
 }
 

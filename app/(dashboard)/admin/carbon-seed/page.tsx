@@ -11,7 +11,7 @@ export default function CarbonSeedPage() {
     const [activeLangs, setActiveLangs] = useState<Record<string, string>>({})
 
     const handleSeed = async () => {
-        if (!window.confirm('Are you sure you want to push all seed data to Supabase? This will overwrite existing entries with the same slug.')) {
+        if (!window.confirm('Are you sure you want to push all carbon seed data to Supabase? This will overwrite existing app and hub entries with the same slug.')) {
             return
         }
 
@@ -72,12 +72,12 @@ export default function CarbonSeedPage() {
                         {status === 'loading' ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                Pushing to DB...
+                                Pushing carbon content...
                             </>
                         ) : (
                             <>
                                 <Database className="w-4 h-4" />
-                                Push to Supabase
+                                Push apps + hubs
                             </>
                         )}
                     </button>
@@ -91,10 +91,10 @@ export default function CarbonSeedPage() {
                             <Info className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-blue-900 mb-1">Reviewing Multi-language Carbon Data</h3>
+                            <h3 className="font-bold text-blue-900 mb-1">Reviewing Multi-language Carbon Content</h3>
                             <p className="text-blue-800/80 text-sm leading-relaxed">
                                 Click the <span className="bg-white px-1.5 py-0.5 rounded border border-blue-200 font-bold text-xs">EN</span> tags to preview per-language text.
-                                Push to sync corrected icons (like ChatGPT → Ollama) and new SEO translations for all languages.
+                                Pushing now syncs `carbon_apps`, `carbon_hubs`, and `carbon_compares`, so leaf pages, hub pages, and comparison pages can come from the same Supabase-backed content layer.
                             </p>
                         </div>
                     </div>

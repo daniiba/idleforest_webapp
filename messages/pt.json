@@ -466,6 +466,9 @@
       "tftf-kisumu7-awach": {
         "name": "Kisumu 7 – Awach, Quênia"
       },
+      "tftf-homa-bay-19": {
+        "name": "Homa Bay 19 – Ndhiwa, Quênia"
+      },
       "tftf-senegal": {
         "name": "Projetos TFTF – Senegal"
       },
@@ -684,6 +687,32 @@
       "bitcoin_comparison_note": "*As transações de Bitcoin são calculadas por uso, medindo CO2 por transação em vez de por hora.",
       "why_this_page_matters": "Por que esta página é importante",
       "searches_this_page_should_answer": "Pesquisas que esta página deve responder",
+      "per_transaction_intro": "{app} é modelado por transação nesta página. Um evento típico de uso é estimado em <strong>{grams}g de CO2</strong>. Isso é aproximadamente comparável a {equivalent}.",
+      "search_intent_eyebrow": "Cobertura da intenção de pesquisa",
+      "search_intent_title": "Perguntas que esta página foi criada para responder",
+      "drivers_title": "O que mais influencia esta estimativa",
+      "assumptions_title": "Pressupostos e limites",
+      "uncertainty_note": "Nota de incerteza:",
+      "reduction_title": "Formas de reduzir esta pegada",
+      "reviewed_eyebrow": "Revisto e mantido",
+      "review_title": "Detalhes da revisão editorial",
+      "reviewed_by_label": "Revisto por:",
+      "role_label": "Função:",
+      "organization_label": "Organização:",
+      "last_reviewed_label": "Última revisão:",
+      "editorial_note": "Tratamos estas páginas como guias direcionais para consumidores. Foram feitas para explicar claramente os principais motores das emissões digitais, e não para reproduzir a contabilidade proprietária de um fornecedor.",
+      "sources_title": "Fontes e trilho de revisão",
+      "editorial_snapshot_eyebrow": "Resumo editorial",
+      "trust_title": "Porque esta página deve transmitir confiança",
+      "trust_summary": "Esta página junta um calculador para consumidores, notas metodológicas, contexto de incerteza e referências de fontes na mesma URL.",
+      "trust_canonical": "Canónica:",
+      "trust_last_reviewed": "Última revisão:",
+      "supporting_comparison_page": "Página comparativa de apoio",
+      "why_gap_title": "Porque a diferença acontece",
+      "action_first_title": "Em que agir primeiro",
+      "compare_delta_note": "<strong>{winner}</strong> está atualmente modelado com <strong>{delta}g de CO2</strong> a mais por unidade de uso do que <strong>{lighter}</strong>.",
+      "compare_tie_note": "Estes dois produtos ficam com a mesma estimativa no modelo atual, por isso o melhor alvo de otimização é aquele em que passas mais tempo.",
+      "compare_takeaways_title": "Conclusões da comparação",
       "more_questions_about": "Mais perguntas sobre a pegada de carbono do(a) {app}",
       "explore_the_cluster": "Explorar o cluster da pegada de carbono",
       "featured_carbon_guides": "Guias de carbono em destaque",

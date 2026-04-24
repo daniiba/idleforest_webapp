@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { CARBON_LOCALES, getComparisonPaths } from '@/lib/carbon-routing'
+import { CARBON_LOCALES, getIndexableComparisonPaths } from '@/lib/carbon-routing'
 
 interface BlogPost {
   node: {
@@ -51,13 +51,12 @@ async function getBlogPosts() {
   }
 }
 
-import { getAllCarbonData, getAllSlugs } from '@/lib/carbon-data'
+import { getAllSlugs } from '@/lib/carbon-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPosts = await getBlogPosts()
   const carbonSlugs = await getAllSlugs()
-  const carbonApps = await getAllCarbonData()
-  const carbonComparisonPaths = getComparisonPaths(carbonApps)
+  const carbonComparisonPaths = getIndexableComparisonPaths()
 
   const locales = [...CARBON_LOCALES]
 

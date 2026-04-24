@@ -13,6 +13,7 @@ interface CalculatorWidgetProps {
 
 export function CalculatorWidget({ data }: CalculatorWidgetProps) {
     const t = useTranslations("CarbonFootprint.calculator");
+    const isPerTransaction = data.avg_usage_hours_day === "N/A" || data.category === "Crypto";
 
     const [hoursPerWeek, setHoursPerWeek] = useState(
         typeof data.avg_usage_hours_day === "number"
@@ -33,9 +34,12 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
         setTreesNeeded(trees);
     }, [hoursPerWeek, data.co2_per_hour_grams]);
 
-    if (data.app_name === "Bitcoin (1 Tx)") {
+    if (isPerTransaction) {
         return (
             <div className="bg-brand-navy border border-brand-yellow/20 rounded-xl p-6 text-white shadow-xl">
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-yellow/80 mb-3">
+                    Start with the estimate
+                </p>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                     {t("carbon_impact")}
                 </h3>
@@ -58,6 +62,9 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
 
     return (
         <div className="bg-brand-navy border border-black rounded-lg p-8 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-yellow/80 mb-3">
+                Start with the calculator
+            </p>
             <h3 className="font-rethink-sans text-2xl font-bold mb-6 flex items-center gap-2 text-brand-yellow">
                 {t("calculate_footprint")}
             </h3>
@@ -78,7 +85,7 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
                         <Input
                             type="number"
                             value={hoursPerWeek}
-                            onChange={(e) => setHoursPerWeek(Number(e.target.value))}
+                            onChange={(e) => setHoursPerWeek(Math.max(0, Math.min(168, Number(e.target.value) || 0)))}
                             className="bg-black/20 border-white/20 text-white text-center h-10 font-bold text-lg"
                         />
                     </div>

@@ -3,13 +3,12 @@ import { notFound } from "next/navigation";
 import { getCarbonData, getRelatedCarbonData, getIconUrl, getFeaturedCarbonPages, localizeCarbonData } from "@/lib/carbon-data";
 import { CalculatorWidget } from "@/components/carbon/calculator-widget";
 import { ComparisonGraph } from "@/components/carbon/comparison-graph";
-import { TrustSection } from "@/components/carbon/trust-section";
 import { SmartCTA } from "@/components/smart-cta";
-import { ArrowLeft, ArrowRight, Gamepad2, Users, Monitor } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ExternalLink, Gamepad2, Monitor, Users } from "lucide-react";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
-import { buildComparisonPath, buildLocalizedAlternates } from "@/lib/carbon-routing";
+import { buildComparisonPath, buildLocalizedAlternates, getLocalizedPath, getLocalizedUrl } from "@/lib/carbon-routing";
 
 interface PageProps {
     params: {
@@ -64,6 +63,15 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
     }
 
     const t_human = data.human_equivalent;
+    const canonicalPath = `/carbon-footprint/${data.slug}`;
+    const canonicalUrl = getLocalizedUrl(canonicalPath, params.locale);
+    const localizedHubUrl = getLocalizedUrl("/carbon-footprint", params.locale);
+    const isPerTransaction = data.avg_usage_hours_day === "N/A" || data.category === "Crypto";
+    const reviewedDate = data.seo?.reviewed_at ? new Intl.DateTimeFormat(params.locale, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    }).format(new Date(data.seo.reviewed_at)) : undefined;
     const clusterLinks = [
         {
             title: t("page.cluster_links.hub.title"),
@@ -121,11 +129,54 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
         })),
     ];
 
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": faqEntities
-    };
+    const jsonLd = [
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqEntities
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+                {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "Home",
+                    item: getLocalizedUrl("/", params.locale),
+                },
+                {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: t("page.carbon_footprint_cluster_hub"),
+                    item: localizedHubUrl,
+                },
+                {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: t("page.seo_title", { app: data.app_name }),
+                    item: canonicalUrl,
+                },
+            ]
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: t("page.seo_title", { app: data.app_name }),
+            description: t("page.seo_desc", { app: data.app_name }),
+            url: canonicalUrl,
+            dateModified: data.seo?.reviewed_at,
+            about: {
+                "@type": "Thing",
+                name: `${data.app_name} carbon footprint`
+            },
+            publisher: {
+                "@type": "Organization",
+                name: data.seo?.reviewer?.organization || "IdleForest",
+                url: "https://www.idleforest.com"
+            }
+        }
+    ];
 
     return (
         <div className="min-h-screen bg-brand-gray  pb-12 font-inter">
@@ -177,9 +228,20 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
 
                         <p className="text-xl text-neutral-800 mb-8 leading-relaxed max-w-2xl">
-                            {t("page.did_you_know", { app: data.app_name })}{" "}
-                            <strong className="text-black bg-brand-yellow/30 px-1 rounded">{data.co2_per_hour_grams}{t("page.g_of_co2")}</strong>?
-                            {' '}{t("page.thats_equivalent_to", { equivalent: t_human.toLowerCase() })}
+                            {isPerTransaction ? (
+                                t.rich("page.per_transaction_intro", {
+                                    app: data.app_name,
+                                    grams: data.co2_per_hour_grams,
+                                    equivalent: t_human.toLowerCase(),
+                                    strong: (chunks) => <strong className="text-black bg-brand-yellow/30 px-1 rounded">{chunks}</strong>,
+                                })
+                            ) : (
+                                <>
+                                    {t("page.did_you_know", { app: data.app_name })}{" "}
+                                    <strong className="text-black bg-brand-yellow/30 px-1 rounded">{data.co2_per_hour_grams}{t("page.g_of_co2")}</strong>?
+                                    {' '}{t("page.thats_equivalent_to", { equivalent: t_human.toLowerCase() })}
+                                </>
+                            )}
                         </p>
 
                         {data.seo && (
@@ -190,9 +252,43 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 <p className="text-lg text-neutral-800 leading-relaxed mb-6">
                                     {data.seo.intro}
                                 </p>
-
+                                {data.seo.searchTopics?.length ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {data.seo.searchTopics.slice(0, 5).map((intent) => (
+                                            <span
+                                                key={intent}
+                                                className="inline-flex items-center rounded-full border border-black/10 bg-brand-gray px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-neutral-700"
+                                            >
+                                                {intent}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : null}
                             </div>
                         )}
+
+                        <div className="mb-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)] gap-6 items-start">
+                            {data.seo?.searchTopics?.length ? (
+                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                        {t("page.search_intent_eyebrow")}
+                                    </p>
+                                    <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                        {t("page.search_intent_title")}
+                                    </h2>
+                                    <div className="space-y-3">
+                                        {data.seo.searchTopics.slice(0, 5).map((intent) => (
+                                            <div key={intent} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
+                                                <span>{intent}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : null}
+
+                            <CalculatorWidget data={data} />
+                        </div>
 
                         {data.seo?.methodology_summary || data.seo?.methodology_bullets?.length ? (
                             <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -217,15 +313,119 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                             </div>
                         ) : null}
 
-                        <div className="mb-12">
-                            <CalculatorWidget data={data} />
-                        </div>
+                        {data.seo?.key_drivers?.length || data.seo?.assumptions?.length || data.seo?.uncertainty ? (
+                            <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {data.seo?.key_drivers?.length ? (
+                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                            {t("page.drivers_title")}
+                                        </h2>
+                                        <ul className="space-y-3">
+                                            {data.seo.key_drivers.map((driver) => (
+                                                <li key={driver} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                    <span>{driver}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ) : null}
+
+                                {data.seo?.assumptions?.length || data.seo?.uncertainty ? (
+                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                            {t("page.assumptions_title")}
+                                        </h2>
+                                        {data.seo?.assumptions?.length ? (
+                                            <ul className="space-y-3">
+                                                {data.seo.assumptions.map((assumption) => (
+                                                    <li key={assumption} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                        <span>{assumption}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : null}
+                                        {data.seo?.uncertainty ? (
+                                            <p className="mt-5 rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                                <strong className="text-black">{t("page.uncertainty_note")}</strong> {data.seo.uncertainty}
+                                            </p>
+                                        ) : null}
+                                    </div>
+                                ) : null}
+                            </div>
+                        ) : null}
 
                         <div className="mb-12">
                             <ComparisonGraph data={data} />
                         </div>
 
-                        <TrustSection category={data.category} />
+                        {data.seo?.reduction_tips?.length || data.seo?.reviewer ? (
+                            <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {data.seo?.reduction_tips?.length ? (
+                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                            {t("page.reduction_title")}
+                                        </h2>
+                                        <ul className="space-y-3">
+                                            {data.seo.reduction_tips.map((tip) => (
+                                                <li key={tip} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
+                                                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
+                                                    <span>{tip}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ) : null}
+
+                                {data.seo?.reviewer ? (
+                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                            {t("page.reviewed_eyebrow")}
+                                        </p>
+                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                            {t("page.review_title")}
+                                        </h2>
+                                        <div className="space-y-2 text-neutral-800">
+                                            <p><strong className="text-black">{t("page.reviewed_by_label")}</strong> {data.seo.reviewer.name}</p>
+                                            <p><strong className="text-black">{t("page.role_label")}</strong> {data.seo.reviewer.role}</p>
+                                            <p><strong className="text-black">{t("page.organization_label")}</strong> {data.seo.reviewer.organization}</p>
+                                            {reviewedDate ? (
+                                                <p><strong className="text-black">{t("page.last_reviewed_label")}</strong> {reviewedDate}</p>
+                                            ) : null}
+                                        </div>
+                                        <p className="mt-5 rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                            {t("page.editorial_note")}
+                                        </p>
+                                    </div>
+                                ) : null}
+                            </div>
+                        ) : null}
+
+                        {data.seo?.source_references?.length ? (
+                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    {t("page.sources_title")}
+                                </h2>
+                                <div className="space-y-4">
+                                    {data.seo.source_references.map((source) => (
+                                        <a
+                                            key={source.url}
+                                            href={source.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block rounded-lg border border-black/10 bg-brand-gray p-4 transition-colors hover:border-black"
+                                        >
+                                            <div className="flex items-center justify-between gap-4 mb-2">
+                                                <h3 className="font-rethink-sans text-lg font-extrabold text-black">{source.title}</h3>
+                                                <ExternalLink className="h-4 w-4 shrink-0 text-neutral-500" />
+                                            </div>
+                                            <p className="text-neutral-700 leading-relaxed">{source.note}</p>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
 
                         {data.seo?.faq?.length ? (
                             <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
@@ -343,6 +543,24 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
+                        {data.seo?.reviewer ? (
+                            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                    {t("page.editorial_snapshot_eyebrow")}
+                                </p>
+                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    {t("page.trust_title")}
+                                </h3>
+                                <div className="space-y-3 text-sm leading-relaxed text-neutral-700">
+                                    <p>{t("page.trust_summary")}</p>
+                                    <p>{t("page.trust_canonical")} <span className="font-semibold text-black">{getLocalizedPath(canonicalPath, params.locale)}</span></p>
+                                    {reviewedDate ? (
+                                        <p>{t("page.trust_last_reviewed")} <span className="font-semibold text-black">{reviewedDate}</span></p>
+                                    ) : null}
+                                </div>
+                            </div>
+                        ) : null}
+
                         <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}

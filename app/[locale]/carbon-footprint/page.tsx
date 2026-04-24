@@ -4,7 +4,8 @@ import Navigation from "@/components/navigation";
 import { Link } from "@/navigation";
 import { ArrowLeft, ArrowRight, Leaf, Trees } from "lucide-react";
 import { getCarbonCategories, getFeaturedCarbonPages, getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
-import { buildLocalizedAlternates } from "@/lib/carbon-routing";
+import { buildComparisonPath, buildLocalizedAlternates } from "@/lib/carbon-routing";
+import { getCarbonHub } from "@/lib/carbon-hubs";
 
 interface PageProps {
     params: {
@@ -14,12 +15,13 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const t = await getTranslations({ locale: params.locale, namespace: "CarbonFootprint" });
+    const hub = await getCarbonHub("overview", params.locale);
 
     return {
-        title: `${t("page.digital_carbon_footprint_hub")} | IdleForest`,
-        description: t("page.hub_intro"),
+        title: hub?.seoTitle || `${t("page.digital_carbon_footprint_hub")} | IdleForest`,
+        description: hub?.seoDescription || t("page.hub_intro"),
         alternates: buildLocalizedAlternates("/carbon-footprint", params.locale),
-        keywords: [
+        keywords: hub?.queryChips || [
             "digital carbon footprint",
             "ai carbon footprint",
             "streaming carbon footprint",
@@ -31,14 +33,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CarbonFootprintHubPage({ params }: PageProps) {
     const t = await getTranslations("CarbonFootprint");
+    const hub = await getCarbonHub("overview", params.locale);
+    const showEnglishEnhancements = params.locale === "en";
     const categories = await getCarbonCategories();
     const featuredPages = (await getFeaturedCarbonPages()).map((page) => localizeCarbonData(page, params.locale));
+    const allPages = categories
+        .flatMap(({ items }) => items)
+        .map((page) => localizeCarbonData(page, params.locale));
+    const topEmitters = [...allPages]
+        .sort((left, right) => right.co2_per_hour_grams - left.co2_per_hour_grams)
+        .slice(0, 4);
+    const comparisonShortcuts = (hub?.featuredComparisonPairs || []).map(([slugA, slugB]) => ({
+        href: buildComparisonPath(slugA, slugB),
+        label: `${allPages.find((page) => page.slug === slugA)?.app_name || slugA} vs ${allPages.find((page) => page.slug === slugB)?.app_name || slugB}`,
+    }));
 
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: t("page.digital_carbon_footprint_hub"),
-        description: t("page.hub_intro"),
+        name: hub?.title || t("page.digital_carbon_footprint_hub"),
+        description: hub?.seoDescription || t("page.hub_intro"),
         url: "https://www.idleforest.com/carbon-footprint",
         hasPart: featuredPages.map((page) => ({
             "@type": "WebPage",
@@ -69,15 +83,15 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                 <section className="border-2 border-black bg-white p-8 md:p-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-10">
                     <div className="max-w-4xl">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
-                            {t("page.carbon_footprint_cluster_hub")}
+                            {hub?.eyebrow || t("page.carbon_footprint_cluster_hub")}
                         </p>
                         <h1 className="font-candu text-[42px] sm:text-6xl md:text-7xl leading-[0.95] uppercase text-black mb-6">
-                            {t.rich("page.hub_title", {
+                            {hub?.title || t.rich("page.hub_title", {
                                 highlight: (chunks) => <span className="bg-brand-yellow px-2">{chunks}</span>,
                             })}
                         </h1>
                         <p className="text-lg md:text-xl text-neutral-800 leading-relaxed max-w-3xl mb-8">
-                            {t("page.hub_intro")}
+                            {hub?.intro || t("page.hub_intro")}
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -143,6 +157,44 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
+                {showEnglishEnhancements ? (
+                <section className="mb-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] gap-6">
+                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Cluster strategy</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{hub?.title || "How this hub should help rankings"}</h2>
+                        <div className="space-y-4">
+                            {(hub?.playbook || []).map((item) => (
+                                <div key={item.title} className="rounded-lg border border-black/10 bg-brand-gray p-4">
+                                    <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.title}</h3>
+                                    <p className="text-neutral-700 leading-relaxed">{item.body}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">Highest estimated footprints</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">Where to start</h2>
+                        <div className="space-y-4">
+                            {topEmitters.map((page, index) => (
+                                <Link
+                                    key={page.slug}
+                                    href={`/carbon-footprint/${page.slug}`}
+                                    className="flex items-center justify-between gap-4 rounded-lg border border-black/10 bg-brand-gray p-4 hover:border-black"
+                                >
+                                    <div>
+                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">#{index + 1}</div>
+                                        <div className="font-rethink-sans text-xl font-extrabold text-black">{page.app_name}</div>
+                                        <div className="text-sm text-neutral-600">{page.co2_per_hour_grams}{t("page.g_co2_hour")}</div>
+                                    </div>
+                                    <ArrowRight className="h-4 w-4 shrink-0 text-black" />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+                ) : null}
+
                 <section className="mb-12">
                     <div className="flex items-end justify-between gap-4 mb-6">
                         <div>
@@ -192,6 +244,33 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                         })}
                     </div>
                 </section>
+
+                {showEnglishEnhancements ? (
+                <section className="mb-12">
+                    <div className="mb-6">
+                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">Comparison shortcuts</p>
+                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black">Best supporting comparisons</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {comparisonShortcuts.map((comparison) => (
+                            <Link
+                                key={comparison.href}
+                                href={comparison.href}
+                                className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            >
+                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-2">{comparison.label}</h3>
+                                <p className="text-neutral-700 leading-relaxed mb-4">
+                                    Use these comparison pages to branch into side-by-side decision-making without leaving the carbon footprint cluster.
+                                </p>
+                                <span className="inline-flex items-center gap-1 text-sm font-bold text-black">
+                                    Open comparison <ArrowRight className="w-4 h-4" />
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+                ) : null}
 
                 <section className="border-t-2 border-black/10 pt-10">
                     <div className="mb-6">

@@ -1,4 +1,6 @@
-export const CARBON_SEED_DATA = [
+import { enrichCarbonSeedData } from "@/lib/carbon-app-seo";
+
+const BASE_CARBON_SEED_DATA = [
     {
         "app_name": "Fortnite",
         "category": "Gaming",
@@ -26,6 +28,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "La huella de carbono de Fortnite está impulsada por el hardware de juegos de alto rendimiento y la enorme infraestructura de servidores necesaria para las partidas de battle royale de 100 jugadores.",
+                "methodology_title": "Cómo se calcula esta estimación de Fortnite",
+                "methodology_summary": "Esta estimación combina la demanda de electricidad del hardware de juego con la actividad constante de red y servidores necesaria para ejecutar partidas online.",
+                "methodology_bullets": [
+                    "La cifra por hora asume juego activo en PC o consola, no una pantalla del lanzador en reposo.",
+                    "El consumo del dispositivo es la mayor variable, por lo que las consolas antiguas y el hardware de menor consumo pueden quedar por debajo de esta estimación, mientras que los PC gaming pueden superarla.",
+                    "El multijugador online añade emisiones de servidores y transferencia de datos además de las del propio dispositivo."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuánta CO2 produce Fortnite por hora?",
@@ -37,6 +46,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "Der CO2-Fußabdruck von Fortnite wird durch Hochleistungs-Gaming-Hardware und die massive Serverinfrastruktur bestimmt, die für Battle-Royale-Matches mit 100 Spielern erforderlich ist.",
+                "methodology_title": "So wird diese Fortnite-Schätzung berechnet",
+                "methodology_summary": "Diese Schätzung kombiniert den Strombedarf der Gaming-Hardware mit der permanenten Netzwerk- und Serveraktivität, die für Online-Matches nötig ist.",
+                "methodology_bullets": [
+                    "Der Stundenwert geht von aktivem Spielen auf PC oder Konsole aus, nicht von einem Launcher-Bildschirm im Leerlauf.",
+                    "Der Stromverbrauch des Geräts ist die größte Variable. Ältere Konsolen und sparsamere Hardware können unter dieser Schätzung liegen, während Gaming-PCs darüber liegen können.",
+                    "Online-Multiplayer verursacht zusätzlich zum Gerät selbst Emissionen durch Serverbetrieb und Datenübertragung."
+                ],
                 "faq": [
                     {
                         "question": "Wie viel CO2 produziert Fortnite pro Stunde?",
@@ -48,6 +64,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "A pegada de carbono do Fortnite é impulsionada pelo hardware de jogos de alto desempenho e pela enorme infraestrutura de servidores necessária para partidas de battle royale de 100 jogadores.",
+                "methodology_title": "Como é calculada esta estimativa do Fortnite",
+                "methodology_summary": "Esta estimativa combina a procura de eletricidade do hardware de jogo com a atividade contínua de rede e de servidores necessária para correr partidas online.",
+                "methodology_bullets": [
+                    "O valor por hora assume jogabilidade ativa num PC ou consola, e não um ecrã do launcher em repouso.",
+                    "O consumo do dispositivo é a maior variável, por isso consolas mais antigas e hardware mais eficiente podem ficar abaixo desta estimativa, enquanto PCs gaming a podem ultrapassar.",
+                    "O modo multijogador online acrescenta emissões de servidores e de transferência de dados além das do próprio dispositivo."
+                ],
                 "faq": [
                     {
                         "question": "Quanto CO2 o Fortnite produz por hora?",
@@ -59,6 +82,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "L'empreinte carbone de Fortnite est alimentée par le matériel de jeu haute performance et l'énorme infrastructure de serveurs requise pour les matchs de battle royale à 100 joueurs.",
+                "methodology_title": "Comment cette estimation de Fortnite est calculée",
+                "methodology_summary": "Cette estimation combine la demande d'électricité du matériel de jeu avec l'activité réseau et serveur permanente nécessaire pour faire tourner des parties en ligne.",
+                "methodology_bullets": [
+                    "Le chiffre horaire suppose une partie active sur PC ou console, et non un écran de lancement laissé inactif.",
+                    "La consommation de l'appareil est la variable la plus importante. Les anciennes consoles et le matériel plus économe peuvent rester sous cette estimation, tandis que les PC gaming peuvent la dépasser.",
+                    "Le multijoueur en ligne ajoute des émissions liées aux serveurs et au transfert de données en plus de celles de l'appareil lui-même."
+                ],
                 "faq": [
                     {
                         "question": "Combien de CO2 Fortnite produit-il par heure ?",
@@ -101,6 +131,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "El impacto del streaming de Netflix proviene de los centros de datos, las redes de entrega de contenido y su propio hardware de visualización. A medida que las resoluciones alcanzan el 4K, el costo de carbono por hora de entretenimiento continúa creciendo.",
+                "methodology_title": "Cómo se calcula esta estimación de Netflix",
+                "methodology_summary": "La estimación de Netflix se basa en una hora de streaming de vídeo y refleja tanto la infraestructura digital como el dispositivo usado para ver el contenido.",
+                "methodology_bullets": [
+                    "El punto de partida es una referencia de emisiones del streaming de vídeo bajo demanda en Europa.",
+                    "Ver en resoluciones más altas como 4K suele aumentar la transferencia de datos y el consumo energético del dispositivo, elevando el total.",
+                    "Un televisor o una consola suele tener un impacto mayor que un portátil o un teléfono reproduciendo el mismo contenido."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuál es la huella de carbono de Netflix?",
@@ -116,6 +153,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "Die Auswirkungen von Netflix-Streaming stammen von Rechenzentren, Inhaltsbereitstellungsnetzwerken und Ihrer eigenen Hardware. Da Auflösungen 4K erreichen, wachsen die CO2-Kosten pro Stunde Unterhaltung weiter.",
+                "methodology_title": "So wird diese Netflix-Schätzung berechnet",
+                "methodology_summary": "Die Netflix-Schätzung basiert auf einer Stunde Videostreaming und berücksichtigt sowohl die digitale Infrastruktur als auch das Gerät, auf dem der Inhalt angesehen wird.",
+                "methodology_bullets": [
+                    "Ausgangspunkt ist ein Emissionsrichtwert für Video-on-Demand-Streaming in Europa.",
+                    "Höhere Auflösungen wie 4K erhöhen in der Regel die Datenübertragung und den Energieverbrauch des Geräts, wodurch der Gesamtwert steigt.",
+                    "Ein Fernseher oder eine Spielkonsole hat oft einen größeren Einfluss als ein Laptop oder Smartphone, das denselben Stream abspielt."
+                ],
                 "faq": [
                     {
                         "question": "Wie groß ist der CO2-Fußabdruck von Netflix?",
@@ -131,6 +175,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "O impacto do streaming da Netflix vem de centros de dados, redes de entrega de conteúdo e do seu próprio hardware de visualização. À medida que as resoluções atingem 4K, o custo de carbono por hora de entretenimento continua a crescer.",
+                "methodology_title": "Como é calculada esta estimativa da Netflix",
+                "methodology_summary": "A estimativa da Netflix baseia-se numa hora de streaming de vídeo e reflete tanto a infraestrutura digital como o dispositivo usado para ver o conteúdo.",
+                "methodology_bullets": [
+                    "O ponto de partida é uma referência de emissões para streaming de vídeo a pedido na Europa.",
+                    "Ver em resoluções mais altas, como 4K, normalmente aumenta a transferência de dados e o consumo energético do dispositivo, fazendo subir o total.",
+                    "Uma televisão ou consola de jogos costuma ter um impacto maior do que um portátil ou telemóvel a reproduzir o mesmo conteúdo."
+                ],
                 "faq": [
                     {
                         "question": "Qual é a pegada de carbono da Netflix?",
@@ -146,6 +197,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "L'impact du streaming Netflix provient des centres de données, des réseaux de diffusion de contenu et de votre propre matériel de visionnage. À mesure que les résolutions atteignent la 4K, le coût carbone par heure de divertissement continue de croître.",
+                "methodology_title": "Comment cette estimation de Netflix est calculée",
+                "methodology_summary": "L'estimation de Netflix repose sur une heure de streaming vidéo et reflète à la fois l'infrastructure numérique et l'appareil utilisé pour regarder le contenu.",
+                "methodology_bullets": [
+                    "Le point de départ est un repère d'émissions pour le streaming de vidéo à la demande en Europe.",
+                    "Regarder en plus haute résolution, comme la 4K, augmente généralement le transfert de données et la consommation d'énergie de l'appareil, ce qui fait monter le total.",
+                    "Un téléviseur ou une console de jeu a souvent un impact plus important qu'un ordinateur portable ou un téléphone regardant le même flux."
+                ],
                 "faq": [
                     {
                         "question": "Quelle est l'empreinte carbone de Netflix ?",
@@ -253,6 +311,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "ChatGPT utiliza energía para cada consulta, respuesta y sistema de soporte detrás del modelo. Esta página ayuda a explicar cómo el uso cotidiano de la IA contribuye a las emisiones digitales.",
+                "methodology_title": "Cómo se calcula esta estimación de ChatGPT",
+                "methodology_summary": "Esta estimación convierte interacciones repetidas con IA en una huella por hora combinando la demanda de inferencia del modelo con la sobrecarga del centro de datos que la rodea.",
+                "methodology_bullets": [
+                    "Los modelos de lenguaje grandes se ejecutan en infraestructuras con gran uso de aceleradores que consumen más energía por interacción que la mayoría de las peticiones web normales.",
+                    "La estimación pretende representar un uso activo a lo largo del tiempo, no un único prompt aislado.",
+                    "Las emisiones reales varían según el tamaño del modelo, la longitud de la respuesta, la eficiencia del hardware, la utilización y la mezcla eléctrica del centro de datos."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuánta CO2 produce ChatGPT?",
@@ -264,6 +329,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "ChatGPT verbraucht Energie für jede Anfrage, Antwort und jedes unterstützende System hinter dem Modell. Diese Seite hilft zu erklären, wie die tägliche KI-Nutzung zu digitalen Emissionen beiträgt.",
+                "methodology_title": "So wird diese ChatGPT-Schätzung berechnet",
+                "methodology_summary": "Diese Schätzung übersetzt wiederholte KI-Interaktionen in einen stündlichen Fußabdruck, indem sie den Inferenzbedarf des Modells mit dem umgebenden Rechenzentrums-Overhead kombiniert.",
+                "methodology_bullets": [
+                    "Große Sprachmodelle laufen auf beschleunigerlastiger Infrastruktur, die pro Interaktion mehr Energie verbraucht als die meisten gewöhnlichen Webanfragen.",
+                    "Die Schätzung soll aktive Nutzung über die Zeit abbilden und nicht einen einzelnen Prompt isoliert betrachten.",
+                    "Die tatsächlichen Emissionen variieren je nach Modellgröße, Antwortlänge, Hardwareeffizienz, Auslastung und Strommix des Rechenzentrums."
+                ],
                 "faq": [
                     {
                         "question": "Wie viel CO2 produziert ChatGPT?",
@@ -275,6 +347,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "O ChatGPT usa energia para cada solicitação, resposta e sistema de suporte por trás do modelo. Esta página ajuda a explicar como o uso diário da IA contribui para as emissões digitais.",
+                "methodology_title": "Como é calculada esta estimativa do ChatGPT",
+                "methodology_summary": "Esta estimativa converte interações repetidas com IA numa pegada horária ao combinar a procura de inferência do modelo com a sobrecarga do centro de dados envolvente.",
+                "methodology_bullets": [
+                    "Os grandes modelos de linguagem correm em infraestruturas com forte uso de aceleradores, que consomem mais energia por interação do que a maioria dos pedidos web normais.",
+                    "A estimativa pretende representar uma utilização ativa ao longo do tempo, e não um único prompt isolado.",
+                    "As emissões reais variam consoante o tamanho do modelo, o comprimento da resposta, a eficiência do hardware, a utilização e o mix elétrico do centro de dados."
+                ],
                 "faq": [
                     {
                         "question": "Quanto CO2 o ChatGPT produz?",
@@ -286,6 +365,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "ChatGPT utilise de l'énergie pour chaque requête, réponse et système de support derrière le modèle. Cette page aide à expliquer comment l'utilisation quotidienne de l'IA contribue aux émissions numériques.",
+                "methodology_title": "Comment cette estimation de ChatGPT est calculée",
+                "methodology_summary": "Cette estimation convertit des interactions répétées avec l'IA en une empreinte horaire en combinant la demande d'inférence du modèle avec la surcharge du centre de données qui l'entoure.",
+                "methodology_bullets": [
+                    "Les grands modèles de langage tournent sur des infrastructures très dépendantes des accélérateurs, qui consomment plus d'énergie par interaction que la plupart des requêtes web ordinaires.",
+                    "L'estimation vise à représenter un usage actif dans le temps, et non un prompt unique pris isolément.",
+                    "Les émissions réelles varient selon la taille du modèle, la longueur de la réponse, l'efficacité du matériel, le taux d'utilisation et le mix électrique du centre de données."
+                ],
                 "faq": [
                     {
                         "question": "Combien de CO2 produit ChatGPT ?",
@@ -324,6 +410,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "Las reuniones de Zoom ofrecen beneficios ambientales al reducir los viajes, pero aún requieren una enorme potencia de red y servidor para conectar a los participantes a nivel mundial.",
+                "methodology_title": "Cómo se calcula esta estimación de Zoom",
+                "methodology_summary": "La estimación de Zoom refleja una hora de videollamada por participante y está determinada tanto por la capa de streaming como por el dispositivo que gestiona la reunión.",
+                "methodology_bullets": [
+                    "Las videollamadas aumentan el tráfico de red frente a las llamadas solo de audio, especialmente cuando las cámaras permanecen encendidas durante toda la reunión.",
+                    "El número de participantes importa porque cada flujo de vídeo adicional añade más procesamiento, transmisión y consumo energético del dispositivo.",
+                    "Apagar el vídeo, bajar la resolución o usar hardware eficiente puede reducir la huella por hora."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuánta CO2 produce una llamada de Zoom?",
@@ -335,6 +428,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "Zoom-Meetings bieten Umweltvorteile durch weniger Reisen, erfordern aber dennoch massive Netzwerk- und Serverleistung, um Teilnehmer weltweit zu verbinden.",
+                "methodology_title": "So wird diese Zoom-Schätzung berechnet",
+                "methodology_summary": "Die Zoom-Schätzung bildet eine Stunde Videotelefonie pro Teilnehmer ab und wird sowohl von der Streaming-Ebene als auch vom Gerät geprägt, das das Meeting verarbeitet.",
+                "methodology_bullets": [
+                    "Videoanrufe erhöhen den Netzwerkverkehr im Vergleich zu reinen Audioanrufen, besonders wenn Kameras während des gesamten Meetings eingeschaltet bleiben.",
+                    "Die Teilnehmerzahl ist wichtig, weil jeder zusätzliche Videostream mehr Verarbeitung, Übertragung und Energieverbrauch auf den Geräten verursacht.",
+                    "Wer das Video ausschaltet, die Auflösung senkt oder effiziente Hardware nutzt, kann den stündlichen Fußabdruck verringern."
+                ],
                 "faq": [
                     {
                         "question": "Wie viel CO2 verursacht ein Zoom-Anruf?",
@@ -346,6 +446,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "As reuniões do Zoom proporcionam benefícios ambientais ao reduzir as viagens, mas ainda exigem uma enorme potência de rede e servidor para conectar os participantes globalmente.",
+                "methodology_title": "Como é calculada esta estimativa do Zoom",
+                "methodology_summary": "A estimativa do Zoom reflete uma hora de videochamada por participante e é moldada tanto pela camada de streaming como pelo dispositivo que gere a reunião.",
+                "methodology_bullets": [
+                    "As videochamadas aumentam o tráfego de rede face às chamadas apenas de áudio, especialmente quando as câmaras ficam ligadas durante toda a reunião.",
+                    "O número de participantes importa porque cada fluxo de vídeo adicional acrescenta mais processamento, transmissão e consumo energético do dispositivo.",
+                    "Desligar o vídeo, baixar a resolução ou usar hardware eficiente pode reduzir a pegada por hora."
+                ],
                 "faq": [
                     {
                         "question": "Quanto CO2 produz uma chamada de Zoom?",
@@ -357,6 +464,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "Les réunions Zoom offrent des avantages environnementaux en réduisant les déplacements, mais elles nécessitent toujours une puissance de réseau et de serveur massive pour connecter les participants dans le monde entier.",
+                "methodology_title": "Comment cette estimation de Zoom est calculée",
+                "methodology_summary": "L'estimation de Zoom reflète une heure d'appel vidéo par participant et dépend à la fois de la couche de streaming et de l'appareil qui gère la réunion.",
+                "methodology_bullets": [
+                    "Les appels vidéo augmentent le trafic réseau par rapport aux appels audio seuls, surtout lorsque les caméras restent allumées pendant toute la réunion.",
+                    "Le nombre de participants compte, car chaque flux vidéo supplémentaire ajoute du traitement, de la transmission et de la consommation d'énergie côté appareil.",
+                    "Couper la vidéo, réduire la résolution ou utiliser un matériel efficace peut diminuer l'empreinte horaire."
+                ],
                 "faq": [
                     {
                         "question": "Combien de CO2 un appel Zoom produit-il ?",
@@ -459,6 +573,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "Las transacciones de Bitcoin tienen una alta huella de carbono debido al enorme consumo de energía requerido para el proceso de minería de prueba de trabajo.",
+                "methodology_title": "Cómo se calcula esta estimación de Bitcoin",
+                "methodology_summary": "Bitcoin se trata de forma distinta a las páginas de apps porque aquí la unidad es una transacción y no una hora de tiempo personal frente a la pantalla.",
+                "methodology_bullets": [
+                    "La estimación utiliza referencias de energía y emisiones a nivel de red para el sistema de prueba de trabajo de Bitcoin.",
+                    "La huella por transacción es muy debatida porque depende de cómo se reparta la energía total de minería entre la actividad de la red.",
+                    "La cifra debe leerse como una estimación orientativa del coste de carbono de una transacción, no como una medición precisa."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuánta CO2 genera una transacción de Bitcoin?",
@@ -470,6 +591,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "Bitcoin-Transaktionen haben einen hohen CO2-Fußabdruck aufgrund des massiven Energieverbrauchs, der für den Proof-of-Work-Mining-Prozess erforderlich ist.",
+                "methodology_title": "So wird diese Bitcoin-Schätzung berechnet",
+                "methodology_summary": "Bitcoin wird anders behandelt als die App-Seiten, weil die Einheit hier eine einzelne Transaktion und nicht eine Stunde persönlicher Bildschirmzeit ist.",
+                "methodology_bullets": [
+                    "Die Schätzung verwendet Energie- und Emissionsrichtwerte auf Netzwerkebene für das Proof-of-Work-System von Bitcoin.",
+                    "Der Fußabdruck pro Transaktion ist stark umstritten, weil er davon abhängt, wie der gesamte Mining-Energieverbrauch auf die Netzwerkaktivität verteilt wird.",
+                    "Der angezeigte Wert sollte als Richtwert für die CO2-Kosten einer Transaktion gelesen werden und nicht als präzise Messung."
+                ],
                 "faq": [
                     {
                         "question": "Wie viel CO2 verursacht eine Bitcoin-Transaktion?",
@@ -481,6 +609,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "As transações de Bitcoin têm uma pegada de carbono elevada devido ao enorme consumo de energia necessário para o processo de mineração de prova de trabalho.",
+                "methodology_title": "Como é calculada esta estimativa do Bitcoin",
+                "methodology_summary": "O Bitcoin é tratado de forma diferente das páginas de apps porque aqui a unidade é uma transação e não uma hora de tempo pessoal em frente ao ecrã.",
+                "methodology_bullets": [
+                    "A estimativa usa referências de energia e emissões ao nível da rede para o sistema de prova de trabalho do Bitcoin.",
+                    "A pegada por transação é muito debatida porque depende de como a energia total da mineração é distribuída pela atividade da rede.",
+                    "O valor apresentado deve ser lido como uma estimativa indicativa do custo de carbono de uma transação, e não como uma medição exata."
+                ],
                 "faq": [
                     {
                         "question": "Quanto CO2 cria uma transação de Bitcoin?",
@@ -492,6 +627,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "Les transactions Bitcoin ont une empreinte carbone élevée en raison de la consommation d'énergie massive requise pour le processus de minage en preuve de travail.",
+                "methodology_title": "Comment cette estimation de Bitcoin est calculée",
+                "methodology_summary": "Le Bitcoin est traité différemment des pages d'apps, car l'unité ici est une transaction et non une heure de temps personnel passé devant l'écran.",
+                "methodology_bullets": [
+                    "L'estimation s'appuie sur des repères de consommation d'énergie et d'émissions à l'échelle du réseau pour le système de preuve de travail de Bitcoin.",
+                    "L'empreinte par transaction fait l'objet de nombreux débats, car elle dépend de la manière dont l'énergie totale du minage est répartie sur l'activité du réseau.",
+                    "Le chiffre affiché doit être lu comme une estimation indicative du coût carbone d'une transaction, et non comme une mesure précise."
+                ],
                 "faq": [
                     {
                         "question": "Combien de CO2 une transaction Bitcoin crée-t-elle ?",
@@ -530,6 +672,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "YouTube ofrece miles de millones de horas de video diariamente. La energía utilizada para el procesamiento de contenido y el streaming global se acumula en millones de dispositivos.",
+                "methodology_title": "Cómo se calcula esta estimación de YouTube",
+                "methodology_summary": "Esta estimación refleja una hora de visualización en YouTube y agrupa la infraestructura de la plataforma, la entrega por red y la reproducción en un dispositivo de consumo.",
+                "methodology_bullets": [
+                    "YouTube se comporta como otras plataformas de streaming de vídeo, así que la calidad de visualización y el dispositivo de reproducción afectan mucho al resultado.",
+                    "Los clips cortos también pueden acumularse porque la reproducción automática y los bucles de recomendaciones alargan el tiempo total de visualización.",
+                    "Ver en un teléfono suele consumir menos electricidad que verlo en una televisión grande o en una consola."
+                ],
                 "faq": [
                     {
                         "question": "¿Cuál es la huella de carbono de YouTube?",
@@ -541,6 +690,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "YouTube liefert täglich Milliarden von Videostunden aus. Die für die Inhaltsverarbeitung und das globale Streaming verbrauchte Energie summiert sich über Millionen von Geräten.",
+                "methodology_title": "So wird diese YouTube-Schätzung berechnet",
+                "methodology_summary": "Diese Schätzung bildet eine Stunde YouTube-Nutzung ab und bündelt Plattforminfrastruktur, Netzwerkübertragung und Wiedergabe auf einem Endgerät.",
+                "methodology_bullets": [
+                    "YouTube verhält sich ähnlich wie andere Videostreaming-Plattformen, daher beeinflussen sowohl die Wiedergabequalität als auch das Gerät das Ergebnis stark.",
+                    "Auch kurze Clips summieren sich, weil Autoplay und Empfehlungsschleifen die gesamte Wiedergabezeit verlängern.",
+                    "Das Anschauen auf einem Smartphone verbraucht in der Regel weniger Strom als auf einem großen Fernseher oder einer Konsole."
+                ],
                 "faq": [
                     {
                         "question": "Wie groß ist der CO2-Fußabdruck von YouTube?",
@@ -552,6 +708,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "O YouTube fornece milhares de milhões de horas de vídeo diariamente. A energia utilizada para o processamento de conteúdo e streaming global soma-se em milhões de dispositivos.",
+                "methodology_title": "Como é calculada esta estimativa do YouTube",
+                "methodology_summary": "Esta estimativa reflete uma hora de visualização no YouTube e junta a infraestrutura da plataforma, a entrega pela rede e a reprodução num dispositivo de consumo.",
+                "methodology_bullets": [
+                    "O YouTube comporta-se como outras plataformas de streaming de vídeo, por isso tanto a qualidade de visualização como o dispositivo de reprodução afetam fortemente o resultado.",
+                    "Os clips curtos também se acumulam porque a reprodução automática e os ciclos de recomendações prolongam o tempo total de visualização.",
+                    "Ver num telemóvel costuma gastar menos eletricidade do que ver numa televisão grande ou numa consola."
+                ],
                 "faq": [
                     {
                         "question": "Qual é a pegada de carbono do YouTube?",
@@ -563,6 +726,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "YouTube diffuse des milliards d'heures de vidéo chaque jour. L'énergie utilisée pour le traitement des contenus et le streaming mondial s'additionne sur des millions d'appareils.",
+                "methodology_title": "Comment cette estimation de YouTube est calculée",
+                "methodology_summary": "Cette estimation reflète une heure de visionnage sur YouTube et regroupe l'infrastructure de la plateforme, l'acheminement réseau et la lecture sur un appareil grand public.",
+                "methodology_bullets": [
+                    "YouTube se comporte comme les autres plateformes de streaming vidéo, donc la qualité de visionnage et l'appareil de lecture influencent fortement le résultat.",
+                    "Les clips courts peuvent aussi s'accumuler, car l'autoplay et les boucles de recommandations allongent le temps total de visionnage.",
+                    "Regarder sur un téléphone consomme généralement moins d'électricité que regarder sur un grand téléviseur ou une console."
+                ],
                 "faq": [
                     {
                         "question": "Quelle est l'empreinte carbone de YouTube ?",
@@ -731,6 +901,13 @@ export const CARBON_SEED_DATA = [
             },
             "es": {
                 "intro": "Las pestañas del navegador y los procesos de fondo activos en Chrome consumen CPU y RAM, lo que se traduce en un uso de energía pequeño pero constante.",
+                "methodology_title": "Cómo se calcula esta estimación de Chrome",
+                "methodology_summary": "La estimación de Chrome se centra en el comportamiento de navegación activa y en la carga del navegador en segundo plano, en lugar de solo la energía de una única página vista.",
+                "methodology_bullets": [
+                    "Las pestañas abiertas, la reproducción de vídeo, las extensiones y los sitios con mucho JavaScript cambian cuánto CPU y memoria usa el navegador.",
+                    "Las sesiones largas importan porque un consumo horario modesto se acumula a lo largo de toda una jornada.",
+                    "Esta estimación es más útil como señal comparativa de hábitos digitales que como una medición de laboratorio para una configuración exacta de pestañas."
+                ],
                 "faq": [
                     {
                         "question": "¿Consumen energía las pestañas del navegador?",
@@ -742,6 +919,13 @@ export const CARBON_SEED_DATA = [
             },
             "de": {
                 "intro": "Browser-Tabs und aktive Hintergrundprozesse in Chrome verbrauchen CPU und RAM, was zu einem geringen, aber stetigen Energieverbrauch über den Tag führt.",
+                "methodology_title": "So wird diese Chrome-Schätzung berechnet",
+                "methodology_summary": "Die Chrome-Schätzung konzentriert sich auf aktives Surfverhalten und Browserlast im Hintergrund statt nur auf die Energie eines einzelnen Seitenaufrufs.",
+                "methodology_bullets": [
+                    "Offene Tabs, Videowiedergabe, Erweiterungen und JavaScript-lastige Websites verändern, wie viel CPU und Arbeitsspeicher der Browser nutzt.",
+                    "Lange Sitzungen sind wichtig, weil sich ein moderater stündlicher Stromverbrauch über einen ganzen Arbeitstag summiert.",
+                    "Diese Schätzung ist eher als Vergleichssignal für digitale Gewohnheiten nützlich als als Labormessung für ein ganz bestimmtes Tab-Setup."
+                ],
                 "faq": [
                     {
                         "question": "Verbrauchen Browser-Tabs Energie?",
@@ -753,6 +937,13 @@ export const CARBON_SEED_DATA = [
             },
             "pt": {
                 "intro": "Os separadores do navegador e os processos de segundo plano ativos no Chrome consomem CPU e RAM, traduzindo-se num uso de energia pequeno mas consistente.",
+                "methodology_title": "Como é calculada esta estimativa do Chrome",
+                "methodology_summary": "A estimativa do Chrome centra-se no comportamento de navegação ativa e na carga do browser em segundo plano, em vez de apenas na energia de uma única página visitada.",
+                "methodology_bullets": [
+                    "Separadores abertos, reprodução de vídeo, extensões e sites pesados em JavaScript alteram o uso de CPU e memória do browser.",
+                    "As sessões longas importam porque um consumo horário modesto se acumula ao longo de um dia inteiro de trabalho.",
+                    "Esta estimativa é mais útil como sinal comparativo de hábitos digitais do que como medição laboratorial para uma configuração exata de separadores."
+                ],
                 "faq": [
                     {
                         "question": "Os separadores do navegador consomem energia?",
@@ -764,6 +955,13 @@ export const CARBON_SEED_DATA = [
             },
             "fr": {
                 "intro": "Les onglets du navigateur et les processus d'arrière-plan actifs dans Chrome consomment du processeur et de la RAM, ce qui se traduit par une consommation d'énergie faible mais constante.",
+                "methodology_title": "Comment cette estimation de Chrome est calculée",
+                "methodology_summary": "L'estimation de Chrome se concentre sur le comportement de navigation active et la charge du navigateur en arrière-plan plutôt que sur l'énergie d'une seule page vue.",
+                "methodology_bullets": [
+                    "Les onglets ouverts, la lecture vidéo, les extensions et les sites riches en JavaScript modifient l'utilisation du processeur et de la mémoire par le navigateur.",
+                    "Les longues sessions comptent, car une consommation horaire modeste s'additionne sur toute une journée de travail.",
+                    "Cette estimation est surtout utile comme signal comparatif des habitudes numériques, et non comme mesure de laboratoire pour une configuration d'onglets précise."
+                ],
                 "faq": [
                     {
                         "question": "Les onglets du navigateur consomment-ils de l'énergie ?",
@@ -1357,3 +1555,5 @@ export const CARBON_SEED_DATA = [
         }
     }
 ];
+
+export const CARBON_SEED_DATA = enrichCarbonSeedData(BASE_CARBON_SEED_DATA);
