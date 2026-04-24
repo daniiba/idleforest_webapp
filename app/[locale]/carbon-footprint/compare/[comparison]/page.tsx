@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCarbonData, getFeaturedCarbonPages, getIconUrl } from "@/lib/carbon-data";
+import { getCarbonData, getIconUrl } from "@/lib/carbon-data";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
-import { ArrowLeft, ArrowRight, Gamepad2, Users, Monitor } from "lucide-react";
+import { ArrowLeft, ArrowRight, Monitor } from "lucide-react";
 
 interface PageProps {
     params: {
@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const slugs = params.comparison.split('-vs-');
     if (slugs.length !== 2) return { title: "Compare Carbon Footprints" };
 
-    const data1 = getCarbonData(slugs[0]);
-    const data2 = getCarbonData(slugs[1]);
+    const data1 = await getCarbonData(slugs[0]);
+    const data2 = await getCarbonData(slugs[1]);
 
     if (!data1 || !data2) return { title: "Not Found" };
 
@@ -40,13 +40,12 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
     const slugs = params.comparison.split('-vs-');
     if (slugs.length !== 2) notFound();
 
-    const data1 = getCarbonData(slugs[0]);
-    const data2 = getCarbonData(slugs[1]);
+    const data1 = await getCarbonData(slugs[0]);
+    const data2 = await getCarbonData(slugs[1]);
 
     if (!data1 || !data2) notFound();
 
     const t = await getTranslations("CarbonFootprint");
-    const featuredGuides = getFeaturedCarbonPages(3).filter(g => g.slug !== data1.slug && g.slug !== data2.slug);
 
     const iconUrl1 = getIconUrl(data1);
     const iconUrl2 = getIconUrl(data2);

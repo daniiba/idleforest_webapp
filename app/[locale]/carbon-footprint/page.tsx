@@ -3,13 +3,20 @@ import { getTranslations } from "next-intl/server";
 import Navigation from "@/components/navigation";
 import { Link } from "@/navigation";
 import { ArrowLeft, ArrowRight, Leaf, Trees } from "lucide-react";
-import { getCarbonCategories, getFeaturedCarbonPages, getIconUrl } from "@/lib/carbon-data";
+import { getCarbonCategories, getFeaturedCarbonPages, getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface PageProps {
+    params: {
+        locale: string;
+    };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const t = await getTranslations({ locale: params.locale, namespace: "CarbonFootprint" });
+
     return {
-        title: "Digital Carbon Footprint Hub | IdleForest",
-        description:
-            "Explore the carbon footprint of popular apps, AI tools, browsers, games, and streaming platforms. Compare digital emissions and find simple ways to offset them.",
+        title: `${t("page.digital_carbon_footprint_hub")} | IdleForest`,
+        description: t("page.hub_intro"),
         alternates: {
             canonical: "https://www.idleforest.com/carbon-footprint",
         },
@@ -23,22 +30,20 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default async function CarbonFootprintHubPage() {
+export default async function CarbonFootprintHubPage({ params }: PageProps) {
     const t = await getTranslations("CarbonFootprint");
-
-    const categories = getCarbonCategories();
-    const featuredPages = getFeaturedCarbonPages();
+    const categories = await getCarbonCategories();
+    const featuredPages = (await getFeaturedCarbonPages()).map((page) => localizeCarbonData(page, params.locale));
 
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: "Digital Carbon Footprint Hub",
-        description:
-            "A collection of carbon-footprint pages for apps, streaming services, AI tools, browsers, and games.",
+        name: t("page.digital_carbon_footprint_hub"),
+        description: t("page.hub_intro"),
         url: "https://www.idleforest.com/carbon-footprint",
         hasPart: featuredPages.map((page) => ({
             "@type": "WebPage",
-            name: `Carbon Footprint of ${page.app_name}`,
+            name: `${t("page.carbon_footprint_of")} ${page.app_name}`,
             url: `https://www.idleforest.com/carbon-footprint/${page.slug}`,
         })),
     };
@@ -58,7 +63,7 @@ export default async function CarbonFootprintHubPage() {
                         className="inline-flex items-center text-neutral-600 hover:text-black transition-colors font-medium"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Home
+                        {t("page.back_to_home")}
                     </Link>
                 </div>
 
@@ -68,7 +73,9 @@ export default async function CarbonFootprintHubPage() {
                             {t("page.carbon_footprint_cluster_hub")}
                         </p>
                         <h1 className="font-candu text-[42px] sm:text-6xl md:text-7xl leading-[0.95] uppercase text-black mb-6">
-                            Digital <span className="bg-brand-yellow px-2">carbon footprint</span> guides and calculators
+                            {t.rich("page.hub_title", {
+                                highlight: (chunks) => <span className="bg-brand-yellow px-2">{chunks}</span>,
+                            })}
                         </h1>
                         <p className="text-lg md:text-xl text-neutral-800 leading-relaxed max-w-3xl mb-8">
                             {t("page.hub_intro")}
@@ -78,28 +85,28 @@ export default async function CarbonFootprintHubPage() {
                             <div className="border-2 border-black bg-brand-yellow p-5">
                                 <div className="flex items-center gap-2 font-bold text-black mb-2">
                                     <Leaf className="w-5 h-5" />
-                                    AI carbon footprint
+                                    {t("page.hub_cards.ai.title")}
                                 </div>
                                 <p className="text-sm text-neutral-900">
-                                    Start with AI tools like ChatGPT, then branch into the broader AI emissions topic.
+                                    {t("page.hub_cards.ai.description")}
                                 </p>
                             </div>
                             <div className="border-2 border-black bg-white p-5">
                                 <div className="flex items-center gap-2 font-bold text-black mb-2">
                                     <Trees className="w-5 h-5" />
-                                    Streaming footprint
+                                    {t("page.hub_cards.streaming.title")}
                                 </div>
                                 <p className="text-sm text-neutral-700">
-                                    Compare Netflix, YouTube, Twitch, Spotify, and short-form video usage.
+                                    {t("page.hub_cards.streaming.description")}
                                 </p>
                             </div>
                             <div className="border-2 border-black bg-white p-5">
                                 <div className="flex items-center gap-2 font-bold text-black mb-2">
                                     <Leaf className="w-5 h-5" />
-                                    Work and browsing
+                                    {t("page.hub_cards.work.title")}
                                 </div>
                                 <p className="text-sm text-neutral-700">
-                                    Understand how meetings, browsers, and online workflows add to your digital emissions.
+                                    {t("page.hub_cards.work.description")}
                                 </p>
                             </div>
                         </div>
@@ -164,7 +171,9 @@ export default async function CarbonFootprintHubPage() {
                                             )}
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">{page.category}</div>
+                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                                                {t(`categories.${page.category}`)}
+                                            </div>
                                             <h3 className="font-rethink-sans text-xl font-extrabold text-black group-hover:text-brand-green transition-colors">
                                                 {page.app_name}
                                             </h3>
@@ -174,8 +183,10 @@ export default async function CarbonFootprintHubPage() {
                                         {page.seo?.intro || page.idleforest_pitch}
                                     </p>
                                     <div className="flex items-center justify-between text-sm font-bold text-black">
-                                        <span>{page.co2_per_hour_grams}g CO2 / hour</span>
-                                        <span className="inline-flex items-center gap-1">Open <ArrowRight className="w-4 h-4" /></span>
+                                        <span>{page.co2_per_hour_grams}{t("page.g_co2_hour")}</span>
+                                        <span className="inline-flex items-center gap-1">
+                                            {t("page.open_page")} <ArrowRight className="w-4 h-4" />
+                                        </span>
                                     </div>
                                 </Link>
                             );
@@ -192,7 +203,9 @@ export default async function CarbonFootprintHubPage() {
                     <div className="space-y-10">
                         {categories.map(({ category, items }) => (
                             <div key={category}>
-                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{category}</h3>
+                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    {t(`categories.${category}`)}
+                                </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {items.map((item) => (
                                         <Link

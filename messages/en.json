@@ -669,8 +669,24 @@
       "explore_the_cluster": "Explore the carbon footprint cluster",
       "featured_carbon_guides": "Featured carbon guides",
       "carbon_footprint_cluster_hub": "Carbon footprint cluster hub",
+      "carbon_hub": "Carbon Hub",
       "digital_carbon_footprint_hub": "Digital carbon footprint guides and calculators",
+      "hub_title": "Digital <highlight>carbon footprint</highlight> guides and calculators",
       "hub_intro": "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use these pages to estimate emissions, understand the methodology, and find simple ways to offset your digital footprint.",
+      "hub_cards": {
+        "ai": {
+          "title": "AI carbon footprint",
+          "description": "Start with AI tools like ChatGPT, then branch into the broader AI emissions topic."
+        },
+        "streaming": {
+          "title": "Streaming footprint",
+          "description": "Compare Netflix, YouTube, Twitch, Spotify, and short-form video usage."
+        },
+        "work": {
+          "title": "Work and browsing",
+          "description": "Understand how meetings, browsers, and online workflows add to your digital emissions."
+        }
+      },
       "explore_ai_emissions": "Explore AI emissions",
       "explore_streaming": "Explore streaming",
       "explore_digital_footprint": "Explore digital footprint",
@@ -680,6 +696,78 @@
       "browse_by_category": "Browse by category",
       "recommended_pages": "Recommended pages",
       "explore_related_guides": "Explore related calculators and guides",
+      "open_page": "Open",
+      "cluster_links": {
+        "hub": {
+          "title": "Digital Carbon Footprint Hub",
+          "description": "Explore every carbon-footprint page and compare the biggest digital emission sources."
+        },
+        "ai": {
+          "title": "AI carbon footprint",
+          "description": "Use this parent page to connect ChatGPT with broader AI emissions searches."
+        },
+        "streaming": {
+          "title": "Streaming carbon footprint",
+          "description": "Compare streaming platforms like YouTube, Netflix, and Twitch side by side."
+        },
+        "digital_footprint": {
+          "title": "Digital carbon footprint",
+          "description": "Understand the broader concept behind app, browser, work, and AI emissions."
+        }
+      },
+      "hubs": {
+        "ai": {
+          "title": "AI Carbon Footprint",
+          "seoTitle": "AI Carbon Footprint: Emissions from Artificial Intelligence | IdleForest",
+          "seoDescription": "Understand the carbon footprint of AI models like ChatGPT, Midjourney, and LLMs. Learn how training and inference contribute to global digital emissions.",
+          "eyebrow": "AI Emissions Hub",
+          "intro": "Artificial Intelligence offers incredible capabilities, but these systems require massive amounts of energy. From training neural networks to processing millions of daily prompts, AI's carbon footprint is growing rapidly.",
+          "sections": {
+            "trainingVsInference": {
+              "title": "Training vs. Inference",
+              "body": "Training a large language model uses thousands of GPUs running for months, creating a singular massive footprint. However, inference (the everyday use of models like ChatGPT) happens millions of times a day and adds up over time."
+            },
+            "hardwareAndCooling": {
+              "title": "Hardware and Cooling",
+              "body": "Data centers hosting AI hardware must be kept cool, which often requires significant water and electricity. The overall impact depends heavily on whether the data center runs on renewable energy."
+            }
+          }
+        },
+        "streaming": {
+          "title": "Streaming Carbon Footprint",
+          "seoTitle": "Streaming Carbon Footprint: YouTube, Netflix, Spotify | IdleForest",
+          "seoDescription": "Compare the carbon emissions of top streaming platforms. Estimate how binge-watching Netflix or listening to Spotify adds to your footprint.",
+          "eyebrow": "Streaming Emissions Hub",
+          "intro": "Streaming video and audio relies on complex networks to deliver high-quality media directly to your device. As resolutions increase, so does the amount of data transferred, which uses more server and network energy.",
+          "sections": {
+            "dataCentersToDevices": {
+              "title": "Data Centers to Devices",
+              "body": "Streaming's carbon footprint comes from three main sources: the data centers storing the media, the transmission networks delivering it, and the device you use to watch or listen."
+            },
+            "audioVsVideo": {
+              "title": "Audio vs. Video",
+              "body": "Video streaming requires significantly more bandwidth than audio. Watching 4K video consumes considerably more energy and generates more emissions compared to standard definition streaming or listening to music."
+            }
+          }
+        },
+        "digitalCarbonFootprint": {
+          "title": "Digital Carbon Footprint",
+          "seoTitle": "What is a Digital Carbon Footprint? Definition & Guide | IdleForest",
+          "seoDescription": "Learn what a digital carbon footprint is and how your internet usage, emails, and Zoom meetings contribute to global carbon emissions.",
+          "eyebrow": "Digital Sustainability Hub",
+          "intro": "Every email sent, video watched, and website loaded uses a fraction of electrical energy. While individual actions seem tiny, billions of connected devices and data centers combine to form our global digital carbon footprint.",
+          "sections": {
+            "theInvisibleCloud": {
+              "title": "The Invisible Cloud",
+              "body": "When we save files to the cloud, they are actually stored on physical servers in massive data centers. These facilities run 24/7 and consume enormous amounts of electricity."
+            },
+            "howCanYouReduceIt": {
+              "title": "How Can You Reduce It?",
+              "body": "You can reduce your digital carbon footprint by keeping devices longer, streaming efficiently, closing unused browser tabs, and turning off video during meetings when appropriate."
+            }
+          }
+        }
+      },
       "view_leaderboard": "View Leaderboard",
       "leaderboard_breadcrumb": "Leaderboard",
       "leaderboard_eyebrow": "Emissions Leaderboard",

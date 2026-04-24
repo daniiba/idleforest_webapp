@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { CARBON_DATA, getIconUrl } from "@/lib/carbon-data";
+import { getAllCarbonData, getIconUrl } from "@/lib/carbon-data";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
@@ -18,8 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function LeaderboardPage() {
     const t = await getTranslations("CarbonFootprint");
 
-    // Sort heavily polluting to least polluting.
-    const sortedApps = [...CARBON_DATA].sort((a, b) => b.co2_per_hour_grams - a.co2_per_hour_grams);
+    // Fetch and sort heavily polluting to least polluting.
+    const allApps = await getAllCarbonData();
+    const sortedApps = [...allApps].sort((a, b) => b.co2_per_hour_grams - a.co2_per_hour_grams);
 
     return (
         <div className="min-h-screen bg-brand-gray pb-12 font-inter">

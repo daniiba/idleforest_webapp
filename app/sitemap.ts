@@ -54,7 +54,7 @@ import { getAllSlugs } from '@/lib/carbon-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPosts = await getBlogPosts()
-  const carbonSlugs = getAllSlugs()
+  const carbonSlugs = await getAllSlugs()
 
   const locales = ['en', 'es', 'pt', 'de', 'fr']
 

@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { CARBON_DATA, getIconUrl } from '@/lib/carbon-data';
+import { getCarbonData, getIconUrl } from '@/lib/carbon-data';
 
 export const runtime = 'edge';
 
@@ -7,7 +7,9 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const slug = searchParams.get('slug');
-        const data = CARBON_DATA.find((d) => d.slug === slug);
+        if (!slug) return new Response('Slug required', { status: 400 });
+        
+        const data = await getCarbonData(slug);
 
         if (!data) {
             return new Response('Not found', { status: 404 });

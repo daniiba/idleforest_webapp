@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { CARBON_DATA, getIconUrl } from '@/lib/carbon-data';
+import { getCarbonData, getIconUrl } from '@/lib/carbon-data';
 
 export const runtime = 'edge';
 
@@ -8,8 +8,12 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const app1 = searchParams.get('app1');
         const app2 = searchParams.get('app2');
-        const data1 = CARBON_DATA.find((d) => d.slug === app1);
-        const data2 = CARBON_DATA.find((d) => d.slug === app2);
+        if (!app1 || !app2) return new Response('Apps required', { status: 400 });
+
+        const [data1, data2] = await Promise.all([
+            getCarbonData(app1),
+            getCarbonData(app2)
+        ]);
 
         if (!data1 || !data2) {
             return new Response('Not found', { status: 404 });

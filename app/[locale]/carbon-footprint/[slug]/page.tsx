@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCarbonData, getRelatedCarbonData, getIconUrl, getFeaturedCarbonPages } from "@/lib/carbon-data";
+import { getCarbonData, getRelatedCarbonData, getIconUrl, getFeaturedCarbonPages, localizeCarbonData } from "@/lib/carbon-data";
 import { CalculatorWidget } from "@/components/carbon/calculator-widget";
 import { ComparisonGraph } from "@/components/carbon/comparison-graph";
 import { TrustSection } from "@/components/carbon/trust-section";
@@ -9,16 +9,17 @@ import { ArrowLeft, Gamepad2, Users, Monitor } from "lucide-react";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
-import { useTranslations } from "next-intl";
 
 interface PageProps {
     params: {
         slug: string;
+        locale: string;
     };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const data = getCarbonData(params.slug);
+    const rawData = await getCarbonData(params.slug);
+    const data = rawData ? localizeCarbonData(rawData, params.locale) : undefined;
     const t = await getTranslations("CarbonFootprint");
 
     if (!data) {
@@ -54,38 +55,45 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
-export default function CarbonFootprintPage({ params }: PageProps) {
-    const data = getCarbonData(params.slug);
-    const t = useTranslations("CarbonFootprint");
+export default async function CarbonFootprintPage({ params }: PageProps) {
+    const rawData = await getCarbonData(params.slug);
+    const data = rawData ? localizeCarbonData(rawData, params.locale) : undefined;
+    const t = await getTranslations("CarbonFootprint");
 
     if (!data) {
         notFound();
     }
 
-    const t_human = t(`items.${data.slug}.human_equivalent`);
+    const t_human = data.human_equivalent;
     const clusterLinks = [
         {
-            title: "Digital Carbon Footprint Hub",
-            description: "Explore every carbon-footprint page and compare the biggest digital emission sources.",
+            title: t("page.cluster_links.hub.title"),
+            description: t("page.cluster_links.hub.description"),
             href: "/carbon-footprint",
         },
         {
-            title: "AI carbon footprint",
-            description: "Use this parent page to connect ChatGPT with broader AI emissions searches.",
+            title: t("page.cluster_links.ai.title"),
+            description: t("page.cluster_links.ai.description"),
             href: "/carbon-footprint/ai",
         },
         {
-            title: "Streaming carbon footprint",
-            description: "Compare streaming platforms like YouTube, Netflix, and Twitch side by side.",
+            title: t("page.cluster_links.streaming.title"),
+            description: t("page.cluster_links.streaming.description"),
             href: "/carbon-footprint/streaming",
         },
         {
-            title: "Digital carbon footprint",
-            description: "Understand the broader concept behind app, browser, work, and AI emissions.",
+            title: t("page.cluster_links.digital_footprint.title"),
+            description: t("page.cluster_links.digital_footprint.description"),
             href: "/carbon-footprint/digital-carbon-footprint",
         },
     ].filter((item) => item.href !== `/carbon-footprint/${data.slug}`);
-    const featuredGuides = getFeaturedCarbonPages().filter((page) => page.slug !== data.slug).slice(0, 3);
+    const featuredGuides = (await getFeaturedCarbonPages())
+        .map((page) => localizeCarbonData(page, params.locale))
+        .filter((page) => page.slug !== data.slug)
+        .slice(0, 3);
+    const relatedPages = (await getRelatedCarbonData(data.slug, data.category)).map((related) =>
+        localizeCarbonData(related, params.locale)
+    );
 
     const faqEntities = [
         {
@@ -183,21 +191,7 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                                 <p className="text-lg text-neutral-800 leading-relaxed mb-6">
                                     {data.seo.intro}
                                 </p>
-                                <div>
-                                    <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
-                                        {t("page.searches_this_page_should_answer")}
-                                    </h2>
-                                    <div className="flex flex-wrap gap-2">
-                                        {data.seo.searchTopics.map((topic) => (
-                                            <span
-                                                key={topic}
-                                                className="border border-black bg-brand-gray px-3 py-2 text-sm font-semibold text-black"
-                                            >
-                                                {topic}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
+
                             </div>
                         )}
 
@@ -258,7 +252,9 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                                         href={`/carbon-footprint/${guide.slug}`}
                                         className="border-2 border-black bg-brand-gray p-5 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                     >
-                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">{guide.category}</div>
+                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">
+                                            {t(`categories.${guide.category}`)}
+                                        </div>
                                         <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{guide.app_name}</h3>
                                         <p className="text-neutral-700 text-sm leading-relaxed">{guide.seo?.intro || guide.idleforest_pitch}</p>
                                     </Link>
@@ -271,7 +267,7 @@ export default function CarbonFootprintPage({ params }: PageProps) {
                                 {t("page.compare_with_related")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {getRelatedCarbonData(data.slug, data.category).map((related) => (
+                                {relatedPages.map((related) => (
                                     <Link
                                         key={related.slug}
                                         href={`/carbon-footprint/${related.slug}`}

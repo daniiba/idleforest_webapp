@@ -13,7 +13,6 @@ interface CalculatorWidgetProps {
 
 export function CalculatorWidget({ data }: CalculatorWidgetProps) {
     const t = useTranslations("CarbonFootprint.calculator");
-    const t_items = useTranslations("CarbonFootprint.items");
 
     const [hoursPerWeek, setHoursPerWeek] = useState(
         typeof data.avg_usage_hours_day === "number"
@@ -111,7 +110,7 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
             </div>
 
             <div className="mt-8 text-center text-sm text-gray-300 bg-white/5 p-4 rounded-lg font-medium italic border border-white/10">
-                "{t_items(`${data.slug}.idleforest_pitch`)}"
+                "{data.idleforest_pitch}"
             </div>
         </div>
     );

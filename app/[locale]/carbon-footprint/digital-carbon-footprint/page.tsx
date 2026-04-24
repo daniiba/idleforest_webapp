@@ -1,10 +1,22 @@
 import { CarbonHubPageTemplate, buildCarbonHubMetadata } from "@/components/carbon/cluster-hub-page";
 import { getCarbonHub } from "@/lib/carbon-hubs";
+import { notFound } from "next/navigation";
 
-const hub = getCarbonHub("digital-carbon-footprint")!;
+interface PageProps {
+    params: {
+        locale: string;
+    };
+}
 
-export const metadata = buildCarbonHubMetadata(hub);
+export async function generateMetadata({ params }: PageProps) {
+    const hub = await getCarbonHub("digital-carbon-footprint", params.locale);
+    return buildCarbonHubMetadata(hub!);
+}
 
-export default function DigitalCarbonFootprintPage() {
-    return <CarbonHubPageTemplate hub={hub} />;
+export default async function DigitalCarbonFootprintPage({ params }: PageProps) {
+    const hub = await getCarbonHub("digital-carbon-footprint", params.locale);
+    if (!hub) {
+        notFound();
+    }
+    return <CarbonHubPageTemplate hub={hub} locale={params.locale} />;
 }

@@ -3,11 +3,12 @@ import Navigation from "@/components/navigation";
 import { Link } from "@/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CarbonHubDefinition, getCarbonHubPages } from "@/lib/carbon-hubs";
-import { getIconUrl } from "@/lib/carbon-data";
+import { getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
 import { getTranslations } from "next-intl/server";
 
 interface CarbonHubPageProps {
     hub: CarbonHubDefinition;
+    locale: string;
 }
 
 export function buildCarbonHubMetadata(hub: CarbonHubDefinition): Metadata {
@@ -21,9 +22,9 @@ export function buildCarbonHubMetadata(hub: CarbonHubDefinition): Metadata {
     };
 }
 
-export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
-    const pages = getCarbonHubPages(hub);
+export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps) {
     const t = await getTranslations("CarbonFootprint");
+    const pages = (await getCarbonHubPages(hub)).map((page) => localizeCarbonData(page, locale));
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -33,7 +34,7 @@ export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
         url: `https://www.idleforest.com/carbon-footprint/${hub.slug}`,
         hasPart: pages.map((page) => ({
             "@type": "WebPage",
-            name: `Carbon Footprint of ${page.app_name}`,
+            name: `${t("page.carbon_footprint_of")} ${page.app_name}`,
             url: `https://www.idleforest.com/carbon-footprint/${page.slug}`,
         })),
     };
@@ -50,11 +51,11 @@ export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
                 <div className="mb-8 flex flex-wrap items-center gap-3 text-sm font-medium text-neutral-600">
                     <Link href="/" className="inline-flex items-center hover:text-black transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Home
+                        {t("page.back_to_home")}
                     </Link>
                     <span>/</span>
                     <Link href="/carbon-footprint" className="hover:text-black transition-colors">
-                        Carbon Hub
+                        {t("page.carbon_hub")}
                     </Link>
                     <span>/</span>
                     <span className="text-black">{hub.title}</span>
@@ -71,16 +72,6 @@ export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
                         {hub.intro}
                     </p>
 
-                    <div className="flex flex-wrap gap-2 mb-8">
-                        {hub.queryChips.map((chip) => (
-                            <span
-                                key={chip}
-                                className="border border-black bg-brand-gray px-3 py-2 text-sm font-semibold text-black"
-                            >
-                                {chip}
-                            </span>
-                        ))}
-                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {hub.sections.map((section) => (
@@ -119,7 +110,9 @@ export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
                                             )}
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">{page.category}</div>
+                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                                                {t(`categories.${page.category}`)}
+                                            </div>
                                             <h3 className="font-rethink-sans text-xl font-extrabold text-black group-hover:text-brand-green transition-colors">
                                                 {page.app_name}
                                             </h3>
@@ -129,8 +122,10 @@ export async function CarbonHubPageTemplate({ hub }: CarbonHubPageProps) {
                                         {page.seo?.intro || page.idleforest_pitch}
                                     </p>
                                     <div className="flex items-center justify-between text-sm font-bold text-black">
-                                        <span>{page.co2_per_hour_grams}g CO2 / hour</span>
-                                        <span className="inline-flex items-center gap-1">Open <ArrowRight className="w-4 h-4" /></span>
+                                        <span>{page.co2_per_hour_grams}{t("page.g_co2_hour")}</span>
+                                        <span className="inline-flex items-center gap-1">
+                                            {t("page.open_page")} <ArrowRight className="w-4 h-4" />
+                                        </span>
                                     </div>
                                 </Link>
                             );
