@@ -9,6 +9,7 @@ import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
 import { buildComparisonPath, buildLocalizedAlternates, getLocalizedUrl } from "@/lib/carbon-routing";
+import { getCuratedComparisonPeers } from "@/lib/carbon-compares";
 
 interface PageProps {
     params: {
@@ -62,7 +63,6 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
         notFound();
     }
 
-    const t_human = data.human_equivalent;
     const canonicalPath = `/carbon-footprint/${data.slug}`;
     const canonicalUrl = getLocalizedUrl(canonicalPath, params.locale);
     const localizedHubUrl = getLocalizedUrl("/carbon-footprint", params.locale);
@@ -98,9 +98,16 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
         .map((page) => localizeCarbonData(page, params.locale))
         .filter((page) => page.slug !== data.slug)
         .slice(0, 3);
+    const curatedComparisonPeers = getCuratedComparisonPeers(data.slug);
+    const curatedComparisonPages = (await Promise.all(
+        curatedComparisonPeers.map((peerSlug) => getCarbonData(peerSlug))
+    ))
+        .filter((peer): peer is NonNullable<typeof peer> => Boolean(peer))
+        .map((peer) => localizeCarbonData(peer, params.locale));
     const relatedPages = (await getRelatedCarbonData(data.slug, data.category)).map((related) =>
         localizeCarbonData(related, params.locale)
     );
+    const comparisonPages = (curatedComparisonPages.length ? curatedComparisonPages : relatedPages).slice(0, 3);
 
     const faqEntities = [
         {
@@ -108,7 +115,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
             "name": t("page.faq_q1", { app: data.app_name }),
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": t("page.faq_a1", { app: data.app_name, grams: data.co2_per_hour_grams, equivalent: t_human.toLowerCase() })
+                "text": t("page.faq_a1_no_equivalent", { app: data.app_name, grams: data.co2_per_hour_grams })
             }
         },
         {
@@ -229,18 +236,13 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                         <p className="text-xl text-neutral-800 mb-8 leading-relaxed max-w-2xl">
                             {isPerTransaction ? (
-                                t.rich("page.per_transaction_intro", {
+                                t.rich("page.per_transaction_estimate_sentence", {
                                     app: data.app_name,
                                     grams: data.co2_per_hour_grams,
-                                    equivalent: t_human.toLowerCase(),
                                     strong: (chunks) => <strong className="text-black bg-brand-yellow/30 px-1 rounded">{chunks}</strong>,
                                 })
                             ) : (
-                                <>
-                                    {t("page.did_you_know", { app: data.app_name })}{" "}
-                                    <strong className="text-black bg-brand-yellow/30 px-1 rounded">{data.co2_per_hour_grams}{t("page.g_of_co2")}</strong>?
-                                    {' '}{t("page.thats_equivalent_to", { equivalent: t_human.toLowerCase() })}
-                                </>
+                                t("page.hourly_estimate_sentence", { app: data.app_name, grams: data.co2_per_hour_grams })
                             )}
                         </p>
 
@@ -455,7 +457,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 {t("page.compare_with_related")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {relatedPages.map((related) => (
+                                {comparisonPages.map((related) => (
                                     <Link
                                         key={related.slug}
                                         href={buildComparisonPath(data.slug, related.slug)}

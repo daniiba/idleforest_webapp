@@ -49,6 +49,22 @@ export const INDEXABLE_COMPARE_SLUGS = new Set(
     CARBON_COMPARE_SEED_DATA.map((comparison) => comparison.slug)
 );
 
+export function getCuratedComparisonPeers(currentSlug: string): string[] {
+    const peers: string[] = [];
+
+    for (const comparison of CARBON_COMPARE_SEED_DATA) {
+        const [slugA, slugB] = comparison.slug.split("-vs-");
+
+        if (slugA === currentSlug && slugB) {
+            peers.push(slugB);
+        } else if (slugB === currentSlug && slugA) {
+            peers.push(slugA);
+        }
+    }
+
+    return Array.from(new Set(peers));
+}
+
 export async function getCarbonCompare(slugA: string, slugB: string, locale: string = "en"): Promise<CarbonCompareDefinition | undefined> {
     const slug = buildComparisonSlug(slugA, slugB);
     const supabase = await createClient();

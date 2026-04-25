@@ -49,10 +49,15 @@ const CARBON_LOCALES: CarbonLocale[] = ["en", "es", "de", "pt", "fr"];
 const REVIEWED_AT = "2026-04-24";
 
 const IEA_AI_URL = "https://www.iea.org/reports/energy-and-ai";
-const IEA_DIGITAL_URL = "https://www.iea.org/energy-system/digitalisation/data-centres-and-data-transmission-networks";
-const CARBON_TRUST_STREAMING_URL = "https://www.carbontrust.com/our-work-and-impact/guides-reports-and-tools/carbon-impact-of-video-streaming";
-const CALIFORNIA_GAMING_URL = "https://www.energy.ca.gov/publications/2019/plug-loads-game-changer-computer-gaming-energy-efficiency-without-performance";
-const CAMBRIDGE_BITCOIN_URL = "https://ccaf.io/cbnsi/cbeci";
+const IEA_DIGITAL_URL = "https://www.iea.org/reports/data-centres-and-data-transmission-networks";
+const DIGITAL_CONTENT_LCA_URL = "https://www.nature.com/articles/s41467-024-47621-w";
+const LLM_ENVIRONMENT_URL = "https://www.nature.com/articles/s41598-024-76682-6";
+const CARBON_TRUST_STREAMING_URL = "https://www.carbontrust.com/sites/default/files/documents/resource/public/Carbon-impact-of-video-streaming.pdf";
+const CALIFORNIA_GAMING_URL = "https://www.energy.ca.gov/sites/default/files/2021-06/CEC-500-2019-042.pdf";
+const CAMBRIDGE_BITCOIN_URL = "https://ccaf.io/cbeci/ghg/methodology2.Hashrate";
+const CAMBRIDGE_BITCOIN_POWER_URL = "https://ccaf.io/cbnsi/cbeci/methodology";
+const CAMBRIDGE_ETHEREUM_URL = "https://ccaf.io/cbnsi/ethereum/methodology";
+const ETHEREUM_MERGE_URL = "https://ethereum.org/roadmap/merge/";
 
 function unique(values: string[]): string[] {
     return Array.from(new Set(values.filter(Boolean)));
@@ -81,6 +86,20 @@ const SOURCE_NOTES = {
         pt: "Fornece contexto mais amplo sobre a infraestrutura por trás do consumo energético da cloud e da rede.",
         fr: "Apporte un contexte plus large sur l'infrastructure derrière la consommation d'énergie du cloud et des réseaux.",
     },
+    digitalContent: {
+        en: "Peer-reviewed life-cycle assessment covering web use, social media, video, music streaming, and video conferencing.",
+        es: "Evaluación del ciclo de vida revisada por pares que cubre navegación web, redes sociales, vídeo, música en streaming y videoconferencias.",
+        de: "Peer-reviewte Lebenszyklusanalyse zu Webnutzung, Social Media, Video, Musikstreaming und Videokonferenzen.",
+        pt: "Avaliação de ciclo de vida com revisão por pares sobre navegação web, redes sociais, vídeo, streaming de música e videoconferência.",
+        fr: "Analyse du cycle de vie évaluée par les pairs couvrant le web, les réseaux sociaux, la vidéo, le streaming musical et la visioconférence.",
+    },
+    llmEnvironmental: {
+        en: "Peer-reviewed analysis of LLM energy and carbon impacts for real text-generation workloads.",
+        es: "Análisis revisado por pares sobre el impacto energético y de carbono de los LLM en cargas reales de generación de texto.",
+        de: "Peer-reviewte Analyse zu Energie- und Kohlenstoffwirkungen von LLMs bei realen Textgenerierungs-Workloads.",
+        pt: "Análise com revisão por pares sobre os impactos energéticos e carbónicos dos LLM em cargas reais de geração de texto.",
+        fr: "Analyse évaluée par les pairs des impacts énergétiques et carbone des LLM sur des charges réelles de génération de texte.",
+    },
     carbonTrust: {
         en: "Useful benchmark for streaming emissions and the role of the viewing device.",
         es: "Referencia útil para las emisiones del streaming y el papel del dispositivo de visualización.",
@@ -102,47 +121,75 @@ const SOURCE_NOTES = {
         pt: "A referência pública mais conhecida para a procura elétrica da rede Bitcoin.",
         fr: "La référence publique la plus connue sur la demande électrique du réseau Bitcoin.",
     },
+    bitcoinGhG: {
+        en: "Methodology page for Cambridge's Bitcoin greenhouse-gas model, including uncertainty bounds.",
+        es: "Página metodológica del modelo de gases de efecto invernadero de Bitcoin de Cambridge, con rangos de incertidumbre.",
+        de: "Methodikseite von Cambridges Treibhausgasmodell für Bitcoin mit Unsicherheitsbandbreiten.",
+        pt: "Página metodológica do modelo de emissões de gases com efeito de estufa do Bitcoin de Cambridge, incluindo intervalos de incerteza.",
+        fr: "Page de méthodologie du modèle d'émissions de gaz à effet de serre du Bitcoin par Cambridge, avec bornes d'incertitude.",
+    },
+    ethereumMethodology: {
+        en: "Cambridge methodology for post-Merge Ethereum electricity demand.",
+        es: "Metodología de Cambridge para la demanda eléctrica de Ethereum tras The Merge.",
+        de: "Cambridge-Methodik für den Strombedarf von Ethereum nach The Merge.",
+        pt: "Metodologia de Cambridge para a procura elétrica do Ethereum após o The Merge.",
+        fr: "Méthodologie de Cambridge pour la demande électrique d'Ethereum après The Merge.",
+    },
+    ethereumMerge: {
+        en: "Official Ethereum documentation on the September 15, 2022 Merge and its energy reduction.",
+        es: "Documentación oficial de Ethereum sobre The Merge del 15 de septiembre de 2022 y su reducción energética.",
+        de: "Offizielle Ethereum-Dokumentation zum Merge vom 15. September 2022 und der damit verbundenen Energiereduktion.",
+        pt: "Documentação oficial da Ethereum sobre o The Merge de 15 de setembro de 2022 e a respetiva redução energética.",
+        fr: "Documentation officielle d'Ethereum sur The Merge du 15 septembre 2022 et la réduction d'énergie associée.",
+    },
 };
 
 function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gaming" | "work" | "browsing" | "social" | "crypto" | "bitcoinOverride"): CarbonSourceReference[] {
     if (kind === "ai") {
         return [
             { title: "IEA: Energy and AI", url: IEA_AI_URL, note: SOURCE_NOTES.ieaAi[locale] },
-            { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
+            { title: "Scientific Reports: Environmental impact of large language models", url: LLM_ENVIRONMENT_URL, note: SOURCE_NOTES.llmEnvironmental[locale] },
         ];
     }
 
     if (kind === "streaming") {
         return [
-            { title: "Carbon Trust: Carbon impact of video streaming", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
-            { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
+            { title: "Carbon Trust: Carbon impact of video streaming (PDF)", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
+            { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
         ];
     }
 
     if (kind === "gaming") {
         return [
-            { title: "California Energy Commission: Computer gaming energy efficiency", url: CALIFORNIA_GAMING_URL, note: SOURCE_NOTES.gaming[locale] },
+            { title: "California Energy Commission: Computer gaming energy efficiency (PDF)", url: CALIFORNIA_GAMING_URL, note: SOURCE_NOTES.gaming[locale] },
             { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
         ];
     }
 
-    if (kind === "work" || kind === "browsing" || kind === "social") {
+    if (kind === "work" || kind === "browsing") {
         return [
+            { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
             { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
-            { title: "Carbon Trust: Carbon impact of video streaming", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
+        ];
+    }
+
+    if (kind === "social") {
+        return [
+            { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
+            { title: "Carbon Trust: Carbon impact of video streaming (PDF)", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
         ];
     }
 
     if (kind === "bitcoinOverride") {
         return [
-            { title: "Cambridge Bitcoin Electricity Consumption Index", url: CAMBRIDGE_BITCOIN_URL, note: SOURCE_NOTES.bitcoin[locale] },
-            { title: "IEA: Energy and AI", url: IEA_AI_URL, note: SOURCE_NOTES.ieaAi[locale] },
+            { title: "Cambridge Bitcoin GHG emissions methodology", url: CAMBRIDGE_BITCOIN_URL, note: SOURCE_NOTES.bitcoinGhG[locale] },
+            { title: "Cambridge Bitcoin electricity methodology", url: CAMBRIDGE_BITCOIN_POWER_URL, note: SOURCE_NOTES.bitcoin[locale] },
         ];
     }
 
     return [
-        { title: "Cambridge Bitcoin Electricity Consumption Index", url: CAMBRIDGE_BITCOIN_URL, note: SOURCE_NOTES.bitcoin[locale] },
-        { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
+        { title: "Cambridge Bitcoin electricity methodology", url: CAMBRIDGE_BITCOIN_POWER_URL, note: SOURCE_NOTES.bitcoin[locale] },
+        { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology[locale] },
     ];
 }
 
@@ -937,6 +984,43 @@ const APP_OVERRIDES: Record<string, Partial<Record<CarbonLocale, Partial<Omit<Ca
         fr: {
             source_references: sourceReferences("fr", "bitcoinOverride"),
             searchTopics: ["empreinte carbone par transaction bitcoin", "co2 du bitcoin par transaction", "estimation des émissions du bitcoin"],
+        },
+    },
+    ethereum: {
+        en: {
+            source_references: [
+                { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology.en },
+                { title: "Ethereum.org: The Merge", url: ETHEREUM_MERGE_URL, note: SOURCE_NOTES.ethereumMerge.en },
+            ],
+            searchTopics: ["ethereum transaction carbon footprint", "ethereum co2 per transaction", "ethereum merge energy use"],
+        },
+        es: {
+            source_references: [
+                { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology.es },
+                { title: "Ethereum.org: The Merge", url: ETHEREUM_MERGE_URL, note: SOURCE_NOTES.ethereumMerge.es },
+            ],
+            searchTopics: ["huella de carbono por transacción de ethereum", "co2 de ethereum por transacción", "consumo energético de ethereum tras the merge"],
+        },
+        de: {
+            source_references: [
+                { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology.de },
+                { title: "Ethereum.org: The Merge", url: ETHEREUM_MERGE_URL, note: SOURCE_NOTES.ethereumMerge.de },
+            ],
+            searchTopics: ["ethereum transaktion co2-fußabdruck", "ethereum co2 pro transaktion", "energieverbrauch von ethereum nach dem merge"],
+        },
+        pt: {
+            source_references: [
+                { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology.pt },
+                { title: "Ethereum.org: The Merge", url: ETHEREUM_MERGE_URL, note: SOURCE_NOTES.ethereumMerge.pt },
+            ],
+            searchTopics: ["pegada de carbono por transação de ethereum", "co2 do ethereum por transação", "consumo energético do ethereum após o merge"],
+        },
+        fr: {
+            source_references: [
+                { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology.fr },
+                { title: "Ethereum.org: The Merge", url: ETHEREUM_MERGE_URL, note: SOURCE_NOTES.ethereumMerge.fr },
+            ],
+            searchTopics: ["empreinte carbone par transaction ethereum", "co2 de l'ethereum par transaction", "consommation d'énergie d'ethereum après the merge"],
         },
     },
     "google-chrome": {
