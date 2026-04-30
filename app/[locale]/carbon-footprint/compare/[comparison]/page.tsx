@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getCarbonData, getIconUrl } from "@/lib/carbon-data";
+import { getCarbonData, getIconUrl, localizeCarbonData } from "@/lib/carbon-data";
 import { Link } from "@/navigation";
 import Navigation from "@/components/navigation";
 import { getTranslations } from "next-intl/server";
@@ -59,10 +59,13 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
         permanentRedirect(getLocalizedPath(buildComparisonPath(normalizedSlugA, normalizedSlugB), params.locale));
     }
 
-    const data1 = await getCarbonData(normalizedSlugA);
-    const data2 = await getCarbonData(normalizedSlugB);
+    const rawData1 = await getCarbonData(normalizedSlugA);
+    const rawData2 = await getCarbonData(normalizedSlugB);
 
-    if (!data1 || !data2) notFound();
+    if (!rawData1 || !rawData2) notFound();
+
+    const data1 = localizeCarbonData(rawData1, params.locale);
+    const data2 = localizeCarbonData(rawData2, params.locale);
 
     const t = await getTranslations("CarbonFootprint");
     const compareEditorial = await getCarbonCompare(data1.slug, data2.slug, params.locale);
@@ -78,6 +81,45 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
     const winner = isTie ? undefined : (isData1Worse ? data1 : data2);
     const lighter = isTie ? undefined : (isData1Worse ? data2 : data1);
     const delta = Math.abs(data1.co2_per_hour_grams - data2.co2_per_hour_grams);
+    const category1 = t(`categories.${data1.category}`);
+    const category2 = t(`categories.${data2.category}`);
+    const dataBackedReasons = [
+        !isTie && winner && lighter
+            ? t("page.compare_model_gap_reason", {
+                winner: winner.app_name,
+                winnerGrams: winner.co2_per_hour_grams,
+                lighter: lighter.app_name,
+                lighterGrams: lighter.co2_per_hour_grams,
+                delta,
+            })
+            : t("page.compare_tie_note"),
+        data1.category === data2.category
+            ? t("page.compare_same_category_reason", { category: category1 })
+            : t("page.compare_different_category_reason", {
+                app1: data1.app_name,
+                category1,
+                app2: data2.app_name,
+                category2,
+            }),
+        winner?.seo?.methodology_summary,
+        winner?.seo?.key_drivers?.[0],
+        lighter?.seo?.key_drivers?.[0],
+    ].filter((reason): reason is string => Boolean(reason));
+    const comparisonReasons = compareEditorial?.whyItDiffers?.length
+        ? compareEditorial.whyItDiffers
+        : Array.from(new Set(dataBackedReasons)).slice(0, 4);
+    const comparisonHeading = compareEditorial?.heading || t("page.compare_data_backed_heading");
+    const comparisonSummary = compareEditorial?.summary || t("page.compare_data_backed_summary", {
+        app1: data1.app_name,
+        app2: data2.app_name,
+    });
+    const comparisonAction = compareEditorial?.actionAngle
+        || (winner?.seo?.reduction_tips?.[0]
+            ? t("page.compare_fallback_action_with_tip", {
+                app: winner.app_name,
+                tip: winner.seo.reduction_tips[0],
+            })
+            : t("page.compare_fallback_action"));
     const jsonLd = [
         {
             "@context": "https://schema.org",
@@ -144,9 +186,9 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
                                 {data1.app_name} <span className="bg-brand-yellow px-2 mx-2">vs</span> {data2.app_name}
                             </h1>
-                            {compareEditorial ? (
+                            {comparisonSummary ? (
                                 <p className="mt-5 mx-auto max-w-3xl text-lg leading-relaxed text-neutral-700">
-                                    {compareEditorial.summary}
+                                    {comparisonSummary}
                                 </p>
                             ) : null}
                             {!indexableComparison ? (
@@ -211,9 +253,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                         </div>
 
                         <div className="mb-12 border-2 border-black bg-white p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                            {compareEditorial ? (
-                                <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{compareEditorial.heading}</p>
-                            ) : null}
+                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{comparisonHeading}</p>
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
                             <p className="text-lg text-neutral-800 leading-relaxed">
                                 {t("page.compare_summary_intro", { app1: data1.app_name, app2: data2.app_name })}{' '}
@@ -230,12 +270,12 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </p>
                         </div>
 
-                        {compareEditorial ? (
+                        {comparisonReasons.length ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                                     <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.why_gap_title")}</h3>
                                     <ul className="space-y-3">
-                                        {compareEditorial.whyItDiffers.map((reason) => (
+                                        {comparisonReasons.map((reason) => (
                                             <li key={reason} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
                                                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
                                                 <span>{reason}</span>
@@ -246,7 +286,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                                 <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                                     <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.action_first_title")}</h3>
-                                    <p className="text-neutral-800 leading-relaxed mb-5">{compareEditorial.actionAngle}</p>
+                                    <p className="text-neutral-800 leading-relaxed mb-5">{comparisonAction}</p>
                                     {winner && lighter ? (
                                         <div className="rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
                                             {t.rich("page.compare_delta_note", {
@@ -290,11 +330,11 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
-                        {compareEditorial ? (
+                        {comparisonReasons.length ? (
                             <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                                 <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_takeaways_title")}</h3>
                                 <div className="space-y-3">
-                                    {compareEditorial.whyItDiffers.slice(0, 2).map((reason) => (
+                                    {comparisonReasons.slice(0, 2).map((reason) => (
                                         <div key={reason} className="flex items-start gap-3 text-sm leading-relaxed text-neutral-700">
                                             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
                                             <span>{reason}</span>
