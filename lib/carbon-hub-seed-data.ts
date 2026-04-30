@@ -322,15 +322,15 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 playbook: [
                     {
                         title: "Start with everyday AI use",
-                        body: "For most people, the main question is repeated use of tools like ChatGPT rather than one-off training headlines."
+                        body: "For most people, the main question is the repeated use of text and image tools like ChatGPT, Claude, or Midjourney, rather than one-off training headlines."
                     },
                     {
                         title: "Connect prompts to infrastructure",
-                        body: "Prompt volume, model size, accelerator hardware, and cooling all shape the footprint together."
+                        body: "Prompt volume, model size, accelerator hardware (especially GPUs for image generation), and data center cooling all shape the footprint together."
                     },
                     {
                         title: "Open the closest matching tool page",
-                        body: "After the overview, jump to the calculator page for the AI tool you use most."
+                        body: "After the overview, jump to the calculator page for the AI tool you use most, whether it's for text analysis or generating art."
                     }
                 ],
                 faq: [
@@ -343,7 +343,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Start with the biggest drivers, then open the calculator page that matches the AI tool you use."
                     }
                 ],
-                featuredComparisonPairs: []
+                featuredComparisonPairs: [["chatgpt", "claude"], ["chatgpt", "midjourney"], ["chatgpt", "gemini"]]
             },
             de: {
                 title: "KI-CO2-Fußabdruck",
@@ -366,15 +366,15 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 playbook: [
                     {
                         title: "Mit der alltäglichen KI-Nutzung beginnen",
-                        body: "Für die meisten Menschen geht es vor allem um die wiederholte Nutzung von Tools wie ChatGPT und nicht um einmalige Schlagzeilen zum Training."
+                        body: "Für die meisten Menschen geht es vor allem um die wiederholte Nutzung von Text- und Bild-Tools wie ChatGPT, Claude oder Midjourney und nicht um einmalige Schlagzeilen zum Training."
                     },
                     {
                         title: "Prompts mit Infrastruktur verbinden",
-                        body: "Prompt-Menge, Modellgröße, Beschleuniger-Hardware und Kühlung prägen den Fußabdruck gemeinsam."
+                        body: "Prompt-Menge, Modellgröße, Beschleuniger-Hardware (insbesondere GPUs für die Bildgenerierung) und Rechenzentrumskühlung prägen den Fußabdruck gemeinsam."
                     },
                     {
                         title: "Die passendste Tool-Seite öffnen",
-                        body: "Nach dem Überblick ist der beste nächste Schritt meist die Rechnerseite für das KI-Tool, das du am häufigsten nutzt."
+                        body: "Nach dem Überblick ist der beste nächste Schritt meist die Rechnerseite für das KI-Tool, das du am häufigsten nutzt – egal ob für Textanalyse oder das Generieren von Kunst."
                     }
                 ],
                 faq: [
@@ -387,7 +387,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Beginne mit den größten Treibern und öffne dann die Rechnerseite für das KI-Tool, das du tatsächlich nutzt."
                     }
                 ],
-                featuredComparisonPairs: []
+                featuredComparisonPairs: [["chatgpt", "claude"], ["chatgpt", "midjourney"], ["chatgpt", "gemini"]]
             },
             es: {
                 title: "Huella de carbono de la IA",
@@ -410,15 +410,15 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 playbook: [
                     {
                         title: "Empieza por el uso cotidiano de la IA",
-                        body: "Para la mayoría de personas, la pregunta principal es el uso repetido de herramientas como ChatGPT y no los titulares puntuales sobre entrenamiento."
+                        body: "Para la mayoría de personas, la pregunta principal es el uso repetido de herramientas de texto e imagen como ChatGPT, Claude o Midjourney, y no los titulares puntuales sobre entrenamiento."
                     },
                     {
                         title: "Conecta los prompts con la infraestructura",
-                        body: "El volumen de prompts, el tamaño del modelo, el hardware acelerador y la refrigeración influyen juntos en la huella."
+                        body: "El volumen de prompts, el tamaño del modelo, el hardware acelerador (especialmente las GPUs para generar imágenes) y la refrigeración del centro de datos influyen juntos en la huella."
                     },
                     {
                         title: "Abre la página de la herramienta más cercana",
-                        body: "Después de este resumen, el mejor paso suele ser abrir la calculadora de la herramienta de IA que más usas."
+                        body: "Después de este resumen, el mejor paso suele ser abrir la calculadora de la herramienta de IA que más usas, ya sea para analizar texto o generar arte."
                     }
                 ],
                 faq: [
@@ -431,7 +431,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Empieza por los factores que más pesan y luego abre la calculadora de la herramienta de IA que realmente usas."
                     }
                 ],
-                featuredComparisonPairs: []
+                featuredComparisonPairs: [["chatgpt", "claude"], ["chatgpt", "midjourney"], ["chatgpt", "gemini"]]
             },
             pt: {
                 title: "Pegada de carbono da IA",
@@ -454,15 +454,15 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 playbook: [
                     {
                         title: "Começa pelo uso diário da IA",
-                        body: "Para a maior parte das pessoas, a questão principal é o uso repetido de ferramentas como o ChatGPT e não as manchetes pontuais sobre treino."
+                        body: "Para a maior parte das pessoas, a questão principal é o uso repetido de ferramentas de texto e imagem como o ChatGPT, Claude ou Midjourney, e não as manchetes pontuais sobre treino."
                     },
                     {
                         title: "Liga os prompts à infraestrutura",
-                        body: "Volume de prompts, dimensão do modelo, hardware acelerador e arrefecimento moldam a pegada em conjunto."
+                        body: "Volume de prompts, dimensão do modelo, hardware acelerador (especialmente GPUs para geração de imagens) e arrefecimento do centro de dados moldam a pegada em conjunto."
                     },
                     {
                         title: "Abre a página da ferramenta mais próxima",
-                        body: "Depois deste resumo, o melhor passo costuma ser abrir a calculadora da ferramenta de IA que usas mais."
+                        body: "Depois deste resumo, o melhor passo costuma ser abrir a calculadora da ferramenta de IA que usas mais, seja para analisar texto ou gerar arte."
                     }
                 ],
                 faq: [
@@ -475,7 +475,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Começa pelos fatores com maior impacto e depois abre a calculadora da ferramenta de IA que realmente usas."
                     }
                 ],
-                featuredComparisonPairs: []
+                featuredComparisonPairs: [["chatgpt", "claude"], ["chatgpt", "midjourney"], ["chatgpt", "gemini"]]
             },
             fr: {
                 title: "Empreinte carbone de l'IA",
@@ -498,15 +498,15 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 playbook: [
                     {
                         title: "Commencer par l'usage quotidien de l'IA",
-                        body: "Pour la plupart des gens, la vraie question concerne l'usage répété d'outils comme ChatGPT, et non les gros titres ponctuels sur l'entraînement."
+                        body: "Pour la plupart des gens, la vraie question concerne l'usage répété d'outils de texte et d'image comme ChatGPT, Claude ou Midjourney, et non les gros titres ponctuels sur l'entraînement."
                     },
                     {
                         title: "Relier les prompts à l'infrastructure",
-                        body: "Le volume de prompts, la taille du modèle, le matériel accélérateur et le refroidissement influencent l'empreinte ensemble."
+                        body: "Le volume de prompts, la taille du modèle, le matériel accélérateur (surtout les GPUs pour la génération d'images) et le refroidissement du centre de données influencent l'empreinte ensemble."
                     },
                     {
                         title: "Ouvrir la page de l'outil le plus proche",
-                        body: "Après cette vue d'ensemble, la meilleure étape suivante est souvent d'ouvrir le calculateur de l'outil d'IA que vous utilisez le plus."
+                        body: "Après cette vue d'ensemble, la meilleure étape suivante est souvent d'ouvrir le calculateur de l'outil d'IA que vous utilisez le plus, que ce soit pour analyser du texte ou générer de l'art."
                     }
                 ],
                 faq: [
@@ -519,7 +519,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Commencez par les facteurs les plus importants, puis ouvrez le calculateur de l'outil d'IA que vous utilisez réellement."
                     }
                 ],
-                featuredComparisonPairs: []
+                featuredComparisonPairs: [["chatgpt", "claude"], ["chatgpt", "midjourney"], ["chatgpt", "gemini"]]
             }
         }
     },

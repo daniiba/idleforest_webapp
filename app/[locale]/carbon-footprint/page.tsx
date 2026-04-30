@@ -149,20 +149,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                <section className="mb-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] gap-6">
-                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_strategy_eyebrow")}</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{hub?.title || t("page.overview_strategy_title_fallback")}</h2>
-                        <div className="space-y-4">
-                            {(hub?.playbook || []).map((item) => (
-                                <div key={item.title} className="rounded-lg border border-black/10 bg-brand-gray p-4">
-                                    <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.title}</h3>
-                                    <p className="text-neutral-700 leading-relaxed">{item.body}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
+                <section className="mb-12">
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_top_emitters_eyebrow")}</p>
                         <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.overview_top_emitters_title")}</h2>

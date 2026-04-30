@@ -96,7 +96,6 @@ export function localizeCarbonData(data: CarbonData, locale: string): CarbonData
 }
 
 export function getIconUrl(data: CarbonData): string {
-    // Manual overrides for icons that don't match slug or need special simple-icons slugs
     const overrides: Record<string, string> = {
         "chatgpt": "ollama",
         "league-of-legends": "leagueoflegends",
@@ -105,7 +104,9 @@ export function getIconUrl(data: CarbonData): string {
         "twitter": "x",
         "minecraft": "fallback:gamepad",
         "microsoft-teams": "fallback:users",
-        "roblox": "roblox"
+        "roblox": "roblox",
+        "midjourney": "fallback:image",
+        "gemini": "googlegemini"
     };
 
     const iconSlug = overrides[data.slug] || data.slug.replace(/-/g, "");
