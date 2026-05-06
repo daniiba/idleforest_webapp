@@ -168,8 +168,8 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
   const latestRow = newestRows.find((row) => row.requests !== null) ?? newestRows[0]
   const latestPlantingRow = newestRows.find((row) => row.actualTrees > 0)
   const previousRows = newestRows.filter((row) => row.requests !== null)
-  const impactRows = newestRows.filter((row) => row.requests !== null || row.actualTrees > 0)
-  const recentRows = impactRows.slice(0, 14)
+  const recentRows = previousRows.slice(0, 14)
+  const snapshotDayCount = dailyRows.filter((row) => row.snapshotCount > 0).length
   const bestRequestDay = previousRows.reduce<DailyImpactRow | undefined>((best, row) => {
     if (!best) return row
     return (row.requests ?? 0) > (best.requests ?? 0) ? row : best
@@ -226,11 +226,11 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
               </p>
             </div>
             <Badge className="rounded-none border-2 border-black bg-white px-3 py-1 text-black hover:bg-white">
-              {t("daily_table_days", { count: dailyRows.length })}
+              {t("daily_table_days", { count: snapshotDayCount })}
             </Badge>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <div className="border-2 border-black bg-white p-4">
               <TrendingUp className="mb-3 h-5 w-5 text-black" />
               <div className="text-2xl font-extrabold text-black">{formatNumber(latestRow?.requests ?? null)}</div>
@@ -240,11 +240,6 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
               <DollarSign className="mb-3 h-5 w-5 text-black" />
               <div className="text-2xl font-extrabold text-black">{formatCurrency(latestRow?.earnings ?? null)}</div>
               <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_earnings")}</div>
-            </div>
-            <div className="border-2 border-black bg-white p-4">
-              <Sprout className="mb-3 h-5 w-5 text-black" />
-              <div className="text-2xl font-extrabold text-black">{formatTrees(latestPlantingRow?.actualTrees ?? 0)}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_actual_trees")}</div>
             </div>
             <div className="border-2 border-black bg-white p-4">
               <Users className="mb-3 h-5 w-5 text-black" />
@@ -332,9 +327,8 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
                 <TableHead className="font-extrabold text-black">{t("daily_table_date")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_requests")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_earnings")}</TableHead>
-                <TableHead className="text-right font-extrabold text-black">{t("daily_actual_trees")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_active_nodes")}</TableHead>
-                <TableHead className="hidden text-right font-extrabold text-black sm:table-cell">{t("daily_estimated_trees")}</TableHead>
+                <TableHead className="text-right font-extrabold text-black">{t("daily_estimated_trees")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -348,9 +342,8 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
                   </TableCell>
                   <TableCell className="text-right font-bold text-black">{formatNumber(row.requests)}</TableCell>
                   <TableCell className="text-right font-bold text-black">{formatCurrency(row.earnings)}</TableCell>
-                  <TableCell className="text-right font-bold text-black">{formatTrees(row.actualTrees)}</TableCell>
                   <TableCell className="text-right font-bold text-black">{row.activeNodes.toLocaleString()}</TableCell>
-                  <TableCell className="hidden text-right font-bold text-black sm:table-cell">{formatTrees(row.estimatedTrees)}</TableCell>
+                  <TableCell className="text-right font-bold text-black">{formatTrees(row.estimatedTrees)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
