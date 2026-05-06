@@ -15,6 +15,12 @@ interface HistoricalData {
   requests_total: number
   active_nodes: number
   earnings: number
+  total_users?: number
+}
+
+interface UserHistoryData {
+  date: string
+  total_users: number
 }
 
 // Create client once outside component
@@ -24,6 +30,7 @@ export default function ReportPage() {
   const t = useTranslations('Report')
   const [activeTab, setActiveTab] = useState<'report' | 'analytics'>('report')
   const [data, setData] = useState<HistoricalData[]>([])
+  const [userHistory, setUserHistory] = useState<UserHistoryData[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -42,10 +49,23 @@ export default function ReportPage() {
       if (error) throw error
 
       setData(data || [])
+      await fetchUserHistory()
     } catch (error) {
       console.error('Error fetching historical data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchUserHistory = async () => {
+    try {
+      const response = await fetch('/api/report/user-history')
+      if (!response.ok) throw new Error('Failed to fetch user history')
+
+      const result = await response.json()
+      setUserHistory(result.history || [])
+    } catch (error) {
+      console.error('Error fetching user history:', error)
     }
   }
 
@@ -98,8 +118,8 @@ export default function ReportPage() {
                   ) : (
                     <div className="w-full space-y-6 sm:space-y-8">
                       <h2 className="text-2xl sm:text-3xl font-bold font-rethink-sans text-black">{t('historical_data')}</h2>
-                      <DailyImpactTable data={data} />
-                      <HistoricalDataChart data={data} />
+                      <DailyImpactTable data={data} userHistory={userHistory} />
+                      <HistoricalDataChart data={data} userHistory={userHistory} />
                     </div>
                   )}
                 </div>

@@ -13,10 +13,15 @@ interface HistoricalDataProps {
     requests_total: number;
     active_nodes: number;
     earnings: number;
+    total_users?: number;
+  }[];
+  userHistory?: {
+    date: string;
+    total_users: number;
   }[];
 }
 
-export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
+export const HistoricalDataChart = ({ data, userHistory = [] }: HistoricalDataProps) => {
   const t = useTranslations('Report')
   const isMobile = useIsMobile()
   const [visibleMetrics, setVisibleMetrics] = useState({
@@ -70,6 +75,21 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
     return toDateKey(d)
   }
 
+  const totalUsersByDate = useMemo(
+    () => new Map(userHistory.map((entry) => [entry.date, entry.total_users])),
+    [userHistory]
+  )
+
+  const getTotalUsersForDate = (dateValue: string, fallback: number) => {
+    const dateKey = toDateKey(dateValue)
+    const matchingKey = Array.from(totalUsersByDate.keys())
+      .filter((key) => key <= dateKey)
+      .sort()
+      .pop()
+
+    return matchingKey ? totalUsersByDate.get(matchingKey) ?? fallback : fallback
+  }
+
   // Aggregate donations (trees) by chosen bucket
   const treesByDate = plantingsData.events.reduce<Record<string, number>>((acc, evt) => {
     const key = keyFor(evt.date);
@@ -84,7 +104,7 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
     const key = keyFor(entry.created_at);
     const prev = byDate.get(key) ?? { requests: 0, nodesSum: 0, nodesCount: 0, earnings: 0, trees: 0 };
     prev.requests += entry.requests_total;
-    prev.nodesSum += entry.active_nodes;
+    prev.nodesSum += getTotalUsersForDate(entry.created_at, entry.total_users ?? entry.active_nodes ?? 0);
     prev.nodesCount += 1;
     prev.earnings += entry.earnings;
     byDate.set(key, prev);
@@ -137,9 +157,9 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
       description: "Number of total requests"
     },
     nodes: {
-      label: t('active_nodes'),
+      label: t('total_users'),
       color: "#3A4563", // navy variant for better contrast on gray
-      description: "Number of active nodes"
+      description: "Total users"
     },
     earnings: {
       label: t('total_earnings'),
@@ -396,7 +416,7 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
                 <div className="text-[11px] font-bold uppercase text-brand-navy/60">{day.compactPeriod}</div>
                 <div className="mt-1 text-sm font-extrabold text-brand-navy">{Math.round(day.trees).toLocaleString()} {t("trees")}</div>
                 <div className="text-xs font-medium text-brand-navy/70">
-                  ${(day.earnings || 0).toFixed(2)} · {Math.round(day.nodes).toLocaleString()} {t("active_nodes")}
+                  ${(day.earnings || 0).toFixed(2)} · {Math.round(day.nodes).toLocaleString()} {t("total_users")}
                 </div>
               </div>
             ))}

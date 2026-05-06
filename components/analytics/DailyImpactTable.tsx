@@ -21,13 +21,19 @@ type HistoricalData = {
   requests_total: number
   active_nodes: number
   earnings: number
+  total_users?: number
+}
+
+type UserHistoryData = {
+  date: string
+  total_users: number
 }
 
 type DailyImpactRow = {
   key: string
   date: Date
   requests: number | null
-  activeNodes: number
+  totalUsers: number
   earnings: number | null
   actualTrees: number
   estimatedTrees: number | null
@@ -88,8 +94,9 @@ const getNextExpectedUpdate = (latestDate?: Date) => {
   return next
 }
 
-const buildDailyRows = (data: HistoricalData[]) => {
+const buildDailyRows = (data: HistoricalData[], userHistory: UserHistoryData[]) => {
   const snapshotsByDay = new Map<string, HistoricalData[]>()
+  const totalUsersByDay = new Map(userHistory.map((entry) => [entry.date, entry.total_users]))
   const actualTreesByDay = plantingsData.events.reduce<Map<string, number>>((acc, event) => {
     const date = dateFromPlantingDate(event.date)
     if (Number.isNaN(date.getTime())) return acc
@@ -119,16 +126,22 @@ const buildDailyRows = (data: HistoricalData[]) => {
         date: new Date(latest.created_at),
         snapshotCount: sorted.length,
         totalRequests: latest.requests_total ?? 0,
-        activeNodes: latest.active_nodes ?? 0,
+        totalUsersFallback: latest.total_users ?? latest.active_nodes ?? 0,
         totalEarnings: latest.earnings ?? 0,
       }] as const
     }))
 
-  const allKeys = Array.from(new Set([...Array.from(dailySnapshots.keys()), ...Array.from(actualTreesByDay.keys())])).sort()
+  const allKeys = Array.from(new Set([
+    ...Array.from(dailySnapshots.keys()),
+    ...Array.from(actualTreesByDay.keys()),
+    ...Array.from(totalUsersByDay.keys()),
+  ])).sort()
   let previousSnapshot: { totalRequests: number; totalEarnings: number } | undefined
+  let latestTotalUsers = 0
 
   return allKeys.map((key) => {
     const snapshot = dailySnapshots.get(key)
+    latestTotalUsers = totalUsersByDay.get(key) ?? latestTotalUsers
     const requests = snapshot && previousSnapshot ? Math.max(0, snapshot.totalRequests - previousSnapshot.totalRequests) : null
     const earnings = snapshot && previousSnapshot ? Math.max(0, snapshot.totalEarnings - previousSnapshot.totalEarnings) : null
 
@@ -144,7 +157,7 @@ const buildDailyRows = (data: HistoricalData[]) => {
       date: snapshot?.date ?? dateFromKey(key),
       snapshotCount: snapshot?.snapshotCount ?? 0,
       totalRequests: snapshot?.totalRequests ?? 0,
-      activeNodes: snapshot?.activeNodes ?? 0,
+      totalUsers: latestTotalUsers || snapshot?.totalUsersFallback || 0,
       totalEarnings: snapshot?.totalEarnings ?? 0,
       requests,
       earnings,
@@ -154,7 +167,7 @@ const buildDailyRows = (data: HistoricalData[]) => {
   })
 }
 
-export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
+export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalData[]; userHistory?: UserHistoryData[] }) {
   const t = useTranslations("Report")
   const [now, setNow] = useState(() => new Date())
 
@@ -163,7 +176,7 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
     return () => window.clearInterval(timer)
   }, [])
 
-  const dailyRows = useMemo(() => buildDailyRows(data), [data])
+  const dailyRows = useMemo(() => buildDailyRows(data, userHistory), [data, userHistory])
   const newestRows = dailyRows.slice().reverse()
   const latestRow = newestRows.find((row) => row.requests !== null) ?? newestRows[0]
   const latestPlantingRow = newestRows.find((row) => row.actualTrees > 0)
@@ -266,8 +279,8 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
             </div>
             <div className="border border-black/20 bg-white p-3">
               <Users className="mb-2 h-4 w-4 text-black" />
-              <div className="text-xl font-extrabold text-black">{(latestRow?.activeNodes ?? 0).toLocaleString()}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_active_nodes")}</div>
+              <div className="text-xl font-extrabold text-black">{(latestRow?.totalUsers ?? 0).toLocaleString()}</div>
+              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_total_users")}</div>
             </div>
           </div>
         </div>
@@ -321,7 +334,7 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
                 <TableHead className="font-extrabold text-black">{t("daily_table_date")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_requests")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_earnings")}</TableHead>
-                <TableHead className="text-right font-extrabold text-black">{t("daily_active_nodes")}</TableHead>
+                <TableHead className="text-right font-extrabold text-black">{t("daily_total_users")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_estimated_trees")}</TableHead>
               </TableRow>
             </TableHeader>
@@ -336,7 +349,7 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
                   </TableCell>
                   <TableCell className="text-right font-bold text-black">{formatNumber(row.requests)}</TableCell>
                   <TableCell className="text-right font-bold text-black">{formatCurrency(row.earnings)}</TableCell>
-                  <TableCell className="text-right font-bold text-black">{row.activeNodes.toLocaleString()}</TableCell>
+                  <TableCell className="text-right font-bold text-black">{row.totalUsers.toLocaleString()}</TableCell>
                   <TableCell className="text-right font-bold text-black">{formatTrees(row.estimatedTrees)}</TableCell>
                 </TableRow>
               ))}
