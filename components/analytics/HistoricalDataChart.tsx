@@ -1,6 +1,6 @@
 "use client"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Legend, Tooltip } from "recharts"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer } from "@/components/ui/chart"
 import { plantingsData } from "@/lib/plantings"
@@ -29,6 +29,10 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
   // Mobile-only: allow a single tap to persist the tooltip
   const [isTooltipPinned, setIsTooltipPinned] = useState(false)
   const [pinnedIndex, setPinnedIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (isMobile) setGranularity("daily")
+  }, [isMobile])
 
   // Helpers to build stable YYYY-MM-DD keys WITHOUT timezone jumps
   const dateKeyFromDate = (dt: Date) => {
@@ -103,17 +107,28 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
     const requestsValue = granularity === "daily" ? vals.requests : vals.requests / divisor;
     const earningsValue = granularity === "daily" ? vals.earnings : vals.earnings / divisor;
     return {
+      key,
       period: granularity === "monthly"
         ? new Date(key).toLocaleDateString(undefined, { month: "short", year: "numeric" })
         : granularity === "weekly"
-          ? new Date(key).toLocaleDateString()
-          : new Date(key).toLocaleDateString(),
+          ? new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+          : new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+      compactPeriod: granularity === "monthly"
+        ? new Date(key).toLocaleDateString(undefined, { month: "short" })
+        : new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
       requests: visibleMetrics.requests ? requestsValue : 0,
       nodes: visibleMetrics.nodes ? (vals.nodesCount ? vals.nodesSum / vals.nodesCount : 0) : 0,
       earnings: visibleMetrics.earnings ? earningsValue : 0,
       trees: visibleMetrics.trees ? runningTrees : 0,
     };
   });
+
+  const visibleChartData = useMemo(() => {
+    if (!isMobile) return chartData
+    if (granularity === "monthly") return chartData.slice(-6)
+    if (granularity === "weekly") return chartData.slice(-8)
+    return chartData.slice(-10)
+  }, [chartData, granularity, isMobile])
 
   const config = {
     requests: {
@@ -184,8 +199,8 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
 
   // Build a payload compatible with Recharts Tooltip from a datum at index
   const buildPayloadForIndex = (index: number | null) => {
-    if (index == null || index < 0 || index >= chartData.length) return undefined;
-    const d = chartData[index] as any;
+    if (index == null || index < 0 || index >= visibleChartData.length) return undefined;
+    const d = visibleChartData[index] as any;
     // Order should match the rendered series
     const series: Array<{ key: ConfigKey }> = [
       { key: "requests" },
@@ -262,7 +277,7 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
           <div className="min-w-[320px] w-full">
             <ChartContainer config={config} className="aspect-auto h-[260px] sm:h-[420px]">
               <AreaChart
-                data={chartData}
+                data={visibleChartData}
                 margin={{ left: 0, right: 0, top: isMobile ? 10 : 20, bottom: isMobile ? 0 : 10 }}
                 className="w-full h-full"
                 onClick={handleChartClick}
@@ -273,7 +288,8 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  minTickGap={isMobile ? 20 : 8}
+                  interval={isMobile ? 0 : "preserveStartEnd"}
+                  minTickGap={isMobile ? 4 : 8}
                   tick={{ fill: "rgba(11,16,31,0.8)", fontSize: isMobile ? 10 : 12 }}
                 />
                 <YAxis
@@ -312,7 +328,7 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
                   <Tooltip
                     content={<CustomTooltip />}
                     active={isTooltipPinned}
-                    label={isTooltipPinned && pinnedIndex != null ? chartData[pinnedIndex]?.period : undefined}
+                    label={isTooltipPinned && pinnedIndex != null ? visibleChartData[pinnedIndex]?.period : undefined}
                     payload={isTooltipPinned ? buildPayloadForIndex(pinnedIndex) : undefined}
                   />
                 ) : (
@@ -373,6 +389,19 @@ export const HistoricalDataChart = ({ data }: HistoricalDataProps) => {
             </ChartContainer>
           </div>
         </div>
+        {isMobile && visibleChartData.length > 0 && (
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {visibleChartData.slice(-4).map((day) => (
+              <div key={day.key} className="border border-brand-navy/15 bg-brand-gray/30 p-2">
+                <div className="text-[11px] font-bold uppercase text-brand-navy/60">{day.compactPeriod}</div>
+                <div className="mt-1 text-sm font-extrabold text-brand-navy">{Math.round(day.trees).toLocaleString()} {t("trees")}</div>
+                <div className="text-xs font-medium text-brand-navy/70">
+                  ${(day.earnings || 0).toFixed(2)} · {Math.round(day.nodes).toLocaleString()} {t("active_nodes")}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

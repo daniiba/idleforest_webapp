@@ -98,8 +98,8 @@ export default function ReportPage() {
                   ) : (
                     <div className="w-full space-y-6 sm:space-y-8">
                       <h2 className="text-2xl sm:text-3xl font-bold font-rethink-sans text-black">{t('historical_data')}</h2>
-                      <HistoricalDataChart data={data} />
                       <DailyImpactTable data={data} />
+                      <HistoricalDataChart data={data} />
                     </div>
                   )}
                 </div>
