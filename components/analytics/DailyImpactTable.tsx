@@ -230,7 +230,12 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
             </Badge>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="border-2 border-black bg-white p-4">
+              <Sprout className="mb-3 h-5 w-5 text-black" />
+              <div className="text-2xl font-extrabold text-black">{formatTrees(latestRow?.estimatedTrees ?? null)}</div>
+              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_estimated_trees")}</div>
+            </div>
             <div className="border-2 border-black bg-white p-4">
               <TrendingUp className="mb-3 h-5 w-5 text-black" />
               <div className="text-2xl font-extrabold text-black">{formatNumber(latestRow?.requests ?? null)}</div>
