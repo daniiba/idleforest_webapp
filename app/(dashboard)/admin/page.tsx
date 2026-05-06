@@ -1551,7 +1551,7 @@ export default function AdminPage() {
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Opt-Out Rate <span className="text-purple-600">(Desktop)</span></div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{(stats.desktopOptOutRate * 100).toFixed(1)}%</div>
-                                    <p className="text-xs text-neutral-600 mt-1">{stats.desktopNodeCount} desktop nodes</p>
+                                    <p className="text-xs text-neutral-600 mt-1">{stats.desktopNodeCount} desktop devices</p>
                                 </div>
                             </div>
                         </section>
@@ -1569,12 +1569,12 @@ export default function AdminPage() {
                                     <p className="text-xs text-neutral-600 mt-1">{stats.chromeWau} WAU • {(stats.extensionRevenueShare * 100).toFixed(0)}% of revenue</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension Nodes</div>
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension Devices</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{stats.extensionNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Chrome Extension users</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Desktop Nodes</div>
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Desktop Devices</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{stats.desktopNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Windows + macOS users</p>
                                 </div>
@@ -3037,7 +3037,7 @@ export default function AdminPage() {
                                             <div className="text-xl font-extrabold font-candu text-black">{stats.profilesCount}</div>
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Nodes</div>
+                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Devices</div>
                                             <div className="text-xl font-extrabold font-candu text-black">{stats.nodesCount}</div>
                                         </div>
                                         <div>
