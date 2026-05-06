@@ -185,8 +185,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4
             prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl
             prose-a:text-brand-yellow hover:prose-a:underline prose-a:no-underline
-            prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-[-20px]
-            prose-ul:my-4 prose-ol:my-4
+            prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-1
+            prose-ul:my-6 prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
             prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4
             prose-hr:border-gray-200
             prose-img:rounded-lg prose-img:shadow-lg">
