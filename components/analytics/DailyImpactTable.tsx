@@ -209,113 +209,102 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
   })
 
   return (
-    <section className="space-y-5">
-      <div className="grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
-        <div className="border-2 border-black bg-brand-yellow p-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-black">
-                <Radio className="h-4 w-4" />
-                {t("daily_pulse_label")}
-              </div>
-              <h3 className="mt-2 font-rethink-sans text-2xl font-extrabold text-black">
-                {t("daily_pulse_title")}
-              </h3>
-              <p className="mt-2 max-w-2xl text-sm font-medium leading-relaxed text-neutral-900">
-                {t("daily_pulse_desc")}
-              </p>
+    <section className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="flex flex-col gap-4 border-b-2 border-black bg-brand-yellow p-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-2xl">
+          <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-black">
+            <Radio className="h-4 w-4" />
+            {t("daily_pulse_label")}
+          </div>
+          <h3 className="mt-2 font-rethink-sans text-2xl font-extrabold text-black">
+            {t("daily_pulse_title")}
+          </h3>
+          <p className="mt-2 text-sm font-medium leading-relaxed text-neutral-900">
+            {t("daily_pulse_desc")}
+          </p>
+        </div>
+
+        <div className="min-w-[210px] border-2 border-black bg-white p-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-black">
+              <Clock3 className="h-4 w-4" />
+              {t("next_update")}
             </div>
-            <Badge className="rounded-none border-2 border-black bg-white px-3 py-1 text-black hover:bg-white">
+            <Badge className="rounded-none border border-black bg-brand-gray px-2 py-0.5 text-black hover:bg-brand-gray">
               {t("daily_table_days", { count: snapshotDayCount })}
             </Badge>
           </div>
+          <div className="mt-3 font-mono text-2xl font-black text-black">{formatDuration(timeUntilUpdate)}</div>
+          <Progress
+            value={updateProgress}
+            className="mt-3 h-2 rounded-none border border-black bg-brand-gray [&>div]:bg-brand-green"
+          />
+        </div>
+      </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="border-2 border-black bg-white p-4">
-              <Sprout className="mb-3 h-5 w-5 text-black" />
-              <div className="text-2xl font-extrabold text-black">{formatTrees(latestRow?.estimatedTrees ?? null)}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_estimated_trees")}</div>
-            </div>
-            <div className="border-2 border-black bg-white p-4">
-              <TrendingUp className="mb-3 h-5 w-5 text-black" />
-              <div className="text-2xl font-extrabold text-black">{formatNumber(latestRow?.requests ?? null)}</div>
+      <div className="space-y-4 p-4 sm:p-5">
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="border-2 border-black bg-brand-yellow/20 p-5">
+            <Sprout className="mb-4 h-6 w-6 text-black" />
+            <div className="text-4xl font-black text-black">{formatTrees(latestRow?.estimatedTrees ?? null)}</div>
+            <div className="mt-1 text-sm font-extrabold uppercase tracking-wide text-neutral-700">{t("daily_estimated_trees")}</div>
+            <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-800">
+              {t("daily_estimated_trees_desc")}
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="border border-black/20 bg-white p-3">
+              <TrendingUp className="mb-2 h-4 w-4 text-black" />
+              <div className="text-xl font-extrabold text-black">{formatNumber(latestRow?.requests ?? null)}</div>
               <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_requests")}</div>
             </div>
-            <div className="border-2 border-black bg-white p-4">
-              <DollarSign className="mb-3 h-5 w-5 text-black" />
-              <div className="text-2xl font-extrabold text-black">{formatCurrency(latestRow?.earnings ?? null)}</div>
+            <div className="border border-black/20 bg-white p-3">
+              <DollarSign className="mb-2 h-4 w-4 text-black" />
+              <div className="text-xl font-extrabold text-black">{formatCurrency(latestRow?.earnings ?? null)}</div>
               <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_earnings")}</div>
             </div>
-            <div className="border-2 border-black bg-white p-4">
-              <Users className="mb-3 h-5 w-5 text-black" />
-              <div className="text-2xl font-extrabold text-black">{(latestRow?.activeNodes ?? 0).toLocaleString()}</div>
+            <div className="border border-black/20 bg-white p-3">
+              <Users className="mb-2 h-4 w-4 text-black" />
+              <div className="text-xl font-extrabold text-black">{(latestRow?.activeNodes ?? 0).toLocaleString()}</div>
               <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_active_nodes")}</div>
             </div>
           </div>
         </div>
 
-        <div className="border-2 border-black bg-white p-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-          <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-black">
-            <Clock3 className="h-4 w-4" />
-            {t("next_update")}
-          </div>
-          <div className="mt-4 font-mono text-4xl font-black text-black sm:text-5xl">
-            {formatDuration(timeUntilUpdate)}
-          </div>
-          <Progress
-            value={updateProgress}
-            className="mt-5 h-3 rounded-none border-2 border-black bg-brand-gray [&>div]:bg-brand-green"
-          />
-          <div className="mt-4 space-y-2 text-sm font-medium text-neutral-700">
-            <div className="flex items-center justify-between gap-4">
-              <span>{t("latest_snapshot")}</span>
-              <span className="text-right font-bold text-black">
-                {latestSnapshotDate ? formatDate(latestSnapshotDate) : t("daily_table_baseline")}
-              </span>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="border border-black/20 bg-brand-gray/30 p-4">
+            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
+              <CalendarDays className="h-4 w-4 text-black" />
+              {t("best_recent_day")}
             </div>
-            <div className="flex items-center justify-between gap-4">
-              <span>{t("expected_next")}</span>
-              <span className="text-right font-bold text-black">
-                {nextUpdate.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
-              </span>
+            <div className="mt-2 text-lg font-extrabold text-black">
+              {bestRequestDay ? formatDate(bestRequestDay.date) : t("daily_table_baseline")}
             </div>
+            <p className="mt-1 text-sm font-medium text-neutral-700">
+              {bestRequestDay
+                ? t("best_recent_day_desc", { count: formatNumber(bestRequestDay.requests) })
+                : t("daily_table_empty")}
+            </p>
+          </div>
+          <div className="border border-black/20 bg-brand-gray/30 p-4">
+            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
+              <Sprout className="h-4 w-4 text-black" />
+              {t("daily_actual_trees")}
+            </div>
+            <div className="mt-2 text-lg font-extrabold text-black">
+              {formatTrees(latestPlantingRow?.actualTrees ?? 0)} {t("trees")}
+            </div>
+            <p className="mt-1 text-sm font-medium text-neutral-700">
+              {latestPlantingRow
+                ? t("daily_actual_trees_desc", { date: formatDate(latestPlantingRow.date) })
+                : t("daily_actual_trees_empty")}
+            </p>
           </div>
         </div>
-      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="border-2 border-black bg-white p-4">
-          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
-            <CalendarDays className="h-4 w-4 text-black" />
-            {t("best_recent_day")}
-          </div>
-          <div className="mt-2 text-lg font-extrabold text-black">
-            {bestRequestDay ? formatDate(bestRequestDay.date) : t("daily_table_baseline")}
-          </div>
-          <p className="mt-1 text-sm font-medium text-neutral-700">
-            {bestRequestDay
-              ? t("best_recent_day_desc", { count: formatNumber(bestRequestDay.requests) })
-              : t("daily_table_empty")}
-          </p>
-        </div>
-        <div className="border-2 border-black bg-white p-4">
-          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
-            <Sprout className="h-4 w-4 text-black" />
-            {t("daily_actual_trees")}
-          </div>
-          <div className="mt-2 text-lg font-extrabold text-black">
-            {formatTrees(latestPlantingRow?.actualTrees ?? 0)} {t("trees")}
-          </div>
-          <p className="mt-1 text-sm font-medium text-neutral-700">
-            {latestPlantingRow
-              ? t("daily_actual_trees_desc", { date: formatDate(latestPlantingRow.date) })
-              : t("daily_actual_trees_empty")}
-          </p>
-        </div>
-      </div>
-
-      <div className="overflow-hidden border-2 border-black bg-white">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-black bg-brand-gray/40 px-4 py-3">
+        <div className="overflow-hidden border-2 border-black bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-black bg-brand-gray/40 px-4 py-3">
           <div>
             <h3 className="font-rethink-sans text-xl font-extrabold text-black">{t("daily_table_title")}</h3>
             <p className="text-sm font-medium text-neutral-700">{t("daily_table_desc")}</p>
@@ -358,6 +347,7 @@ export function DailyImpactTable({ data }: { data: HistoricalData[] }) {
             {t("daily_table_empty")}
           </div>
         )}
+        </div>
       </div>
     </section>
   )
