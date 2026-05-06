@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { createClient } from '@/lib/supabase/client'
 import AnnualReport2023 from "@/components/annual-report"
 import Navigation from "@/components/navigation"
+import { DailyImpactTable } from "@/components/analytics/DailyImpactTable"
 import { HistoricalDataChart } from "@/components/analytics/HistoricalDataChart"
 import { FileText, BarChart3 } from "lucide-react"
 import { SmartCTA } from "@/components/smart-cta"
@@ -98,6 +99,7 @@ export default function ReportPage() {
                     <div className="w-full space-y-6 sm:space-y-8">
                       <h2 className="text-2xl sm:text-3xl font-bold font-rethink-sans text-black">{t('historical_data')}</h2>
                       <HistoricalDataChart data={data} />
+                      <DailyImpactTable data={data} />
                     </div>
                   )}
                 </div>
