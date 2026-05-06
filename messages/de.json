@@ -466,7 +466,7 @@
         "daily_total_users": "Benutzer insgesamt",
         "daily_active_nodes": "Aktive Knoten",
         "daily_actual_trees": "Tatsächlich gepflanzte Bäume",
-        "daily_actual_trees_desc": "Neuester Pflanz-Eintrag, erfasst am {date}.",
+        "daily_actual_trees_desc": "Insgesamt erfasste Pflanzungen. Neuester Eintrag: {date}.",
         "daily_actual_trees_empty": "Tatsächliche Pflanz-Einträge erscheinen hier, sobald sie erfasst sind.",
         "daily_estimated_trees": "Gesch. finanzierte Bäume",
         "daily_estimated_trees_desc": "Geschätzt aus den täglichen Einnahmen mit dem aktuellen Planungswert von 0,55 $ pro Baum.",

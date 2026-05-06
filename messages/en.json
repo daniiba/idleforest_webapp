@@ -466,7 +466,7 @@
         "daily_total_users": "Total users",
         "daily_active_nodes": "Active nodes",
         "daily_actual_trees": "Actual trees planted",
-        "daily_actual_trees_desc": "Most recent planting event, recorded on {date}.",
+        "daily_actual_trees_desc": "Total recorded plantings. Latest planting event: {date}.",
         "daily_actual_trees_empty": "Actual planting events will appear here as soon as they are recorded.",
         "daily_estimated_trees": "Est. trees funded",
         "daily_estimated_trees_desc": "Estimated from daily earnings using the current $0.55 per tree planning rate.",

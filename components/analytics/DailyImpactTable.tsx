@@ -180,6 +180,7 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
   const newestRows = dailyRows.slice().reverse()
   const latestRow = newestRows.find((row) => row.requests !== null) ?? newestRows[0]
   const latestPlantingRow = newestRows.find((row) => row.actualTrees > 0)
+  const totalActualTrees = plantingsData.events.reduce((sum, event) => sum + event.trees, 0)
   const previousRows = newestRows.filter((row) => row.requests !== null)
   const recentRows = previousRows.slice(0, 14)
   const snapshotDayCount = dailyRows.filter((row) => row.snapshotCount > 0).length
@@ -306,7 +307,7 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
               {t("daily_actual_trees")}
             </div>
             <div className="mt-2 text-lg font-extrabold text-black">
-              {formatTrees(latestPlantingRow?.actualTrees ?? 0)} {t("trees")}
+              {formatTrees(totalActualTrees)} {t("trees")}
             </div>
             <p className="mt-1 text-sm font-medium text-neutral-700">
               {latestPlantingRow

@@ -466,7 +466,7 @@
         "daily_total_users": "Utilisateurs totaux",
         "daily_active_nodes": "Nœuds actifs",
         "daily_actual_trees": "Arbres réellement plantés",
-        "daily_actual_trees_desc": "Événement de plantation le plus récent, enregistré le {date}.",
+        "daily_actual_trees_desc": "Plantations enregistrées au total. Événement le plus récent : {date}.",
         "daily_actual_trees_empty": "Les événements de plantation réels apparaîtront ici dès qu'ils seront enregistrés.",
         "daily_estimated_trees": "Arbres estimés financés",
         "daily_estimated_trees_desc": "Estimation à partir des gains quotidiens avec le taux actuel de planification de 0,55 $ par arbre.",
