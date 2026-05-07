@@ -117,7 +117,7 @@ export async function getAdminStats() {
 
     // Date calculations
     const now = new Date()
-    const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30)).toISOString()
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString()
 
     // 1. Profiles (Registered Users)
     const { count: profilesCount } = await supabase
@@ -129,6 +129,72 @@ export async function getAdminStats() {
         .from('profiles')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', thirtyDaysAgo)
+
+    type ProfileActivity = {
+        user_id: string
+        created_at: string
+        last_seen?: string | null
+    }
+
+    const { data: profileActivityData, error: profileActivityError } = await supabase
+        .from('profiles')
+        .select('user_id, created_at, last_seen')
+
+    if (profileActivityError) {
+        console.error('Error fetching profile activity:', profileActivityError)
+    }
+
+    const profileActivityRows = (profileActivityData || []) as ProfileActivity[]
+    const profileUserIds = profileActivityRows
+        .map(profile => profile.user_id)
+        .filter((userId): userId is string => Boolean(userId))
+
+    const { data: referralStats } = profileUserIds.length > 0
+        ? await supabase
+            .from('referral_stats')
+            .select('user_id, updated_at')
+            .in('user_id', profileUserIds)
+        : { data: [] }
+
+    const referralActivityMap = new Map(referralStats?.map(row => [row.user_id, row.updated_at]) || [])
+    const authActivityMap = new Map<string, string | null>()
+
+    try {
+        const adminClient = createAdminClient()
+        let page = 1
+        const perPage = 100
+        let hasMore = true
+
+        while (hasMore) {
+            const { data: authUsers, error: authError } = await adminClient.auth.admin.listUsers({
+                page,
+                perPage
+            })
+
+            if (authError) {
+                console.error('Error fetching auth users for 30d activity:', authError)
+                break
+            }
+
+            const users = authUsers?.users || []
+            users.forEach(user => {
+                authActivityMap.set(user.id, user.last_sign_in_at || null)
+            })
+            hasMore = users.length === perPage
+            page++
+        }
+    } catch (error) {
+        console.error('Error creating admin client for 30d activity:', error)
+    }
+
+    const activeLast30DaysUsersCount = profileActivityRows.filter(profile => {
+        const lastActive = profile.last_seen
+            || authActivityMap.get(profile.user_id)
+            || referralActivityMap.get(profile.user_id)
+            || profile.created_at
+
+        return Boolean(lastActive && lastActive >= thirtyDaysAgo)
+    }).length
 
     // 3. Nodes Stats
     const { count: nodesCount } = await supabase
@@ -259,6 +325,7 @@ export async function getAdminStats() {
         totalUsersCount,
         newTotalUsersCount,
         activeUsersCount,
+        activeLast30DaysUsersCount,
         churnRate,
         // Platform breakdown
         chromeWau: chromeWauAvg,  // Use avg for ARPU calculations

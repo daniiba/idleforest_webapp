@@ -117,6 +117,7 @@ export default function AdminPage() {
         totalUsersCount: number,
         newTotalUsersCount: number,
         activeUsersCount: number,
+        activeLast30DaysUsersCount: number,
         churnRate: number,
         // Platform breakdown
         chromeWau: number,
@@ -1204,6 +1205,7 @@ export default function AdminPage() {
 
     // Metrics Calculations
     const arpu = stats.activeUsersCount > 0 ? (stats.monthlyRevenue / stats.activeUsersCount) : 0
+    const activeLast30DaysArpu = stats.activeLast30DaysUsersCount > 0 ? (stats.monthlyRevenue / stats.activeLast30DaysUsersCount) : 0
     const churnRate = stats.churnRate
     const ltv = churnRate > 0 ? (arpu / churnRate) : (arpu * 12)
     const profit = stats.monthlyRevenue - FINANCIAL_DATA.totalCosts
@@ -1542,6 +1544,11 @@ export default function AdminPage() {
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Blended)</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{arpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">All platforms</p>
+                                </div>
+                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Active 30d)</div>
+                                    <div className="text-2xl font-extrabold font-candu text-black">€{activeLast30DaysArpu.toFixed(2)}</div>
+                                    <p className="text-xs text-neutral-600 mt-1">{stats.activeLast30DaysUsersCount} registered active users</p>
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Monthly Churn <span className="text-blue-600">(Chrome)</span></div>
