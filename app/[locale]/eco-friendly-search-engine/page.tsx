@@ -120,7 +120,7 @@ const hubLinks = [
   {
     href: "/blog/does-ecosia-actually-plant-trees",
     title: "Does Ecosia actually plant trees?",
-    body: "Answer the trust question people ask before committing to Ecosia.",
+    body: "Look at the reports, partners, and monitoring behind Ecosia's tree-planting claims.",
   },
   {
     href: "/blog/what-is-ecosia-chat-and-how-to-use-it",
@@ -294,12 +294,12 @@ export default function EcoFriendlySearchEnginePage() {
           <div>
             <h2 className="font-rethink-sans text-3xl font-extrabold">What search engine plants trees?</h2>
             <p className="mt-3 text-neutral-700">
-              Ecosia is the clearest answer to this search intent. It is a search engine that uses search advertising revenue to fund climate action and tree-planting projects.
+              Ecosia is the best-known answer: it turns everyday searches into funding for climate action and tree-planting projects.
             </p>
           </div>
           <div className="space-y-4 text-neutral-700">
             <p>
-              The important nuance is that "search engine that plants trees" and "tool that helps plant trees while browsing" are not identical. Ecosia creates impact when you search with Ecosia. IdleForest creates a separate passive layer from opt-in idle bandwidth, so it can run alongside Ecosia or alongside a search engine you already use.
+              That difference matters: Ecosia creates impact when you search with Ecosia. IdleForest creates a separate passive layer from opt-in idle bandwidth, so it can run alongside Ecosia or alongside a search engine you already use.
             </p>
             <p>
               For many users, the best eco-friendly setup is layered: Ecosia for tree-funded searches, IdleForest for passive browsing time, and optional tools like Tab for a Cause or TreeClicks for new tabs and shopping.
@@ -352,7 +352,7 @@ export default function EcoFriendlySearchEnginePage() {
           <div>
             <h2 className="font-rethink-sans text-3xl font-extrabold">Ecosia alternatives if you do not want to change search engines</h2>
             <p className="mt-3 text-neutral-700">
-              If the blocker is switching away from Google, DuckDuckGo, Brave, or your current default search, IdleForest is the most relevant alternative in this cluster because it does not replace search at all.
+              If switching away from Google, DuckDuckGo, Brave, or your current default search is the deal-breaker, IdleForest is the easier fit because it does not replace search at all.
             </p>
             <div className="mt-6">
               <Button asChild className="border-2 border-black bg-brand-yellow px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
@@ -377,7 +377,7 @@ export default function EcoFriendlySearchEnginePage() {
         <div className="mb-8 max-w-3xl">
           <h2 className="font-rethink-sans text-3xl font-extrabold">Explore the hub</h2>
           <p className="mt-3 text-neutral-700">
-            Start broad here, then open the more specific pages for Ecosia data, trust questions, and direct comparisons.
+            Go deeper on Ecosia data, safety questions, and side-by-side comparisons when you want the details behind a tool.
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

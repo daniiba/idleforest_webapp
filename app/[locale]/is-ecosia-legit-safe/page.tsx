@@ -60,7 +60,7 @@ const proofRows = [
 const faqs = [
   {
     question: "Is Ecosia legit?",
-    answer: "Yes, Ecosia appears legitimate based on its public financial reports, long operating history, published tree-planting projects, B Corp certification history, and third-party coverage. The important nuance is that users should judge the evidence: financial reports, partner updates, and privacy terms.",
+    answer: "Yes, Ecosia appears legitimate based on its public financial reports, long operating history, published tree-planting projects, B Corp certification history, and third-party coverage. The useful next step is to check the evidence yourself: financial reports, partner updates, and privacy terms.",
   },
   {
     question: "Is Ecosia safe to use?",
@@ -238,7 +238,7 @@ export default function IsEcosiaLegitSafePage() {
               Ecosia also relies on search partners such as Microsoft Bing, and in some cases Google, to provide results and ads. Those partners may receive the data needed to deliver results, ads, and fraud protection.
             </p>
             <p>
-              The practical answer: Ecosia is reasonable for people who want greener search with public transparency. People who need maximum privacy should compare Ecosia's privacy policy with privacy-first search engines before switching.
+              In practice, Ecosia is a reasonable choice if you want greener search with public transparency. If maximum privacy is the priority, compare Ecosia's privacy policy with privacy-first search engines before switching.
             </p>
           </div>
         </div>

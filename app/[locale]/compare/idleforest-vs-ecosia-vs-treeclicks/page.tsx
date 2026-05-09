@@ -56,17 +56,17 @@ const relatedLinks = [
   {
     href: "/use-idleforest-with-ecosia",
     title: "Use IdleForest with Ecosia",
-    body: "For people who already use Ecosia and want to add passive tree funding without changing search settings.",
+    body: "Already using Ecosia? Add passive tree funding without changing your search settings.",
   },
   {
     href: "/ecosia",
     title: "Ecosia financial and tree planting data",
-    body: "For people checking Ecosia's published financial reports, tree data, and transparency record.",
+    body: "Check Ecosia's published financial reports, tree data, and transparency record.",
   },
   {
     href: "/eco-friendly-search-engine",
     title: "Eco-friendly search engines",
-    body: "For broader comparisons of Ecosia, OceanHero, Tab for a Cause, TreeClicks, Ekoru, and IdleForest.",
+    body: "Compare Ecosia, OceanHero, Tab for a Cause, TreeClicks, Ekoru, and IdleForest in one place.",
   },
 ]
 

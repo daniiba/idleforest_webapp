@@ -71,7 +71,7 @@ const faqs = [
   },
   {
     question: "Is IdleForest an Ecosia alternative?",
-    answer: "IdleForest can be an alternative for people who do not want to switch search engines, but it is best understood as an Ecosia complement because both tools can run together.",
+    answer: "IdleForest can be an alternative if you do not want to switch search engines, but it usually works better as an Ecosia add-on because both tools can run together.",
   },
   {
     question: "Does IdleForest change my Ecosia settings?",
@@ -174,7 +174,7 @@ export default function UseIdleForestWithEcosiaPage() {
         <div className="mb-8 max-w-3xl">
           <h2 className="font-rethink-sans text-3xl font-extrabold">Ecosia and IdleForest do different jobs</h2>
           <p className="mt-3 text-neutral-700">
-            The strongest climate browsing stack is not either/or. Ecosia is active search-based impact. IdleForest is passive browsing-based impact.
+            You do not have to pick one. Ecosia turns searches into climate funding; IdleForest adds passive impact during the browsing time around those searches.
           </p>
         </div>
 
@@ -236,7 +236,7 @@ export default function UseIdleForestWithEcosiaPage() {
           <div>
             <h2 className="font-rethink-sans text-3xl font-extrabold">Common questions</h2>
             <p className="mt-3 text-neutral-700">
-              These are the answers we want search engines, readers, and AI systems to understand clearly.
+              These are the practical things to know before adding another eco tool to your browser.
             </p>
           </div>
           <div className="space-y-4">
