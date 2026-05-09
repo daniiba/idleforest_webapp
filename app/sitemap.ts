@@ -1,5 +1,10 @@
 import { MetadataRoute } from 'next'
 import { CARBON_LOCALES, getIndexableComparisonPaths } from '@/lib/carbon-routing'
+import { getAllCarbonData } from '@/lib/carbon-data'
+
+const SITE_URL = 'https://www.idleforest.com'
+const SEO_CLUSTER_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
+const CORE_SITE_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
 
 interface BlogPost {
   node: {
@@ -51,11 +56,13 @@ async function getBlogPosts() {
   }
 }
 
-import { getAllSlugs } from '@/lib/carbon-data'
+function getStableDate(value?: string) {
+  return value ? new Date(value) : SEO_CLUSTER_LAST_MODIFIED
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPosts = await getBlogPosts()
-  const carbonSlugs = await getAllSlugs()
+  const carbonPagesData = await getAllCarbonData()
   const carbonComparisonPaths = getIndexableComparisonPaths()
 
   const locales = [...CARBON_LOCALES]
@@ -66,8 +73,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.forEach(locale => {
       // For 'en', the path is exactly the base path. Others get the prefix.
       const prefix = locale === 'en' ? '' : `/${locale}`
-      alternates[locale] = `https://www.idleforest.com${prefix}${path}`
+      alternates[locale] = `${SITE_URL}${prefix}${path}`
     })
+    alternates['x-default'] = `${SITE_URL}${path}`
     return { languages: alternates }
   }
 
@@ -75,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const generateLocalizedUrls = (path: string, options: { lastModified: Date; changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly'; priority: number }, translated = true) => {
     if (!translated) {
       return [{
-        url: `https://www.idleforest.com${path}`,
+        url: `${SITE_URL}${path}`,
         ...options
       }]
     }
@@ -84,7 +92,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return locales.map(locale => {
       const prefix = locale === 'en' ? '' : `/${locale}`
       return {
-        url: `https://www.idleforest.com${prefix}${path}`,
+        url: `${SITE_URL}${prefix}${path}`,
         alternates,
         ...options
       }
@@ -97,14 +105,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }, false))
 
-  const carbonPages = carbonSlugs.flatMap((slug) => generateLocalizedUrls(`/carbon-footprint/${slug}`, {
-    lastModified: new Date(),
+  const carbonPages = carbonPagesData.flatMap((page) => generateLocalizedUrls(`/carbon-footprint/${page.slug}`, {
+    lastModified: getStableDate(page.seo_content?.en?.reviewed_at),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
   const carbonComparePages = carbonComparisonPaths.flatMap((path) => generateLocalizedUrls(path, {
-    lastModified: new Date(),
+    lastModified: SEO_CLUSTER_LAST_MODIFIED,
     changeFrequency: 'weekly',
     priority: 0.75,
   }))
@@ -118,24 +126,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const routesOptions: RouteOption[] = [
-    { path: '', changeFrequency: 'daily', priority: 1, lastModified: new Date() },
-    { path: '/blog', changeFrequency: 'daily', priority: 0.8, lastModified: new Date(), translated: false },
-    { path: '/carbon-footprint', changeFrequency: 'weekly', priority: 0.85, lastModified: new Date() },
-    { path: '/carbon-footprint/ai', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
-    { path: '/carbon-footprint/streaming', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
-    { path: '/carbon-footprint/digital-carbon-footprint', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
-    { path: '/carbon-footprint/leaderboard', changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
-    { path: '/eco-friendly-search-engine', changeFrequency: 'weekly', priority: 0.9, lastModified: new Date() },
-    { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: new Date() },
-    { path: '/is-ecosia-legit-safe', changeFrequency: 'weekly', priority: 0.85, lastModified: new Date() },
-    { path: '/use-idleforest-with-ecosia', changeFrequency: 'weekly', priority: 0.85, lastModified: new Date() },
-    { path: '/transparency', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
-    { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: new Date() },
-    { path: '/downloads', changeFrequency: 'monthly', priority: 0.7, lastModified: new Date() },
-    { path: '/contact', changeFrequency: 'monthly', priority: 0.5, lastModified: new Date() },
-    { path: '/terms', changeFrequency: 'monthly', priority: 0.4, lastModified: new Date() },
-    { path: '/report', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date() },
-    { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: new Date(), translated: false },
+    { path: '', changeFrequency: 'daily', priority: 1, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/blog', changeFrequency: 'daily', priority: 0.8, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
+    { path: '/carbon-footprint', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/carbon-footprint/ai', changeFrequency: 'weekly', priority: 0.8, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/carbon-footprint/streaming', changeFrequency: 'weekly', priority: 0.8, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/carbon-footprint/digital-carbon-footprint', changeFrequency: 'weekly', priority: 0.8, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/carbon-footprint/leaderboard', changeFrequency: 'weekly', priority: 0.8, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/eco-friendly-search-engine', changeFrequency: 'weekly', priority: 0.9, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/is-ecosia-legit-safe', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/use-idleforest-with-ecosia', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
+    { path: '/transparency', changeFrequency: 'monthly', priority: 0.7, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/downloads', changeFrequency: 'monthly', priority: 0.7, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/contact', changeFrequency: 'monthly', priority: 0.5, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/terms', changeFrequency: 'monthly', priority: 0.4, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/report', changeFrequency: 'weekly', priority: 0.7, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: SEO_CLUSTER_LAST_MODIFIED, translated: false },
   ]
   
   const routes = routesOptions.flatMap(({ path, translated, ...options }) => generateLocalizedUrls(path, options, translated !== false))
