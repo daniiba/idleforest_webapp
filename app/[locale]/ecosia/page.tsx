@@ -3,6 +3,7 @@ import Navigation from "@/components/navigation";
 import { transformedData, getHistoricalTreeData, getMonthlyData, getProjectLocations } from "@/lib/dataTransform";
 import Script from "next/script";
 import EcosiaClient from "./EcosiaClient";
+import { Link } from "@/navigation";
 
 export const metadata: Metadata = {
   title: "Ecosia Financial Data & Historical Tree Planting Report | Complete Analysis",
@@ -72,6 +73,26 @@ const Index = () => {
             <div className="max-w-4xl">
               <h1 className="text-5xl text-black mb-6 font-rethink-sans">Ecosia Financial Data & Historical Tree Planting Report</h1>
               <p className="text-xl text-gray-700 mb-4">Comprehensive analysis of Ecosia's financial data and historical tree planting records. This dashboard visualizes Ecosia's income, expenses, and financial transparency through their official financial reports.</p>
+              <div className="mb-8 border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h2 className="mb-2 text-2xl font-bold text-black">Using Ecosia? Add IdleForest as a passive tree-planting layer.</h2>
+                <p className="mb-4 text-gray-700">
+                  Ecosia funds trees when you search. IdleForest works alongside Ecosia and helps fund verified tree planting through opt-in idle bandwidth, without changing your search engine.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/use-idleforest-with-ecosia" className="inline-flex items-center border-2 border-black bg-brand-yellow px-4 py-2 font-bold text-black hover:bg-black hover:text-brand-yellow">
+                    Use IdleForest with Ecosia
+                  </Link>
+                  <Link href="/is-ecosia-legit-safe" className="inline-flex items-center border-2 border-black bg-white px-4 py-2 font-bold text-black hover:bg-black hover:text-brand-yellow">
+                    Is Ecosia legit and safe?
+                  </Link>
+                  <Link href="/compare/idleforest-vs-ecosia-vs-treeclicks" className="inline-flex items-center border-2 border-black bg-white px-4 py-2 font-bold text-black hover:bg-black hover:text-brand-yellow">
+                    Compare Ecosia, IdleForest, and TreeClicks
+                  </Link>
+                  <Link href="/eco-friendly-search-engine" className="inline-flex items-center border-2 border-black bg-white px-4 py-2 font-bold text-black hover:bg-black hover:text-brand-yellow">
+                    Explore eco-friendly search engines
+                  </Link>
+                </div>
+              </div>
               <div className="prose prose-lg max-w-none">
                 <h2 className="text-2xl font-bold text-black mt-6 mb-3">About Ecosia's Financial Data</h2>
                 <p className="text-gray-600 mb-4">

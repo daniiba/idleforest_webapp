@@ -16,7 +16,9 @@ export function SmartCTA({
     forceVertical = false,
     buttonVariant = "default", // "default" (yellow bg) or "inverse" (black bg)
     onDarkBackground = false,
-    deviceInfo
+    deviceInfo,
+    desktopOnly = false,
+    showExtensionDownload = true
 }: {
     className?: string;
     showLearnMore?: boolean;
@@ -24,6 +26,8 @@ export function SmartCTA({
     buttonVariant?: "default" | "inverse";
     onDarkBackground?: boolean;
     deviceInfo?: DeviceDetection;
+    desktopOnly?: boolean;
+    showExtensionDownload?: boolean;
 }) {
     const { isMobile, isDesktop, isChrome, isEdge, isMac } = useDeviceDetection(deviceInfo);
 
@@ -42,7 +46,7 @@ export function SmartCTA({
     return (
         <div className={cn("flex flex-col w-full sm:w-auto items-stretch gap-3", className)}>
             {/* Mobile Chrome: Show "Add to Desktop" */}
-            {isMobile && isChrome && (
+            {!desktopOnly && isMobile && isChrome && (
                 <Button asChild className={buttonClass}>
                     <Link
                         href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
@@ -58,7 +62,7 @@ export function SmartCTA({
             )}
 
             {/* Other Mobile: Show Not Available + Discord/Email */}
-            {isMobile && !isChrome && (
+            {!desktopOnly && isMobile && !isChrome && (
                 <div className="space-y-4 w-full">
                     <div className="bg-neutral-900/10 p-4 rounded-lg border border-neutral-900/20">
                         <p className="font-bold mb-2">Not available on this device</p>
@@ -112,7 +116,7 @@ export function SmartCTA({
                     </div>
 
                     {/* Desktop Chrome/Edge: Show Extension Button */}
-                    {(isChrome || isEdge) && (
+                    {showExtensionDownload && (isChrome || isEdge) && (
                         <>
                             {!forceVertical && <span className="font-bold text-lg hidden sm:block">or</span>}
                             {forceVertical && <span className="font-bold text-lg text-center">or</span>}

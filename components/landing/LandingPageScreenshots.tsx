@@ -126,7 +126,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                 </p>
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
-                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} />
+                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} desktopOnly showExtensionDownload={false} />
                                 </div>
                                 <HeroTrustSignals />
                             </div>

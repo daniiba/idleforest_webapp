@@ -122,7 +122,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </p>
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
-                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} />
+                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} desktopOnly showExtensionDownload={false} />
                                 </div>
                                 <HeroTrustSignals />
                             </div>

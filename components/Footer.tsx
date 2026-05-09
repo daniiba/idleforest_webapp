@@ -31,7 +31,7 @@ const Footer = () => {
               <span className="text-gray-700">•</span>
               <Link href="/report" className="text-gray-400 hover:text-brand-yellow">Report</Link>
               <span className="text-gray-700">•</span>
-              <Link href="/compare/idleforest-vs-ecosia-vs-treeclicks" className="text-gray-400 hover:text-brand-yellow">Comparison</Link>
+              <Link href="/eco-friendly-search-engine" className="text-gray-400 hover:text-brand-yellow">Eco Search</Link>
               <span className="text-gray-700">•</span>
               <Link href="/transparency" className="text-gray-400 hover:text-brand-yellow">{t('transparency')}</Link>
               <span className="text-gray-700">•</span>
