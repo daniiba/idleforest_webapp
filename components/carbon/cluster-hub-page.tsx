@@ -24,10 +24,19 @@ export function buildCarbonHubMetadata(hub: CarbonHubDefinition, locale: string)
 export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps) {
     const t = await getTranslations("CarbonFootprint");
     const pages = (await getCarbonHubPages(hub)).map((page) => localizeCarbonData(page, locale));
+    const getFallbackIconLabel = (appName: string) =>
+        appName
+            .replace(/\([^)]*\)/g, "")
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((word) => word[0])
+            .join("")
+            .toUpperCase();
     const renderAppIcon = (page: typeof pages[number], sizeClasses = "w-7 h-7") => {
         const iconUrl = getIconUrl(page);
         return iconUrl.startsWith("fallback:") ? (
-            <span className="font-bold text-[10px] uppercase text-black">{page.category.slice(0, 3)}</span>
+            <span className="font-bold text-[10px] uppercase text-black">{getFallbackIconLabel(page.app_name)}</span>
         ) : (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={iconUrl} alt="" className={sizeClasses} />
@@ -139,10 +148,15 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                     href={`/carbon-footprint/${page.slug}`}
                                     className="flex items-center justify-between gap-4 rounded-lg border border-black/10 bg-brand-gray p-4 hover:border-black"
                                 >
-                                    <div>
-                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">#{index + 1}</div>
-                                        <div className="font-rethink-sans text-xl font-extrabold text-black">{page.app_name}</div>
-                                        <div className="text-sm text-neutral-600">{page.co2_per_hour_grams}{t("page.g_co2_hour")}</div>
+                                    <div className="flex min-w-0 items-center gap-4">
+                                        <div className="h-12 w-12 shrink-0 border-2 border-black bg-white flex items-center justify-center">
+                                            {renderAppIcon(page)}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">#{index + 1}</div>
+                                            <div className="font-rethink-sans text-xl font-extrabold text-black truncate">{page.app_name}</div>
+                                            <div className="text-sm text-neutral-600">{page.co2_per_hour_grams}{t("page.g_co2_hour")}</div>
+                                        </div>
                                     </div>
                                     <ArrowRight className="h-4 w-4 shrink-0 text-black" />
                                 </Link>
