@@ -46,7 +46,7 @@ export interface CarbonSeedEntry {
 }
 
 const CARBON_LOCALES: CarbonLocale[] = ["en", "es", "de", "pt", "fr"];
-const REVIEWED_AT = "2026-04-24";
+const REVIEWED_AT = "2026-05-10";
 
 const IEA_AI_URL = "https://www.iea.org/reports/energy-and-ai";
 const IEA_DIGITAL_URL = "https://www.iea.org/reports/data-centres-and-data-transmission-networks";
@@ -58,6 +58,7 @@ const CAMBRIDGE_BITCOIN_URL = "https://ccaf.io/cbeci/ghg/methodology2.Hashrate";
 const CAMBRIDGE_BITCOIN_POWER_URL = "https://ccaf.io/cbnsi/cbeci/methodology";
 const CAMBRIDGE_ETHEREUM_URL = "https://ccaf.io/cbnsi/ethereum/methodology";
 const ETHEREUM_MERGE_URL = "https://ethereum.org/roadmap/merge/";
+const TREE_OFFSET_URL = "https://ceepr.mit.edu/wp-content/uploads/2024/03/MIT-CEEPR-WP-2024-04.pdf";
 
 function unique(values: string[]): string[] {
     return Array.from(new Set(values.filter(Boolean)));
@@ -142,13 +143,29 @@ const SOURCE_NOTES = {
         pt: "Documentação oficial da Ethereum sobre o The Merge de 15 de setembro de 2022 e a respetiva redução energética.",
         fr: "Documentation officielle d'Ethereum sur The Merge du 15 septembre 2022 et la réduction d'énergie associée.",
     },
+    treeOffset: {
+        en: "Supports the offset conversion used by IdleForest: roughly 20kg CO2 absorbed per mature tree per year, with wide real-world variation.",
+        es: "Respalda la conversión de compensación usada por IdleForest: unos 20kg de CO2 absorbidos por árbol maduro al año, con amplia variación real.",
+        de: "Stützt die von IdleForest verwendete Ausgleichsrechnung: etwa 20kg CO2 pro ausgewachsenem Baum und Jahr, mit großer realer Streuung.",
+        pt: "Sustenta a conversão de compensação usada pelo IdleForest: cerca de 20kg de CO2 absorvidos por árvore madura por ano, com grande variação real.",
+        fr: "Soutient la conversion de compensation utilisée par IdleForest : environ 20kg de CO2 absorbés par arbre mature et par an, avec une forte variation réelle.",
+    },
 };
+
+function treeOffsetReference(locale: CarbonLocale): CarbonSourceReference {
+    return {
+        title: "MIT CEEPR: How much can we reduce CO2 by planting trees?",
+        url: TREE_OFFSET_URL,
+        note: SOURCE_NOTES.treeOffset[locale],
+    };
+}
 
 function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gaming" | "work" | "browsing" | "social" | "crypto" | "bitcoinOverride"): CarbonSourceReference[] {
     if (kind === "ai") {
         return [
             { title: "IEA: Energy and AI", url: IEA_AI_URL, note: SOURCE_NOTES.ieaAi[locale] },
             { title: "Scientific Reports: Environmental impact of large language models", url: LLM_ENVIRONMENT_URL, note: SOURCE_NOTES.llmEnvironmental[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
@@ -156,6 +173,7 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
         return [
             { title: "Carbon Trust: Carbon impact of video streaming (PDF)", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
             { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
@@ -163,6 +181,7 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
         return [
             { title: "California Energy Commission: Computer gaming energy efficiency (PDF)", url: CALIFORNIA_GAMING_URL, note: SOURCE_NOTES.gaming[locale] },
             { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
@@ -170,6 +189,7 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
         return [
             { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
             { title: "IEA: Data centres and data transmission networks", url: IEA_DIGITAL_URL, note: SOURCE_NOTES.ieaDigital[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
@@ -177,6 +197,7 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
         return [
             { title: "Nature Communications: The environmental sustainability of digital content consumption", url: DIGITAL_CONTENT_LCA_URL, note: SOURCE_NOTES.digitalContent[locale] },
             { title: "Carbon Trust: Carbon impact of video streaming (PDF)", url: CARBON_TRUST_STREAMING_URL, note: SOURCE_NOTES.carbonTrust[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
@@ -184,12 +205,14 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
         return [
             { title: "Cambridge Bitcoin GHG emissions methodology", url: CAMBRIDGE_BITCOIN_URL, note: SOURCE_NOTES.bitcoinGhG[locale] },
             { title: "Cambridge Bitcoin electricity methodology", url: CAMBRIDGE_BITCOIN_POWER_URL, note: SOURCE_NOTES.bitcoin[locale] },
+            treeOffsetReference(locale),
         ];
     }
 
     return [
         { title: "Cambridge Bitcoin electricity methodology", url: CAMBRIDGE_BITCOIN_POWER_URL, note: SOURCE_NOTES.bitcoin[locale] },
         { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology[locale] },
+        treeOffsetReference(locale),
     ];
 }
 

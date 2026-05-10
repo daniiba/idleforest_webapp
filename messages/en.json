@@ -90,6 +90,17 @@
             "users_label": "ACTIVE USERS",
             "contributions_label": "TOTAL CONTRIBUTIONS"
         },
+        "team": {
+            "eyebrow": "Team",
+            "heading": "Meet the team",
+            "subheading": "The people building IdleForest and turning idle internet into real reforestation work.",
+            "founder_ceo": "Co-Founder & CEO",
+            "cofounder_product_design": "Co-Founder & Product Design Lead",
+            "ecology_impact_lead": "Ecology & Conservation Lead",
+            "project_management_marketing": "Social Media Manager",
+            "team_member": "Team Member",
+            "linkedin_label": "LinkedIn"
+        },
         "achievements": {
             "heading_line1": "What we achieved",
             "heading_line2": "& where we're heading",

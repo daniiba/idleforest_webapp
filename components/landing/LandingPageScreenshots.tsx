@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
 import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
 import ProjectsSection from "@/components/landing/ProjectsSection";
+import TeamSection from "@/components/landing/TeamSection";
 
 export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const [stats, setStats] = useState({
@@ -340,6 +341,9 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                         </div>
                     </div>
                 </section>
+
+                {/* TEAM */}
+                <TeamSection />
 
                 {/* REVIEWS */}
                 <ReviewsSection />

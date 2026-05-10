@@ -1,6 +1,6 @@
-import { enrichCarbonSeedData } from "@/lib/carbon-app-seo";
+import { enrichCarbonSeedData, type CarbonSeedEntry } from "@/lib/carbon-app-seo";
 
-const BASE_CARBON_SEED_DATA = [
+const BASE_CARBON_SEED_DATA: CarbonSeedEntry[] = [
     {
         "app_name": "Fortnite",
         "category": "Gaming",
@@ -1743,6 +1743,280 @@ const BASE_CARBON_SEED_DATA = [
                 ],
                 "idleforest_pitch": "Points de karma pour la planète.",
                 "human_equivalent_comparison": "Conduire 36 km en voiture"
+            }
+        }
+    },
+    {
+        "app_name": "Discord",
+        "category": "Social",
+        "avg_usage_hours_day": "1.5",
+        "co2_per_hour_grams": 35,
+        "slug": "discord",
+        "seo_content": {
+            "en": {
+                "intro": "Discord's carbon footprint depends on the mix of text chat, voice rooms, video calls, screen sharing, and always-open desktop sessions. Text-heavy communities are relatively light, while long voice or screen-share sessions move closer to online work and streaming behavior.",
+                "methodology_title": "How this Discord estimate is built",
+                "methodology_summary": "IdleForest models Discord as a mixed social and communication app: lighter than video-first platforms, but heavier than plain web browsing when voice, media previews, and screen sharing are active.",
+                "methodology_bullets": [
+                    "The 35gCO2e/hour estimate sits between low-intensity social browsing and video-conferencing benchmarks.",
+                    "The yearly estimate uses 35gCO2e/hour x 1.5 hours/day x 365 / 1000 = 19.2kgCO2e/year.",
+                    "The tree estimate rounds up annual emissions divided by 20kgCO2e per tree-year, so Discord rounds to 1 tree/year in this model."
+                ],
+                "faq": [
+                    {
+                        "question": "What is Discord's carbon footprint per hour?",
+                        "answer": "IdleForest estimates a mixed hour of Discord use at about 35gCO2e. Text chat is lower, while video, screen sharing, and long voice sessions can push the total upward."
+                    },
+                    {
+                        "question": "Why is Discord lower than video streaming?",
+                        "answer": "Many Discord sessions are text or voice first, so the model is lower than full video streaming. It still includes device, network, and server-side energy rather than treating chat as zero-impact."
+                    }
+                ],
+                "idleforest_pitch": "Your server can make the chat footprint visible and turn community time into trees.",
+                "human_equivalent_comparison": "Driving 50km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Slack",
+        "category": "Work",
+        "avg_usage_hours_day": "2.0",
+        "co2_per_hour_grams": 30,
+        "slug": "slack",
+        "seo_content": {
+            "en": {
+                "intro": "Slack is mostly a text and notification workflow, but its footprint rises with long active desktop sessions, file previews, huddles, clips, and video calls.",
+                "methodology_title": "How this Slack estimate is built",
+                "methodology_summary": "The estimate treats Slack as an active work tool with a lower hourly footprint than video meetings, but higher overhead than a static page because it stays synced across devices and workspaces.",
+                "methodology_bullets": [
+                    "The 30gCO2e/hour figure reflects active chat, file previews, notifications, and occasional voice or video collaboration.",
+                    "The yearly estimate uses 30gCO2e/hour x 2 hours/day x 365 / 1000 = 21.9kgCO2e/year.",
+                    "Tree offset math rounds 21.9kgCO2e/year divided by 20kgCO2e per tree-year up to 2 trees."
+                ],
+                "faq": [
+                    {
+                        "question": "Is Slack a high-carbon app?",
+                        "answer": "Slack is not as intensive as video streaming or gaming, but always-on work sessions, huddles, clips, and file previews give it a measurable footprint."
+                    }
+                ],
+                "idleforest_pitch": "Offset the background cost of modern teamwork.",
+                "human_equivalent_comparison": "Driving 57km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "WhatsApp",
+        "category": "Social",
+        "avg_usage_hours_day": "1.0",
+        "co2_per_hour_grams": 18,
+        "slug": "whatsapp",
+        "seo_content": {
+            "en": {
+                "intro": "WhatsApp is usually lighter than video-first social apps because much of the activity is text and voice messaging, but photos, videos, backups, calls, and group activity still use devices, networks, and servers.",
+                "methodology_title": "How this WhatsApp estimate is built",
+                "methodology_summary": "IdleForest models WhatsApp as a mobile-first messaging app with a low-to-moderate hourly footprint that increases when media sharing and video calls dominate.",
+                "methodology_bullets": [
+                    "The 18gCO2e/hour estimate is lower than feed-heavy social apps because text and voice messages are relatively light.",
+                    "The yearly estimate uses 18gCO2e/hour x 1 hour/day x 365 / 1000 = 6.6kgCO2e/year.",
+                    "Tree offset math rounds 6.6kgCO2e/year divided by 20kgCO2e per tree-year up to 1 tree."
+                ],
+                "faq": [
+                    {
+                        "question": "Does WhatsApp have a carbon footprint?",
+                        "answer": "Yes. Individual messages are tiny, but device energy, network transfer, server sync, backups, media, and calls create a measurable footprint over time."
+                    }
+                ],
+                "idleforest_pitch": "Tiny messages add up. Let them fund tiny forests too.",
+                "human_equivalent_comparison": "Driving 17km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Facebook",
+        "category": "Social",
+        "avg_usage_hours_day": "1.0",
+        "co2_per_hour_grams": 65,
+        "slug": "facebook",
+        "seo_content": {
+            "en": {
+                "intro": "Facebook combines feed browsing, images, autoplay video, groups, ads, marketplace browsing, and messaging, so its footprint is higher than text-only social use but lower than continuous HD streaming.",
+                "methodology_title": "How this Facebook estimate is built",
+                "methodology_summary": "The estimate treats Facebook as a media-rich social feed where autoplay, image loading, ads, and long mobile sessions are the main drivers.",
+                "methodology_bullets": [
+                    "The 65gCO2e/hour estimate is based on a mixed social-media hour with meaningful image and video density.",
+                    "The yearly estimate uses 65gCO2e/hour x 1 hour/day x 365 / 1000 = 23.7kgCO2e/year.",
+                    "Tree offset math rounds 23.7kgCO2e/year divided by 20kgCO2e per tree-year up to 2 trees."
+                ],
+                "faq": [
+                    {
+                        "question": "Why is Facebook higher than messaging apps?",
+                        "answer": "A typical Facebook session loads more images, video, ads, and recommendation content than a plain messaging session, increasing network and device-side energy."
+                    }
+                ],
+                "idleforest_pitch": "Make every feed session give something back.",
+                "human_equivalent_comparison": "Driving 62km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "LinkedIn",
+        "category": "Social",
+        "avg_usage_hours_day": "0.5",
+        "co2_per_hour_grams": 22,
+        "slug": "linkedin",
+        "seo_content": {
+            "en": {
+                "intro": "LinkedIn is generally lighter than video-first social platforms, but its feed, messaging, ads, article pages, and job browsing still create emissions through device use and cloud delivery.",
+                "methodology_title": "How this LinkedIn estimate is built",
+                "methodology_summary": "IdleForest models LinkedIn as a professional social feed with mostly text and image browsing, plus occasional video and document viewing.",
+                "methodology_bullets": [
+                    "The 22gCO2e/hour estimate is close to active web browsing with additional social-feed overhead.",
+                    "The yearly estimate uses 22gCO2e/hour x 0.5 hours/day x 365 / 1000 = 4.0kgCO2e/year.",
+                    "Tree offset math rounds 4.0kgCO2e/year divided by 20kgCO2e per tree-year up to 1 tree."
+                ],
+                "faq": [
+                    {
+                        "question": "Is LinkedIn lower impact than TikTok or Instagram?",
+                        "answer": "Usually yes. LinkedIn sessions tend to be more text and image based, while TikTok and Instagram contain more continuous video and recommendation-loop viewing."
+                    }
+                ],
+                "idleforest_pitch": "Networking, but with a little climate payback.",
+                "human_equivalent_comparison": "Driving 10km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Gmail",
+        "category": "Work",
+        "avg_usage_hours_day": "1.0",
+        "co2_per_hour_grams": 8,
+        "slug": "gmail",
+        "seo_content": {
+            "en": {
+                "intro": "Gmail's footprint is small per action, but inbox checking, search, attachments, spam filtering, storage, and device time add up across daily work.",
+                "methodology_title": "How this Gmail estimate is built",
+                "methodology_summary": "The estimate treats Gmail as a lightweight work app whose main footprint comes from device time, cloud storage, search, attachments, and background syncing.",
+                "methodology_bullets": [
+                    "The 8gCO2e/hour estimate is intentionally lower than meeting tools because email is mostly text and asynchronous.",
+                    "The yearly estimate uses 8gCO2e/hour x 1 hour/day x 365 / 1000 = 2.9kgCO2e/year.",
+                    "Tree offset math rounds 2.9kgCO2e/year divided by 20kgCO2e per tree-year up to 1 tree."
+                ],
+                "faq": [
+                    {
+                        "question": "Does email have a carbon footprint?",
+                        "answer": "Yes. A single email is small, but storage, attachments, spam filtering, search, syncing, and the device used to read mail all contribute over time."
+                    }
+                ],
+                "idleforest_pitch": "Clean up the inbox and offset what remains.",
+                "human_equivalent_comparison": "Driving 8km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Microsoft Outlook",
+        "category": "Work",
+        "avg_usage_hours_day": "1.0",
+        "co2_per_hour_grams": 10,
+        "slug": "microsoft-outlook",
+        "seo_content": {
+            "en": {
+                "intro": "Outlook combines email, calendar, search, attachments, notifications, and background syncing across desktop and mobile, giving it a small but steady daily footprint.",
+                "methodology_title": "How this Outlook estimate is built",
+                "methodology_summary": "IdleForest models Outlook as a lightweight but always-synced work app, slightly above simple email because calendar, attachment, and desktop-client activity are often bundled into the same session.",
+                "methodology_bullets": [
+                    "The 10gCO2e/hour estimate reflects active email and calendar use rather than idle background sync.",
+                    "The yearly estimate uses 10gCO2e/hour x 1 hour/day x 365 / 1000 = 3.7kgCO2e/year.",
+                    "Tree offset math rounds 3.7kgCO2e/year divided by 20kgCO2e per tree-year up to 1 tree."
+                ],
+                "faq": [
+                    {
+                        "question": "Why does Outlook have a footprint if email is lightweight?",
+                        "answer": "The per-message footprint is small, but device time, attachment storage, search, notifications, and sync infrastructure create a measurable yearly total."
+                    }
+                ],
+                "idleforest_pitch": "Calendar chaos, meet quiet offsetting.",
+                "human_equivalent_comparison": "Driving 9km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Amazon Prime Video",
+        "category": "Streaming",
+        "avg_usage_hours_day": "1.5",
+        "co2_per_hour_grams": 55,
+        "slug": "amazon-prime-video",
+        "seo_content": {
+            "en": {
+                "intro": "Amazon Prime Video has a similar footprint profile to other video-on-demand services: content delivery, network transfer, and the viewing device dominate the user-facing estimate.",
+                "methodology_title": "How this Prime Video estimate is built",
+                "methodology_summary": "The estimate uses the same one-hour video-on-demand benchmark applied to streaming services, with device choice and resolution treated as the biggest variables.",
+                "methodology_bullets": [
+                    "The 55gCO2e/hour estimate follows the Carbon Trust's European average for one hour of video streaming.",
+                    "The yearly estimate uses 55gCO2e/hour x 1.5 hours/day x 365 / 1000 = 30.1kgCO2e/year.",
+                    "Tree offset math rounds 30.1kgCO2e/year divided by 20kgCO2e per tree-year up to 2 trees."
+                ],
+                "faq": [
+                    {
+                        "question": "Is Prime Video similar to Netflix for carbon footprint?",
+                        "answer": "Yes. For consumer estimates, the biggest drivers are viewing time, device, resolution, and electricity mix rather than the brand of video-on-demand platform."
+                    }
+                ],
+                "idleforest_pitch": "Offset movie night without adding another subscription.",
+                "human_equivalent_comparison": "Driving 78km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Safari",
+        "category": "Browsing",
+        "avg_usage_hours_day": "3.0",
+        "co2_per_hour_grams": 20,
+        "slug": "safari",
+        "seo_content": {
+            "en": {
+                "intro": "Safari's footprint depends less on the browser brand than on open tabs, media-heavy pages, extensions, and the device running the session.",
+                "methodology_title": "How this Safari estimate is built",
+                "methodology_summary": "IdleForest models Safari as active web browsing with a slightly lower footprint than heavy desktop browsing because many Safari sessions happen on energy-efficient Apple devices.",
+                "methodology_bullets": [
+                    "The 20gCO2e/hour estimate reflects active browsing rather than a single page load.",
+                    "The yearly estimate uses 20gCO2e/hour x 3 hours/day x 365 / 1000 = 21.9kgCO2e/year.",
+                    "Tree offset math rounds 21.9kgCO2e/year divided by 20kgCO2e per tree-year up to 2 trees."
+                ],
+                "faq": [
+                    {
+                        "question": "Is Safari's footprint mostly from the browser?",
+                        "answer": "No. The loaded websites, video playback, ads, scripts, device efficiency, and local electricity mix usually matter more than the browser name alone."
+                    }
+                ],
+                "idleforest_pitch": "Browse a little lighter, plant a little more.",
+                "human_equivalent_comparison": "Driving 57km in a car"
+            }
+        }
+    },
+    {
+        "app_name": "Firefox",
+        "category": "Browsing",
+        "avg_usage_hours_day": "3.0",
+        "co2_per_hour_grams": 22,
+        "slug": "firefox",
+        "seo_content": {
+            "en": {
+                "intro": "Firefox browsing emissions come from active device energy, page complexity, media playback, extensions, and the web infrastructure behind each session.",
+                "methodology_title": "How this Firefox estimate is built",
+                "methodology_summary": "The estimate treats Firefox as a general-purpose browser where tab count, video-heavy pages, extensions, and session length are the main practical drivers.",
+                "methodology_bullets": [
+                    "The 22gCO2e/hour estimate is in the same range as other active desktop browsing models.",
+                    "The yearly estimate uses 22gCO2e/hour x 3 hours/day x 365 / 1000 = 24.1kgCO2e/year.",
+                    "Tree offset math rounds 24.1kgCO2e/year divided by 20kgCO2e per tree-year up to 2 trees."
+                ],
+                "faq": [
+                    {
+                        "question": "Does Firefox itself determine the carbon footprint?",
+                        "answer": "Only partly. Website complexity, video playback, extensions, device efficiency, and electricity mix are usually the larger drivers."
+                    }
+                ],
+                "idleforest_pitch": "Open tabs can plant trees too.",
+                "human_equivalent_comparison": "Driving 63km in a car"
             }
         }
     }

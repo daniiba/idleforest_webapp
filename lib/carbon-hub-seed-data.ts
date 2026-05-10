@@ -86,7 +86,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Start with the broad category that matches the query, then move into the specific app page or comparison page that best matches the real habit you want to estimate."
                     }
                 ],
-                featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
+                featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
             },
             de: {
                 title: "Leitfäden und Rechner zum digitalen CO2-Fußabdruck",
@@ -138,7 +138,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Beginne mit der übergeordneten Kategorie der Suchanfrage und wechsle dann zu der App- oder Vergleichsseite, die am besten zur tatsächlichen Gewohnheit passt, die du schätzen möchtest."
                     }
                 ],
-                featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
+                featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
             },
             es: {
                 title: "Guías y calculadoras de huella de carbono digital",
@@ -190,7 +190,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Empieza por la categoría general que coincida con la búsqueda y luego pasa a la página de app o comparación que mejor represente el hábito real que quieres estimar."
                     }
                 ],
-                featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
+                featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
             },
             pt: {
                 title: "Guias e calculadoras de pegada de carbono digital",
@@ -242,7 +242,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Começa pela categoria geral que corresponde à pesquisa e depois passa para a página da app ou para a comparação que melhor representa o hábito real que queres estimar."
                     }
                 ],
-                featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
+                featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
             },
             fr: {
                 title: "Guides et calculateurs d'empreinte carbone numérique",
@@ -294,7 +294,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Commencez par la grande catégorie qui correspond à la recherche, puis passez à la page application ou comparaison qui reflète le mieux l'usage réel à estimer."
                     }
                 ],
-                featuredComparisonPairs: [["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
+                featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]
             }
         }
     },
@@ -793,7 +793,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Video, device choice, time-on-platform, and meeting behavior usually move the number more than isolated lightweight actions."
                     }
                 ],
-                featuredComparisonPairs: [["zoom", "google-meet"], ["instagram", "tiktok"]]
+                featuredComparisonPairs: [["discord", "slack"], ["zoom", "google-meet"], ["instagram", "tiktok"]]
             },
             de: {
                 title: "Digitaler CO2-Fußabdruck",
@@ -837,7 +837,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Video, Gerätewahl, Zeit auf Plattformen und Meeting-Verhalten verändern die Zahl meist stärker als einzelne leichte Aktionen."
                     }
                 ],
-                featuredComparisonPairs: [["zoom", "google-meet"], ["instagram", "tiktok"]]
+                featuredComparisonPairs: [["discord", "slack"], ["zoom", "google-meet"], ["instagram", "tiktok"]]
             },
             es: {
                 title: "Huella de carbono digital",
@@ -881,7 +881,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "El vídeo, el tipo de dispositivo, el tiempo en plataforma y el comportamiento en reuniones suelen mover más la cifra que acciones ligeras aisladas."
                     }
                 ],
-                featuredComparisonPairs: [["zoom", "google-meet"], ["instagram", "tiktok"]]
+                featuredComparisonPairs: [["discord", "slack"], ["zoom", "google-meet"], ["instagram", "tiktok"]]
             },
             pt: {
                 title: "Pegada de carbono digital",
@@ -925,7 +925,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "Vídeo, escolha do dispositivo, tempo em plataforma e comportamento em reuniões costumam mexer mais no valor do que ações leves isoladas."
                     }
                 ],
-                featuredComparisonPairs: [["zoom", "google-meet"], ["instagram", "tiktok"]]
+                featuredComparisonPairs: [["discord", "slack"], ["zoom", "google-meet"], ["instagram", "tiktok"]]
             },
             fr: {
                 title: "Empreinte carbone numérique",
@@ -969,7 +969,7 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                         answer: "La vidéo, le choix de l'appareil, le temps passé sur les plateformes et le comportement en réunion influencent généralement plus le chiffre que des actions légères isolées."
                     }
                 ],
-                featuredComparisonPairs: [["zoom", "google-meet"], ["instagram", "tiktok"]]
+                featuredComparisonPairs: [["discord", "slack"], ["zoom", "google-meet"], ["instagram", "tiktok"]]
             }
         }
     }

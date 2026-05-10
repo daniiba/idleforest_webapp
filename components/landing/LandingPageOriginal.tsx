@@ -18,6 +18,7 @@ import TopTeamsBanner from "@/components/TopTeamsBanner";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
 import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
 import ProjectsSection from "@/components/landing/ProjectsSection";
+import TeamSection from "@/components/landing/TeamSection";
 
 export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const t = useTranslations("Landing");
@@ -311,6 +312,9 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                         </div>
                     </div>
                 </section>
+
+                {/* TEAM */}
+                <TeamSection />
 
                 {/* REVIEWS */}
                 <ReviewsSection />

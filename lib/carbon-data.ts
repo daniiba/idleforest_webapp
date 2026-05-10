@@ -104,6 +104,9 @@ export function getIconUrl(data: CarbonData): string {
         "twitter": "x",
         "minecraft": "fallback:gamepad",
         "microsoft-teams": "fallback:users",
+        "microsoft-outlook": "microsoftoutlook",
+        "amazon-prime-video": "primevideo",
+        "firefox": "firefoxbrowser",
         "roblox": "roblox",
         "midjourney": "fallback:image",
         "gemini": "googlegemini"
@@ -172,8 +175,8 @@ export async function getCarbonCategories(): Promise<{ category: string; items: 
     }));
 }
 
-export async function getFeaturedCarbonPages(limit: number = 6): Promise<CarbonData[]> {
-    const featuredSlugs = ["chatgpt", "instagram", "tiktok", "youtube", "netflix", "zoom"];
+export async function getFeaturedCarbonPages(limit: number = 9): Promise<CarbonData[]> {
+    const featuredSlugs = ["chatgpt", "discord", "instagram", "tiktok", "youtube", "netflix", "zoom", "slack", "whatsapp"];
     const supabase = await createClient();
     const { data, error } = await supabase
         .from('carbon_apps')

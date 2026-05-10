@@ -90,6 +90,17 @@
             "users_label": "AKTIVE NUTZER",
             "contributions_label": "GESAMTBEITRÄGE"
         },
+        "team": {
+            "eyebrow": "Team",
+            "heading": "Lerne das Team kennen",
+            "subheading": "Die Menschen, die IdleForest bauen und ungenutztes Internet in echte Aufforstung verwandeln.",
+            "founder_ceo": "Co-Gründer und CEO",
+            "cofounder_product_design": "Co-Gründer und Product Design Lead",
+            "ecology_impact_lead": "Leitung Ökologie und Naturschutz",
+            "project_management_marketing": "Social Media Manager",
+            "team_member": "Teammitglied",
+            "linkedin_label": "LinkedIn"
+        },
         "achievements": {
             "heading_line1": "Was wir erreicht haben",
             "heading_line2": "und wohin wir gehen",

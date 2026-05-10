@@ -16,6 +16,21 @@ export interface CarbonCompareSeedEntry {
 
 export const CARBON_COMPARE_SEED_DATA: CarbonCompareSeedEntry[] = [
     {
+        slug: buildSeedComparisonSlug("discord", "slack"),
+        content: {
+            en: {
+                heading: "Community chat versus work chat",
+                summary: "Discord and Slack look similar on the surface, but the usage pattern is different: Discord often mixes text, voice rooms, streams, and community media, while Slack is usually work messaging with occasional huddles and calls.",
+                whyItDiffers: [
+                    "Discord is modeled higher because long voice rooms, screen sharing, and media-rich communities can raise the active-session footprint.",
+                    "Slack is modeled as a work chat tool that stays synced across devices but usually spends more time in text, notifications, and file previews than in continuous media.",
+                    "Both estimates include device, network, and server-side overhead, and both use the same yearly formula: grams per hour x daily hours x 365 / 1000."
+                ],
+                actionAngle: "For both tools, reduce the high-intensity sessions first: unnecessary screen sharing, long idle voice rooms, and always-on video."
+            }
+        }
+    },
+    {
         slug: buildSeedComparisonSlug("netflix", "youtube"),
         content: {
             en: {

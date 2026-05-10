@@ -18,6 +18,26 @@ interface PageProps {
     };
 }
 
+const CALCULATION_PROOF_COPY = {
+    eyebrow: "Calculation proof",
+    title: "How the estimate is calculated",
+    annualFormulaLabel: "Annual footprint formula",
+    transactionFormulaLabel: "Per-transaction conversion",
+    treeFormulaLabel: "Tree offset formula",
+    evidenceLabel: "Evidence trail",
+    evidenceNote: "The hourly estimate, assumptions, methodology notes, and source URLs are stored in the Supabase carbon_apps.seo_content row for this page.",
+    roundedUp: "rounded up",
+    treeYear: "kg CO2e per tree-year",
+};
+
+function formatProofKg(value: number): string {
+    if (value >= 0.1) {
+        return String(Math.round(value * 10) / 10);
+    }
+
+    return value.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const rawData = await getCarbonData(params.slug);
     const data = rawData ? localizeCarbonData(rawData, params.locale) : undefined;
@@ -72,6 +92,15 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
         month: "long",
         day: "numeric",
     }).format(new Date(data.seo.reviewed_at)) : undefined;
+    const avgDailyHours = typeof data.avg_usage_hours_day === "number" ? data.avg_usage_hours_day : undefined;
+    const rawImpactKg = avgDailyHours
+        ? (data.co2_per_hour_grams * avgDailyHours * 365) / 1000
+        : data.co2_per_hour_grams / 1000;
+    const proofImpactKg = formatProofKg(rawImpactKg);
+    const annualFormula = avgDailyHours
+        ? `${data.co2_per_hour_grams}g CO2e/hour x ${avgDailyHours}h/day x 365 / 1000 = ${proofImpactKg}kg CO2e/year`
+        : `${data.co2_per_hour_grams}g CO2e / 1000 = ${proofImpactKg}kg CO2e per modeled use event`;
+    const treeFormula = `ceil(${proofImpactKg}kg CO2e / 20 ${CALCULATION_PROOF_COPY.treeYear}) = ${data.trees_to_offset} ${CALCULATION_PROOF_COPY.roundedUp}`;
     const clusterLinks = [
         {
             title: t("page.cluster_links.hub.title"),
@@ -280,6 +309,32 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 ) : null}
                             </div>
                         ) : null}
+
+                        <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                {CALCULATION_PROOF_COPY.eyebrow}
+                            </p>
+                            <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-5">
+                                {CALCULATION_PROOF_COPY.title}
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="rounded-lg border border-black/10 bg-brand-gray p-4">
+                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 mb-2">
+                                        {isPerTransaction ? CALCULATION_PROOF_COPY.transactionFormulaLabel : CALCULATION_PROOF_COPY.annualFormulaLabel}
+                                    </p>
+                                    <p className="font-mono text-sm text-black break-words">{annualFormula}</p>
+                                </div>
+                                <div className="rounded-lg border border-black/10 bg-brand-gray p-4">
+                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 mb-2">
+                                        {CALCULATION_PROOF_COPY.treeFormulaLabel}
+                                    </p>
+                                    <p className="font-mono text-sm text-black break-words">{treeFormula}</p>
+                                </div>
+                                <p className="text-sm leading-relaxed text-neutral-700">
+                                    <strong className="text-black">{CALCULATION_PROOF_COPY.evidenceLabel}:</strong> {CALCULATION_PROOF_COPY.evidenceNote}
+                                </p>
+                            </div>
+                        </div>
 
                         {data.seo?.key_drivers?.length || data.seo?.assumptions?.length || data.seo?.uncertainty ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
