@@ -102,12 +102,12 @@ export function getIconUrl(data: CarbonData): string {
         "google-chrome": "googlechrome",
         "google-meet": "googlemeet",
         "twitter": "x",
-        "slack": "fallback:slack",
-        "linkedin": "fallback:li",
+        "slack": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/slack.svg",
+        "linkedin": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg",
         "minecraft": "fallback:gamepad",
         "microsoft-teams": "fallback:users",
-        "microsoft-outlook": "fallback:outlook",
-        "amazon-prime-video": "fallback:prime",
+        "microsoft-outlook": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/microsoftoutlook.svg",
+        "amazon-prime-video": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/primevideo.svg",
         "firefox": "firefoxbrowser",
         "roblox": "roblox",
         "midjourney": "fallback:image",
@@ -116,7 +116,7 @@ export function getIconUrl(data: CarbonData): string {
 
     const iconSlug = overrides[data.slug] || data.slug.replace(/-/g, "");
     
-    if (iconSlug.startsWith("fallback:")) {
+    if (iconSlug.startsWith("fallback:") || iconSlug.startsWith("https://")) {
         return iconSlug;
     }
     
