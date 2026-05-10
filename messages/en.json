@@ -735,7 +735,7 @@
       "hub_faq_eyebrow": "FAQ",
       "hub_faq_title": "Common questions",
       "overview_strategy_eyebrow": "How to use this guide",
-      "overview_strategy_title_fallback": "What you'll find here",
+      "overview_strategy_title_fallback": "How app carbon footprint estimates work",
       "overview_top_emitters_eyebrow": "Highest estimated footprints",
       "overview_top_emitters_title": "Good places to start",
       "overview_comparisons_eyebrow": "Quick comparisons",
@@ -780,9 +780,9 @@
             "featured_carbon_guides": "Featured carbon guides",
             "carbon_footprint_cluster_hub": "Carbon footprint hub",
             "carbon_hub": "Carbon footprint hub",
-            "digital_carbon_footprint_hub": "Digital carbon footprint guides and calculators",
-            "hub_title": "Digital <highlight>carbon footprint</highlight> guides and calculators",
-            "hub_intro": "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use these pages to estimate emissions, understand the methodology, and find simple ways to offset your digital footprint.",
+            "digital_carbon_footprint_hub": "Digital Carbon Footprint of Apps: Calculators and Comparisons",
+            "hub_title": "Digital <highlight>carbon footprint of apps</highlight>: calculators and comparisons",
+            "hub_intro": "Compare the estimated carbon footprint of popular apps, AI tools, streaming platforms, games, browsers, and social networks. Use these calculators to estimate CO2 per hour, yearly emissions, and trees needed to offset your digital habits.",
             "hub_cards": {
                 "ai": {
                     "title": "AI carbon footprint",

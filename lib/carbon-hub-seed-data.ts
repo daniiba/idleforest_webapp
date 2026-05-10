@@ -37,39 +37,41 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
         slug: "overview",
         content: {
             en: {
-                title: "Digital carbon footprint guides and calculators",
-                seoTitle: "Digital Carbon Footprint Guides and Calculators | IdleForest",
-                seoDescription: "Compare the carbon footprint of everyday apps, AI tools, games, browsers, streaming platforms, and online work habits in one connected hub.",
+                title: "Digital Carbon Footprint of Apps: Calculators and Comparisons",
+                seoTitle: "Digital Carbon Footprint of Apps: Calculators and Comparisons | IdleForest",
+                seoDescription: "Compare the digital carbon footprint of popular apps, AI tools, streaming services, games, browsers, and social platforms with app-level CO2 calculators.",
                 queryChips: [
                     "digital carbon footprint",
-                    "app carbon footprint",
+                    "carbon footprint of apps",
+                    "app carbon footprint calculator",
                     "ai carbon footprint",
-                    "streaming carbon footprint"
+                    "streaming carbon footprint",
+                    "social media carbon footprint"
                 ],
                 eyebrow: "Carbon footprint hub",
-                intro: "Compare the carbon footprint of the apps, AI tools, games, browsers, and streaming platforms people use every day. Use this hub to understand the biggest digital habits, open focused calculators, and compare common activities.",
+                intro: "Compare the estimated carbon footprint of popular apps, AI tools, streaming platforms, games, browsers, and social networks. Use the calculators to estimate CO2 per hour, yearly emissions, and trees needed to offset your digital habits.",
                 sections: [
                     {
-                        title: "Start with the habits you use most",
-                        body: "The most useful entry points are usually the behaviors people repeat every day: streaming, AI prompts, meetings, social feeds, and long browser sessions."
+                        title: "What counts in a digital carbon footprint",
+                        body: "App emissions can come from device energy, network data transfer, server processing, cloud storage, media delivery, and how long a session lasts. That is why video, AI, gaming, messaging, and browsing pages use different assumptions."
                     },
                     {
-                        title: "Move from broad topics to specific tools",
-                        body: "Start with a broad topic like digital carbon footprint, then jump into the app page or comparison that best matches the tool or habit you actually use."
+                        title: "Use app calculators for specific estimates",
+                        body: "Each app page turns a modeled CO2-per-hour estimate into weekly use, yearly emissions, and trees needed to offset the habit. Start here, then open pages like Discord carbon footprint, ChatGPT carbon footprint, Netflix carbon footprint, or TikTok carbon footprint."
                     },
                     {
-                        title: "Use the estimates as practical guidance",
-                        body: "These pages are built to compare common digital behaviors, not to reproduce proprietary vendor accounting line by line."
+                        title: "Compare apps, categories, and tradeoffs",
+                        body: "The hub groups AI, streaming, gaming, social media, work, browsing, and crypto pages so you can compare similar tools side by side instead of treating every digital habit as the same."
                     }
                 ],
                 playbook: [
                     {
                         title: "Compare the biggest digital categories",
-                        body: "This hub brings AI, streaming, work, browsing, social, crypto, and gaming pages together so you can see where different digital habits sit."
+                        body: "This hub brings AI, streaming, work, browsing, social media, crypto, and gaming carbon footprint pages together so you can see where different digital habits sit."
                     },
                     {
                         title: "Jump to the calculator that matches your routine",
-                        body: "The best next step is usually the app page or comparison page that reflects the tool, platform, or habit you spend the most time with."
+                        body: "The best next step is usually the app carbon footprint calculator or comparison page that reflects the tool, platform, or habit you spend the most time with."
                     },
                     {
                         title: "Use comparisons to make tradeoffs clearer",
@@ -79,11 +81,11 @@ export const CARBON_HUB_SEED_DATA: CarbonHubSeedEntry[] = [
                 faq: [
                     {
                         question: "What is this carbon footprint hub for?",
-                        answer: "It connects broad digital sustainability queries with practical calculators and comparison pages so people can understand which habits matter most."
+                        answer: "It connects broad digital carbon footprint questions with app-level calculators and comparison pages for AI tools, streaming services, games, social media, browsers, and work apps."
                     },
                     {
-                        question: "How should someone use this hub?",
-                        answer: "Start with the broad category that matches the query, then move into the specific app page or comparison page that best matches the real habit you want to estimate."
+                        question: "How are app carbon footprint estimates calculated?",
+                        answer: "The pages combine modeled CO2 per hour, usage assumptions, source references, and category-specific drivers such as device energy, network transfer, server processing, and storage. They are consumer estimates, not official vendor disclosures."
                     }
                 ],
                 featuredComparisonPairs: [["discord", "slack"], ["netflix", "youtube"], ["youtube", "tiktok"], ["zoom", "google-meet"], ["bitcoin", "ethereum"]]

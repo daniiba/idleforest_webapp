@@ -24,6 +24,15 @@ export function buildCarbonHubMetadata(hub: CarbonHubDefinition, locale: string)
 export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps) {
     const t = await getTranslations("CarbonFootprint");
     const pages = (await getCarbonHubPages(hub)).map((page) => localizeCarbonData(page, locale));
+    const renderAppIcon = (page: typeof pages[number], sizeClasses = "w-7 h-7") => {
+        const iconUrl = getIconUrl(page);
+        return iconUrl.startsWith("fallback:") ? (
+            <span className="font-bold text-[10px] uppercase text-black">{page.category.slice(0, 3)}</span>
+        ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={iconUrl} alt="" className={sizeClasses} />
+        );
+    };
     const topEmitters = [...pages]
         .sort((left, right) => right.co2_per_hour_grams - left.co2_per_hour_grams)
         .slice(0, 3);
@@ -204,9 +213,19 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                     href={href}
                                     className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 >
-                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-3">
-                                        {pageA.app_name} vs {pageB.app_name}
-                                    </h3>
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="flex -space-x-2">
+                                            <div className="h-12 w-12 border-2 border-black bg-brand-gray flex items-center justify-center">
+                                                {renderAppIcon(pageA)}
+                                            </div>
+                                            <div className="h-12 w-12 border-2 border-black bg-brand-yellow flex items-center justify-center">
+                                                {renderAppIcon(pageB)}
+                                            </div>
+                                        </div>
+                                        <h3 className="font-rethink-sans text-2xl font-extrabold text-black">
+                                            {pageA.app_name} vs {pageB.app_name}
+                                        </h3>
+                                    </div>
                                     <p className="text-neutral-700 leading-relaxed mb-4">
                                         {t("page.hub_comparisons_description")}
                                     </p>

@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "carbon:study": "node scripts/carbon-study.mjs",
+    "carbon:study:summary": "node scripts/carbon-study-summary.mjs",
     "lint": "next lint"
   },
   "dependencies": {

@@ -34,18 +34,47 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CarbonFootprintHubPage({ params }: PageProps) {
     const t = await getTranslations("CarbonFootprint");
     const hub = await getCarbonHub("overview", params.locale);
-    const categories = await getCarbonCategories();
+    const categories = (await getCarbonCategories()).map(({ category, items }) => ({
+        category,
+        items: items.map((page) => localizeCarbonData(page, params.locale)),
+    }));
     const featuredPages = (await getFeaturedCarbonPages()).map((page) => localizeCarbonData(page, params.locale));
     const allPages = categories
-        .flatMap(({ items }) => items)
-        .map((page) => localizeCarbonData(page, params.locale));
+        .flatMap(({ items }) => items);
+    const renderAppIcon = (page: typeof allPages[number], sizeClasses = "w-7 h-7") => {
+        const iconUrl = getIconUrl(page);
+        return iconUrl.startsWith("fallback:") ? (
+            <span className="font-bold text-[10px] uppercase text-black">{page.category.slice(0, 3)}</span>
+        ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={iconUrl} alt="" className={sizeClasses} />
+        );
+    };
     const topEmitters = [...allPages]
         .sort((left, right) => right.co2_per_hour_grams - left.co2_per_hour_grams)
         .slice(0, 4);
-    const comparisonShortcuts = (hub?.featuredComparisonPairs || []).map(([slugA, slugB]) => ({
-        href: buildComparisonPath(slugA, slugB),
-        label: `${allPages.find((page) => page.slug === slugA)?.app_name || slugA} vs ${allPages.find((page) => page.slug === slugB)?.app_name || slugB}`,
-    }));
+    const comparisonShortcuts = (hub?.featuredComparisonPairs || [])
+        .map(([slugA, slugB]) => {
+            const pageA = allPages.find((page) => page.slug === slugA);
+            const pageB = allPages.find((page) => page.slug === slugB);
+
+            if (!pageA || !pageB) {
+                return null;
+            }
+
+            return {
+                href: buildComparisonPath(slugA, slugB),
+                label: `${pageA.app_name} vs ${pageB.app_name}`,
+                pageA,
+                pageB,
+            };
+        })
+        .filter(Boolean) as {
+            href: string;
+            label: string;
+            pageA: typeof allPages[number];
+            pageB: typeof allPages[number];
+        }[];
     const heroCards = [
         {
             href: "/carbon-footprint/ai",
@@ -149,6 +178,32 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
+                {hub?.sections?.length ? (
+                    <section className="mb-12">
+                        <div className="mb-6">
+                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">
+                                {t("page.overview_strategy_eyebrow")}
+                            </p>
+                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black">
+                                {t("page.overview_strategy_title_fallback")}
+                            </h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {hub.sections.map((section) => (
+                                <div key={section.title} className="border-2 border-black bg-white p-6">
+                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-3">
+                                        {section.title}
+                                    </h3>
+                                    <p className="text-neutral-700 leading-relaxed">
+                                        {section.body}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ) : null}
+
                 <section className="mb-12">
                     <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_top_emitters_eyebrow")}</p>
@@ -236,13 +291,28 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                                 href={comparison.href}
                                 className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                             >
-                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-2">{comparison.label}</h3>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="flex -space-x-2">
+                                        <div className="h-12 w-12 border-2 border-black bg-brand-gray flex items-center justify-center">
+                                            {renderAppIcon(comparison.pageA)}
+                                        </div>
+                                        <div className="h-12 w-12 border-2 border-black bg-brand-yellow flex items-center justify-center">
+                                            {renderAppIcon(comparison.pageB)}
+                                        </div>
+                                    </div>
+                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black">{comparison.label}</h3>
+                                </div>
                                 <p className="text-neutral-700 leading-relaxed mb-4">
                                     {t("page.overview_comparisons_description")}
                                 </p>
-                                <span className="inline-flex items-center gap-1 text-sm font-bold text-black">
-                                    {t("page.open_comparison")} <ArrowRight className="w-4 h-4" />
-                                </span>
+                                <div className="flex items-center justify-between gap-4 text-sm font-bold text-black">
+                                    <span>
+                                        {comparison.pageA.co2_per_hour_grams}{t("page.g_co2_hour")} vs {comparison.pageB.co2_per_hour_grams}{t("page.g_co2_hour")}
+                                    </span>
+                                    <span className="inline-flex items-center gap-1">
+                                        {t("page.open_comparison")} <ArrowRight className="w-4 h-4" />
+                                    </span>
+                                </div>
                             </Link>
                         ))}
                     </div>
@@ -266,9 +336,19 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                                         <Link
                                             key={item.slug}
                                             href={`/carbon-footprint/${item.slug}`}
-                                            className="border border-black/15 bg-white px-4 py-4 font-medium text-neutral-800 hover:border-black hover:text-black transition-colors flex items-center justify-between gap-4"
+                                            className="border border-black/15 bg-white px-4 py-4 text-neutral-800 hover:border-black hover:text-black transition-colors flex items-center justify-between gap-4"
                                         >
-                                            <span>{item.app_name}</span>
+                                            <span className="flex min-w-0 items-center gap-3">
+                                                <span className="h-10 w-10 shrink-0 border-2 border-black bg-brand-gray flex items-center justify-center">
+                                                    {renderAppIcon(item, "w-6 h-6")}
+                                                </span>
+                                                <span className="min-w-0">
+                                                    <span className="block truncate font-bold text-black">{item.app_name}</span>
+                                                    <span className="block text-xs font-medium text-neutral-600">
+                                                        {item.co2_per_hour_grams}{t("page.g_co2_hour")}
+                                                    </span>
+                                                </span>
+                                            </span>
                                             <ArrowRight className="w-4 h-4 shrink-0" />
                                         </Link>
                                     ))}
