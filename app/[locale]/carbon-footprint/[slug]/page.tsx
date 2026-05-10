@@ -24,8 +24,8 @@ const CALCULATION_PROOF_COPY = {
     annualFormulaLabel: "Annual footprint formula",
     transactionFormulaLabel: "Per-transaction conversion",
     treeFormulaLabel: "Tree offset formula",
-    evidenceLabel: "Evidence trail",
-    evidenceNote: "The hourly estimate, assumptions, methodology notes, and source URLs are stored in the Supabase carbon_apps.seo_content row for this page.",
+    evidenceLabel: "Source basis",
+    evidenceNote: "This estimate combines the app's modeled hourly footprint, usage assumption, methodology notes, and linked research sources. It is directional and should be read as a transparent consumer estimate, not a vendor emissions disclosure.",
     roundedUp: "rounded up",
     treeYear: "kg CO2e per tree-year",
 };

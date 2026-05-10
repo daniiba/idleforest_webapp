@@ -52,6 +52,7 @@ const IEA_AI_URL = "https://www.iea.org/reports/energy-and-ai";
 const IEA_DIGITAL_URL = "https://www.iea.org/reports/data-centres-and-data-transmission-networks";
 const DIGITAL_CONTENT_LCA_URL = "https://www.nature.com/articles/s41467-024-47621-w";
 const LLM_ENVIRONMENT_URL = "https://www.nature.com/articles/s41598-024-76682-6";
+const INTERNET_USE_FOOTPRINT_URL = "https://doi.org/10.1016/j.resconrec.2020.105389";
 const CARBON_TRUST_STREAMING_URL = "https://www.carbontrust.com/sites/default/files/documents/resource/public/Carbon-impact-of-video-streaming.pdf";
 const CALIFORNIA_GAMING_URL = "https://www.energy.ca.gov/sites/default/files/2021-06/CEC-500-2019-042.pdf";
 const CAMBRIDGE_BITCOIN_URL = "https://ccaf.io/cbeci/ghg/methodology2.Hashrate";
@@ -93,6 +94,13 @@ const SOURCE_NOTES = {
         de: "Peer-reviewte Lebenszyklusanalyse zu Webnutzung, Social Media, Video, Musikstreaming und Videokonferenzen.",
         pt: "Avaliação de ciclo de vida com revisão por pares sobre navegação web, redes sociais, vídeo, streaming de música e videoconferência.",
         fr: "Analyse du cycle de vie évaluée par les pairs couvrant le web, les réseaux sociaux, la vidéo, le streaming musical et la visioconférence.",
+    },
+    internetUseFootprint: {
+        en: "Peer-reviewed study used as a benchmark for internet data-transfer emissions and the rough footprint range behind mixed chat, voice, and media sessions.",
+        es: "Estudio revisado por pares usado como referencia para las emisiones por transferencia de datos de internet y el rango aproximado detrás de sesiones mixtas de chat, voz y medios.",
+        de: "Peer-reviewte Studie als Referenz für Emissionen aus Internet-Datentransfer und den groben Bereich hinter gemischten Chat-, Sprach- und Medien-Sessions.",
+        pt: "Estudo com revisão por pares usado como referência para emissões de transferência de dados na internet e para o intervalo aproximado por trás de sessões mistas de chat, voz e media.",
+        fr: "Étude évaluée par les pairs utilisée comme repère pour les émissions liées au transfert de données Internet et la plage approximative des sessions mixtes chat, voix et médias.",
     },
     llmEnvironmental: {
         en: "Peer-reviewed analysis of LLM energy and carbon impacts for real text-generation workloads.",
@@ -212,6 +220,27 @@ function sourceReferences(locale: CarbonLocale, kind: "ai" | "streaming" | "gami
     return [
         { title: "Cambridge Bitcoin electricity methodology", url: CAMBRIDGE_BITCOIN_POWER_URL, note: SOURCE_NOTES.bitcoin[locale] },
         { title: "Cambridge Ethereum methodology", url: CAMBRIDGE_ETHEREUM_URL, note: SOURCE_NOTES.ethereumMethodology[locale] },
+        treeOffsetReference(locale),
+    ];
+}
+
+function discordSourceReferences(locale: CarbonLocale): CarbonSourceReference[] {
+    return [
+        {
+            title: "Nature Communications: The environmental sustainability of digital content consumption",
+            url: DIGITAL_CONTENT_LCA_URL,
+            note: SOURCE_NOTES.digitalContent[locale],
+        },
+        {
+            title: "Resources, Conservation and Recycling: The overlooked environmental footprint of increasing Internet use",
+            url: INTERNET_USE_FOOTPRINT_URL,
+            note: SOURCE_NOTES.internetUseFootprint[locale],
+        },
+        {
+            title: "Carbon Trust: Carbon impact of video streaming (PDF)",
+            url: CARBON_TRUST_STREAMING_URL,
+            note: SOURCE_NOTES.carbonTrust[locale],
+        },
         treeOffsetReference(locale),
     ];
 }
@@ -1007,6 +1036,23 @@ const APP_OVERRIDES: Record<string, Partial<Record<CarbonLocale, Partial<Omit<Ca
         fr: {
             source_references: sourceReferences("fr", "bitcoinOverride"),
             searchTopics: ["empreinte carbone par transaction bitcoin", "co2 du bitcoin par transaction", "estimation des émissions du bitcoin"],
+        },
+    },
+    discord: {
+        en: {
+            source_references: discordSourceReferences("en"),
+        },
+        es: {
+            source_references: discordSourceReferences("es"),
+        },
+        de: {
+            source_references: discordSourceReferences("de"),
+        },
+        pt: {
+            source_references: discordSourceReferences("pt"),
+        },
+        fr: {
+            source_references: discordSourceReferences("fr"),
         },
     },
     ethereum: {

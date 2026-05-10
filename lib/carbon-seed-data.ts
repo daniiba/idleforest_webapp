@@ -1754,22 +1754,24 @@ const BASE_CARBON_SEED_DATA: CarbonSeedEntry[] = [
         "slug": "discord",
         "seo_content": {
             "en": {
-                "intro": "Discord's carbon footprint depends on the mix of text chat, voice rooms, video calls, screen sharing, and always-open desktop sessions. Text-heavy communities are relatively light, while long voice or screen-share sessions move closer to online work and streaming behavior.",
+                "intro": "Discord has not published an official per-hour carbon footprint, so this page models Discord from published digital-content research. The estimate depends on the mix of text chat, voice rooms, video calls, screen sharing, and always-open desktop sessions.",
                 "methodology_title": "How this Discord estimate is built",
-                "methodology_summary": "IdleForest models Discord as a mixed social and communication app: lighter than video-first platforms, but heavier than plain web browsing when voice, media previews, and screen sharing are active.",
+                "methodology_summary": "IdleForest models Discord as a mixed social and communication app. The 35gCO2e/hour figure is a directional blend: above lightweight text/social browsing, below full video streaming, and anchored to peer-reviewed digital-content LCA plus published internet-use and streaming benchmarks.",
                 "methodology_bullets": [
-                    "The 35gCO2e/hour estimate sits between low-intensity social browsing and video-conferencing benchmarks.",
+                    "Nature Communications models social media and video conferencing as separate digital-content categories with data centers, transmission networks, home networking equipment, and end-user devices in scope.",
+                    "Obringer et al. provide a peer-reviewed internet-use footprint benchmark for data processing and transmission, while Carbon Trust estimates one hour of video-on-demand streaming at about 55gCO2e in Europe.",
+                    "Discord is set at 35gCO2e/hour because a typical mixed session is lighter than full video streaming but heavier than text-only chat when voice, media previews, and screen sharing are active.",
                     "The yearly estimate uses 35gCO2e/hour x 1.5 hours/day x 365 / 1000 = 19.2kgCO2e/year.",
                     "The tree estimate rounds up annual emissions divided by 20kgCO2e per tree-year, so Discord rounds to 1 tree/year in this model."
                 ],
                 "faq": [
                     {
                         "question": "What is Discord's carbon footprint per hour?",
-                        "answer": "IdleForest estimates a mixed hour of Discord use at about 35gCO2e. Text chat is lower, while video, screen sharing, and long voice sessions can push the total upward."
+                        "answer": "IdleForest estimates a mixed hour of Discord use at about 35gCO2e. This is not a Discord vendor disclosure; it is derived from digital-content LCA, internet-use, and streaming benchmarks."
                     },
                     {
                         "question": "Why is Discord lower than video streaming?",
-                        "answer": "Many Discord sessions are text or voice first, so the model is lower than full video streaming. It still includes device, network, and server-side energy rather than treating chat as zero-impact."
+                        "answer": "Many Discord sessions are text or voice first, so the model is lower than the Carbon Trust's 55gCO2e/hour video-streaming benchmark. It still includes device, network, and server-side energy rather than treating chat as zero-impact."
                     }
                 ],
                 "idleforest_pitch": "Your server can make the chat footprint visible and turn community time into trees.",
