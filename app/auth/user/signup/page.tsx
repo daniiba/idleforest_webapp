@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
+import { trackOnboardingEvent } from '@/lib/onboarding-events';
 
 interface InviteInfo {
   teamName: string;
@@ -112,6 +113,12 @@ function SignupForm() {
         email,
         externalId: data.user.id,
         customData: { lead_type: 'User Signup Complete' },
+      });
+      trackOnboardingEvent('signup_created', {
+        source: inviteCode ? 'invite_signup' : 'direct_signup',
+        metadata: {
+          hasInvite: Boolean(inviteCode)
+        }
       });
 
       // If there's an invite code, join the team/company

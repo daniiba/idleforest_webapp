@@ -11,13 +11,13 @@ import {
     TreePine,
     Download,
     Monitor,
-    Chrome,
     CheckCircle2,
     ArrowRight,
     Sparkles,
     Info,
     RefreshCw
 } from 'lucide-react'
+import { trackOnboardingEvent } from '@/lib/onboarding-events'
 
 interface CompanyData {
     id: string
@@ -47,6 +47,7 @@ export default function CompanyWelcomePage() {
     const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'other'>('other')
     const [rewardMessage, setRewardMessage] = useState<string | null>(null)
     const [isClaimingReward, setIsClaimingReward] = useState(false)
+    const [hasClickedDownload, setHasClickedDownload] = useState(false)
     const params = useParams()
     const router = useRouter()
 
@@ -84,6 +85,10 @@ export default function CompanyWelcomePage() {
     useEffect(() => {
         if (!nodeStatus?.hasDesktopNode || rewardMessage || isClaimingReward) return
 
+        trackOnboardingEvent('desktop_node_connected', {
+            source: 'company_welcome',
+            metadata: { companySlug: params.slug, platforms: nodeStatus.platforms }
+        })
         claimDesktopReward()
     }, [nodeStatus?.hasDesktopNode, rewardMessage, isClaimingReward])
 
@@ -151,6 +156,12 @@ export default function CompanyWelcomePage() {
             const data = await response.json()
 
             if (response.ok) {
+                if (!data.alreadyAwarded) {
+                    trackOnboardingEvent('desktop_reward_awarded', {
+                        source: 'company_welcome',
+                        metadata: { companySlug: params.slug, trees: data.trees || 3 }
+                    })
+                }
                 setRewardMessage(data.alreadyAwarded
                     ? 'Desktop bonus already claimed.'
                     : `${data.trees || 3} desktop bonus trees awarded!`
@@ -276,62 +287,70 @@ export default function CompanyWelcomePage() {
                     </div>
                 </div>
 
+                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <h3 className="text-xl font-bold font-candu uppercase mb-4">Desktop Bonus Checklist</h3>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                        <div className="border-2 border-black bg-green-50 p-4">
+                            <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" />
+                            <p className="font-bold">Joined company</p>
+                            <p className="text-xs text-neutral-600">You&apos;re in {company.name}.</p>
+                        </div>
+                        <div className={`border-2 border-black p-4 ${hasClickedDownload ? 'bg-green-50' : 'bg-white'}`}>
+                            {hasClickedDownload ? <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" /> : <Download className="mb-2 h-6 w-6 text-brand-navy" />}
+                            <p className="font-bold">Download desktop</p>
+                            <p className="text-xs text-neutral-600">Install the app on this computer.</p>
+                        </div>
+                        <div className="border-2 border-black bg-white p-4">
+                            <Monitor className="mb-2 h-6 w-6 text-brand-navy" />
+                            <p className="font-bold">Log in and sync</p>
+                            <p className="text-xs text-neutral-600">We&apos;ll award 3 trees automatically.</p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Install Options */}
                 <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
                     <h3 className="text-xl font-bold font-candu uppercase mb-4 flex items-center gap-2">
                         <Download className="w-5 h-5" /> Get IdleForest
                     </h3>
                     <p className="text-neutral-600 mb-6">
-                        Choose how you want to plant trees. The desktop app earns more points, but the extension is lightweight and easy to install.
+                        Install the desktop app first. It earns more impact for {company.name} and unlocks your 3 bonus trees after sync.
                     </p>
 
                     <div className="space-y-4">
-                        {/* Desktop App - Primary for Windows/Mac */}
-                        {(detectedPlatform === 'windows' || detectedPlatform === 'mac') && (
-                            <Link
-                                href={detectedPlatform === 'windows'
-                                    ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
-                                    : 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
-                                }
-                                target="_blank"
-                                className="flex items-center gap-4 p-4 bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
-                            >
-                                <div className="bg-brand-yellow text-black p-3 border-2 border-black">
-                                    <Monitor className="w-6 h-6" />
-                                </div>
-                                <div className="flex-1">
-                                    <p className="font-bold text-lg">Desktop App</p>
-                                    <p className="text-sm text-gray-300">
-                                        {detectedPlatform === 'windows' ? 'For Windows' : 'For Mac'} • Earns more points
-                                    </p>
-                                </div>
-                                <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">
-                                    RECOMMENDED
-                                </span>
-                            </Link>
-                        )}
-
-                        {/* Browser Extension */}
                         <Link
-                            href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                            href={detectedPlatform === 'mac'
+                                ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
+                                : detectedPlatform === 'windows'
+                                    ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
+                                    : '/downloads#desktop-apps'
+                            }
                             target="_blank"
-                            className="flex items-center gap-4 p-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            onClick={() => {
+                                setHasClickedDownload(true)
+                                trackOnboardingEvent('desktop_download_clicked', {
+                                    source: 'company_welcome',
+                                    metadata: { companySlug: params.slug, platform: detectedPlatform }
+                                })
+                            }}
+                            className="flex items-center gap-4 p-4 bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
                         >
-                            <div className="bg-neutral-100 p-3 border-2 border-black">
-                                <Chrome className="w-6 h-6 text-neutral-700" />
+                            <div className="bg-brand-yellow text-black p-3 border-2 border-black">
+                                <Monitor className="w-6 h-6" />
                             </div>
                             <div className="flex-1">
-                                <p className="font-bold text-lg">Browser Extension</p>
-                                <p className="text-sm text-neutral-600">
-                                    Chrome & Edge • Lightweight
+                                <p className="font-bold text-lg">Desktop App</p>
+                                <p className="text-sm text-gray-300">
+                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : 'Windows or Mac'} • Unlocks 3 bonus trees
                                 </p>
                             </div>
-                            {detectedPlatform === 'other' && (
-                                <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">
-                                    RECOMMENDED
-                                </span>
-                            )}
+                            <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">
+                                RECOMMENDED
+                            </span>
                         </Link>
+                        <p className="text-center text-xs text-neutral-500">
+                            Need the browser extension too? Add it later from the downloads page after desktop is connected.
+                        </p>
                     </div>
                 </div>
 

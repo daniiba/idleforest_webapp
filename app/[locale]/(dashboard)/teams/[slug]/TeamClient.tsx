@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card } from "@/components/ui/card"
-import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Chrome, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
+import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"
 import { TeamMembers } from "@/components/TeamMembers"
+import { trackOnboardingEvent } from "@/lib/onboarding-events"
 
 
 
@@ -52,11 +53,13 @@ interface Invite {
 function InstallBanner({
 	teamName,
 	onCheckConnection,
-	isChecking
+	isChecking,
+	teamSlug
 }: {
 	teamName: string,
 	onCheckConnection: () => void,
-	isChecking: boolean
+	isChecking: boolean,
+	teamSlug: string
 }) {
 	const [platform, setPlatform] = useState<'windows' | 'mac' | 'other'>('other')
 	const [hasClickedInstall, setHasClickedInstall] = useState(false)
@@ -77,7 +80,7 @@ function InstallBanner({
 	// Direct download URLs
 	const windowsUrl = 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
 	const macUrl = 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
-	const extensionUrl = 'https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk'
+	const downloadUrl = platform === 'mac' ? macUrl : platform === 'windows' ? windowsUrl : '/downloads#desktop-apps'
 
 	return (
 		<div className="mb-8">
@@ -87,51 +90,25 @@ function InstallBanner({
 						<Download className="w-6 h-6 text-brand-yellow" />
 					</div>
 					<div className="flex-1">
-						<h3 className="font-bold text-lg text-black">Start Earning Points for Your Team!</h3>
-						<p className="text-neutral-700 text-sm">Install IdleForest to contribute to {teamName}'s tree planting efforts.</p>
+						<h3 className="font-bold text-lg text-black">Unlock 3 Desktop Bonus Trees for Your Team</h3>
+						<p className="text-neutral-700 text-sm">Install the desktop app to keep contributing to {teamName} even when your browser is closed.</p>
 					</div>
 					<div className="flex gap-2 flex-wrap">
-						{platform === 'windows' && (
-							<Link
-								href={windowsUrl}
-								target="_blank"
-								onClick={handleInstallClick}
-								className="flex items-center gap-2 px-5 py-3 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-							>
-								<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" /></svg> Download for Windows
-							</Link>
-						)}
-						{platform === 'mac' && (
-							<Link
-								href={macUrl}
-								target="_blank"
-								onClick={handleInstallClick}
-								className="flex items-center gap-2 px-5 py-3 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-							>
-								<Apple className="w-4 h-4" /> Download for Mac
-							</Link>
-						)}
-						{platform === 'other' && (
-							<Link
-								href={extensionUrl}
-								target="_blank"
-								onClick={handleInstallClick}
-								className="flex items-center gap-2 px-5 py-3 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-							>
-								<Chrome className="w-4 h-4" /> Get Browser Extension
-							</Link>
-						)}
-						{/* Secondary option */}
-						{platform !== 'other' && (
-							<Link
-								href={extensionUrl}
-								target="_blank"
-								onClick={handleInstallClick}
-								className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-							>
-								<Chrome className="w-4 h-4" /> Extension
-							</Link>
-						)}
+						<Link
+							href={downloadUrl}
+							target="_blank"
+							onClick={() => {
+								handleInstallClick()
+								trackOnboardingEvent('desktop_download_clicked', {
+									source: 'team_page_banner',
+									metadata: { teamSlug, platform }
+								})
+							}}
+							className="flex items-center gap-2 px-5 py-3 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+						>
+							{platform === 'mac' ? <Apple className="w-4 h-4" /> : <Download className="w-4 h-4" />}
+							{platform === 'windows' ? 'Download for Windows' : platform === 'mac' ? 'Download for Mac' : 'Download Desktop App'}
+						</Link>
 					</div>
 				</div>
 
@@ -148,8 +125,8 @@ function InstallBanner({
 									Important: Log in after installing
 								</p>
 								<p className="text-sm text-neutral-800 mt-1">
-									After installing, open the app or extension and <strong>log in with your account</strong>.
-									We'll automatically detect when you're connected.
+									After installing, open the desktop app and <strong>log in with your account</strong>.
+									We'll automatically detect when desktop is connected.
 								</p>
 							</div>
 						</div>
@@ -196,7 +173,7 @@ export default function TeamClient() {
 	const [existingTeam, setExistingTeam] = useState<{ id: string; name: string } | null>(null)
 	const [isCurrentTeamOwner, setIsCurrentTeamOwner] = useState(false)
 	const [joinError, setJoinError] = useState<string | null>(null)
-	const [hasNode, setHasNode] = useState<boolean | null>(null)
+	const [hasDesktopNode, setHasDesktopNode] = useState<boolean | null>(null)
 	const [isCheckingConnection, setIsCheckingConnection] = useState(false)
 	// Edit team state
 	const [showEditModal, setShowEditModal] = useState(false)
@@ -224,19 +201,22 @@ export default function TeamClient() {
 		}
 	}, [team?.id])
 
-	// Poll for node status every 5 seconds when user logs in and doesn't have a node yet
+	// Poll for node status every 5 seconds when user logs in and doesn't have desktop connected yet
 	useEffect(() => {
-		// Only poll if we've checked status (hasNode !== null) and user doesn't have a node (hasNode === false)
-		// and user is logged in (currentUser !== null)
-		if (hasNode !== false || !currentUser) return
+		// Only poll if we've checked status and user doesn't have desktop connected.
+		if (hasDesktopNode !== false || !currentUser) return
 
 		const pollInterval = setInterval(async () => {
 			try {
 				const response = await fetch('/api/user/node-status')
 				if (response.ok) {
 					const data = await response.json()
-					if (data.hasNode) {
-						setHasNode(true)
+					if (data.hasDesktopNode) {
+						setHasDesktopNode(true)
+						trackOnboardingEvent('desktop_node_connected', {
+							source: 'team_page_banner',
+							metadata: { teamSlug: params.slug, platforms: data.platforms }
+						})
 						// Optional: refresh team data to update member platform icons if needed
 						fetchTeamData()
 					}
@@ -247,14 +227,14 @@ export default function TeamClient() {
 		}, 5000)
 
 		return () => clearInterval(pollInterval)
-	}, [hasNode, currentUser])
+	}, [hasDesktopNode, currentUser, params.slug])
 
 	const fetchNodeStatus = async () => {
 		try {
 			const response = await fetch('/api/user/node-status')
 			if (response.ok) {
 				const data = await response.json()
-				setHasNode(data.hasNode)
+				setHasDesktopNode(data.hasDesktopNode)
 			}
 		} catch (error) {
 			console.error('Error fetching node status:', error)
@@ -267,8 +247,12 @@ export default function TeamClient() {
 			const response = await fetch('/api/user/node-status')
 			if (response.ok) {
 				const data = await response.json()
-				setHasNode(data.hasNode)
-				if (data.hasNode) {
+				setHasDesktopNode(data.hasDesktopNode)
+				if (data.hasDesktopNode) {
+					trackOnboardingEvent('desktop_node_connected', {
+						source: 'team_page_banner',
+						metadata: { teamSlug: params.slug, platforms: data.platforms }
+					})
 					fetchTeamData()
 				}
 			}
@@ -403,6 +387,10 @@ export default function TeamClient() {
 		}
 	}
 
+	const buildDesktopInviteMessage = (inviteCode: string) => {
+		return `Join ${team?.name || 'my IdleForest team'} and install the desktop app to plant trees with us. Desktop users can unlock bonus trees after syncing: https://idleforest.com/invite/${inviteCode}`
+	}
+
 	const handleCreateInvite = async () => {
 		setCreatingInvite(true)
 		try {
@@ -418,8 +406,8 @@ export default function TeamClient() {
 
 			const data = await response.json()
 			if (data.inviteUrl) {
-				// Copy to clipboard immediately
-				await navigator.clipboard.writeText(data.inviteUrl)
+				// Copy a desktop-first invite message immediately
+				await navigator.clipboard.writeText(buildDesktopInviteMessage(data.invite.invite_code))
 				setCopiedCode(data.invite.invite_code)
 				setTimeout(() => setCopiedCode(null), 2000)
 				// Refresh invites list
@@ -433,8 +421,7 @@ export default function TeamClient() {
 	}
 
 	const handleCopyInvite = async (inviteCode: string) => {
-		const inviteUrl = `https://idleforest.com/invite/${inviteCode}`
-		await navigator.clipboard.writeText(inviteUrl)
+		await navigator.clipboard.writeText(buildDesktopInviteMessage(inviteCode))
 		setCopiedCode(inviteCode)
 		setTimeout(() => setCopiedCode(null), 2000)
 	}
@@ -680,13 +667,14 @@ export default function TeamClient() {
 					</div>
 				)}
 
-				{/* Install Banner - for members without nodes */}
-				{isMember && hasNode === false && (
+				{/* Install Banner - for members without desktop */}
+				{isMember && hasDesktopNode === false && (
 					<div className="mb-8">
 						<InstallBanner
 							teamName={team?.name || 'your team'}
 							onCheckConnection={refetchNodeStatus}
 							isChecking={isCheckingConnection}
+							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
 						/>
 					</div>
 				)}
@@ -792,10 +780,10 @@ export default function TeamClient() {
 									</div>
 
 									{/* Contribution Status Badge */}
-									{isMember && hasNode && (
+									{isMember && hasDesktopNode && (
 										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform -rotate-1">
 											<div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-											Contributing
+											Desktop Connected
 										</div>
 									)}
 
@@ -867,7 +855,7 @@ export default function TeamClient() {
 									</div>
 									<div>
 										<h3 className="font-bold text-lg">Your Invite Link</h3>
-										<p className="text-sm text-gray-600">Share your personal link to invite people to the team</p>
+										<p className="text-sm text-gray-600">Share a desktop-first invite so new members connect the app and earn bonus trees</p>
 									</div>
 								</div>
 								{invites.length === 0 && (
@@ -879,8 +867,8 @@ export default function TeamClient() {
 										{creatingInvite ? (
 											<><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
 										) : (
-											<><UserPlus className="w-4 h-4" /> Create Invite Link</>
-										)}
+													<><UserPlus className="w-4 h-4" /> Create Desktop Invite</>
+												)}
 									</button>
 								)}
 							</div>
@@ -894,6 +882,9 @@ export default function TeamClient() {
 													<code className="text-sm bg-white px-2 py-1 border border-gray-300 font-mono">
 														https://idleforest.com/invite/{invite.invite_code}
 													</code>
+													<span className="text-xs font-bold uppercase text-brand-navy">
+														Copies desktop install message
+													</span>
 												</div>
 												<div className="flex items-center gap-4 text-xs text-gray-500">
 													<span>Created {new Date(invite.created_at).toLocaleDateString()}</span>

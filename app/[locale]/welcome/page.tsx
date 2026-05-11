@@ -14,6 +14,7 @@ import {
     Sparkles,
     TreePine
 } from 'lucide-react'
+import { trackOnboardingEvent } from '@/lib/onboarding-events'
 
 interface NodeStatus {
     hasNode: boolean
@@ -34,6 +35,7 @@ export default function WelcomePage() {
     const [rewardState, setRewardState] = useState<RewardState>('idle')
     const [rewardError, setRewardError] = useState<string | null>(null)
     const [treesAwarded, setTreesAwarded] = useState(3)
+    const [hasClickedDownload, setHasClickedDownload] = useState(false)
 
     useEffect(() => {
         const platformString = navigator.platform.toLowerCase()
@@ -59,6 +61,10 @@ export default function WelcomePage() {
     useEffect(() => {
         if (!nodeStatus?.hasDesktopNode || rewardState !== 'idle') return
 
+        trackOnboardingEvent('desktop_node_connected', {
+            source: 'generic_welcome',
+            metadata: { platforms: nodeStatus.platforms }
+        })
         claimDesktopReward()
     }, [nodeStatus?.hasDesktopNode, rewardState])
 
@@ -115,6 +121,10 @@ export default function WelcomePage() {
             if (data.alreadyAwarded) {
                 setRewardState('already-awarded')
             } else if (data.awarded) {
+                trackOnboardingEvent('desktop_reward_awarded', {
+                    source: 'generic_welcome',
+                    metadata: { trees: data.trees || 3 }
+                })
                 setRewardState('awarded')
             } else {
                 setRewardState('claiming')
@@ -203,6 +213,29 @@ export default function WelcomePage() {
                 ) : (
                     <>
                         <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <h2 className="mb-4 font-candu text-2xl font-extrabold uppercase">
+                                Desktop Bonus Checklist
+                            </h2>
+                            <div className="grid gap-3 sm:grid-cols-3">
+                                <div className="border-2 border-black bg-green-50 p-4">
+                                    <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" />
+                                    <p className="font-bold">Account created</p>
+                                    <p className="text-xs text-neutral-600">You&apos;re signed in.</p>
+                                </div>
+                                <div className={`border-2 border-black p-4 ${hasClickedDownload ? 'bg-green-50' : 'bg-white'}`}>
+                                    {hasClickedDownload ? <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" /> : <Download className="mb-2 h-6 w-6 text-brand-navy" />}
+                                    <p className="font-bold">Download desktop</p>
+                                    <p className="text-xs text-neutral-600">Get the app for this computer.</p>
+                                </div>
+                                <div className="border-2 border-black bg-white p-4">
+                                    <Monitor className="mb-2 h-6 w-6 text-brand-navy" />
+                                    <p className="font-bold">Log in and sync</p>
+                                    <p className="text-xs text-neutral-600">We&apos;ll award 3 trees automatically.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                             <h2 className="mb-4 flex items-center gap-2 font-candu text-2xl font-extrabold uppercase">
                                 <Download className="h-6 w-6" />
                                 Get the Desktop App
@@ -215,6 +248,13 @@ export default function WelcomePage() {
                                 href={downloadUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => {
+                                    setHasClickedDownload(true)
+                                    trackOnboardingEvent('desktop_download_clicked', {
+                                        source: 'generic_welcome',
+                                        metadata: { platform: detectedPlatform }
+                                    })
+                                }}
                                 className="flex items-center gap-4 border-2 border-black bg-brand-navy p-4 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                             >
                                 <div className="border-2 border-black bg-brand-yellow p-3 text-black">

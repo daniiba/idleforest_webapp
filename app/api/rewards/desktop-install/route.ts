@@ -171,6 +171,16 @@ export async function POST() {
                 })
                 .eq('id', claimedReward.id)
 
+            await admin.from('onboarding_events').insert({
+                user_id: user.id,
+                event_name: 'desktop_reward_awarded',
+                source: 'desktop_install_reward_api',
+                metadata: {
+                    trees: DESKTOP_INSTALL_BONUS_TREES,
+                    nodeId: String(desktopNode.id)
+                }
+            })
+
             return NextResponse.json({
                 eligible: true,
                 awarded: true,
