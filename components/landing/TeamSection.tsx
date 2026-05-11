@@ -24,14 +24,14 @@ const TEAM_MEMBERS: TeamMember[] = [
         imagePosition: "50% 24%",
         imageScale: "scale(1.08)",
     },
-    // {
-    //     name: "Tobias Stein",
-    //     initials: "TS",
-    //     linkedInUrl: "https://www.linkedin.com/in/tobias-stein-81258a18b/",
-    //     roleKey: "cofounder_product_design",
-    //     imageSrc: "/images/team-tobias.jpeg",
-    //     imagePosition: "48% 34%",
-    // },
+    {
+        name: "Tobias Stein",
+        initials: "TS",
+        linkedInUrl: "https://www.linkedin.com/in/tobias-stein-81258a18b/",
+        roleKey: "cofounder_product_design",
+        imageSrc: "/images/team-tobias.jpeg",
+        imagePosition: "48% 34%",
+    },
     {
         name: "Dilyara Kenzhebayeva",
         initials: "DK",

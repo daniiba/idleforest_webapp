@@ -145,8 +145,8 @@ function SignupForm() {
         }
       }
 
-      // Redirect to profile
-      router.push(`/profile/${displayName}`);
+      // Redirect to desktop-first onboarding so new users connect the app before landing in profile.
+      router.push('/en/welcome');
     } else if (data.user && !data.session) {
       // User created but no session - email confirmation might be required
       // or there was an issue establishing the session

@@ -29,7 +29,9 @@ interface CompanyData {
 
 interface NodeStatus {
     hasNode: boolean
+    hasDesktopNode: boolean
     nodeCount: number
+    desktopNodeCount: number
     platforms: string[]
 }
 
@@ -43,6 +45,8 @@ export default function CompanyWelcomePage() {
     const [loading, setLoading] = useState(true)
     const [isCheckingConnection, setIsCheckingConnection] = useState(false)
     const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'other'>('other')
+    const [rewardMessage, setRewardMessage] = useState<string | null>(null)
+    const [isClaimingReward, setIsClaimingReward] = useState(false)
     const params = useParams()
     const router = useRouter()
 
@@ -58,9 +62,9 @@ export default function CompanyWelcomePage() {
         fetchData()
     }, [params.slug])
 
-    // Poll for node status every 5 seconds when user doesn't have a node yet
+    // Poll for node status every 5 seconds when user doesn't have the desktop app connected yet
     useEffect(() => {
-        if (loading || nodeStatus?.hasNode) return
+        if (loading || nodeStatus?.hasDesktopNode) return
 
         const pollInterval = setInterval(async () => {
             try {
@@ -75,7 +79,13 @@ export default function CompanyWelcomePage() {
         }, 5000)
 
         return () => clearInterval(pollInterval)
-    }, [loading, nodeStatus?.hasNode])
+    }, [loading, nodeStatus?.hasDesktopNode])
+
+    useEffect(() => {
+        if (!nodeStatus?.hasDesktopNode || rewardMessage || isClaimingReward) return
+
+        claimDesktopReward()
+    }, [nodeStatus?.hasDesktopNode, rewardMessage, isClaimingReward])
 
     const fetchData = async () => {
         try {
@@ -134,6 +144,30 @@ export default function CompanyWelcomePage() {
         }
     }
 
+    const claimDesktopReward = async () => {
+        setIsClaimingReward(true)
+        try {
+            const response = await fetch('/api/rewards/desktop-install', { method: 'POST' })
+            const data = await response.json()
+
+            if (response.ok) {
+                setRewardMessage(data.alreadyAwarded
+                    ? 'Desktop bonus already claimed.'
+                    : `${data.trees || 3} desktop bonus trees awarded!`
+                )
+            } else if (response.status === 202) {
+                setRewardMessage('Desktop bonus is being processed.')
+            } else {
+                setRewardMessage(data.error || 'Desktop connected. Bonus trees will be awarded soon.')
+            }
+        } catch (error) {
+            console.error('Reward claim error:', error)
+            setRewardMessage('Desktop connected. Bonus trees will be awarded soon.')
+        } finally {
+            setIsClaimingReward(false)
+        }
+    }
+
     if (loading) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
@@ -149,8 +183,8 @@ export default function CompanyWelcomePage() {
         return null
     }
 
-    // If user already has nodes, redirect to company portal page 
-    if (nodeStatus?.hasNode) {
+    // If user already has the desktop app connected, show completion and reward state.
+    if (nodeStatus?.hasDesktopNode) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
                 <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
@@ -161,9 +195,12 @@ export default function CompanyWelcomePage() {
                         You&apos;re All Set!
                     </h1>
                     <p className="text-neutral-600 mb-6">
-                        You already have IdleForest installed. You&apos;re now part of{' '}
+                        You have the IdleForest desktop app connected. You&apos;re now part of{' '}
                         <span className="font-bold text-black">{company.name}</span> and earning points for the company!
                     </p>
+                    <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
+                        {isClaimingReward ? 'Awarding your desktop bonus trees...' : rewardMessage || 'Checking desktop bonus...'}
+                    </div>
                     <Link
                         href={`/c/${company.slug}`}
                         className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
@@ -307,9 +344,14 @@ export default function CompanyWelcomePage() {
                                 Important: Log in after installing
                             </p>
                             <p className="text-sm text-blue-700 mt-1">
-                                After installing, open the app or extension and <strong>log in with your account</strong>.
-                                We'll automatically detect when you're connected.
+                                After installing, open the desktop app and <strong>log in with your account</strong>.
+                                We'll automatically detect when your desktop app is connected.
                             </p>
+                            {nodeStatus?.hasNode && !nodeStatus.hasDesktopNode && (
+                                <p className="text-sm font-bold text-orange-700 mt-2">
+                                    We detected the browser extension. Connect the desktop app to unlock bonus trees.
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-blue-300">

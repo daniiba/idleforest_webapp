@@ -66,9 +66,14 @@ export async function GET() {
             if (hasExtension) platforms.push('extension')
         }
 
+        const hasDesktopNode = platforms.includes('windows') || platforms.includes('mac')
+        const desktopNodeCount = nodes?.filter(n => n.platform === 'win32' || n.platform === 'darwin').length || 0
+
         return NextResponse.json({
             hasNode,
+            hasDesktopNode,
             nodeCount,
+            desktopNodeCount,
             platforms
         })
 

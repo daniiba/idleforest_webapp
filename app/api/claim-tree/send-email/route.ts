@@ -43,7 +43,9 @@ export async function POST(request: Request) {
     }
 
     // 2. Send Email
-    const claimUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com'}/claim-tree/${token}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://idleforest.com';
+    const claimUrl = `${baseUrl}/claim-tree/${token}`;
+    const desktopOnboardingUrl = `${baseUrl}/welcome`;
 
     const emailHtml = `
 <!DOCTYPE html>
@@ -63,17 +65,19 @@ export async function POST(request: Request) {
     <div style="background-color: #ffffff; padding: 32px; border: 2px solid #000000;">
       <p style="margin: 0 0 20px 0; font-size: 16px;">Hi ${userName || 'Friend'},</p>
       
-      <p style="margin: 0 0 20px 0; font-size: 16px;">Thanks for joining IdleForest! Instead of just planting one tree, we want to give you a chance to grow an entire forest.</p>
+      <p style="margin: 0 0 20px 0; font-size: 16px;">Thanks for joining IdleForest! Your account is the key to unlocking desktop bonus trees.</p>
       
-      <p style="margin: 0 0 20px 0; font-size: 16px;">We've designed this process to ensure we can help the environment the most. This approach allows us to verify every tree planted and maximize our collective impact.</p>
+      <p style="margin: 0 0 20px 0; font-size: 16px;">Next, download IdleForest for Windows or Mac, open the app, and log in with this account. Once the desktop app syncs, we will automatically detect it and award your desktop bonus trees.</p>
 
-      <p style="margin: 0 0 20px 0; font-size: 16px;">Click below to choose how you want to start:</p>
+      <p style="margin: 0 0 20px 0; font-size: 16px;">Start on the onboarding page so we can wait for the desktop app to connect.</p>
       
       <div style="text-align: center; margin: 28px 0;">
-        <a href="${claimUrl}" style="display: inline-block; padding: 14px 32px; background-color: #E0F146; color: #0B101F; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid #000000;">Claim My Forest</a>
+        <a href="${desktopOnboardingUrl}" style="display: inline-block; padding: 14px 32px; background-color: #E0F146; color: #0B101F; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid #000000;">Unlock Desktop Bonus</a>
       </div>
       
-      <p style="margin: 0 0 20px 0; font-size: 16px;">You can earn up to <strong>3 trees</strong> immediately by joining a team or referring friends!</p>
+      <p style="margin: 0 0 20px 0; font-size: 16px;">After downloading, use your personal claim link to get your free starter trees: <a href="${claimUrl}" style="color: #0B101F; font-weight: 700;">Claim My Forest</a>.</p>
+
+      <p style="margin: 0 0 20px 0; font-size: 16px;">You can still earn more trees by joining a team or inviting friends, but the biggest long-term impact comes from running the desktop app.</p>
       
       <p style="margin: 0 0 0 0; font-size: 16px;">See you in the forest,</p>
       
@@ -97,7 +101,7 @@ export async function POST(request: Request) {
 
     const { success, error: emailError } = await sendEmail(
       email,
-      'Action Required: Claim your free trees 🌲',
+      'Download the desktop app to earn more trees 🌲',
       emailHtml
     );
 
