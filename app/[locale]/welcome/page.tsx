@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import {
     AlertCircle,
     ArrowRight,
@@ -26,10 +27,14 @@ interface NodeStatus {
 
 type Platform = 'windows' | 'mac' | 'other'
 type RewardState = 'idle' | 'claiming' | 'awarded' | 'already-awarded' | 'error'
+type AuthState = 'loading' | 'authenticated' | 'unauthenticated'
+
+const supabase = createClient()
 
 export default function WelcomePage() {
     const [nodeStatus, setNodeStatus] = useState<NodeStatus | null>(null)
     const [loadingStatus, setLoadingStatus] = useState(true)
+    const [authState, setAuthState] = useState<AuthState>('loading')
     const [isCheckingConnection, setIsCheckingConnection] = useState(false)
     const [detectedPlatform, setDetectedPlatform] = useState<Platform>('other')
     const [rewardState, setRewardState] = useState<RewardState>('idle')
@@ -45,28 +50,28 @@ export default function WelcomePage() {
             setDetectedPlatform('mac')
         }
 
-        fetchNodeStatus()
+        checkAuthAndNodeStatus()
     }, [])
 
     useEffect(() => {
-        if (loadingStatus || nodeStatus?.hasDesktopNode) return
+        if (loadingStatus || authState !== 'authenticated' || nodeStatus?.hasDesktopNode) return
 
         const pollInterval = setInterval(() => {
             fetchNodeStatus({ silent: true })
         }, 5000)
 
         return () => clearInterval(pollInterval)
-    }, [loadingStatus, nodeStatus?.hasDesktopNode])
+    }, [authState, loadingStatus, nodeStatus?.hasDesktopNode])
 
     useEffect(() => {
-        if (!nodeStatus?.hasDesktopNode || rewardState !== 'idle') return
+        if (authState !== 'authenticated' || !nodeStatus?.hasDesktopNode || rewardState !== 'idle') return
 
         trackOnboardingEvent('desktop_node_connected', {
             source: 'generic_welcome',
             metadata: { platforms: nodeStatus.platforms }
         })
         claimDesktopReward()
-    }, [nodeStatus?.hasDesktopNode, rewardState])
+    }, [authState, nodeStatus?.hasDesktopNode, rewardState])
 
     const downloadUrl = useMemo(() => {
         if (detectedPlatform === 'mac') {
@@ -78,6 +83,21 @@ export default function WelcomePage() {
 
     const platformLabel = detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'windows' ? 'Windows' : 'Desktop'
 
+    const checkAuthAndNodeStatus = async () => {
+        setLoadingStatus(true)
+
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+            setAuthState('unauthenticated')
+            setNodeStatus(null)
+            setLoadingStatus(false)
+            return
+        }
+
+        setAuthState('authenticated')
+        await fetchNodeStatus()
+    }
+
     const fetchNodeStatus = async ({ silent = false } = {}) => {
         if (!silent) {
             setIsCheckingConnection(true)
@@ -88,6 +108,10 @@ export default function WelcomePage() {
             if (response.ok) {
                 const status = await response.json()
                 setNodeStatus(status)
+                setAuthState('authenticated')
+            } else if (response.status === 401) {
+                setAuthState('unauthenticated')
+                setNodeStatus(null)
             }
         } catch (error) {
             console.error('Error checking node status:', error)
@@ -98,6 +122,12 @@ export default function WelcomePage() {
     }
 
     const claimDesktopReward = async () => {
+        if (authState !== 'authenticated') {
+            setRewardState('error')
+            setRewardError('Sign in before claiming your desktop bonus trees.')
+            return
+        }
+
         setRewardState('claiming')
         setRewardError(null)
 
@@ -136,6 +166,7 @@ export default function WelcomePage() {
     }
 
     const hasExtensionOnly = nodeStatus?.hasNode && !nodeStatus.hasDesktopNode
+    const isAuthenticated = authState === 'authenticated'
 
     return (
         <main className="relative min-h-screen overflow-hidden bg-brand-gray px-4 py-12 font-rethink-sans text-black">
@@ -156,11 +187,37 @@ export default function WelcomePage() {
                         Unlock Desktop Bonus Trees
                     </h1>
                     <p className="mx-auto mt-4 max-w-xl text-lg text-neutral-700">
-                        Download the IdleForest desktop app, log in with this account, and we&apos;ll automatically detect your connection.
+                        {isAuthenticated
+                            ? 'Download the IdleForest desktop app, log in with this account, and we&apos;ll automatically detect your connection.'
+                            : 'Sign in to your IdleForest account, then connect the desktop app to claim your bonus trees.'}
                     </p>
                 </section>
 
-                {nodeStatus?.hasDesktopNode ? (
+                {authState === 'loading' ? (
+                    <section className="bg-white border-2 border-black p-6 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <Loader2 className="mx-auto h-6 w-6 animate-spin" />
+                        <p className="mt-3 font-bold text-neutral-700">Checking your account...</p>
+                    </section>
+                ) : authState === 'unauthenticated' ? (
+                    <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h2 className="font-candu text-2xl font-extrabold uppercase">
+                                    Sign In First
+                                </h2>
+                                <p className="mt-2 text-neutral-700">
+                                    The desktop bonus is tied to your profile. Sign in, then return here to install the app and claim 5 trees.
+                                </p>
+                            </div>
+                            <Link
+                                href="/auth/user/login?redirect=/welcome"
+                                className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                            >
+                                Sign In <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </div>
+                    </section>
+                ) : nodeStatus?.hasDesktopNode ? (
                     <section className="bg-white border-2 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                         <div className="flex flex-col items-center text-center">
                             <div className="mb-5 flex h-16 w-16 items-center justify-center border-2 border-black bg-green-500">
@@ -217,10 +274,16 @@ export default function WelcomePage() {
                                 Desktop Bonus Checklist
                             </h2>
                             <div className="grid gap-3 sm:grid-cols-3">
-                                <div className="border-2 border-black bg-green-50 p-4">
-                                    <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" />
-                                    <p className="font-bold">Account created</p>
-                                    <p className="text-xs text-neutral-600">You&apos;re signed in.</p>
+                                <div className={`border-2 border-black p-4 ${isAuthenticated ? 'bg-green-50' : 'bg-white'}`}>
+                                    {isAuthenticated ? (
+                                        <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" />
+                                    ) : (
+                                        <AlertCircle className="mb-2 h-6 w-6 text-orange-600" />
+                                    )}
+                                    <p className="font-bold">{isAuthenticated ? 'Account ready' : 'Sign in'}</p>
+                                    <p className="text-xs text-neutral-600">
+                                        {isAuthenticated ? 'You are signed in.' : 'Use your IdleForest account.'}
+                                    </p>
                                 </div>
                                 <div className={`border-2 border-black p-4 ${hasClickedDownload ? 'bg-green-50' : 'bg-white'}`}>
                                     {hasClickedDownload ? <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" /> : <Download className="mb-2 h-6 w-6 text-brand-navy" />}

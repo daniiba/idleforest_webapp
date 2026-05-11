@@ -14,7 +14,24 @@ export default function UserLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const getSafeRedirect = () => {
+    if (typeof window === 'undefined') return null;
+
+    const redirect = new URLSearchParams(window.location.search).get('redirect');
+    if (!redirect || !redirect.startsWith('/') || redirect.startsWith('//')) {
+      return null;
+    }
+
+    return redirect;
+  };
+
   const redirectToProfile = async (userId: string) => {
+    const redirect = getSafeRedirect();
+    if (redirect) {
+      router.push(redirect);
+      return;
+    }
+
     // Fetch the user's profile to get their display_name
     const { data: profile } = await supabase
       .from('profiles')
