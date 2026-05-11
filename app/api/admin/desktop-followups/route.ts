@@ -9,19 +9,19 @@ const STAGE_CONFIG: Record<FollowupStage, { minAgeHours: number; segment: string
         minAgeHours: 0.25,
         segment: 'desktop_followup_15m',
         subject: 'Your desktop bonus trees are waiting 🌲',
-        intro: 'You created your IdleForest account. The next step is connecting the desktop app so we can award your 3 bonus trees.'
+        intro: 'You created your IdleForest account. The next step is connecting the desktop app so we can award your 5 bonus trees.'
     },
     '24h': {
         minAgeHours: 24,
         segment: 'desktop_followup_24h',
-        subject: 'Still want your 3 desktop bonus trees?',
+        subject: 'Still want your 5 desktop bonus trees?',
         intro: 'Your desktop bonus is still waiting. Install IdleForest on your computer, log in, and we will detect the desktop sync automatically.'
     },
     '3d': {
         minAgeHours: 72,
         segment: 'desktop_followup_3d',
         subject: 'Last call for your desktop bonus trees',
-        intro: 'IdleForest plants the most when the desktop app is running. Connect it now to unlock your 3 bonus trees and keep planting in the background.'
+        intro: 'IdleForest plants the most when the desktop app is running. Connect it now to unlock your 5 bonus trees and keep planting in the background.'
     }
 }
 

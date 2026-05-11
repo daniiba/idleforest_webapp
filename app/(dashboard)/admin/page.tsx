@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/chart'
 import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, type CompanyAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Email Preview Component with proper scaling
@@ -2344,7 +2344,7 @@ export default function AdminPage() {
                                         <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                             <Users className="h-5 w-5 text-brand-navy" />
                                             User Segments
-                                            {(selectedSegment === 'active' || selectedSegment === 'new_users' || selectedSegment === 'power_users' || selectedSegment === 'team_owners') && (
+                                            {(selectedSegment === 'active' || selectedSegment === 'new_users' || selectedSegment === 'power_users' || selectedSegment === 'team_owners' || selectedSegment === 'profile_no_desktop') && (
                                                 <button
                                                     onClick={() => handleSyncSegment(selectedSegment as UserSegment)}
                                                     className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border-2 border-black hover:bg-brand-yellow transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
@@ -2446,6 +2446,16 @@ export default function AdminPage() {
                                             <div className="text-2xl font-extrabold font-candu">{segmentStats?.extension_no_desktop || 0}</div>
                                         </button>
                                         <button
+                                            onClick={() => setSelectedSegment('profile_no_desktop')}
+                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'profile_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Monitor className="h-4 w-4 text-blue-500" />
+                                                <span className="text-xs font-bold uppercase text-neutral-500">Profile No Desktop</span>
+                                            </div>
+                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.profile_no_desktop || 0}</div>
+                                        </button>
+                                        <button
                                             onClick={() => setSelectedSegment('team_owners')}
                                             className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
@@ -2534,7 +2544,7 @@ export default function AdminPage() {
                                 {/* User Table */}
                                 <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <h3 className="text-base font-bold text-black mb-4">
-                                        {selectedSegment === 'all' ? 'All Users' : `${selectedSegment.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}`} ({filteredUsers.length})
+                                        {selectedSegment === 'all' ? 'All Users' : `${selectedSegment.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}`} ({filteredUsers.length})
                                     </h3>
                                     <div className="overflow-x-auto">
                                         <Table>
@@ -2580,10 +2590,11 @@ export default function AdminPage() {
                                                                             seg === 'active' ? 'bg-green-100' :
                                                                                 seg === 'inactive' ? 'bg-red-100' :
                                                                                     seg === 'unopted_desktop' ? 'bg-purple-100' :
+                                                                                        seg === 'profile_no_desktop' ? 'bg-blue-100' :
                                                                                         'bg-blue-100'
                                                                             }`}
                                                                     >
-                                                                        {seg.replace('_', ' ')}
+                                                                        {seg.replace(/_/g, ' ')}
                                                                     </span>
                                                                 ))}
                                                             </div>

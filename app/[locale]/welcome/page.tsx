@@ -34,7 +34,7 @@ export default function WelcomePage() {
     const [detectedPlatform, setDetectedPlatform] = useState<Platform>('other')
     const [rewardState, setRewardState] = useState<RewardState>('idle')
     const [rewardError, setRewardError] = useState<string | null>(null)
-    const [treesAwarded, setTreesAwarded] = useState(3)
+    const [treesAwarded, setTreesAwarded] = useState(5)
     const [hasClickedDownload, setHasClickedDownload] = useState(false)
 
     useEffect(() => {
@@ -111,7 +111,7 @@ export default function WelcomePage() {
                 throw new Error(data.error || 'Could not award desktop bonus yet.')
             }
 
-            setTreesAwarded(data.trees || 3)
+            setTreesAwarded(data.trees || 5)
 
             if (data.processing) {
                 window.setTimeout(() => setRewardState('idle'), 3000)
@@ -123,7 +123,7 @@ export default function WelcomePage() {
             } else if (data.awarded) {
                 trackOnboardingEvent('desktop_reward_awarded', {
                     source: 'generic_welcome',
-                    metadata: { trees: data.trees || 3 }
+                    metadata: { trees: data.trees || 5 }
                 })
                 setRewardState('awarded')
             } else {
@@ -230,7 +230,7 @@ export default function WelcomePage() {
                                 <div className="border-2 border-black bg-white p-4">
                                     <Monitor className="mb-2 h-6 w-6 text-brand-navy" />
                                     <p className="font-bold">Log in and sync</p>
-                                    <p className="text-xs text-neutral-600">We&apos;ll award 3 trees automatically.</p>
+                                    <p className="text-xs text-neutral-600">We&apos;ll award 5 trees automatically.</p>
                                 </div>
                             </div>
                         </section>
@@ -262,7 +262,7 @@ export default function WelcomePage() {
                                 </div>
                                 <div className="flex-1">
                                     <p className="text-lg font-bold">Download for {platformLabel}</p>
-                                    <p className="text-sm text-gray-300">Log in after installing to claim 3 bonus trees</p>
+                                    <p className="text-sm text-gray-300">Log in after installing to claim 5 bonus trees</p>
                                 </div>
                                 <span className="border border-black bg-brand-yellow px-2 py-1 text-xs font-bold text-black">
                                     RECOMMENDED

@@ -1,0 +1,102 @@
+DO $$
+DECLARE
+    template_content TEXT := $html$
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body
+    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.7; color: #0B101F; margin: 0; padding: 40px 20px; background-color: #D9D9D9;">
+
+    <div style="max-width: 580px; margin: 0 auto;">
+
+        <div style="background-color: #E0F146; padding: 20px 24px; border: 2px solid #000000; border-bottom: none;">
+            <img src="https://idleforest.com/logo.png" alt="IdleForest" style="height: 28px;">
+        </div>
+
+        <div style="background-color: #ffffff; padding: 32px; border: 2px solid #000000;">
+            <p style="margin: 0 0 20px 0; font-size: 16px;">Hey {{{FIRST_NAME}}},</p>
+
+            <p style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700;">Your 5 desktop bonus trees are waiting.</p>
+
+            <p style="margin: 0 0 20px 0; font-size: 16px;">You already have an IdleForest profile. The next step is connecting the desktop app so your computer can keep planting even when your browser is closed.</p>
+
+            <p style="margin: 0 0 20px 0; font-size: 16px;">Install IdleForest for Windows or Mac, log in with the same account, and we will automatically detect the desktop sync. Once it connects, we will award <strong>5 bonus trees</strong> to your profile.</p>
+
+            <div style="background-color: #F4F7DC; border: 2px solid #000000; padding: 18px 20px; margin: 24px 0;">
+                <p style="margin: 0; font-size: 15px; font-weight: 700;">Why desktop?</p>
+                <p style="margin: 8px 0 0 0; font-size: 15px;">The desktop app runs quietly in the background, so you can grow your impact without changing how you browse.</p>
+            </div>
+
+            <div style="text-align: center; margin: 28px 0;">
+                <a href="https://idleforest.com/welcome?utm_source=resend&amp;utm_medium=broadcast&amp;utm_campaign=desktop_5_tree_bonus"
+                    style="display: inline-block; padding: 14px 32px; background-color: #E0F146; color: #0B101F; text-decoration: none; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid #000000;">Claim
+                    5 Bonus Trees</a>
+            </div>
+
+            <p style="margin: 0 0 20px 0; font-size: 16px;">After installing, open the app and log in. Your bonus is claimed from the welcome page as soon as the desktop app syncs.</p>
+
+            <p style="margin: 0 0 0 0; font-size: 16px;">See you in the forest,</p>
+
+            <div style="margin-top: 28px; padding-top: 20px; border-top: 3px solid #E0F146;">
+                <p
+                    style="margin: 0; font-weight: 700; color: #0B101F; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Daniel Ibanez Becker</p>
+                <p style="margin: 4px 0 0 0; font-size: 13px; color: #666;">Founder & CEO, IdleForest</p>
+            </div>
+        </div>
+
+        <div
+            style="background-color: #0B101F; padding: 20px 24px; border: 2px solid #000000; border-top: none; text-align: center;">
+            <p
+                style="margin: 0 0 6px 0; font-size: 12px; color: #E0F146; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                Turn your idle internet into real trees</p>
+            <p style="margin: 0 0 16px 0;"><a href="https://idleforest.com"
+                    style="color: #E0F146; text-decoration: none; font-size: 13px;">idleforest.com</a></p>
+            <a href="{{UNSUBSCRIBE_URL}}" style="color: #888;">Unsubscribe from emails</a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+$html$;
+BEGIN
+    IF to_regclass('public.email_templates') IS NOT NULL THEN
+        IF EXISTS (
+            SELECT 1 FROM public.email_templates
+            WHERE name = 'Desktop install 5-tree bonus'
+        ) THEN
+            UPDATE public.email_templates
+            SET
+                subject = 'Get 5 trees when you install the desktop app',
+                content = template_content,
+                from_email = 'Daniel from IdleForest <daniel@idleforest.com>',
+                updated_at = NOW()
+            WHERE name = 'Desktop install 5-tree bonus';
+        ELSE
+            INSERT INTO public.email_templates (name, subject, content, from_email)
+            VALUES (
+                'Desktop install 5-tree bonus',
+                'Get 5 trees when you install the desktop app',
+                template_content,
+                'Daniel from IdleForest <daniel@idleforest.com>'
+            );
+        END IF;
+    END IF;
+
+    IF to_regclass('public.user_rewards') IS NOT NULL THEN
+        UPDATE public.user_rewards
+        SET
+            trees_awarded = 5,
+            updated_at = NOW()
+        WHERE reward_type = 'desktop_first_connect'
+            AND status IN ('pending', 'failed')
+            AND trees_awarded < 5;
+    END IF;
+END $$;

@@ -159,12 +159,12 @@ export default function CompanyWelcomePage() {
                 if (!data.alreadyAwarded) {
                     trackOnboardingEvent('desktop_reward_awarded', {
                         source: 'company_welcome',
-                        metadata: { companySlug: params.slug, trees: data.trees || 3 }
+                        metadata: { companySlug: params.slug, trees: data.trees || 5 }
                     })
                 }
                 setRewardMessage(data.alreadyAwarded
                     ? 'Desktop bonus already claimed.'
-                    : `${data.trees || 3} desktop bonus trees awarded!`
+                    : `${data.trees || 5} desktop bonus trees awarded!`
                 )
             } else if (response.status === 202) {
                 setRewardMessage('Desktop bonus is being processed.')
@@ -303,7 +303,7 @@ export default function CompanyWelcomePage() {
                         <div className="border-2 border-black bg-white p-4">
                             <Monitor className="mb-2 h-6 w-6 text-brand-navy" />
                             <p className="font-bold">Log in and sync</p>
-                            <p className="text-xs text-neutral-600">We&apos;ll award 3 trees automatically.</p>
+                            <p className="text-xs text-neutral-600">We&apos;ll award 5 trees automatically.</p>
                         </div>
                     </div>
                 </div>
@@ -314,7 +314,7 @@ export default function CompanyWelcomePage() {
                         <Download className="w-5 h-5" /> Get IdleForest
                     </h3>
                     <p className="text-neutral-600 mb-6">
-                        Install the desktop app first. It earns more impact for {company.name} and unlocks your 3 bonus trees after sync.
+                        Install the desktop app first. It earns more impact for {company.name} and unlocks your 5 bonus trees after sync.
                     </p>
 
                     <div className="space-y-4">
@@ -341,7 +341,7 @@ export default function CompanyWelcomePage() {
                             <div className="flex-1">
                                 <p className="font-bold text-lg">Desktop App</p>
                                 <p className="text-sm text-gray-300">
-                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : 'Windows or Mac'} • Unlocks 3 bonus trees
+                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : 'Windows or Mac'} • Unlocks 5 bonus trees
                                 </p>
                             </div>
                             <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">

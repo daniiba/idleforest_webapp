@@ -34,7 +34,7 @@ export default function DesktopUpgradeBanner() {
                         <Monitor className="h-5 w-5" />
                     </div>
                     <p>
-                        You&apos;re using the browser extension. Connect the desktop app to keep planting when your browser is closed and unlock 3 bonus trees.
+                        You&apos;re using the browser extension. Connect the desktop app to keep planting when your browser is closed and unlock 5 bonus trees.
                     </p>
                 </div>
                 <Link

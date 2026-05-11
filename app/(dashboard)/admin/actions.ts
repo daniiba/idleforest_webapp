@@ -361,7 +361,7 @@ import {
 export type { ResendContact }
 
 
-export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop' | 'team_owners' | 'extension_no_desktop'
+export type UserSegment = 'power_users' | 'active' | 'inactive' | 'new_users' | 'unopted_desktop' | 'team_owners' | 'extension_no_desktop' | 'profile_no_desktop'
 
 export interface PowerUser {
     id: string
@@ -383,6 +383,7 @@ export interface SegmentStats {
     unopted_desktop: number
     team_owners: number
     extension_no_desktop: number
+    profile_no_desktop: number
     total: number
 }
 
@@ -465,8 +466,9 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
         .from('nodes')
         .select('user_id, platform, opt_in')
 
-    // Create a set of users who have at least one desktop node with opt_in = false
+    // Create sets for desktop-related targeting.
     const unoptedDesktopUserIds = new Set<string>()
+    const desktopUserIds = new Set<string>()
     // Logic for extension_no_desktop: "if all nodes that belong to a user have platform Null then its a user without desktop"
     const userNodesMap = new Map<string, { hasDesktop: boolean; hasAnyNode: boolean; allPlatformsNull: boolean }>()
 
@@ -482,7 +484,10 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             // Logic for extension_no_desktop
             const stats = userNodesMap.get(node.user_id) || { hasDesktop: false, hasAnyNode: true, allPlatformsNull: true }
             const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
-            if (isDesktop) stats.hasDesktop = true
+            if (isDesktop) {
+                stats.hasDesktop = true
+                desktopUserIds.add(node.user_id)
+            }
             if (node.platform !== null) stats.allPlatformsNull = false
             userNodesMap.set(node.user_id, stats)
         })
@@ -557,6 +562,11 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             segments.push('extension_no_desktop')
         }
 
+        // Profile No Desktop: every registered profile that has not connected a Windows/Mac desktop node.
+        if (!desktopUserIds.has(profile.user_id)) {
+            segments.push('profile_no_desktop')
+        }
+
         return {
             id: profile.id,
             user_id: profile.user_id,
@@ -590,6 +600,7 @@ export async function getSegmentCounts(): Promise<SegmentStats> {
         unopted_desktop: users.filter(u => u.segments.includes('unopted_desktop')).length,
         team_owners: users.filter(u => u.segments.includes('team_owners')).length,
         extension_no_desktop: users.filter(u => u.segments.includes('extension_no_desktop')).length,
+        profile_no_desktop: users.filter(u => u.segments.includes('profile_no_desktop')).length,
         total: users.length
     }
 }

@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 const DESKTOP_INSTALL_REWARD_TYPE = 'desktop_first_connect'
-const DESKTOP_INSTALL_BONUS_TREES = 3
+const DESKTOP_INSTALL_BONUS_TREES = 5
 const ONE_CLICK_IMPACT_API_KEY = process.env.ONE_CLICK_IMPACT_API_KEY
 
 export async function POST() {
@@ -102,6 +102,7 @@ export async function POST() {
             .from('user_rewards')
             .update({
                 status: 'processing',
+                trees_awarded: DESKTOP_INSTALL_BONUS_TREES,
                 node_id: String(desktopNode.id),
                 updated_at: new Date().toISOString(),
                 error_message: null
