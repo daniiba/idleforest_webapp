@@ -352,10 +352,10 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                 {t("page.about_desc")}
                             </p>
                             <Link
-                                href="/"
+                                href="/welcome"
                                 className="block w-full border-2 border-black bg-black text-brand-yellow px-6 py-4 text-center font-bold uppercase tracking-wide hover:-translate-y-1 transition-transform"
                             >
-                                Start Planting Free
+                                Connect Desktop App
                             </Link>
                         </div>
                     </div>

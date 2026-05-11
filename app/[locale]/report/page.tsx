@@ -137,7 +137,7 @@ export default function ReportPage() {
                 {t('about_desc')}
               </p>
 
-              <SmartCTA className="w-full text-black" showLearnMore={false} forceVertical={true} buttonVariant="inverse" />
+              <SmartCTA className="w-full text-black" showLearnMore={false} forceVertical={true} buttonVariant="inverse" desktopOnly showExtensionDownload={false} />
 
               <div className="mt-6 text-sm text-neutral-800 border-t-2 border-black/10 pt-4 font-medium">
                 <p className="mb-2 flex items-center gap-2">
