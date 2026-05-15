@@ -154,13 +154,11 @@ export default async function CompanyPortalPage({
                         <div className="flex flex-col justify-center">
                             <div className="mb-8 flex items-center gap-4">
                                 {company.logo_url ? (
-                                    <Image
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
                                         src={company.logo_url}
                                         alt={company.name}
-                                        width={72}
-                                        height={72}
                                         className="h-16 w-16 rounded-lg border border-black/10 bg-white object-cover shadow-sm"
-                                        priority
                                     />
                                 ) : (
                                     <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-black/10 bg-brand-yellow">
