@@ -1,12 +1,57 @@
 import { createClient } from '@/lib/supabase/server'
+import { aggregateProjects, plantingsData } from '@/lib/plantings'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { TreePine, Download, CheckCircle, Play, Users, ShieldCheck, ZapOff, Heart } from 'lucide-react'
+import {
+    ArrowRight,
+    BadgeCheck,
+    CheckCircle,
+    ExternalLink,
+    Heart,
+    Leaf,
+    MapPin,
+    Play,
+    ShieldCheck,
+    TreePine,
+    Users,
+    ZapOff,
+} from 'lucide-react'
 import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 
 export const dynamic = 'force-dynamic'
+
+const numberFormatter = new Intl.NumberFormat('en-US')
+
+function formatNumber(value: number) {
+    return numberFormatter.format(value)
+}
+
+function getYouTubeEmbedUrl(url: string) {
+    if (url.includes('youtu.be/')) {
+        return url.replace('youtu.be/', 'youtube.com/embed/')
+    }
+
+    return url.replace('watch?v=', 'embed/')
+}
+
+function getCompanyWebsiteLink(website: string | null | undefined) {
+    if (!website) return null
+
+    try {
+        const url = new URL(website.match(/^https?:\/\//i) ? website : `https://${website}`)
+        if (url.protocol !== 'https:' && url.protocol !== 'http:') return null
+        url.hash = ''
+
+        return {
+            url: url.toString(),
+            hostname: url.hostname.replace(/^www\./, ''),
+        }
+    } catch {
+        return null
+    }
+}
 
 export default async function CompanyPortalPage({
     params,
@@ -17,7 +62,6 @@ export default async function CompanyPortalPage({
 }) {
     const supabase = await createClient()
 
-    // Fetch the company
     const { data: company, error } = await supabase
         .from('companies')
         .select('*')
@@ -28,7 +72,6 @@ export default async function CompanyPortalPage({
         return notFound()
     }
 
-    // Fetch members and points for social proof
     const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('total_points')
@@ -42,7 +85,36 @@ export default async function CompanyPortalPage({
         totalPoints = profiles.reduce((acc, p) => acc + (p.total_points || 0), 0)
     }
 
-    // Check if user is already logged in and part of this company
+    const { data: donations } = await supabase
+        .from('donations')
+        .select('trees_planted')
+        .eq('company_id', company.id)
+
+    const donatedTrees = donations?.reduce((sum, donation) => sum + (donation.trees_planted || 0), 0) ?? 0
+    const earnedTrees = Math.floor(totalPoints / 1000)
+    const companyTrees = donatedTrees > 0 ? donatedTrees : earnedTrees
+    const companyTreesLabel = donatedTrees > 0 ? 'Recorded company trees' : 'Estimated company trees'
+
+    const verifiedTrees = plantingsData.events.reduce((sum, event) => sum + event.trees, 0)
+    const plantingProjects = aggregateProjects(plantingsData)
+        .filter((project) => project.totalTrees > 0)
+        .sort((a, b) => b.totalTrees - a.totalTrees)
+
+    const featuredProjects = plantingProjects
+        .filter((project) => project.project.images && project.project.images.length > 0)
+        .concat(plantingProjects.filter((project) => !project.project.images || project.project.images.length === 0))
+        .slice(0, 3)
+
+    const plantingCountries = Array.from(
+        new Set(plantingProjects.map((project) => project.country?.name ?? project.project.countryCode))
+    )
+
+    const latestPlantingDate = plantingProjects
+        .map((project) => project.lastDate)
+        .filter(Boolean)
+        .sort()
+        .slice(-1)[0]
+
     const { data: { user } } = await supabase.auth.getUser()
     let isMember = false
     if (user) {
@@ -58,20 +130,15 @@ export default async function CompanyPortalPage({
     }
 
     const { invite } = searchParams
-
-    // Check if the current user is the owner
     const isOwner = user ? company.user_id === user.id : false
-    
-    // If invite code is provided and it matches, or if user is already a member
     const isValidInvite = !company.is_invite_only || (invite && invite === company.invite_code) || isMember
-
     const themeColor = company.theme_color || '#10B981'
+    const companyWebsite = getCompanyWebsiteLink(company.website)
 
     return (
-        <div className="min-h-screen bg-neutral-50 font-sans selection:bg-brand-yellow selection:text-black">
+        <div className="min-h-screen bg-[#F7F8F2] font-sans text-brand-navy selection:bg-brand-yellow selection:text-black">
             <Navigation hideBanner />
 
-            {/* Set tracking cookie natively if valid invite */}
             {isValidInvite && invite && (
                 <script
                     dangerouslySetInnerHTML={{
@@ -80,190 +147,312 @@ export default async function CompanyPortalPage({
                 />
             )}
 
-            <main className="pt-8 pb-16">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                    {/* Hero Section */}
-                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl overflow-hidden mb-12 relative">
-                        <div
-                            className="h-32 w-full opacity-20 absolute top-0 left-0 pointer-events-none"
-                            style={{
-                                backgroundImage: `linear-gradient(45deg, ${themeColor} 25%, transparent 25%, transparent 75%, ${themeColor} 75%, ${themeColor}), linear-gradient(45deg, ${themeColor} 25%, transparent 25%, transparent 75%, ${themeColor} 75%, ${themeColor})`,
-                                backgroundSize: '20px 20px',
-                                backgroundPosition: '0 0, 10px 10px'
-                            }}
-                        />
-
-                        <div className="p-8 md:p-12 relative z-10 text-center">
-                            
-                            <div className="mb-6 flex justify-center">
+            <main>
+                <section className="relative overflow-hidden border-b border-black/10 bg-white">
+                    <div className="absolute inset-x-0 top-0 h-2" style={{ backgroundColor: themeColor }} />
+                    <div className="mx-auto grid min-h-[calc(100vh-88px)] max-w-7xl gap-10 px-4 pb-12 pt-24 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-16 lg:pt-28">
+                        <div className="flex flex-col justify-center">
+                            <div className="mb-8 flex items-center gap-4">
                                 {company.logo_url ? (
-                                    <Image 
-                                        src={company.logo_url} 
-                                        alt={company.name} 
-                                        width={100} 
-                                        height={100} 
-                                        className="w-24 h-24 rounded-full border-4 border-black object-cover bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" 
+                                    <Image
+                                        src={company.logo_url}
+                                        alt={company.name}
+                                        width={72}
+                                        height={72}
+                                        className="h-16 w-16 rounded-lg border border-black/10 bg-white object-cover shadow-sm"
+                                        priority
                                     />
                                 ) : (
-                                    <div className="w-24 h-24 bg-brand-yellow rounded-full border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                        <TreePine className="h-12 w-12 text-brand-navy" />
+                                    <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-black/10 bg-brand-yellow">
+                                        <TreePine className="h-8 w-8 text-brand-navy" />
                                     </div>
                                 )}
+                                <div>
+                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">Company forest</p>
+                                    <p className="text-lg font-extrabold text-brand-navy">{company.name}</p>
+                                    {companyWebsite && (
+                                        <a
+                                            href={companyWebsite.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="mt-1 inline-flex items-center gap-1.5 text-sm font-bold text-emerald-700 hover:text-brand-navy"
+                                        >
+                                            {companyWebsite.hostname}
+                                            <ExternalLink className="h-3.5 w-3.5" />
+                                        </a>
+                                    )}
+                                </div>
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-candu uppercase text-black mb-6 leading-tight">
-                                Welcome to <br />
-                                <span style={{ color: themeColor }}>{company.name}&apos;s</span> Portal
+                            <h1 className="max-w-3xl font-candu text-5xl font-extrabold leading-[0.95] tracking-normal text-brand-navy sm:text-6xl lg:text-7xl">
+                                Turn everyday work into real trees.
                             </h1>
-
-                            <p className="text-lg md:text-xl font-medium text-neutral-700 max-w-2xl mx-auto leading-relaxed mb-6">
-                                {company.description || "We have partnered with IdleForest to plant real trees while you work. Join our company today!"}
+                            <p className="mt-6 max-w-2xl text-lg leading-8 text-neutral-700">
+                                {company.description || `${company.name} is using IdleForest to convert idle bandwidth into verified reforestation impact. Join the company forest and help grow the number together.`}
                             </p>
 
-                            {/* Trust Stats Badge */}
-                            {(memberCount > 0 || totalPoints > 0) && (
-                                <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-                                    <div className="bg-brand-navy/5 border-2 border-brand-navy/20 rounded-xl px-4 py-2 flex items-center gap-2">
-                                        <Users className="h-5 w-5 text-brand-navy" />
-                                        <span className="font-extrabold text-xl text-brand-navy">{memberCount}</span>
-                                        <span className="font-bold text-neutral-600 text-sm uppercase tracking-wide">Active Members</span>
-                                    </div>
-                                    <div className="bg-green-50 border-2 border-green-200 rounded-xl px-4 py-2 flex items-center gap-2">
-                                        <TreePine className="h-5 w-5 text-green-600" />
-                                        <span className="font-extrabold text-xl text-green-700">{totalPoints.toLocaleString()}</span>
-                                        <span className="font-bold text-green-800 text-sm uppercase tracking-wide">Points Generated</span>
-                                    </div>
-                                </div>
-                            )}
-
-                            {isMember ? (
-                                <div className="space-y-6 flex flex-col items-center">
+                            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                                {isMember ? (
                                     <Link
                                         href={`/${params.locale}/welcome/c/${company.slug}`}
-                                        className="inline-flex items-center gap-3 px-8 py-4 rounded-xl border-4 border-black font-extrabold uppercase tracking-widest text-lg transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
-                                        style={{
-                                            backgroundColor: themeColor,
-                                            color: '#000',
-                                            boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)'
-                                        }}
+                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
+                                        style={{ backgroundColor: themeColor }}
                                     >
-                                        Go to Company Portal
+                                        Go to portal
+                                        <ArrowRight className="h-4 w-4" />
                                     </Link>
-                                    <p className="text-sm font-bold text-neutral-500 flex items-center justify-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-green-500" />
-                                        You are already a member of {company.name}
-                                    </p>
-                                </div>
-                            ) : isValidInvite ? (
-                                <div className="space-y-6 flex flex-col items-center">
+                                ) : isValidInvite ? (
                                     <Link
                                         href={`/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`}
-                                        className="inline-flex items-center gap-3 px-8 py-4 rounded-xl border-4 border-black font-extrabold uppercase tracking-widest text-lg transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
-                                        style={{
-                                            backgroundColor: themeColor,
-                                            color: '#000',
-                                            boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)'
-                                        }}
+                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
+                                        style={{ backgroundColor: themeColor }}
                                     >
-                                        Get Started by Signing Up
+                                        Join {company.name}
+                                        <ArrowRight className="h-4 w-4" />
                                     </Link>
-                                    <p className="text-sm font-bold text-neutral-500 flex items-center justify-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-green-500" />
-                                        You will automatically join {company.name}
+                                ) : (
+                                    <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900">
+                                        This company forest is invite-only. Open it from your company invite link to join.
+                                    </div>
+                                )}
+
+                                {isMember && (
+                                    <p className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
+                                        <CheckCircle className="h-4 w-4" />
+                                        You are already a member
                                     </p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="flex items-end">
+                            <div className="w-full overflow-hidden rounded-lg border border-black/10 bg-brand-navy text-white shadow-xl">
+                                <div className="grid gap-px bg-white/10 sm:grid-cols-2">
+                                    <div className="bg-brand-navy p-6">
+                                        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-md bg-brand-yellow text-brand-navy">
+                                            <TreePine className="h-6 w-6" />
+                                        </div>
+                                        <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">{companyTreesLabel}</p>
+                                        <p className="mt-3 font-candu text-6xl font-extrabold leading-none text-brand-yellow">{formatNumber(companyTrees)}</p>
+                                        <p className="mt-3 text-sm leading-6 text-white/70">
+                                            {donatedTrees > 0
+                                                ? 'Pulled from this company donation history.'
+                                                : 'Estimated from team points until company donation records are available.'}
+                                        </p>
+                                    </div>
+                                    <div className="grid bg-brand-navy">
+                                        <div className="border-b border-white/10 p-6">
+                                            <div className="flex items-center gap-3">
+                                                <Users className="h-5 w-5 text-brand-yellow" />
+                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Members</p>
+                                            </div>
+                                            <p className="mt-2 text-3xl font-extrabold">{formatNumber(memberCount)}</p>
+                                        </div>
+                                        <div className="p-6">
+                                            <div className="flex items-center gap-3">
+                                                <Leaf className="h-5 w-5 text-brand-yellow" />
+                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Points generated</p>
+                                            </div>
+                                            <p className="mt-2 text-3xl font-extrabold">{formatNumber(totalPoints)}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            ) : null}
+                                <div className="border-t border-white/10 bg-white/[0.03] p-6">
+                                    <div className="flex items-start gap-3">
+                                        <BadgeCheck className="mt-1 h-5 w-5 shrink-0 text-brand-yellow" />
+                                        <p className="text-sm leading-6 text-white/75">
+                                            IdleForest has {formatNumber(verifiedTrees)} recorded trees across {plantingCountries.length} countries. Latest recorded planting: {latestPlantingDate ? new Date(latestPlantingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'coming soon'}.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Explainer Video Section */}
-                    {company.video_url ? (
-                        <div className="bg-brand-navy border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                <section className="bg-[#F7F8F2] py-14 sm:py-20">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+                            <div>
+                                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-emerald-700">Planting proof</p>
+                                <h2 className="mt-3 font-candu text-4xl font-extrabold leading-tight text-brand-navy sm:text-5xl">
+                                    Where trees are planted
+                                </h2>
+                                <p className="mt-4 text-base leading-7 text-neutral-700">
+                                    Company contributions support IdleForest&apos;s verified planting pipeline. These are real examples from current project records.
+                                </p>
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-3">
+                                <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
+                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Verified trees</p>
+                                    <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(verifiedTrees)}</p>
+                                </div>
+                                <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
+                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Projects</p>
+                                    <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(plantingProjects.length)}</p>
+                                </div>
+                                <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
+                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Countries</p>
+                                    <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(plantingCountries.length)}</p>
+                                </div>
+                            </div>
+                        </div>
 
-                            <h2 className="text-2xl font-extrabold font-candu uppercase mb-6 flex items-center gap-3">
-                                <Play className="h-6 w-6 text-brand-yellow" />
-                                How it works
-                            </h2>
+                        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+                            {featuredProjects.map((planting) => {
+                                const image = planting.project.images?.[0]
+                                const countryName = planting.country?.name ?? planting.project.countryCode
 
-                            <div className="aspect-video w-full rounded-xl border-4 border-black bg-black overflow-hidden relative shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
-                                {/* If YouTube link, embed iframe, otherwise normal video tag. Basic YouTube parsing for now: */}
+                                return (
+                                    <article key={planting.project.id} className="overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm">
+                                        <div className="relative aspect-[4/3] bg-brand-navy">
+                                            {image ? (
+                                                <Image
+                                                    src={image}
+                                                    alt={planting.project.name}
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(min-width: 1024px) 33vw, 100vw"
+                                                />
+                                            ) : (
+                                                <div className="flex h-full items-center justify-center bg-brand-navy text-brand-yellow">
+                                                    <TreePine className="h-16 w-16" />
+                                                </div>
+                                            )}
+                                            <div className="absolute left-4 top-4 rounded-md bg-white/95 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-navy shadow-sm">
+                                                {formatNumber(planting.totalTrees)} trees
+                                            </div>
+                                        </div>
+                                        <div className="p-5">
+                                            <div className="mb-3 flex items-center gap-2 text-sm font-bold text-emerald-700">
+                                                <MapPin className="h-4 w-4" />
+                                                {countryName}
+                                            </div>
+                                            <h3 className="text-xl font-extrabold leading-snug text-brand-navy">{planting.project.name}</h3>
+                                            <p className="mt-3 text-sm leading-6 text-neutral-600">
+                                                Planted with {planting.partner?.name ?? planting.project.partnerId}
+                                                {planting.lastDate ? `, last updated ${new Date(planting.lastDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}.` : '.'}
+                                            </p>
+                                            {planting.project.externalRef && (
+                                                <a
+                                                    href={planting.project.externalRef}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-brand-navy hover:text-emerald-700"
+                                                >
+                                                    View project
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </article>
+                                )
+                            })}
+                        </div>
+
+                        <div className="mt-6 flex flex-wrap gap-2">
+                            {plantingCountries.map((country) => (
+                                <span key={country} className="inline-flex items-center gap-2 rounded-md border border-black/10 bg-white px-3 py-2 text-sm font-semibold text-neutral-700">
+                                    <MapPin className="h-4 w-4 text-emerald-700" />
+                                    {country}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-white py-14 sm:py-20">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="grid gap-5 md:grid-cols-3">
+                            <div className="rounded-lg border border-black/10 bg-[#F7F8F2] p-6">
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-white text-emerald-700 shadow-sm">
+                                    <Heart className="h-6 w-6" />
+                                </div>
+                                <h3 className="text-xl font-extrabold text-brand-navy">Free for members</h3>
+                                <p className="mt-3 text-sm leading-6 text-neutral-700">
+                                    Members do not donate or change their workflow. Idle bandwidth funds the planting.
+                                </p>
+                            </div>
+                            <div className="rounded-lg border border-black/10 bg-[#F7F8F2] p-6">
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-white text-sky-700 shadow-sm">
+                                    <ShieldCheck className="h-6 w-6" />
+                                </div>
+                                <h3 className="text-xl font-extrabold text-brand-navy">Privacy first</h3>
+                                <p className="mt-3 text-sm leading-6 text-neutral-700">
+                                    IdleForest does not read browsing history, personal files, messages, or private data.
+                                </p>
+                            </div>
+                            <div className="rounded-lg border border-black/10 bg-[#F7F8F2] p-6">
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-white text-amber-700 shadow-sm">
+                                    <ZapOff className="h-6 w-6" />
+                                </div>
+                                <h3 className="text-xl font-extrabold text-brand-navy">Runs quietly</h3>
+                                <p className="mt-3 text-sm leading-6 text-neutral-700">
+                                    The app pauses when the connection is needed and stays out of the way during work.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {company.video_url ? (
+                    <section className="bg-brand-navy py-14 text-white sm:py-20">
+                        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+                            <div className="mb-8 flex items-center gap-3">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-md bg-brand-yellow text-brand-navy">
+                                    <Play className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-yellow">How it works</p>
+                                    <h2 className="text-3xl font-extrabold">A quick walkthrough for {company.name}</h2>
+                                </div>
+                            </div>
+                            <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/15 bg-black shadow-2xl">
                                 {company.video_url.includes('youtube.com') || company.video_url.includes('youtu.be') ? (
                                     <iframe
-                                        src={company.video_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
-                                        className="w-full h-full border-none"
+                                        src={getYouTubeEmbedUrl(company.video_url)}
+                                        className="h-full w-full border-none"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
-                                        title={`${company.name} Explainer Video`}
-                                    ></iframe>
+                                        title={`${company.name} explainer video`}
+                                    />
                                 ) : (
                                     <video
                                         src={company.video_url}
                                         controls
-                                        className="w-full h-full object-cover"
-                                    ></video>
+                                        className="h-full w-full object-cover"
+                                    />
                                 )}
                             </div>
                         </div>
-                    ) : (
-                        <div className="bg-brand-yellow border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-8 md:p-10 text-black relative overflow-hidden mb-12">
-                            <h2 className="text-3xl md:text-4xl font-extrabold font-candu uppercase mb-8 text-center">
-                                How IdleForest Works
-                            </h2>
-                            <div className="grid gap-6 md:grid-cols-3">
-                                <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                    <div className="w-12 h-12 bg-black text-brand-yellow rounded-full flex items-center justify-center font-extrabold text-2xl mb-4 font-candu">1</div>
-                                    <h3 className="font-extrabold text-xl uppercase font-candu mb-2">Join</h3>
-                                    <p className="font-medium text-neutral-700">Sign up and automatically join {company.name}&apos;s forest to start contributing to the common goal.</p>
-                                </div>
-                                <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                    <div className="w-12 h-12 bg-black text-brand-yellow rounded-full flex items-center justify-center font-extrabold text-2xl mb-4 font-candu">2</div>
-                                    <h3 className="font-extrabold text-xl uppercase font-candu mb-2">Install</h3>
-                                    <p className="font-medium text-neutral-700">Download the desktop app or browser extension. It runs quietly in the background.</p>
-                                </div>
-                                <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                    <div className="w-12 h-12 bg-black text-brand-yellow rounded-full flex items-center justify-center font-extrabold text-2xl mb-4 font-candu">3</div>
-                                    <h3 className="font-extrabold text-xl uppercase font-candu mb-2">Plant</h3>
-                                    <p className="font-medium text-neutral-700">Your unused bandwidth helps real trees get planted around the world, completely for free!</p>
-                                </div>
+                    </section>
+                ) : (
+                    <section className="bg-brand-navy py-14 text-white sm:py-20">
+                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div className="mb-10 max-w-2xl">
+                                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-yellow">How it works</p>
+                                <h2 className="mt-3 font-candu text-4xl font-extrabold leading-tight sm:text-5xl">Three simple steps</h2>
+                            </div>
+                            <div className="grid gap-5 md:grid-cols-3">
+                                {[
+                                    ['01', 'Join', `Create an account from this page and join ${company.name}'s company forest.`],
+                                    ['02', 'Install', 'Run the desktop app or browser extension while you work as usual.'],
+                                    ['03', 'Plant', 'IdleForest turns eligible idle activity into funded planting through verified partners.'],
+                                ].map(([step, title, description]) => (
+                                    <div key={step} className="rounded-lg border border-white/15 bg-white/[0.04] p-6">
+                                        <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-md bg-brand-yellow font-candu text-xl font-extrabold text-brand-navy">
+                                            {step}
+                                        </div>
+                                        <h3 className="text-2xl font-extrabold">{title}</h3>
+                                        <p className="mt-3 text-sm leading-6 text-white/70">{description}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    )}
-
-                    {/* Trust Markers Section */}
-                    <div className="mb-8 border-t-4 border-black pt-12">
-                        <h2 className="text-3xl font-extrabold font-candu uppercase mb-8 text-center text-black">
-                            Why join {company.name}&apos;s forest?
-                        </h2>
-                        <div className="grid gap-6 md:grid-cols-3">
-                            <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    <Heart className="h-8 w-8 text-green-600" />
-                                </div>
-                                <h3 className="font-extrabold text-xl uppercase font-candu mb-3 text-black">100% Free Forever</h3>
-                                <p className="font-medium text-neutral-700">You never pay a dime. Your unused background internet bandwidth funds the tree planting automatically.</p>
-                            </div>
-                            <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    <ShieldCheck className="h-8 w-8 text-blue-600" />
-                                </div>
-                                <h3 className="font-extrabold text-xl uppercase font-candu mb-3 text-black">Strictly Private</h3>
-                                <p className="font-medium text-neutral-700">We do not track your browsing history, see your data, or interact with your personal files at any time.</p>
-                            </div>
-                            <div className="bg-white border-4 border-black rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center transition-transform hover:-translate-y-1">
-                                <div className="w-16 h-16 bg-brand-yellow/30 rounded-full flex items-center justify-center mb-6 border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    <ZapOff className="h-8 w-8 text-brand-yellow" />
-                                </div>
-                                <h3 className="font-extrabold text-xl uppercase font-candu mb-3 text-black">Zero Impact</h3>
-                                <p className="font-medium text-neutral-700">Runs silently in the background. It pauses immediately if you need your connection for anything else.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </section>
+                )}
             </main>
 
-            {/* Owner Settings Panel */}
             {isOwner && (
                 <CompanySettingsPanel company={company} memberCount={memberCount} totalPoints={totalPoints} />
             )}
