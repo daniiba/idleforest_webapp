@@ -1,11 +1,17 @@
 'use client'
 
 import Image from 'next/image';
-import { Link } from '@/navigation';
+import { Link, usePathname } from '@/navigation';
 import { useTranslations } from 'next-intl';
 
 const Footer = () => {
   const t = useTranslations('Footer');
+  const pathname = usePathname();
+  const normalizedPath = pathname.toLowerCase().replace(/[^a-z0-9/]/g, '');
+
+  if (normalizedPath.includes('/c/phonerepair')) {
+    return null;
+  }
 
   return (
     <footer className="relative z-10 border-t border-gray-800 py-6 bg-black backdrop-blur-sm">
