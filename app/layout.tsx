@@ -116,7 +116,6 @@ fbq('track', 'PageView');
                     </Script>
                 ) : null}
                 <Script src="https://cdn.ywxi.net/js/1.js" strategy="afterInteractive" />
-                <Script src="https://widgets.tree-nation.com/js/widgets/v2/widgets.min.js" strategy="afterInteractive" />
                 <Script src="https://cdn.tinystats.net/scripts/capi.js" strategy="afterInteractive" />
                 <script
                     type="application/ld+json"
@@ -142,11 +141,6 @@ fbq('track', 'PageView');
                     }}
                 />
 
-                <Script src="https://cdn.1clickimpact.com/v1/badge.js"
-                    data-badge-id="W8034005"
-                    data-theme="light"
-                    strategy="afterInteractive"
-                />
             </head>
             <body
                 className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} antialiased`}

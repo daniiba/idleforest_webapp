@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image';
+import Script from 'next/script';
 import { Link, usePathname } from '@/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -26,7 +26,18 @@ const Footer = () => {
                 <span className="text-brand-yellow">🇪🇺</span> Proudly made in Lisbon, Portugal
               </span>
             </div>
-            <div data-widget-type="offset-website" data-tree-nation-code="cb31716592a11a9b" data-lang="en" data-theme="dark"></div>
+            <div className="inline-flex min-h-8 items-center" data-1ci-container="W8034005">
+              <a href="https://1clickimpact.com" target="_blank" rel="noopener" className="text-sm text-gray-400 hover:text-brand-yellow">
+                Climate Action by 1ClickImpact
+              </a>
+            </div>
+            <Script
+              src="https://cdn.1clickimpact.com/v1/badge.js"
+              data-badge-id="W8034005"
+              data-theme="light"
+              data-position="inline"
+              strategy="afterInteractive"
+            />
           </div>
           <div className="flex items-center gap-4">
             {/* Footer quick links */}
