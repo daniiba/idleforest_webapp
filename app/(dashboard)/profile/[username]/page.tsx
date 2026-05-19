@@ -102,6 +102,7 @@ export default function PublicProfilePage() {
                 }
 
                 // Fetch Tree badge progress for "Trees Planted" stat
+                let plantedFromBadges = 0
                 // First, get the Tree badge type and its tiers
                 const { data: treeBadgeType, error: treeBadgeError } = await supabase
                     .from('badge_types')
@@ -125,9 +126,18 @@ export default function PublicProfilePage() {
                         .in('badge_tier_id', tierIds)
 
                     if (!progressError && treeProgress && treeProgress.length > 0) {
-                        setTreesPlanted(treeProgress[0].current_value || 0)
+                        plantedFromBadges = treeProgress[0].current_value || 0
                     }
                 }
+
+                const { data: treeRewards } = await supabase
+                    .from('user_rewards')
+                    .select('trees_awarded')
+                    .eq('user_id', profile.user_id)
+                    .eq('status', 'awarded')
+
+                const plantedFromRewards = treeRewards?.reduce((sum, reward) => sum + (reward.trees_awarded || 0), 0) ?? 0
+                setTreesPlanted(plantedFromBadges + plantedFromRewards)
 
                 // Fetch user's team
                 const { data: teamMembership } = await supabase

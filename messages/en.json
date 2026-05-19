@@ -723,26 +723,26 @@
             "faq_q2": "How many trees do I need to plant to offset {app}?",
             "faq_a2": "To offset a year of typical usage of {app} (approx. {kg}kg of CO2), you would need to plant about {trees} trees.",
             "bitcoin_comparison_note": "*Bitcoin transactions are calculated per usage, measuring CO2 per transaction rather than per hour.",
-      "why_this_page_matters": "Page overview",
-      "searches_this_page_should_answer": "Questions covered on this page",
-      "hub_playbook_eyebrow": "How to use this hub",
-      "hub_playbook_title": "What you'll find in this hub",
-      "hub_top_emitters_eyebrow": "Highest estimated emitters",
-      "hub_top_emitters_title": "Good pages to start with",
-      "hub_comparisons_eyebrow": "Side-by-side comparisons",
-      "hub_comparisons_title": "Compare related apps and habits",
-      "hub_comparisons_description": "See two related digital habits side by side.",
-      "hub_faq_eyebrow": "FAQ",
-      "hub_faq_title": "Common questions",
-      "overview_strategy_eyebrow": "How to use this guide",
-      "overview_strategy_title_fallback": "How app carbon footprint estimates work",
-      "overview_top_emitters_eyebrow": "Highest estimated footprints",
-      "overview_top_emitters_title": "Good places to start",
-      "overview_comparisons_eyebrow": "Quick comparisons",
-      "overview_comparisons_title": "Useful side-by-side comparisons",
-      "overview_comparisons_description": "Open a direct comparison between two related digital habits.",
-      "per_transaction_estimate_sentence": "{app} is modeled per transaction on this page. One typical use event is estimated at <strong>{grams}g of CO2</strong>.",
-      "per_transaction_intro": "{app} is modeled per transaction on this page. One typical use event is estimated at <strong>{grams}g of CO2</strong>. That is roughly comparable to {equivalent}.",
+            "why_this_page_matters": "Page overview",
+            "searches_this_page_should_answer": "Questions covered on this page",
+            "hub_playbook_eyebrow": "How to use this hub",
+            "hub_playbook_title": "What you'll find in this hub",
+            "hub_top_emitters_eyebrow": "Highest estimated emitters",
+            "hub_top_emitters_title": "Good pages to start with",
+            "hub_comparisons_eyebrow": "Side-by-side comparisons",
+            "hub_comparisons_title": "Compare related apps and habits",
+            "hub_comparisons_description": "See two related digital habits side by side.",
+            "hub_faq_eyebrow": "FAQ",
+            "hub_faq_title": "Common questions",
+            "overview_strategy_eyebrow": "How to use this guide",
+            "overview_strategy_title_fallback": "How app carbon footprint estimates work",
+            "overview_top_emitters_eyebrow": "Highest estimated footprints",
+            "overview_top_emitters_title": "Good places to start",
+            "overview_comparisons_eyebrow": "Quick comparisons",
+            "overview_comparisons_title": "Useful side-by-side comparisons",
+            "overview_comparisons_description": "Open a direct comparison between two related digital habits.",
+            "per_transaction_estimate_sentence": "{app} is modeled per transaction on this page. One typical use event is estimated at <strong>{grams}g of CO2</strong>.",
+            "per_transaction_intro": "{app} is modeled per transaction on this page. One typical use event is estimated at <strong>{grams}g of CO2</strong>. That is roughly comparable to {equivalent}.",
             "search_intent_eyebrow": "Popular questions",
             "search_intent_title": "Questions this page helps answer",
             "drivers_title": "What drives this estimate most",
@@ -887,6 +887,66 @@
             "leaderboard_title_pt2": "Carbon",
             "leaderboard_title_pt3": "Footprints",
             "leaderboard_desc": "Ranked from highest to lowest emissions. Find out which platforms are consuming the most energy and generating the highest levels of CO2 during your daily usage."
+        }
+    },
+    "PhoneRepairCompany": {
+        "nav": {
+            "howItWorks": "How it works",
+            "proof": "Proof",
+            "install": "Install"
+        },
+        "cta": {
+            "portal": "Portal",
+            "join": "Join",
+            "installFromInvite": "Install for 5 trees",
+            "startInstall": "Install for 5 trees",
+            "inviteRequired": "Invite required",
+            "bookRepair": "Book repair"
+        },
+        "hero": {
+            "eyebrow": "PhoneRepair.pt x IdleForest",
+            "title": "Greener phone repairs.",
+            "description": "Choose IdleForest with your PhoneRepair.pt repair, install after checkout, and receive 5 bonus trees for your account."
+        },
+        "how": {
+            "eyebrow": "How IdleForest works",
+            "title": "Choose the green option.",
+            "body": "PhoneRepair.pt customers can make their repair go further. Choose IdleForest, install after checkout, and your 5 bonus trees count toward the PhoneRepair.pt planting impact."
+        },
+        "steps": {
+            "join": {
+                "title": "Join the repair forest",
+                "body": "After choosing the green option, your IdleForest account is linked to the PhoneRepair.pt planting effort."
+            },
+            "run": {
+                "title": "Let it run quietly",
+                "body": "Install the desktop app, log in, and we will award 5 bonus trees once it syncs."
+            },
+            "plant": {
+                "title": "Help plant trees",
+                "body": "Your bonus trees and future impact add to the public PhoneRepair.pt x IdleForest record."
+            }
+        },
+        "proof": {
+            "eyebrow": "Proof of planting",
+            "body": "IdleForest publishes planting records across {count} countries. PhoneRepair.pt installs add 5 bonus trees per eligible user to this public record as the partnership grows."
+        },
+        "install": {
+            "eyebrow": "How to install",
+            "title": "Install to receive 5 trees.",
+            "body": "After choosing the green option, use the invite link to create an account and install IdleForest. When the desktop app syncs, we award 5 trees to your user profile and the PhoneRepair.pt company forest."
+        },
+        "labels": {
+            "recordedCompanyTrees": "Recorded company trees",
+            "estimatedCompanyTrees": "Estimated company trees",
+            "members": "Members",
+            "points": "Points",
+            "current": "Current"
+        },
+        "projects": {
+            "plantToStopPoverty": "Plant to Stop Poverty",
+            "kisumu": "Kisumu 7 - Awach, Kenya",
+            "mkussu": "Replanting the burnt Mkussu Forest"
         }
     }
 }

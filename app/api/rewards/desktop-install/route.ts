@@ -39,9 +39,15 @@ export async function POST() {
             }, { status: 409 })
         }
 
+        const { data: profile } = await admin
+            .from('profiles')
+            .select('display_name, company_id')
+            .eq('user_id', user.id)
+            .maybeSingle()
+
         const { data: existingReward } = await admin
             .from('user_rewards')
-            .select('id, status, trees_awarded')
+            .select('id, status, trees_awarded, company_id')
             .eq('user_id', user.id)
             .eq('reward_type', DESKTOP_INSTALL_REWARD_TYPE)
             .maybeSingle()
@@ -56,15 +62,16 @@ export async function POST() {
                     reward_type: DESKTOP_INSTALL_REWARD_TYPE,
                     trees_awarded: DESKTOP_INSTALL_BONUS_TREES,
                     node_id: String(desktopNode.id),
+                    company_id: profile?.company_id || null,
                     status: 'pending'
                 })
-                .select('id, status, trees_awarded')
+                .select('id, status, trees_awarded, company_id')
                 .single()
 
             if (insertError) {
                 const { data: duplicateReward } = await admin
                     .from('user_rewards')
-                    .select('id, status, trees_awarded')
+                    .select('id, status, trees_awarded, company_id')
                     .eq('user_id', user.id)
                     .eq('reward_type', DESKTOP_INSTALL_REWARD_TYPE)
                     .maybeSingle()
@@ -80,6 +87,16 @@ export async function POST() {
         }
 
         if (reward.status === 'awarded') {
+            if (!reward.company_id && profile?.company_id) {
+                await admin
+                    .from('user_rewards')
+                    .update({
+                        company_id: profile.company_id,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', reward.id)
+            }
+
             return NextResponse.json({
                 eligible: true,
                 awarded: true,
@@ -104,6 +121,7 @@ export async function POST() {
                 status: 'processing',
                 trees_awarded: DESKTOP_INSTALL_BONUS_TREES,
                 node_id: String(desktopNode.id),
+                company_id: profile?.company_id || reward.company_id || null,
                 updated_at: new Date().toISOString(),
                 error_message: null
             })
@@ -126,12 +144,6 @@ export async function POST() {
             if (!ONE_CLICK_IMPACT_API_KEY) {
                 throw new Error('Missing 1ClickImpact API key')
             }
-
-            const { data: profile } = await admin
-                .from('profiles')
-                .select('display_name')
-                .eq('user_id', user.id)
-                .maybeSingle()
 
             const plantResponse = await fetch('https://api.1clickimpact.com/v1/plant_tree', {
                 method: 'POST',
@@ -178,7 +190,8 @@ export async function POST() {
                 source: 'desktop_install_reward_api',
                 metadata: {
                     trees: DESKTOP_INSTALL_BONUS_TREES,
-                    nodeId: String(desktopNode.id)
+                    nodeId: String(desktopNode.id),
+                    companyId: profile?.company_id || reward.company_id || null
                 }
             })
 

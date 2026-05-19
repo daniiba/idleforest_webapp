@@ -53,6 +53,14 @@ export default function UserShareClient() {
                     }
                 }
 
+                const { data: treeRewards } = await supabase
+                    .from('user_rewards')
+                    .select('trees_awarded')
+                    .eq('user_id', profile.user_id)
+                    .eq('status', 'awarded')
+
+                treesPlanted += treeRewards?.reduce((sum, reward) => sum + (reward.trees_awarded || 0), 0) ?? 0
+
                 // Get badge count
                 const { count: badgeCount } = await supabase
                     .from('badge_progress')

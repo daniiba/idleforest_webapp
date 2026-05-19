@@ -723,26 +723,26 @@
             "faq_q2": "Wie viele Bäume muss ich pflanzen, um {app} auszugleichen?",
             "faq_a2": "Um ein Jahr typischer Nutzung von {app} (ca. {kg}kg CO2) auszugleichen, müsstest du etwa {trees} Bäume pflanzen.",
             "bitcoin_comparison_note": "*Bitcoin-Transaktionen werden pro Nutzung berechnet, CO2 wird pro Transaktion und nicht pro Stunde gemessen.",
-      "why_this_page_matters": "Seitenüberblick",
-      "searches_this_page_should_answer": "Fragen auf dieser Seite",
-      "hub_playbook_eyebrow": "So nutzt du diesen Hub",
-      "hub_playbook_title": "Was du in diesem Hub findest",
-      "hub_top_emitters_eyebrow": "Höchste geschätzte Emittenten",
-      "hub_top_emitters_title": "Gute Seiten für den Einstieg",
-      "hub_comparisons_eyebrow": "Direkte Vergleiche",
-      "hub_comparisons_title": "Verwandte Apps und Gewohnheiten vergleichen",
-      "hub_comparisons_description": "Sieh dir zwei verwandte digitale Gewohnheiten direkt nebeneinander an.",
-      "hub_faq_eyebrow": "FAQ",
-      "hub_faq_title": "Häufige Fragen",
-      "overview_strategy_eyebrow": "So nutzt du diesen Leitfaden",
-      "overview_strategy_title_fallback": "Was du hier findest",
-      "overview_top_emitters_eyebrow": "Höchste geschätzte Fußabdrücke",
-      "overview_top_emitters_title": "Gute Startpunkte",
-      "overview_comparisons_eyebrow": "Schnellvergleiche",
-      "overview_comparisons_title": "Nützliche Direktvergleiche",
-      "overview_comparisons_description": "Öffne einen direkten Vergleich zwischen zwei verwandten digitalen Gewohnheiten.",
-      "per_transaction_estimate_sentence": "{app} wird auf dieser Seite pro Transaktion modelliert. Ein typischer Nutzungsvorgang wird auf <strong>{grams}g CO2</strong> geschätzt.",
-      "per_transaction_intro": "{app} wird auf dieser Seite pro Transaktion modelliert. Ein typischer Nutzungsvorgang wird auf <strong>{grams}g CO2</strong> geschätzt. Das ist grob vergleichbar mit {equivalent}.",
+            "why_this_page_matters": "Seitenüberblick",
+            "searches_this_page_should_answer": "Fragen auf dieser Seite",
+            "hub_playbook_eyebrow": "So nutzt du diesen Hub",
+            "hub_playbook_title": "Was du in diesem Hub findest",
+            "hub_top_emitters_eyebrow": "Höchste geschätzte Emittenten",
+            "hub_top_emitters_title": "Gute Seiten für den Einstieg",
+            "hub_comparisons_eyebrow": "Direkte Vergleiche",
+            "hub_comparisons_title": "Verwandte Apps und Gewohnheiten vergleichen",
+            "hub_comparisons_description": "Sieh dir zwei verwandte digitale Gewohnheiten direkt nebeneinander an.",
+            "hub_faq_eyebrow": "FAQ",
+            "hub_faq_title": "Häufige Fragen",
+            "overview_strategy_eyebrow": "So nutzt du diesen Leitfaden",
+            "overview_strategy_title_fallback": "Was du hier findest",
+            "overview_top_emitters_eyebrow": "Höchste geschätzte Fußabdrücke",
+            "overview_top_emitters_title": "Gute Startpunkte",
+            "overview_comparisons_eyebrow": "Schnellvergleiche",
+            "overview_comparisons_title": "Nützliche Direktvergleiche",
+            "overview_comparisons_description": "Öffne einen direkten Vergleich zwischen zwei verwandten digitalen Gewohnheiten.",
+            "per_transaction_estimate_sentence": "{app} wird auf dieser Seite pro Transaktion modelliert. Ein typischer Nutzungsvorgang wird auf <strong>{grams}g CO2</strong> geschätzt.",
+            "per_transaction_intro": "{app} wird auf dieser Seite pro Transaktion modelliert. Ein typischer Nutzungsvorgang wird auf <strong>{grams}g CO2</strong> geschätzt. Das ist grob vergleichbar mit {equivalent}.",
             "search_intent_eyebrow": "Häufige Fragen",
             "search_intent_title": "Fragen, bei denen diese Seite hilft",
             "drivers_title": "Was diese Schätzung am stärksten beeinflusst",
@@ -887,6 +887,66 @@
             "leaderboard_title_pt2": "CO2",
             "leaderboard_title_pt3": "Fußabdrücke",
             "leaderboard_desc": "Gelistet von den höchsten zu den niedrigsten Emissionen. Finde heraus, welche Plattformen bei der täglichen Nutzung die meiste Energie verbrauchen und am meisten CO2 erzeugen."
+        }
+    },
+    "PhoneRepairCompany": {
+        "nav": {
+            "howItWorks": "So funktioniert es",
+            "proof": "Nachweis",
+            "install": "Installieren"
+        },
+        "cta": {
+            "portal": "Portal",
+            "join": "Beitreten",
+            "installFromInvite": "Für 5 Bäume installieren",
+            "startInstall": "Für 5 Bäume installieren",
+            "inviteRequired": "Einladung erforderlich",
+            "bookRepair": "Reparatur buchen"
+        },
+        "hero": {
+            "eyebrow": "PhoneRepair.pt x IdleForest",
+            "title": "Grünere Handyreparaturen.",
+            "description": "Wähle IdleForest mit deiner PhoneRepair.pt-Reparatur, installiere es nach dem Checkout und erhalte 5 Bonusbäume für dein Konto."
+        },
+        "how": {
+            "eyebrow": "So funktioniert IdleForest",
+            "title": "Wähle die grüne Option.",
+            "body": "PhoneRepair.pt-Kunden können ihrer Reparatur mehr Wirkung geben. Wähle IdleForest, installiere es nach dem Checkout, und deine 5 Bonusbäume zählen zum Pflanzimpact von PhoneRepair.pt."
+        },
+        "steps": {
+            "join": {
+                "title": "Tritt dem Reparaturwald bei",
+                "body": "Nachdem du die grüne Option gewählt hast, wird dein IdleForest-Konto mit dem Pflanzprojekt von PhoneRepair.pt verknüpft."
+            },
+            "run": {
+                "title": "Lass es leise laufen",
+                "body": "Installiere die Desktop-App, melde dich an, und wir vergeben 5 Bonusbäume, sobald sie synchronisiert."
+            },
+            "plant": {
+                "title": "Hilf beim Pflanzen",
+                "body": "Deine Bonusbäume und dein zukünftiger Impact fließen in den öffentlichen PhoneRepair.pt x IdleForest-Nachweis ein."
+            }
+        },
+        "proof": {
+            "eyebrow": "Pflanznachweis",
+            "body": "IdleForest veröffentlicht Pflanznachweise in {count} Ländern. PhoneRepair.pt-Installationen ergänzen diesen öffentlichen Nachweis um 5 Bonusbäume pro berechtigtem Nutzer, während die Partnerschaft wächst."
+        },
+        "install": {
+            "eyebrow": "Installation",
+            "title": "Installieren und 5 Bäume erhalten.",
+            "body": "Nachdem du die grüne Option gewählt hast, nutze den Einladungslink, um ein Konto zu erstellen und IdleForest zu installieren. Wenn die Desktop-App synchronisiert, schreiben wir deinem Profil und dem PhoneRepair.pt-Firmenwald 5 Bäume gut."
+        },
+        "labels": {
+            "recordedCompanyTrees": "Erfasste Firmenbäume",
+            "estimatedCompanyTrees": "Geschätzte Firmenbäume",
+            "members": "Mitglieder",
+            "points": "Punkte",
+            "current": "Aktuell"
+        },
+        "projects": {
+            "plantToStopPoverty": "Plant to Stop Poverty",
+            "kisumu": "Kisumu 7 - Awach, Kenya",
+            "mkussu": "Replanting the burnt Mkussu Forest"
         }
     }
 }

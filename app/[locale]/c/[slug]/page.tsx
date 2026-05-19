@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { aggregateProjects, plantingsData } from '@/lib/plantings'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -21,31 +22,20 @@ import {
 import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree'
+import { getTranslations } from 'next-intl/server'
 
 export const dynamic = 'force-dynamic'
 
 const numberFormatter = new Intl.NumberFormat('en-US')
 
-const phoneRepairPledgeItems = [
-    {
-        number: '01',
-        title: 'Join the repair forest',
-        body: 'After choosing the green option, your IdleForest install is linked to the PhoneRepair.pt planting effort.',
-    },
-    {
-        number: '02',
-        title: 'Let it run quietly',
-        body: 'IdleForest works in the background using idle internet capacity, so you can keep using your device as usual.',
-    },
-    {
-        number: '03',
-        title: 'Help plant trees',
-        body: 'That background activity helps fund verified planting projects and adds to the public PhoneRepair.pt x IdleForest record.',
-    },
-]
+const phoneRepairProjectNameKeys: Record<string, string> = {
+    'tn-plant-to-stop-poverty': 'plantToStopPoverty',
+    'tftf-kisumu7-awach': 'kisumu',
+    'tn-syzygium': 'mkussu',
+}
 
-function formatNumber(value: number) {
-    return numberFormatter.format(value)
+function formatNumber(value: number, locale?: string) {
+    return locale ? new Intl.NumberFormat(locale).format(value) : numberFormatter.format(value)
 }
 
 function getYouTubeEmbedUrl(url: string) {
@@ -109,11 +99,21 @@ function PhoneRepairWireframePanel({
     companyWebsite,
     isMember,
     isValidInvite,
+    copy,
 }: {
     joinHref: string
     companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
     isMember: boolean
     isValidInvite: boolean
+    copy: {
+        eyebrow: string
+        title: string
+        description: string
+        portalCta: string
+        installCta: string
+        inviteRequired: string
+        bookRepair: string
+    }
 }) {
     return (
         <div className="phone-line-panel phone-line-hero-panel relative z-20 min-h-[500px] overflow-hidden rounded-[42px] border border-[#e5e5dc] bg-[#fafaf6] p-4 sm:min-h-[620px] sm:p-10 lg:h-[min(720px,calc(100vh-150px))] lg:min-h-0">
@@ -219,13 +219,12 @@ function PhoneRepairWireframePanel({
             <PhoneRepairGrowingTrees />
             <div className="phone-line-hero-copy relative z-10 flex h-full min-h-[440px] flex-col justify-between gap-8 pr-0 lg:max-w-[430px] lg:pr-4">
                 <div className="pt-12 sm:pt-10 lg:pt-10">
-                    <PhoneRepairEyebrow className="text-[#6d7416]">PhoneRepair.pt x IdleForest</PhoneRepairEyebrow>
+                    <PhoneRepairEyebrow className="text-[#6d7416]">{copy.eyebrow}</PhoneRepairEyebrow>
                     <h1 className="mt-5 max-w-[410px] font-candu text-[3rem] font-black uppercase leading-[0.9] tracking-normal text-[#050505] sm:text-[4.25rem] lg:text-[4.15rem]">
-                        Greener phone repairs.
+                        {copy.title}
                     </h1>
                     <p className="mt-5 max-w-[370px] text-base font-semibold leading-7 text-[#31332b] sm:text-lg sm:leading-8">
-                        Choose IdleForest with your PhoneRepair.pt repair, install after checkout, and help fund
-                        verified tree planting.
+                        {copy.description}
                     </p>
                     <div className="mt-5 flex flex-wrap items-center gap-3">
                         {isMember ? (
@@ -233,7 +232,7 @@ function PhoneRepairWireframePanel({
                                 href={joinHref}
                                 className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
-                                Go to portal
+                                {copy.portalCta}
                                 <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                             </Link>
                         ) : isValidInvite ? (
@@ -241,12 +240,12 @@ function PhoneRepairWireframePanel({
                                 href={joinHref}
                                 className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
-                                Install from invite
+                                {copy.installCta}
                                 <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                             </Link>
                         ) : (
                             <span className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/10 bg-white/90 px-5 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-brand-navy shadow-[0_18px_34px_rgba(11,16,31,0.08)]">
-                                Invite required
+                                {copy.inviteRequired}
                             </span>
                         )}
                         {companyWebsite ? (
@@ -256,7 +255,7 @@ function PhoneRepairWireframePanel({
                                 rel="noreferrer"
                                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/15 bg-white/90 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-brand-navy transition-colors hover:border-brand-navy/35"
                             >
-                                Book repair
+                                {copy.bookRepair}
                             </a>
                         ) : null}
                     </div>
@@ -276,6 +275,7 @@ export default async function CompanyPortalPage({
     searchParams: { invite?: string; design?: string; variant?: string }
 }) {
     const supabase = await createClient()
+    const phoneRepairT = await getTranslations({ locale: params.locale, namespace: 'PhoneRepairCompany' })
 
     const { data: company, error } = await supabase.from('companies').select('*').eq('slug', params.slug).single()
 
@@ -285,23 +285,63 @@ export default async function CompanyPortalPage({
 
     const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('total_points')
+        .select('user_id, total_points')
         .eq('company_id', company.id)
 
     let memberCount = 0
     let totalPoints = 0
+    let companyRewardTrees = 0
+    const memberUserIds = profiles?.map((profile) => profile.user_id).filter(Boolean) ?? []
 
     if (!profilesError && profiles) {
         memberCount = profiles.length
         totalPoints = profiles.reduce((acc, p) => acc + (p.total_points || 0), 0)
     }
 
+    try {
+        const admin = createAdminClient()
+        const rewardRows = new Map<string, number>()
+        const { data: companyDesktopRewards, error: companyDesktopRewardsError } = await admin
+            .from('user_rewards')
+            .select('id, trees_awarded')
+            .eq('reward_type', 'desktop_first_connect')
+            .eq('status', 'awarded')
+            .eq('company_id', company.id)
+
+        if (!companyDesktopRewardsError && companyDesktopRewards) {
+            companyDesktopRewards.forEach((reward) => {
+                rewardRows.set(reward.id, reward.trees_awarded || 0)
+            })
+        }
+
+        if (memberUserIds.length > 0) {
+            const { data: memberDesktopRewards, error: memberDesktopRewardsError } = await admin
+                .from('user_rewards')
+                .select('id, trees_awarded')
+                .eq('reward_type', 'desktop_first_connect')
+                .eq('status', 'awarded')
+                .is('company_id', null)
+                .in('user_id', memberUserIds)
+
+            if (!memberDesktopRewardsError && memberDesktopRewards) {
+                memberDesktopRewards.forEach((reward) => {
+                    rewardRows.set(reward.id, reward.trees_awarded || 0)
+                })
+            }
+        }
+
+        companyRewardTrees = Array.from(rewardRows.values()).reduce((sum, trees) => sum + trees, 0)
+    } catch (error) {
+        console.error('Unable to load company reward trees', error)
+    }
+
     const { data: donations } = await supabase.from('donations').select('trees_planted').eq('company_id', company.id)
 
     const donatedTrees = donations?.reduce((sum, donation) => sum + (donation.trees_planted || 0), 0) ?? 0
+    const recordedCompanyTrees = donatedTrees + companyRewardTrees
     const earnedTrees = Math.floor(totalPoints / 1000)
-    const companyTrees = donatedTrees > 0 ? donatedTrees : earnedTrees
-    const companyTreesLabel = donatedTrees > 0 ? 'Recorded company trees' : 'Estimated company trees'
+    const companyTrees = recordedCompanyTrees > 0 ? recordedCompanyTrees : earnedTrees
+    const companyTreesLabel = recordedCompanyTrees > 0 ? phoneRepairT('labels.recordedCompanyTrees') : phoneRepairT('labels.estimatedCompanyTrees')
 
     const verifiedTrees = plantingsData.events.reduce((sum, event) => sum + event.trees, 0)
     const plantingProjects = aggregateProjects(plantingsData)
@@ -328,7 +368,7 @@ export default async function CompanyPortalPage({
     } = await supabase.auth.getUser()
     let isMember = false
     if (user) {
-        const { data: profile } = await supabase.from('profiles').select('company_id').eq('id', user.id).single()
+        const { data: profile } = await supabase.from('profiles').select('company_id').eq('user_id', user.id).single()
 
         if (profile && profile.company_id === company.id) {
             isMember = true
@@ -350,22 +390,40 @@ export default async function CompanyPortalPage({
             const countryName = planting.country?.name ?? planting.project.countryCode
             const partnerName = planting.partner?.name ?? planting.project.partnerId
             const date = planting.lastDate
-                ? new Date(planting.lastDate).toLocaleDateString('en-US', {
+                ? new Date(planting.lastDate).toLocaleDateString(params.locale, {
                       month: 'short',
                       year: 'numeric',
                   })
-                : 'Current'
+                : phoneRepairT('labels.current')
+            const projectNameKey = phoneRepairProjectNameKeys[planting.project.id]
 
             return {
                 id: planting.project.id,
-                trees: planting.totalTrees,
-                name: planting.project.name,
+                trees: formatNumber(planting.totalTrees, params.locale),
+                name: projectNameKey ? phoneRepairT(`projects.${projectNameKey}`) : planting.project.name,
                 meta: `${countryName} - ${partnerName}`,
                 date,
                 href: planting.project.externalRef || '/report',
                 image: planting.project.images?.[0],
             }
         })
+        const phoneRepairPledgeItems = [
+            {
+                number: '01',
+                title: phoneRepairT('steps.join.title'),
+                body: phoneRepairT('steps.join.body'),
+            },
+            {
+                number: '02',
+                title: phoneRepairT('steps.run.title'),
+                body: phoneRepairT('steps.run.body'),
+            },
+            {
+                number: '03',
+                title: phoneRepairT('steps.plant.title'),
+                body: phoneRepairT('steps.plant.body'),
+            },
+        ]
 
         return (
             <div className="min-h-screen overflow-x-hidden bg-[#f8f8f5] text-brand-navy selection:bg-brand-yellow selection:text-black">
@@ -382,13 +440,13 @@ export default async function CompanyPortalPage({
                         <PhoneRepairMark company={company} compact />
                         <nav className="hidden items-center gap-6 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[#6f6f69] md:flex">
                             <a href="#ascii-flow" className="hover:text-brand-navy">
-                                How it works
+                                {phoneRepairT('nav.howItWorks')}
                             </a>
                             <a href="#ascii-proof" className="hover:text-brand-navy">
-                                Proof
+                                {phoneRepairT('nav.proof')}
                             </a>
                             <a href="#ascii-install" className="hover:text-brand-navy">
-                                Install
+                                {phoneRepairT('nav.install')}
                             </a>
                         </nav>
                         {isMember ? (
@@ -396,14 +454,14 @@ export default async function CompanyPortalPage({
                                 href={joinHref}
                                 className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
-                                Portal
+                                {phoneRepairT('cta.portal')}
                             </Link>
                         ) : isValidInvite ? (
                             <Link
                                 href={joinHref}
                                 className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
-                                Join
+                                {phoneRepairT('cta.join')}
                             </Link>
                         ) : null}
                     </div>
@@ -416,6 +474,15 @@ export default async function CompanyPortalPage({
                             companyWebsite={companyWebsite}
                             isMember={isMember}
                             isValidInvite={isValidInvite}
+                            copy={{
+                                eyebrow: phoneRepairT('hero.eyebrow'),
+                                title: phoneRepairT('hero.title'),
+                                description: phoneRepairT('hero.description'),
+                                portalCta: phoneRepairT('cta.portal'),
+                                installCta: phoneRepairT('cta.installFromInvite'),
+                                inviteRequired: phoneRepairT('cta.inviteRequired'),
+                                bookRepair: phoneRepairT('cta.bookRepair'),
+                            }}
                         />
                     </section>
 
@@ -424,13 +491,12 @@ export default async function CompanyPortalPage({
                         className="mx-auto mt-4 grid max-w-[1540px] gap-5 rounded-[34px] bg-[#efefeb] p-5 sm:mt-5 sm:p-7 lg:grid-cols-[0.82fr_1.18fr]"
                     >
                         <div className="rounded-[26px] bg-brand-navy p-6 text-white sm:p-8">
-                            <PhoneRepairEyebrow className="text-brand-yellow">How IdleForest works</PhoneRepairEyebrow>
+                            <PhoneRepairEyebrow className="text-brand-yellow">{phoneRepairT('how.eyebrow')}</PhoneRepairEyebrow>
                             <h2 className="mt-6 max-w-[520px] font-candu text-[3rem] font-black uppercase leading-none tracking-normal text-white sm:text-[4.2rem]">
-                                Choose the green option.
+                                {phoneRepairT('how.title')}
                             </h2>
                             <p className="mt-6 max-w-[520px] text-base font-medium leading-7 text-white/76">
-                                PhoneRepair.pt customers can make their repair go further. Choose IdleForest, install
-                                after checkout, and help grow PhoneRepair.pt&apos;s verified planting impact.
+                                {phoneRepairT('how.body')}
                             </p>
                         </div>
                         <div className="grid gap-4 md:grid-cols-3">
@@ -454,22 +520,21 @@ export default async function CompanyPortalPage({
                     >
                         <div className="rounded-[26px] bg-brand-yellow p-6 text-brand-navy">
                             <p className="font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-brand-navy/70">
-                                Proof of planting
+                                {phoneRepairT('proof.eyebrow')}
                             </p>
                             <p className="mt-4 font-candu text-6xl font-black uppercase leading-none tracking-normal text-brand-navy">
-                                {formatNumber(verifiedTrees)}
+                                {formatNumber(verifiedTrees, params.locale)}
                             </p>
                             <p className="mt-4 max-w-[580px] text-base font-medium leading-7 text-brand-navy/80">
-                                IdleForest publishes planting records across {plantingCountries.length} countries.
-                                PhoneRepair.pt installs add to this public record as the partnership grows.
+                                {phoneRepairT('proof.body', { count: plantingCountries.length })}
                             </p>
                         </div>
                         <div className="grid gap-4">
                             <div className="grid gap-4 md:grid-cols-3">
                                 {[
-                                    [companyTreesLabel, formatNumber(companyTrees)],
-                                    ['Members', formatNumber(memberCount)],
-                                    ['Points', formatNumber(totalPoints)],
+                                    [companyTreesLabel, formatNumber(companyTrees, params.locale)],
+                                    [phoneRepairT('labels.members'), formatNumber(memberCount, params.locale)],
+                                    [phoneRepairT('labels.points'), formatNumber(totalPoints, params.locale)],
                                 ].map(([label, value]) => (
                                     <div key={label} className="rounded-[24px] bg-[#f2f2ef] p-5">
                                         <p className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[#777]">
@@ -502,7 +567,7 @@ export default async function CompanyPortalPage({
                                             ) : null}
                                         </span>
                                         <span className="col-start-2 col-span-2 font-mono text-[0.68rem] font-black uppercase text-[#777] sm:col-auto">
-                                            {formatNumber(record.trees)}
+                                            {record.trees}
                                         </span>
                                         <span className="col-start-2 col-span-2 min-w-0 break-words font-candu text-[1.6rem] font-black uppercase leading-[0.94] tracking-normal sm:col-auto sm:text-2xl sm:leading-none">
                                             {record.name}
@@ -526,13 +591,12 @@ export default async function CompanyPortalPage({
                         className="mx-auto mt-8 grid max-w-[1540px] gap-6 overflow-hidden rounded-[28px] bg-brand-navy p-5 text-white sm:rounded-[34px] sm:p-10 lg:grid-cols-[1fr_auto] lg:p-12"
                     >
                         <div className="min-w-0">
-                            <PhoneRepairEyebrow className="text-brand-yellow">How to install</PhoneRepairEyebrow>
+                            <PhoneRepairEyebrow className="text-brand-yellow">{phoneRepairT('install.eyebrow')}</PhoneRepairEyebrow>
                             <h2 className="mt-6 max-w-full break-words font-candu text-[2.08rem] font-black uppercase leading-[0.96] tracking-normal text-white sm:max-w-[720px] sm:text-[4rem] sm:leading-none">
-                                Follow the PhoneRepair.pt invite.
+                                {phoneRepairT('install.title')}
                             </h2>
                             <p className="mt-6 max-w-full text-[0.98rem] font-medium leading-7 text-white/75 sm:max-w-[620px] sm:text-base">
-                                After choosing the green option, use the invite link to create an account and install
-                                IdleForest. The invite connects the app install to this partnership.
+                                {phoneRepairT('install.body')}
                             </p>
                         </div>
                         <div className="flex min-w-0 flex-col items-stretch gap-3 self-center sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
@@ -541,7 +605,7 @@ export default async function CompanyPortalPage({
                                     href={joinHref}
                                     className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
-                                    Go to portal
+                                    {phoneRepairT('cta.portal')}
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                                 </Link>
                             ) : isValidInvite ? (
@@ -549,7 +613,7 @@ export default async function CompanyPortalPage({
                                     href={joinHref}
                                     className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
-                                    Start install
+                                    {phoneRepairT('cta.startInstall')}
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                                 </Link>
                             ) : null}
@@ -560,7 +624,7 @@ export default async function CompanyPortalPage({
                                     rel="noreferrer"
                                     className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:border-white sm:w-auto"
                                 >
-                                    Book repair
+                                    {phoneRepairT('cta.bookRepair')}
                                 </a>
                             ) : null}
                         </div>
@@ -680,8 +744,8 @@ export default async function CompanyPortalPage({
                                             {formatNumber(companyTrees)}
                                         </p>
                                         <p className="mt-3 text-sm leading-6 text-white/70">
-                                            {donatedTrees > 0
-                                                ? 'Pulled from this company donation history.'
+                                            {recordedCompanyTrees > 0
+                                                ? 'Pulled from company donation history and awarded install bonuses.'
                                                 : 'Estimated from team points until company donation records are available.'}
                                         </p>
                                     </div>
