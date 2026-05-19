@@ -389,6 +389,39 @@ pre[class*="language-"].line-numbers > code {
   }
 }
 
+@keyframes phone-line-phone-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, -4px, 0) scale(1);
+  }
+}
+
+@keyframes phone-line-macbook-enter {
+  0% {
+    opacity: 0;
+    transform: translateX(-64%) translateY(36px) rotate(-3deg) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(-3deg) scale(1);
+  }
+}
+
+@keyframes phone-line-ipad-enter {
+  0% {
+    opacity: 0;
+    transform: translateX(-36%) translateY(36px) rotate(15deg) scale(0.96);
+  }
+  100% {
+    opacity: var(--phone-line-device-opacity, 1);
+    transform: translateX(-50%) translateY(0) rotate(15deg) scale(1);
+  }
+}
+
 @keyframes phone-line-grow {
   0% {
     opacity: 0;
@@ -476,6 +509,17 @@ pre[class*="language-"].line-numbers > code {
   background-size: 78px 78px;
 }
 
+.phone-repair-mark-logo {
+  display: inline-block;
+  flex: 0 0 auto;
+  border: 2px solid rgba(11, 16, 31, 0.34);
+  border-radius: 7px;
+  background:
+    url("/partner/phonerepairlogo.png") center / 72% 72% no-repeat,
+    rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 14px rgba(11, 16, 31, 0.08);
+}
+
 .phone-line-stage {
   position: absolute;
   inset: 4% 6% 18%;
@@ -494,18 +538,31 @@ pre[class*="language-"].line-numbers > code {
   }
 
   .phone-line-hero-panel .phone-line-macbook {
-    left: 23%;
-    bottom: 9%;
-    width: clamp(320px, 29vw, 470px);
+    left: 23.5%;
+    bottom: 8%;
+    width: clamp(320px, 28vw, 455px);
   }
 
   .phone-line-hero-panel .phone-line-ipad {
-    left: 72%;
+    left: 76.5%;
     right: auto;
-    bottom: 9%;
+    bottom: 8%;
     width: clamp(168px, 15vw, 250px);
-    transform: translateX(-50%) rotate(15deg);
+    --phone-line-device-opacity: 0.86;
+    transform: translateX(-36%) translateY(36px) rotate(15deg) scale(0.96);
     opacity: 0.86;
+  }
+
+  .phone-line-hero-panel .phone-line-macbook {
+    transform: translateX(-64%) translateY(36px) rotate(-3deg) scale(0.96);
+  }
+
+  .phone-line-hero-panel.is-device-loaded .phone-line-macbook {
+    transform: translateX(-50%) rotate(-3deg);
+  }
+
+  .phone-line-hero-panel.is-device-loaded .phone-line-ipad {
+    transform: translateX(-50%) rotate(15deg);
   }
 }
 
@@ -528,21 +585,46 @@ pre[class*="language-"].line-numbers > code {
     inset 0 0 0 4px rgba(255, 255, 255, 0.18),
     inset 0 0 0 9px rgba(0, 0, 0, 0.7),
     0 38px 80px rgba(11, 16, 31, 0.12);
-  transform: translate3d(0, -4px, 0) rotate(-2deg);
+  transform: translate3d(0, -4px, 0);
   transform-style: flat;
-  animation: phone-line-device-float 8s ease-in-out infinite;
+  transition: transform 220ms ease;
 }
 
 .phone-line-hero-panel .phone-line-device {
   width: clamp(245px, 19vw, 330px);
+  transform: translate3d(0, 34px, 0) scale(0.96);
+}
+
+.phone-line-hero-panel.is-device-loaded .phone-line-device {
+  transform: translate3d(0, -4px, 0);
 }
 
 .phone-line-macbook,
 .phone-line-ipad {
   position: absolute;
   z-index: 1;
-  pointer-events: none;
+  pointer-events: auto;
   filter: drop-shadow(0 24px 34px rgba(11, 16, 31, 0.1));
+  transition: transform 220ms ease;
+}
+
+.phone-line-hero-panel.is-device-loaded.is-device-hovered .phone-line-device,
+.phone-line-hero-panel.is-device-loaded .phone-line-stage:hover .phone-line-device {
+  transform: translate3d(0, -8px, 0) scale(1.035);
+}
+
+.phone-line-hero-panel.is-device-loaded.is-device-hovered .phone-line-macbook,
+.phone-line-hero-panel.is-device-loaded .phone-line-stage:hover .phone-line-macbook {
+  transform: translateX(-56%) translateY(8px) rotate(-3deg) scale(1.035);
+}
+
+.phone-line-ipad:hover {
+  transform: translateX(50%) rotate(3deg);
+}
+
+.phone-line-hero-panel.is-device-loaded.is-device-hovered .phone-line-ipad,
+.phone-line-hero-panel.is-device-loaded .phone-line-stage:hover .phone-line-ipad {
+  transform: translateX(-44%) translateY(8px) rotate(15deg) scale(1.035);
 }
 
 .phone-line-macbook {
@@ -1466,7 +1548,7 @@ pre[class*="language-"].line-numbers > code {
 
 .phone-line-growing-tree {
   position: absolute;
-  left: 66%;
+  left: 56%;
   top: 86%;
   z-index: 5;
   width: clamp(210px, 22vw, 320px);
@@ -1503,7 +1585,7 @@ pre[class*="language-"].line-numbers > code {
 }
 
 .phone-line-growing-tree-left {
-  left: 35%;
+  left: 24%;
   top: 76%;
   z-index: 4;
   width: clamp(280px, 31vw, 440px);
@@ -1703,8 +1785,8 @@ pre[class*="language-"].line-numbers > code {
   }
 
   .phone-line-hero-panel .phone-line-stage {
-    inset: 49% -10% -5%;
-    opacity: 0.42;
+    inset: 44% 0 3%;
+    opacity: 0.5;
   }
 
   .phone-line-stage {
@@ -1712,34 +1794,33 @@ pre[class*="language-"].line-numbers > code {
   }
 
   .phone-line-device {
-    width: clamp(230px, 66vw, 300px);
+    width: clamp(225px, 62vw, 290px);
   }
 
   .phone-line-macbook {
-    left: 8%;
-    top: auto;
-    bottom: 24%;
-    width: clamp(210px, 56vw, 300px);
-    opacity: 0.72;
+    display: none;
   }
 
   .phone-line-ipad {
-    right: 4%;
-    top: auto;
-    bottom: 25%;
-    width: clamp(120px, 31vw, 165px);
-    opacity: 0.78;
+    display: none;
+  }
+
+  .phone-line-hero-panel .phone-line-device,
+  .phone-line-hero-panel.is-device-loaded .phone-line-device,
+  .phone-line-hero-panel.is-device-loaded.is-device-hovered .phone-line-device,
+  .phone-line-hero-panel.is-device-loaded .phone-line-stage:hover .phone-line-device {
+    transform: translate3d(0, -4px, 0);
   }
 
   .phone-line-growing-tree {
-    left: 82%;
+    left: 70%;
     top: 82%;
     width: clamp(220px, 58vw, 320px);
     transform: translate3d(-50%, -50%, 0) scaleX(-1);
   }
 
   .phone-line-growing-tree-left {
-    left: 16%;
+    left: 5%;
     top: 72%;
     width: clamp(310px, 84vw, 430px);
     transform: translate3d(-50%, -50%, 0) scaleX(1);
