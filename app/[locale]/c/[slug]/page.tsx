@@ -116,7 +116,7 @@ function PhoneRepairWireframePanel({
     isValidInvite: boolean
 }) {
     return (
-        <div className="phone-line-panel phone-line-hero-panel relative z-20 min-h-[500px] overflow-hidden rounded-[42px] border border-[#e5e5dc] bg-[#fafaf6] p-6 sm:min-h-[620px] sm:p-10 lg:h-[min(720px,calc(100vh-150px))] lg:min-h-0">
+        <div className="phone-line-panel phone-line-hero-panel relative z-20 min-h-[500px] overflow-hidden rounded-[42px] border border-[#e5e5dc] bg-[#fafaf6] p-4 sm:min-h-[620px] sm:p-10 lg:h-[min(720px,calc(100vh-150px))] lg:min-h-0">
             <div className="absolute inset-0 overflow-hidden rounded-[42px]">
                 <div className="phone-line-stage" aria-hidden>
                     <div className="phone-line-macbook">
@@ -217,7 +217,7 @@ function PhoneRepairWireframePanel({
                 <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(250,250,246,0)_62%,rgba(250,250,246,0.9)_100%)]" />
             </div>
             <PhoneRepairGrowingTrees />
-            <div className="relative z-10 flex h-full min-h-[440px] flex-col justify-between gap-8 pr-0 lg:max-w-[430px] lg:pr-4">
+            <div className="phone-line-hero-copy relative z-10 flex h-full min-h-[440px] flex-col justify-between gap-8 pr-0 lg:max-w-[430px] lg:pr-4">
                 <div className="pt-12 sm:pt-10 lg:pt-10">
                     <PhoneRepairEyebrow className="text-[#6d7416]">PhoneRepair.pt x IdleForest</PhoneRepairEyebrow>
                     <h1 className="mt-5 max-w-[410px] font-candu text-[3rem] font-black uppercase leading-[0.9] tracking-normal text-[#050505] sm:text-[4.25rem] lg:text-[4.15rem]">
@@ -368,7 +368,7 @@ export default async function CompanyPortalPage({
         })
 
         return (
-            <div className="min-h-screen bg-[#f8f8f5] text-brand-navy selection:bg-brand-yellow selection:text-black">
+            <div className="min-h-screen overflow-x-hidden bg-[#f8f8f5] text-brand-navy selection:bg-brand-yellow selection:text-black">
                 {isValidInvite && invite && (
                     <script
                         dangerouslySetInnerHTML={{
@@ -377,8 +377,8 @@ export default async function CompanyPortalPage({
                     />
                 )}
 
-                <header className="px-4 py-4 sm:px-7">
-                    <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-4 rounded-[26px] border border-[#deded8] bg-white/80 px-4 py-3 backdrop-blur sm:px-6">
+                <header className="px-3 py-3 sm:px-7 sm:py-4">
+                    <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-3 rounded-[22px] border border-[#deded8] bg-white/80 px-3 py-3 backdrop-blur sm:gap-4 sm:rounded-[26px] sm:px-6">
                         <PhoneRepairMark company={company} compact />
                         <nav className="hidden items-center gap-6 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[#6f6f69] md:flex">
                             <a href="#ascii-flow" className="hover:text-brand-navy">
@@ -409,7 +409,7 @@ export default async function CompanyPortalPage({
                     </div>
                 </header>
 
-                <main className="px-4 pb-4 sm:px-7 sm:pb-7">
+                <main className="px-3 pb-3 sm:px-7 sm:pb-7">
                     <section className="relative isolate mx-auto max-w-[1540px]">
                         <PhoneRepairWireframePanel
                             joinHref={joinHref}
@@ -488,29 +488,33 @@ export default async function CompanyPortalPage({
                                         href={record.href}
                                         target={record.href.startsWith('http') ? '_blank' : undefined}
                                         rel={record.href.startsWith('http') ? 'noreferrer' : undefined}
-                                        className="grid items-center gap-4 py-5 transition-colors hover:text-emerald-700 sm:grid-cols-[82px_80px_1fr_170px_24px]"
+                                        className="grid grid-cols-[96px_minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2 py-5 transition-colors hover:text-emerald-700 sm:grid-cols-[82px_80px_1fr_170px_24px] sm:items-center sm:gap-4"
                                     >
-                                        <span className="relative block h-16 w-20 overflow-hidden rounded-[18px] bg-[#f2f2ef]">
+                                        <span className="relative col-start-1 row-span-4 block h-24 w-full overflow-hidden rounded-[18px] bg-[#f2f2ef] sm:col-auto sm:row-auto sm:h-16 sm:w-20">
                                             {record.image ? (
                                                 <Image
                                                     src={record.image}
                                                     alt={record.name}
                                                     fill
-                                                    sizes="80px"
+                                                    sizes="(max-width: 639px) 96px, 80px"
                                                     className="object-cover"
                                                 />
                                             ) : null}
                                         </span>
-                                        <span className="font-mono text-[0.68rem] font-black uppercase text-[#777]">
+                                        <span className="col-start-2 col-span-2 font-mono text-[0.68rem] font-black uppercase text-[#777] sm:col-auto">
                                             {formatNumber(record.trees)}
                                         </span>
-                                        <span className="font-candu text-2xl font-black uppercase leading-none tracking-normal">
+                                        <span className="col-start-2 col-span-2 min-w-0 break-words font-candu text-[1.6rem] font-black uppercase leading-[0.94] tracking-normal sm:col-auto sm:text-2xl sm:leading-none">
                                             {record.name}
                                         </span>
-                                        <span className="font-mono text-[0.58rem] font-black uppercase tracking-[0.16em] text-[#777]">
+                                        <span className="col-start-2 font-mono text-[0.58rem] font-black uppercase tracking-[0.16em] text-[#777] sm:col-auto">
                                             {record.date}
                                         </span>
-                                        <ArrowUpRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                        <ArrowUpRight
+                                            aria-hidden
+                                            className="col-start-3 row-start-1 h-4 w-4 justify-self-end sm:col-auto sm:row-auto sm:justify-self-auto"
+                                            strokeWidth={3}
+                                        />
                                     </a>
                                 ))}
                             </div>
@@ -519,23 +523,23 @@ export default async function CompanyPortalPage({
 
                     <section
                         id="ascii-install"
-                        className="mx-auto mt-8 grid max-w-[1540px] gap-6 rounded-[34px] bg-brand-navy p-7 text-white sm:p-10 lg:grid-cols-[1fr_auto] lg:p-12"
+                        className="mx-auto mt-8 grid max-w-[1540px] gap-6 overflow-hidden rounded-[28px] bg-brand-navy p-5 text-white sm:rounded-[34px] sm:p-10 lg:grid-cols-[1fr_auto] lg:p-12"
                     >
-                        <div>
+                        <div className="min-w-0">
                             <PhoneRepairEyebrow className="text-brand-yellow">How to install</PhoneRepairEyebrow>
-                            <h2 className="mt-6 max-w-[720px] font-candu text-[2.7rem] font-black uppercase leading-none tracking-normal text-white sm:text-[4rem]">
+                            <h2 className="mt-6 max-w-full break-words font-candu text-[2.08rem] font-black uppercase leading-[0.96] tracking-normal text-white sm:max-w-[720px] sm:text-[4rem] sm:leading-none">
                                 Follow the PhoneRepair.pt invite.
                             </h2>
-                            <p className="mt-6 max-w-[620px] text-base font-medium leading-7 text-white/75">
+                            <p className="mt-6 max-w-full text-[0.98rem] font-medium leading-7 text-white/75 sm:max-w-[620px] sm:text-base">
                                 After choosing the green option, use the invite link to create an account and install
                                 IdleForest. The invite connects the app install to this partnership.
                             </p>
                         </div>
-                        <div className="flex flex-wrap items-center gap-4 self-center">
+                        <div className="flex min-w-0 flex-col items-stretch gap-3 self-center sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                             {isMember ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black"
+                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
                                     Go to portal
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
@@ -543,7 +547,7 @@ export default async function CompanyPortalPage({
                             ) : isValidInvite ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black"
+                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
                                     Start install
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
@@ -554,7 +558,7 @@ export default async function CompanyPortalPage({
                                     href={companyWebsite.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:border-white"
+                                    className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:border-white sm:w-auto"
                                 >
                                     Book repair
                                 </a>
