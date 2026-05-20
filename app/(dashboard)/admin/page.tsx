@@ -20,7 +20,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, type CompanyAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, getNodeTransferRequestsAdmin, approveNodeTransferAdmin, rejectNodeTransferAdmin, type CompanyAdmin, type NodeTransferRequestAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -102,6 +102,28 @@ const paidGrowthChartConfig = {
 const churnChartConfig = {
     uninstallRate: { label: "Uninstall Rate", color: "hsl(0, 72%, 51%)" },
 } satisfies ChartConfig
+
+const compactId = (value: string | null | undefined, chars = 8) => {
+    if (!value) return '—'
+    return value.length > chars * 2 ? `${value.slice(0, chars)}...${value.slice(-chars)}` : value
+}
+
+const formatDateTime = (value: string | null | undefined) => {
+    if (!value) return '—'
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    }).format(new Date(value))
+}
+
+const getTransferStatusClass = (status: NodeTransferRequestAdmin['status']) => {
+    if (status === 'pending') return 'bg-yellow-100 text-yellow-900 border-yellow-400'
+    if (status === 'approved') return 'bg-green-100 text-green-900 border-green-500'
+    if (status === 'rejected') return 'bg-red-100 text-red-900 border-red-500'
+    return 'bg-neutral-100 text-neutral-700 border-neutral-400'
+}
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -219,6 +241,62 @@ export default function AdminPage() {
     const [newCompany, setNewCompany] = useState({ name: '', slug: '', invite_code: '', theme_color: '#10B981', website: '', video_url: '', logo_url: '', description: '', is_invite_only: true })
     const [isSavingCompany, setIsSavingCompany] = useState(false)
     const [previewCompany, setPreviewCompany] = useState<CompanyAdmin | null>(null)
+
+    // Node Transfer Requests State
+    const [nodeTransferRequests, setNodeTransferRequests] = useState<NodeTransferRequestAdmin[]>([])
+    const [isLoadingNodeTransfers, setIsLoadingNodeTransfers] = useState(false)
+    const [nodeTransferActionId, setNodeTransferActionId] = useState<string | null>(null)
+    const [nodeTransferResult, setNodeTransferResult] = useState<{ success: boolean; message: string } | null>(null)
+
+    const fetchNodeTransferRequests = async (preserveResult = false) => {
+        setIsLoadingNodeTransfers(true)
+        if (!preserveResult) {
+            setNodeTransferResult(null)
+        }
+        try {
+            const result = await getNodeTransferRequestsAdmin()
+            setNodeTransferRequests(result.requests)
+            if (result.error) {
+                setNodeTransferResult({ success: false, message: result.error })
+            }
+        } catch (error) {
+            console.error('Error fetching node transfer requests:', error)
+            setNodeTransferResult({ success: false, message: 'Failed to load node transfer requests' })
+        } finally {
+            setIsLoadingNodeTransfers(false)
+        }
+    }
+
+    const handleNodeTransferDecision = async (requestId: string, decision: 'approve' | 'reject') => {
+        const request = nodeTransferRequests.find(item => item.id === requestId)
+        const actionLabel = decision === 'approve' ? 'approve' : 'reject'
+        if (!request || !confirm(`Are you sure you want to ${actionLabel} this node transfer?`)) return
+
+        setNodeTransferActionId(requestId)
+        setNodeTransferResult(null)
+        try {
+            const result = decision === 'approve'
+                ? await approveNodeTransferAdmin(requestId)
+                : await rejectNodeTransferAdmin(requestId)
+
+            if (result.success) {
+                setNodeTransferResult({
+                    success: true,
+                    message: decision === 'approve'
+                        ? `Node ${compactId(request.node_identifier)} moved to ${request.to_display_name || request.to_email || compactId(request.to_user_id)}.`
+                        : `Transfer request for ${compactId(request.node_identifier)} was rejected.`
+                })
+                await fetchNodeTransferRequests(true)
+            } else {
+                setNodeTransferResult({ success: false, message: result.error || `Failed to ${actionLabel} transfer request` })
+            }
+        } catch (error) {
+            console.error(`Error trying to ${actionLabel} node transfer request:`, error)
+            setNodeTransferResult({ success: false, message: `Failed to ${actionLabel} transfer request` })
+        } finally {
+            setNodeTransferActionId(null)
+        }
+    }
 
     // Fetch Companies
     const fetchCompanies = async () => {
@@ -1445,9 +1523,12 @@ export default function AdminPage() {
                         if (value === 'companies') {
                             fetchCompanies()
                         }
+                        if (value === 'node-transfers') {
+                            fetchNodeTransferRequests()
+                        }
                     }}
                     className="w-full" defaultValue={'real-data'}                 >
-                    <TabsList className="grid w-full max-w-4xl grid-cols-7 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
+                    <TabsList className="grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
                         <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
@@ -1455,6 +1536,7 @@ export default function AdminPage() {
                         <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
                         <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
                         <TabsTrigger value="companies" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🏢 Companies</TabsTrigger>
+                        <TabsTrigger value="node-transfers" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">Transfers</TabsTrigger>
                         <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
                     </TabsList>
 
@@ -2908,6 +2990,130 @@ export default function AdminPage() {
                             {templates.length === 0 && (
                                 <div className="col-span-full py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
                                     No templates created yet.
+                                </div>
+                            )}
+                        </div>
+                    </TabsContent>
+
+                    {/* NODE TRANSFERS TAB */}
+                    <TabsContent value="node-transfers" className="space-y-6 mt-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div>
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                    <Monitor className="h-5 w-5 text-brand-navy" />
+                                    Node Transfers
+                                </h2>
+                                <p className="text-sm text-neutral-600 mt-1">Approve account-switching requests without moving historical contribution rows.</p>
+                            </div>
+                            <button
+                                onClick={() => fetchNodeTransferRequests()}
+                                disabled={isLoadingNodeTransfers}
+                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${isLoadingNodeTransfers ? 'animate-spin' : ''}`} />
+                                Refresh
+                            </button>
+                        </div>
+
+                        {nodeTransferResult && (
+                            <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 font-bold ${nodeTransferResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                                {nodeTransferResult.message}
+                            </div>
+                        )}
+
+                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                            {isLoadingNodeTransfers ? (
+                                <div className="p-12 flex justify-center text-neutral-500">
+                                    <Loader2 className="h-8 w-8 animate-spin" />
+                                </div>
+                            ) : nodeTransferRequests.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="border-b-2 border-black bg-neutral-50">
+                                                <TableHead className="font-bold text-black uppercase text-xs">Node</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Original Owner</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Requested Owner</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Request</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {nodeTransferRequests.map((request) => {
+                                                const isPending = request.status === 'pending'
+                                                const currentOwnerChanged = request.node_current_user_id && request.from_user_id && request.node_current_user_id !== request.from_user_id
+                                                return (
+                                                    <TableRow key={request.id} className="border-b border-neutral-200 hover:bg-neutral-50 align-top">
+                                                        <TableCell className="min-w-[220px]">
+                                                            <div className="font-mono text-sm font-bold text-black">{compactId(request.node_identifier, 10)}</div>
+                                                            <div className="mt-1 text-xs text-neutral-500 flex flex-wrap gap-2">
+                                                                <span>{request.node_platform || 'extension'}</span>
+                                                                <span>{(request.node_total_requests || 0).toLocaleString()} requests</span>
+                                                                {request.node_opt_in === false && <span className="text-red-600 font-bold">opted out</span>}
+                                                            </div>
+                                                            {currentOwnerChanged && (
+                                                                <div className="mt-2 text-xs font-bold text-red-700 flex items-center gap-1">
+                                                                    <AlertTriangle className="h-3 w-3" />
+                                                                    Current owner: {compactId(request.node_current_user_id)}
+                                                                </div>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[220px]">
+                                                            <div className="font-bold text-black">{request.from_display_name || request.from_email || 'Unknown user'}</div>
+                                                            <div className="text-xs text-neutral-500 font-mono">{compactId(request.from_user_id)}</div>
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[220px]">
+                                                            <div className="font-bold text-black">{request.to_display_name || request.to_email || 'Unknown user'}</div>
+                                                            <div className="text-xs text-neutral-500 font-mono">{compactId(request.to_user_id)}</div>
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[220px]">
+                                                            <div className="text-sm text-black">{request.reason || 'No reason provided'}</div>
+                                                            <div className="text-xs text-neutral-500 mt-1">{formatDateTime(request.created_at)}</div>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold uppercase ${getTransferStatusClass(request.status)}`}>
+                                                                {request.status}
+                                                            </span>
+                                                            {request.resolved_at && (
+                                                                <div className="text-xs text-neutral-500 mt-2">{formatDateTime(request.resolved_at)}</div>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className="text-right min-w-[170px]">
+                                                            {isPending ? (
+                                                                <div className="flex items-center justify-end gap-2">
+                                                                    <button
+                                                                        onClick={() => handleNodeTransferDecision(request.id, 'approve')}
+                                                                        disabled={nodeTransferActionId === request.id}
+                                                                        className="bg-green-100 text-green-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-green-200 disabled:opacity-50 flex items-center gap-1"
+                                                                    >
+                                                                        {nodeTransferActionId === request.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                                                                        Approve
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleNodeTransferDecision(request.id, 'reject')}
+                                                                        disabled={nodeTransferActionId === request.id}
+                                                                        className="bg-red-100 text-red-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-red-200 disabled:opacity-50 flex items-center gap-1"
+                                                                    >
+                                                                        <X className="h-3 w-3" />
+                                                                        Reject
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <span className="text-xs text-neutral-500 font-bold uppercase">No action</span>
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            ) : (
+                                <div className="p-12 text-center text-neutral-500 flex flex-col items-center">
+                                    <Monitor className="h-12 w-12 text-neutral-300 mb-4" />
+                                    <p className="font-bold text-black text-lg">No Node Transfer Requests</p>
+                                    <p className="text-sm mt-1">Requests appear here when a logged-in user asks to move a local node from another account.</p>
                                 </div>
                             )}
                         </div>

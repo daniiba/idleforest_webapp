@@ -2859,3 +2859,171 @@ export async function deleteCompanyAdmin(id: string): Promise<{ success: boolean
 
     return { success: true }
 }
+
+// ========================================
+// NODE TRANSFER REQUESTS
+// ========================================
+
+export type NodeTransferStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
+
+export interface NodeTransferRequestAdmin {
+    id: string
+    node_identifier: string
+    from_user_id: string | null
+    to_user_id: string
+    reason: string | null
+    status: NodeTransferStatus
+    created_at: string
+    resolved_at: string | null
+    resolved_by: string | null
+    from_display_name: string | null
+    from_email: string | null
+    to_display_name: string | null
+    to_email: string | null
+    node_current_user_id: string | null
+    node_platform: string | null
+    node_total_requests: number | null
+    node_opt_in: boolean | null
+}
+
+type RawNodeTransferRequest = {
+    id: string
+    node_identifier: string
+    from_user_id: string | null
+    to_user_id: string
+    reason: string | null
+    status: NodeTransferStatus
+    created_at: string
+    resolved_at: string | null
+    resolved_by: string | null
+}
+
+type NodeTransferProfile = {
+    user_id: string
+    display_name: string | null
+}
+
+type NodeTransferNode = {
+    node_identifier: string
+    user_id: string | null
+    platform: string | null
+    total_requests: number | null
+    opt_in: boolean | null
+}
+
+export async function getNodeTransferRequestsAdmin(): Promise<{ requests: NodeTransferRequestAdmin[]; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { data, error } = await adminClient
+        .from('node_transfer_requests')
+        .select('id, node_identifier, from_user_id, to_user_id, reason, status, created_at, resolved_at, resolved_by')
+        .order('created_at', { ascending: false })
+        .limit(100)
+
+    if (error) {
+        console.error('Error fetching node transfer requests:', error)
+        return { requests: [], error: error.message }
+    }
+
+    const requests = (data || []) as RawNodeTransferRequest[]
+    const userIds = Array.from(new Set(requests.flatMap(request => [request.from_user_id, request.to_user_id]).filter((id): id is string => Boolean(id))))
+    const nodeIdentifiers = Array.from(new Set(requests.map(request => request.node_identifier).filter(Boolean)))
+
+    const profileMap = new Map<string, string | null>()
+    if (userIds.length > 0) {
+        const { data: profiles, error: profilesError } = await adminClient
+            .from('profiles')
+            .select('user_id, display_name')
+            .in('user_id', userIds)
+
+        if (profilesError) {
+            console.error('Error fetching transfer request profiles:', profilesError)
+        } else {
+            ;((profiles || []) as NodeTransferProfile[]).forEach(profile => {
+                profileMap.set(profile.user_id, profile.display_name)
+            })
+        }
+    }
+
+    const emailMap = new Map<string, string | null>()
+    await Promise.all(userIds.map(async (userId) => {
+        const { data: authUser, error: authError } = await adminClient.auth.admin.getUserById(userId)
+        if (authError) {
+            console.error('Error fetching transfer request auth user:', userId, authError)
+            emailMap.set(userId, null)
+            return
+        }
+        emailMap.set(userId, authUser.user?.email || null)
+    }))
+
+    const nodeMap = new Map<string, NodeTransferNode>()
+    if (nodeIdentifiers.length > 0) {
+        const { data: nodes, error: nodesError } = await adminClient
+            .from('nodes')
+            .select('node_identifier, user_id, platform, total_requests, opt_in')
+            .in('node_identifier', nodeIdentifiers)
+
+        if (nodesError) {
+            console.error('Error fetching transfer request nodes:', nodesError)
+        } else {
+            ;((nodes || []) as NodeTransferNode[]).forEach(node => {
+                nodeMap.set(node.node_identifier, node)
+            })
+        }
+    }
+
+    return {
+        requests: requests.map(request => {
+            const node = nodeMap.get(request.node_identifier)
+            return {
+                ...request,
+                from_display_name: request.from_user_id ? profileMap.get(request.from_user_id) || null : null,
+                from_email: request.from_user_id ? emailMap.get(request.from_user_id) || null : null,
+                to_display_name: profileMap.get(request.to_user_id) || null,
+                to_email: emailMap.get(request.to_user_id) || null,
+                node_current_user_id: node?.user_id || null,
+                node_platform: node?.platform || null,
+                node_total_requests: node?.total_requests ?? null,
+                node_opt_in: node?.opt_in ?? null
+            }
+        })
+    }
+}
+
+export async function approveNodeTransferAdmin(requestId: string): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient.rpc('approve_node_transfer', { p_request_id: requestId })
+
+    if (error) {
+        console.error('Error approving node transfer request:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
+
+export async function rejectNodeTransferAdmin(requestId: string): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient.rpc('reject_node_transfer', { p_request_id: requestId })
+
+    if (error) {
+        console.error('Error rejecting node transfer request:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
