@@ -113,7 +113,7 @@ const POST_QUERY = `
         ...PostFields
       }
       redirectedPost(slug: $slug) {
-        ...PostFields
+        slug
       }
       posts(first: 3) {
         edges {
@@ -138,7 +138,7 @@ type PostResponse = {
   data?: {
     publication?: {
       post?: HashnodePost | null;
-      redirectedPost?: HashnodePost | null;
+      redirectedPost?: { slug: string } | null;
       posts?: {
         edges?: Array<{ node: HashnodePostSummary }>;
       };
@@ -153,9 +153,22 @@ export async function getHashnodePost(slug: string) {
   });
 
   const publication = data?.data?.publication;
+  const post = publication?.post || null;
+
+  if (post) {
+    return {
+      post,
+      recommendedPosts: publication?.posts?.edges?.map((edge) => edge.node) || [],
+    };
+  }
+
+  const redirectedSlug = publication?.redirectedPost?.slug;
+  if (redirectedSlug && redirectedSlug !== slug) {
+    return getHashnodePost(redirectedSlug);
+  }
 
   return {
-    post: publication?.post || publication?.redirectedPost || null,
+    post: null,
     recommendedPosts: publication?.posts?.edges?.map((edge) => edge.node) || [],
   };
 }
