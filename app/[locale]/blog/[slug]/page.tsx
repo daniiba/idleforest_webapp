@@ -7,90 +7,12 @@ import { BlogPostCard } from '@/components/blog-post-card'
 import type { BlogPost } from '@/components/blog-post-card'
 import BrowserButtons from "@/components/browser-buttons";
 import { SmartCTA } from "@/components/smart-cta";
+import { getHashnodePost } from '@/lib/hashnode-blog'
 
 export const revalidate = 60 // invalidate every hour
 
-const POST_QUERY = `
-  query Post($slug: String!) {
-    publication(host: "idleforest.com/blog") {
-      post(slug: $slug) {
-        title
-        brief
-        content {
-          html
-        }
-        coverImage {
-          url
-        }
-        publishedAt
-        readTimeInMinutes
-        views
-        reactionCount
-        responseCount
-        tags {
-          name
-        }
-      }
-      posts(first: 3) {
-        edges {
-          node {
-            title
-            brief
-            slug
-            coverImage {
-              url
-            }
-            publishedAt
-          }
-        }
-      }
-    }
-  }
-`
-
-async function fetchPost(slug: string) {
-  try {
-    // Add a unique timestamp to the query name to bypass caching
-    const timestamp = Date.now();
-    const uniqueQuery = POST_QUERY.replace('query Post', `query Post_${timestamp}`);
-
-    const response = await fetch('https://gql.hashnode.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        query: uniqueQuery,
-        variables: { slug }
-      }),
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new TypeError("Oops, we haven't got JSON!")
-    }
-
-    const data = await response.json()
-    if (data.errors) {
-      throw new Error(data.errors[0]?.message || 'GraphQL Error')
-    }
-
-    return data
-  } catch (error) {
-    console.error('Error fetching post:', error)
-    return null
-  }
-}
-
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const data = await fetchPost(params.slug)
-  const post = data?.data?.publication?.post
+  const { post } = await getHashnodePost(params.slug)
 
   if (!post) {
     return {
@@ -123,9 +45,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const data = await fetchPost(params.slug)
-  const post = data?.data?.publication?.post
-  const recommendedPosts = data?.data?.publication?.posts?.edges?.map((edge: any) => edge.node) || []
+  const { post, recommendedPosts } = await getHashnodePost(params.slug)
 
   if (!post) {
     return (

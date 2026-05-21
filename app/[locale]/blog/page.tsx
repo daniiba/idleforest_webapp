@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, TreePine } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { BlogPostCard } from '@/components/blog-post-card'
 import type { BlogPost } from '@/components/blog-post-card'
 import Link from 'next/link'
 import Script from 'next/script'
-import Navigation from '@/components/navigation'
+import { getHashnodePosts } from '@/lib/hashnode-blog'
 
 const POSTS_PER_PAGE = 6
 
@@ -25,89 +25,6 @@ export const metadata: Metadata = {
   }
 }
 
-async function getBlogPosts(cursor?: string | null) {
-  try {
-    const query = `
-      query Publication($host: String!, $first: Int!, $after: String) {
-        publication(host: $host) {
-          isTeam
-          title
-          posts(first: $first, after: $after) {
-            edges {
-              node {
-                title
-                brief
-                url
-                slug
-                coverImage {
-                  url
-                }
-                publishedAt
-                readTimeInMinutes
-                views
-                reactionCount
-                responseCount
-                tags {
-                  name
-                }
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-        }
-      }
-    `;
-
-    const variables = {
-      host: "idleforest.com/blog",
-      first: POSTS_PER_PAGE,
-      after: cursor,
-    };
-
-    // Add a unique timestamp to the query name to bypass caching
-    const timestamp = Date.now();
-    const uniqueQuery = query.replace('query Publication', `query Publication_${timestamp}`);
-
-    const response = await fetch('https://gql.hashnode.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ query: uniqueQuery, variables }),
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new TypeError("Oops, we haven't got JSON!")
-    }
-
-    const data = await response.json()
-    if (data.errors) {
-      throw new Error(data.errors[0]?.message || 'GraphQL Error')
-    }
-
-    return {
-      posts: data.data?.publication?.posts?.edges.map((edge: any) => edge.node) || [],
-      pageInfo: data.data?.publication?.posts?.pageInfo
-    }
-  } catch (error) {
-    console.error('Error fetching blog posts:', error)
-    return {
-      posts: [],
-      pageInfo: { hasNextPage: false }
-    }
-  }
-}
-
 export default async function BlogPage({
   searchParams
 }: {
@@ -115,13 +32,14 @@ export default async function BlogPage({
 }) {
   const currentPage = parseInt(searchParams.page || '1')
   const currentCursor = searchParams.cursor
-  const { posts, pageInfo } = await getBlogPosts(currentCursor)
+  const { posts, pageInfo } = await getHashnodePosts({
+    cursor: currentCursor,
+    first: POSTS_PER_PAGE,
+  })
 
   if (posts.length === 0 && currentPage === 1) {
     return (
       <div className="min-h-screen bg-brand-gray">
-        <Navigation />
-
         <div className="container mx-auto px-4 py-8 pt-8">
           <h1 className="text-4xl font-bold mb-8 text-white">Blog Posts</h1>
           <div className="text-center py-12">

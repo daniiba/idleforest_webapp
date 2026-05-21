@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Blog integration
+
+The blog is rendered from Hashnode's GraphQL API at `https://gql-beta.hashnode.com`. Set `HASHNODE_ACCESS_TOKEN` in local and production environments so server-side blog reads are authenticated. You can override the endpoint with `HASHNODE_ENDPOINT` and the publication host with `HASHNODE_PUBLICATION_HOST`.
+
 First, run the development server:
 
 ```bash
