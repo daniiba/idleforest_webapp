@@ -5,20 +5,19 @@ import LandingPageVideo from '@/components/landing/LandingPageVideo'
 import LandingPageScreenshots from '@/components/landing/LandingPageScreenshots'
 import { getDeviceInfo } from '@/lib/device-detection'
 import { buildLocalizedAlternates, getLocalizedUrl } from '@/lib/carbon-routing'
-
-const HOME_TITLE = 'Plant Trees For Free While Browsing | IdleForest - Passive Reforestation'
-const HOME_DESCRIPTION = "Plant trees automatically without changing how you browse. IdleForest's browser extension uses idle bandwidth to fund reforestation, with no donations or search engine switch required."
+import { getLocaleMeta, HOME_META_BY_LOCALE } from '@/lib/seo-locales'
 
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
   const url = getLocalizedUrl('', params.locale)
+  const meta = getLocaleMeta(HOME_META_BY_LOCALE, params.locale)
 
   return {
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
+    title: meta.title,
+    description: meta.description,
     alternates: buildLocalizedAlternates('', params.locale),
     openGraph: {
-      title: HOME_TITLE,
-      description: HOME_DESCRIPTION,
+      title: meta.title,
+      description: meta.description,
       url,
       siteName: 'IdleForest',
       type: 'website',
@@ -33,8 +32,8 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
     },
     twitter: {
       card: 'summary_large_image',
-      title: HOME_TITLE,
-      description: HOME_DESCRIPTION,
+      title: meta.title,
+      description: meta.description,
       images: ['/preview.png'],
     },
   }

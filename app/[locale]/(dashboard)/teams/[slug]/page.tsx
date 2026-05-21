@@ -2,10 +2,12 @@ import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
 import TeamClient from "./TeamClient";
 import { notFound } from "next/navigation";
+import { buildLocalizedAlternates, getLocalizedUrl } from "@/lib/carbon-routing";
+import { LOCALE_NAMES } from "@/lib/seo-locales";
 
 // Define Page Params
 type Props = {
-	params: { slug: string };
+	params: { locale: string; slug: string };
 	searchParams: { [key: string]: string | string[] | undefined };
 }
 
@@ -28,16 +30,23 @@ export async function generateMetadata(
 
 	if (!team) {
 		return {
-			title: "Team Not Found | IdleForest",
+			title: `Team Not Found | IdleForest ${LOCALE_NAMES[params.locale] || 'English'}`,
 		};
 	}
 
+	const localeName = LOCALE_NAMES[params.locale] || 'English';
+	const title = `${team.name} | IdleForest Teams (${localeName})`;
+	const description = team.description || `Join ${team.name} on IdleForest and plant trees together!`;
+	const path = `/teams/${slug}`;
+
 	return {
-		title: `${team.name} | IdleForest Teams`,
-		description: team.description || `Join ${team.name} on IdleForest and plant trees together!`,
+		title,
+		description,
+		alternates: buildLocalizedAlternates(path, params.locale),
 		openGraph: {
-			title: `${team.name} - IdleForest Team`,
-			description: team.description || `Join ${team.name} to help reforest the planet using your idle bandwidth.`,
+			title: `${team.name} - IdleForest Team (${localeName})`,
+			description,
+			url: getLocalizedUrl(path, params.locale),
 			images: team.image_url ? [team.image_url] : [],
 			type: "website",
 		},

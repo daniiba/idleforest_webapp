@@ -9,7 +9,6 @@ const handleI18nRouting = createMiddleware({
   localeDetection: false
 });
 
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -18,6 +17,13 @@ export async function middleware(request: NextRequest) {
   const skipI18nPaths = ['/api', '/auth', '/game', '/install', '/extension-auth', '/onboarding', '/create-team', '/test-donation', '/claim-tree', '/share', '/download-success', '/stats', '/profile', '/admin', '/record'];
   if (skipI18nPaths.some(path => pathname.startsWith(path))) {
     return await updateSession(request);
+  }
+
+  const homepagePaths = ['/', '/es', '/de', '/pt', '/fr'];
+  if (homepagePaths.includes(pathname) && request.nextUrl.searchParams.has('ref')) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete('ref');
+    return NextResponse.redirect(url, 308);
   }
 
   // Redirect localized blog/compare routes to English (base) route (308 Permanent Redirect)
