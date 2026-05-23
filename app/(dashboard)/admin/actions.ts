@@ -217,11 +217,11 @@ export async function getAdminStats() {
     const totalUsersCount = (profilesCount || 0) + (anonymousNodesCount || 0)
     const newTotalUsersCount = (newProfilesCount || 0) + (newAnonymousNodesCount || 0)
 
-    // 5. Active Users (WAU) - use monthly average for ARPU consistency
+    // 5. Active Users (WAU) - use adjusted monthly average for ARPU consistency
     // Using wauAvg (monthly average) instead of currentWau (latest snapshot) for accurate ARPU
     const latestMonthData = chromeStoreData.monthlyData[chromeStoreData.monthlyData.length - 1]
     const chromeWauAvg = latestMonthData?.wauAvg || 0
-    const chromeWauCurrent = chromeStoreData.totals.currentWau  // Keep for display purposes
+    const chromeWauCurrent = chromeStoreData.totals.currentWau  // Adjusted current WAU for display
     const desktopWau = chromeStoreData.desktopData.length > 0
         ? chromeStoreData.desktopData[chromeStoreData.desktopData.length - 1].wauAvg
         : 0
@@ -328,8 +328,8 @@ export async function getAdminStats() {
         activeLast30DaysUsersCount,
         churnRate,
         // Platform breakdown
-        chromeWau: chromeWauAvg,  // Use avg for ARPU calculations
-        chromeWauCurrent,          // Latest snapshot for display
+        chromeWau: chromeWauAvg,  // Use adjusted avg for ARPU calculations
+        chromeWauCurrent,          // Adjusted latest snapshot for display
         desktopWau,
         extensionNodeCount,
         desktopNodeCount,

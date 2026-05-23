@@ -1324,6 +1324,7 @@ export default function AdminPage() {
     // Year-end projections for profitability
     const currentMonthlyRevenue = stats.monthlyRevenue
     const currentWau = chromeStoreData.totals.currentWau
+    const reportedCurrentWau = chromeStoreData.totals.reportedCurrentWau ?? currentWau
     const targetProfitability = FINANCIAL_DATA.totalCosts
     const revenueGap = targetProfitability - currentMonthlyRevenue
     const requiredWauForProfitability = arpu > 0 ? Math.ceil(targetProfitability / arpu) : 0
@@ -1562,13 +1563,16 @@ export default function AdminPage() {
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Activity className="h-4 w-4 text-brand-navy" />
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active (Current)</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active (Adjusted)</p>
                                     </div>
                                     <div className="text-3xl font-extrabold font-candu text-black">{stats.chromeWauCurrent + stats.desktopWau}</div>
                                     <p className="text-sm text-neutral-600 mt-1">
                                         <span className="text-blue-600">{stats.chromeWauCurrent}</span> ext + <span className="text-purple-600">{stats.desktopWau}</span> desktop
                                     </p>
-                                    <p className="text-xs text-neutral-400 mt-1">Avg: {stats.chromeWau + stats.desktopWau} (used for ARPU)</p>
+                                    <p className="text-xs text-neutral-400 mt-1">Adjusted avg: {stats.chromeWau + stats.desktopWau} (used for ARPU)</p>
+                                    {reportedCurrentWau !== currentWau && (
+                                        <p className="text-xs text-amber-700 mt-1">Chrome reported {reportedCurrentWau} WAU</p>
+                                    )}
                                 </div>
                                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                                     <div className="flex items-center gap-2 mb-2">
@@ -1705,10 +1709,16 @@ export default function AdminPage() {
                             <h2 className="text-xl font-extrabold mb-4 font-candu uppercase text-black">Growth Trends</h2>
                             <div className="grid gap-4 lg:grid-cols-3">
                                 <div id="wau-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
-                                    <h3 className="text-base font-bold text-black mb-1">Weekly Active Users</h3>
-                                    <p className="text-xs text-neutral-600 mb-4">
+                                    <h3 className="text-base font-bold text-black mb-1">Weekly Active Users <span className="text-amber-600 text-sm font-normal">(adjusted)</span></h3>
+                                    <p className="text-xs text-neutral-600 mb-2">
                                         {chromeStoreData.yearOverYear.startWau} → {chromeStoreData.yearOverYear.endWau} ({chromeStoreData.yearOverYear.wauGrowth})
                                     </p>
+                                    {chromeStoreData.wauAdjustment.enabled && (
+                                        <p className="text-xs text-amber-700 mb-4 flex items-center gap-1">
+                                            <AlertTriangle className="h-3 w-3" />
+                                            Adjusted from {chromeStoreData.wauAdjustment.anomalyStartDate}; reported peak {chromeStoreData.totals.reportedPeakWau} on {chromeStoreData.totals.reportedPeakWauDate}
+                                        </p>
+                                    )}
                                     <ChartContainer config={wauChartConfig} className="h-[200px] w-full">
                                         <AreaChart data={chromeStoreData.monthlyData} margin={{ left: 0, right: 0 }}>
                                             <CartesianGrid strokeDasharray="3 3" />
@@ -1766,7 +1776,7 @@ export default function AdminPage() {
                         {/* Revenue Chart */}
                         <div id="revenue-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                             <h3 className="text-base font-bold text-black mb-1">Revenue & ARPU Trend</h3>
-                            <p className="text-xs text-neutral-600 mb-4">ARPU includes desktop WAU where available (Jan 2026+)</p>
+                            <p className="text-xs text-neutral-600 mb-4">ARPU uses adjusted Chrome WAU plus desktop WAU where available (Jan 2026+)</p>
                             <ChartContainer config={revenueChartConfig} className="h-[200px] w-full">
                                 <ComposedChart data={monthlyMetricsData} margin={{ left: 0, right: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
@@ -3289,6 +3299,7 @@ export default function AdminPage() {
                                                 <TableHead className="text-right text-xs font-bold">Uninstalls</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Net</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">WAU</TableHead>
+                                                <TableHead className="text-right text-xs font-bold">Reported</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Retention</TableHead>
                                             </TableRow>
                                         </TableHeader>
@@ -3303,7 +3314,11 @@ export default function AdminPage() {
                                                         <TableCell className={`text-right font-semibold text-xs py-2 ${m.netGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                                             {m.netGrowth >= 0 ? '+' : ''}{m.netGrowth}
                                                         </TableCell>
-                                                        <TableCell className="text-right text-xs py-2">{m.wauAvg}</TableCell>
+                                                        <TableCell className="text-right text-xs py-2">
+                                                            {m.wauAvg}
+                                                            {m.isWauAdjusted && <span className="ml-1 text-amber-600">*</span>}
+                                                        </TableCell>
+                                                        <TableCell className="text-right text-xs py-2 text-neutral-500">{m.reportedWauAvg}</TableCell>
                                                         <TableCell className="text-right text-xs py-2">{retention.toFixed(0)}%</TableCell>
                                                     </TableRow>
                                                 )

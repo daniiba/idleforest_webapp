@@ -7,7 +7,11 @@
             "netGrowth": 12,
             "wauStart": 2,
             "wauEnd": 12,
-            "wauAvg": 9
+            "wauAvg": 9,
+            "reportedWauStart": 2,
+            "reportedWauEnd": 12,
+            "reportedWauAvg": 9,
+            "isWauAdjusted": false
         },
         {
             "month": "Dec 2024",
@@ -16,7 +20,11 @@
             "netGrowth": 2,
             "wauStart": 12,
             "wauEnd": 13,
-            "wauAvg": 16
+            "wauAvg": 16,
+            "reportedWauStart": 12,
+            "reportedWauEnd": 13,
+            "reportedWauAvg": 16,
+            "isWauAdjusted": false
         },
         {
             "month": "Jan 2025",
@@ -25,7 +33,11 @@
             "netGrowth": 4,
             "wauStart": 12,
             "wauEnd": 19,
-            "wauAvg": 16
+            "wauAvg": 16,
+            "reportedWauStart": 12,
+            "reportedWauEnd": 19,
+            "reportedWauAvg": 16,
+            "isWauAdjusted": false
         },
         {
             "month": "Feb 2025",
@@ -34,7 +46,11 @@
             "netGrowth": 48,
             "wauStart": 18,
             "wauEnd": 71,
-            "wauAvg": 42
+            "wauAvg": 42,
+            "reportedWauStart": 18,
+            "reportedWauEnd": 71,
+            "reportedWauAvg": 42,
+            "isWauAdjusted": false
         },
         {
             "month": "Mar 2025",
@@ -43,7 +59,11 @@
             "netGrowth": 37,
             "wauStart": 72,
             "wauEnd": 130,
-            "wauAvg": 103
+            "wauAvg": 103,
+            "reportedWauStart": 72,
+            "reportedWauEnd": 130,
+            "reportedWauAvg": 103,
+            "isWauAdjusted": false
         },
         {
             "month": "Apr 2025",
@@ -52,7 +72,11 @@
             "netGrowth": 54,
             "wauStart": 132,
             "wauEnd": 188,
-            "wauAvg": 157
+            "wauAvg": 157,
+            "reportedWauStart": 132,
+            "reportedWauEnd": 188,
+            "reportedWauAvg": 157,
+            "isWauAdjusted": false
         },
         {
             "month": "May 2025",
@@ -61,7 +85,11 @@
             "netGrowth": 135,
             "wauStart": 190,
             "wauEnd": 338,
-            "wauAvg": 295
+            "wauAvg": 295,
+            "reportedWauStart": 190,
+            "reportedWauEnd": 338,
+            "reportedWauAvg": 295,
+            "isWauAdjusted": false
         },
         {
             "month": "Jun 2025",
@@ -70,7 +98,11 @@
             "netGrowth": 40,
             "wauStart": 337,
             "wauEnd": 403,
-            "wauAvg": 365
+            "wauAvg": 365,
+            "reportedWauStart": 337,
+            "reportedWauEnd": 403,
+            "reportedWauAvg": 365,
+            "isWauAdjusted": false
         },
         {
             "month": "Jul 2025",
@@ -79,7 +111,11 @@
             "netGrowth": 27,
             "wauStart": 400,
             "wauEnd": 389,
-            "wauAvg": 383
+            "wauAvg": 383,
+            "reportedWauStart": 400,
+            "reportedWauEnd": 389,
+            "reportedWauAvg": 383,
+            "isWauAdjusted": false
         },
         {
             "month": "Aug 2025",
@@ -88,7 +124,11 @@
             "netGrowth": 3,
             "wauStart": 389,
             "wauEnd": 386,
-            "wauAvg": 384
+            "wauAvg": 384,
+            "reportedWauStart": 389,
+            "reportedWauEnd": 386,
+            "reportedWauAvg": 384,
+            "isWauAdjusted": false
         },
         {
             "month": "Sep 2025",
@@ -97,7 +137,11 @@
             "netGrowth": 28,
             "wauStart": 385,
             "wauEnd": 414,
-            "wauAvg": 395
+            "wauAvg": 395,
+            "reportedWauStart": 385,
+            "reportedWauEnd": 414,
+            "reportedWauAvg": 395,
+            "isWauAdjusted": false
         },
         {
             "month": "Oct 2025",
@@ -106,7 +150,11 @@
             "netGrowth": 53,
             "wauStart": 420,
             "wauEnd": 471,
-            "wauAvg": 466
+            "wauAvg": 466,
+            "reportedWauStart": 420,
+            "reportedWauEnd": 471,
+            "reportedWauAvg": 466,
+            "isWauAdjusted": false
         },
         {
             "month": "Nov 2025",
@@ -115,7 +163,11 @@
             "netGrowth": 92,
             "wauStart": 473,
             "wauEnd": 488,
-            "wauAvg": 483
+            "wauAvg": 483,
+            "reportedWauStart": 473,
+            "reportedWauEnd": 488,
+            "reportedWauAvg": 483,
+            "isWauAdjusted": false
         },
         {
             "month": "Dec 2025",
@@ -124,7 +176,11 @@
             "netGrowth": 96,
             "wauStart": 499,
             "wauEnd": 408,
-            "wauAvg": 478
+            "wauAvg": 478,
+            "reportedWauStart": 499,
+            "reportedWauEnd": 408,
+            "reportedWauAvg": 478,
+            "isWauAdjusted": false
         },
         {
             "month": "Jan 2026",
@@ -133,7 +189,11 @@
             "netGrowth": 96,
             "wauStart": 415,
             "wauEnd": 563,
-            "wauAvg": 516
+            "wauAvg": 516,
+            "reportedWauStart": 415,
+            "reportedWauEnd": 563,
+            "reportedWauAvg": 516,
+            "isWauAdjusted": false
         },
         {
             "month": "Feb 2026",
@@ -142,7 +202,11 @@
             "netGrowth": 96,
             "wauStart": 558,
             "wauEnd": 578,
-            "wauAvg": 553
+            "wauAvg": 553,
+            "reportedWauStart": 558,
+            "reportedWauEnd": 578,
+            "reportedWauAvg": 553,
+            "isWauAdjusted": false
         },
         {
             "month": "Mar 2026",
@@ -151,16 +215,37 @@
             "netGrowth": 126,
             "wauStart": 582,
             "wauEnd": 654,
-            "wauAvg": 620
+            "wauAvg": 620,
+            "reportedWauStart": 582,
+            "reportedWauEnd": 654,
+            "reportedWauAvg": 620,
+            "isWauAdjusted": false
         },
         {
             "month": "Apr 2026",
-            "installs": 79,
-            "uninstalls": 20,
-            "netGrowth": 59,
+            "installs": 168,
+            "uninstalls": 55,
+            "netGrowth": 113,
             "wauStart": 661,
-            "wauEnd": 664,
-            "wauAvg": 647
+            "wauEnd": 686,
+            "wauAvg": 666,
+            "reportedWauStart": 661,
+            "reportedWauEnd": 686,
+            "reportedWauAvg": 666,
+            "isWauAdjusted": false
+        },
+        {
+            "month": "May 2026",
+            "installs": 145,
+            "uninstalls": 39,
+            "netGrowth": 106,
+            "wauStart": 691,
+            "wauEnd": 818,
+            "wauAvg": 764,
+            "reportedWauStart": 691,
+            "reportedWauEnd": 1679,
+            "reportedWauAvg": 1677,
+            "isWauAdjusted": true
         }
     ],
     "desktopData": [
@@ -170,7 +255,7 @@
         },
         {
             "month": "Feb 2026",
-            "wauAvg": 57
+            "wauAvg": 65
         },
         {
             "month": "Mar 2026",
@@ -178,21 +263,42 @@
         },
         {
             "month": "Apr 2026",
-            "wauAvg": 64
+            "wauAvg": 69
+        },
+        {
+            "month": "May 2026",
+            "wauAvg": 75
         }
     ],
     "totals": {
-        "totalInstalls": 1603,
-        "totalUninstalls": 595,
-        "netUsers": 1008,
-        "currentWau": 664,
-        "peakWau": 664,
-        "peakWauDate": "Apr 13, 2026"
+        "totalInstalls": 1837,
+        "totalUninstalls": 669,
+        "netUsers": 1168,
+        "currentWau": 818,
+        "reportedCurrentWau": 1679,
+        "peakWau": 818,
+        "peakWauDate": "May 21, 2026",
+        "reportedPeakWau": 2199,
+        "reportedPeakWauDate": "May 17, 2026"
     },
     "yearOverYear": {
-        "wauGrowth": "332x",
-        "wauGrowthPercent": 33100,
+        "wauGrowth": "409x",
+        "wauGrowthPercent": 40800,
         "startWau": 2,
-        "endWau": 664
+        "endWau": 818
+    },
+    "wauAdjustment": {
+        "enabled": true,
+        "method": "Reported Chrome WAU is used through May 3, 2026; from May 4, 2026 onward, adjusted WAU grows only by daily net installs and is capped by net installed users.",
+        "anomalyStartDate": "May 04, 2026",
+        "events": [
+            {
+                "date": "May 04, 2026",
+                "reportedWau": 915,
+                "previousAdjustedWau": 725,
+                "dailyNetGrowth": 2,
+                "reason": "Reported Chrome WAU jumped faster than installs can explain"
+            }
+        ]
     }
 }
