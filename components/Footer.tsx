@@ -42,8 +42,6 @@ const Footer = () => {
           <div className="flex items-center gap-4">
             {/* Footer quick links */}
             <nav className="hidden sm:flex items-center gap-3 text-sm">
-              <Link href="/game" className="text-gray-400 hover:text-brand-yellow">Play</Link>
-              <span className="text-gray-700">•</span>
               <Link href="/blog" className="text-gray-400 hover:text-brand-yellow">{t('blog')}</Link>
               <span className="text-gray-700">•</span>
               <Link href="/report" className="text-gray-400 hover:text-brand-yellow">Report</Link>

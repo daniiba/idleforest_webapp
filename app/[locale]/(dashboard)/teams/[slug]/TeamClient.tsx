@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card } from "@/components/ui/card"
-import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2 } from "lucide-react"
+import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2, TreePine } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
@@ -184,6 +184,7 @@ export default function TeamClient() {
 	const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
 	const [uploadingImage, setUploadingImage] = useState(false)
 	const [historicalData, setHistoricalData] = useState<any[]>([])
+	const [actualTreesPlanted, setActualTreesPlanted] = useState(0)
 	const [currentUserRole, setCurrentUserRole] = useState<'owner' | 'admin' | 'member' | null>(null)
 	const params = useParams()
 	const router = useRouter()
@@ -198,6 +199,7 @@ export default function TeamClient() {
 	useEffect(() => {
 		if (team?.id) {
 			fetchHistoricalData()
+			fetchTeamStats()
 		}
 	}, [team?.id])
 
@@ -363,7 +365,7 @@ export default function TeamClient() {
 				.from('team_daily_stats')
 				.select('date, total_points_snapshot, points_gained_that_day, member_count')
 				.eq('team_id', team.id)
-				.order('date', { ascending: true })
+				.order('date', { ascending: false })
 				.limit(30)
 
 			if (dailyStats) {
@@ -371,6 +373,20 @@ export default function TeamClient() {
 			}
 		} catch (error) {
 			console.error('Error fetching historical data:', error)
+		}
+	}
+
+	const fetchTeamStats = async () => {
+		try {
+			if (!team?.id) return
+
+			const response = await fetch(`/api/teams/stats?teamId=${team.id}`)
+			if (!response.ok) return
+
+			const data = await response.json()
+			setActualTreesPlanted(data.actualTreesPlanted || 0)
+		} catch (error) {
+			console.error('Error fetching team stats:', error)
 		}
 	}
 
@@ -803,16 +819,23 @@ export default function TeamClient() {
 						</div>
 
 						{/* Stats Grid - Integrated Bottom Section */}
-						<div className="grid grid-cols-3 gap-0 border-t-2 border-black">
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t-2 border-black">
 							<div className="p-4 border-r-2 border-black text-center bg-brand-yellow/10">
 								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Total Points</p>
 								<p className="text-2xl md:text-3xl font-black text-brand-navy">{team.total_points.toLocaleString()}</p>
 							</div>
-							<div className="p-4 border-r-2 border-black text-center bg-blue-50">
+							<div className="p-4 md:border-r-2 border-black text-center bg-green-50">
+								<div className="flex items-center justify-center gap-1 text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">
+									<TreePine className="h-3.5 w-3.5 text-green-600" />
+									Trees Planted
+								</div>
+								<p className="text-2xl md:text-3xl font-black text-brand-navy">{actualTreesPlanted.toLocaleString()}</p>
+							</div>
+							<div className="p-4 border-r-2 border-t-2 md:border-t-0 border-black text-center bg-blue-50">
 								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Members</p>
 								<p className="text-2xl md:text-3xl font-black text-brand-navy">{members.length}</p>
 							</div>
-							<div className="p-4 text-center bg-gray-50">
+							<div className="p-4 border-t-2 md:border-t-0 border-black text-center bg-gray-50">
 								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Created</p>
 								<p className="text-2xl md:text-3xl font-black text-brand-navy">{new Date(team.created_at).toLocaleDateString()}</p>
 							</div>

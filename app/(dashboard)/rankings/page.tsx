@@ -3,8 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { Trophy, Medal, Trees, User } from 'lucide-react'
-import Link from "next/link"
+import { Trophy, Medal, User } from 'lucide-react'
 
 interface Ranking {
     user_id: string
@@ -122,13 +121,6 @@ export default function RankingsPage() {
                 </div>
             </Card>
 
-            <div className="mt-8 text-center">
-                <Link href="/game">
-                    <button className="bg-black text-white px-8 py-3 font-bold font-candu uppercase text-lg border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        Plant More Trees
-                    </button>
-                </Link>
-            </div>
         </div>
     )
 }
