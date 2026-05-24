@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card } from "@/components/ui/card"
-import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2, TreePine } from "lucide-react"
+import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2, TreePine, MessageSquare } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
@@ -37,6 +37,7 @@ interface Team {
 	created_at: string
 	created_by: string
 	total_points: number
+	discord_guild_id?: string | null
 }
 
 interface Invite {
@@ -557,6 +558,9 @@ export default function TeamClient() {
 	}
 
 	const isOwner = currentUser && team && currentUser.id === team.created_by
+	const discordServerUrl = team?.discord_guild_id
+		? `https://discord.com/channels/${team.discord_guild_id}`
+		: null
 
 	const openEditModal = () => {
 		setEditDescription(team?.description || '')
@@ -749,6 +753,20 @@ export default function TeamClient() {
 													<UserPlus className="w-5 h-5" />
 													Invite
 												</button>
+											)}
+
+											{/* Discord Server - for Discord-linked teams */}
+											{discordServerUrl && (
+												<a
+													href={discordServerUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													title="Open Discord Server"
+													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												>
+													<MessageSquare className="w-5 h-5" />
+													Discord
+												</a>
 											)}
 
 											{/* Leave Team - for non-owner members */}
