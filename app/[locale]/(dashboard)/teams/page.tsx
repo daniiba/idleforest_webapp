@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Link } from "@/navigation";
-import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar } from "lucide-react"
+import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar, MessageSquare, Plus, ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 interface Team {
@@ -14,6 +14,7 @@ interface Team {
 	created_by: string
 	total_points: number
 	image_url: string | null
+	discord_guild_id?: string | null
 }
 
 interface RankedProfile {
@@ -97,7 +98,7 @@ export default function TeamsPage() {
 		// Fetch teams with image_url
 		const { data: teamsData } = await supabase
 			.from('teams')
-			.select('id, slug, name, created_at, created_by, total_points, image_url')
+			.select('id, slug, name, created_at, created_by, total_points, image_url, discord_guild_id')
 			.order('total_points', { ascending: false })
 
 		if (teamsData) {
@@ -387,7 +388,52 @@ export default function TeamsPage() {
 				{/* Top 3 Daily Banner - MOVED TO LAYOUT */}
 
 				{/* Header */}
-
+				<section className="bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8">
+					<div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+						<div className="max-w-3xl">
+							<div className="mb-3 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-black">
+								<Users className="h-4 w-4" />
+								{t('hero_badge')}
+							</div>
+							<h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-black">
+								{t('hero_title')}
+							</h1>
+							<p className="mt-3 max-w-2xl text-base md:text-lg font-medium text-neutral-700">
+								{t('hero_description')}
+							</p>
+						</div>
+						<div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+							<Link
+								href="/create-team"
+								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+							>
+								<Plus className="h-5 w-5" />
+								{t('create_team_cta')}
+							</Link>
+							<button
+								onClick={() => setActiveTab('teams')}
+								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black border-2 border-black font-extrabold uppercase text-sm text-white shadow-[3px_3px_0px_0px_rgba(224,241,70,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(224,241,70,1)] transition-all"
+							>
+								{t('find_team_cta')}
+								<ArrowRight className="h-5 w-5" />
+							</button>
+						</div>
+					</div>
+					<div className="mt-6 grid gap-3 sm:grid-cols-3">
+						<div className="border-2 border-black bg-brand-gray p-3">
+							<p className="text-2xl font-black text-black">{teams.length.toLocaleString()}</p>
+							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('active_teams')}</p>
+						</div>
+						<div className="border-2 border-black bg-green-50 p-3">
+							<p className="text-2xl font-black text-black">{periodTopTeams.length.toLocaleString()}</p>
+							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('teams_active_today')}</p>
+						</div>
+						<div className="border-2 border-black bg-blue-50 p-3">
+							<p className="text-2xl font-black text-black">{fastestGrowingTeams.length.toLocaleString()}</p>
+							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('growing_this_period')}</p>
+						</div>
+					</div>
+				</section>
 
 				{/* Tabs */}
 				<div className="flex justify-center">
@@ -455,7 +501,18 @@ export default function TeamsPage() {
 													</div>
 												)}
 												<div className="flex-1 min-w-0">
-													<h2 className="text-lg font-bold truncate text-black">{team.name}</h2>
+													<div className="flex items-center gap-2 min-w-0">
+														<h2 className="text-lg font-bold truncate text-black">{team.name}</h2>
+														{team.discord_guild_id && (
+															<span
+																title="Discord team"
+																aria-label="Discord team"
+																className="inline-flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-[#5865F2] text-white"
+															>
+																<MessageSquare className="h-3.5 w-3.5" />
+															</span>
+														)}
+													</div>
 													<p className="mt-1 text-xs text-neutral-500">{t('created')} {formatCreated(team.created_at)}</p>
 												</div>
 												<div className="flex items-center bg-brand-yellow border-2 border-black px-2 py-1 flex-shrink-0">

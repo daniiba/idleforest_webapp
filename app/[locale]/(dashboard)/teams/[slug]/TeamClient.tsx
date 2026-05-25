@@ -10,6 +10,7 @@ import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"
 import { TeamMembers } from "@/components/TeamMembers"
+import { TeamMilestoneBadges } from "@/components/TeamMilestoneBadges"
 import { trackOnboardingEvent } from "@/lib/onboarding-events"
 
 
@@ -186,6 +187,7 @@ export default function TeamClient() {
 	const [uploadingImage, setUploadingImage] = useState(false)
 	const [historicalData, setHistoricalData] = useState<any[]>([])
 	const [actualTreesPlanted, setActualTreesPlanted] = useState(0)
+	const [desktopMemberCount, setDesktopMemberCount] = useState(0)
 	const [currentUserRole, setCurrentUserRole] = useState<'owner' | 'admin' | 'member' | null>(null)
 	const params = useParams()
 	const router = useRouter()
@@ -386,6 +388,7 @@ export default function TeamClient() {
 
 			const data = await response.json()
 			setActualTreesPlanted(data.actualTreesPlanted || 0)
+			setDesktopMemberCount(data.desktopMemberCount || 0)
 		} catch (error) {
 			console.error('Error fetching team stats:', error)
 		}
@@ -558,9 +561,6 @@ export default function TeamClient() {
 	}
 
 	const isOwner = currentUser && team && currentUser.id === team.created_by
-	const discordServerUrl = team?.discord_guild_id
-		? `https://discord.com/channels/${team.discord_guild_id}`
-		: null
 
 	const openEditModal = () => {
 		setEditDescription(team?.description || '')
@@ -755,18 +755,16 @@ export default function TeamClient() {
 												</button>
 											)}
 
-											{/* Discord Server - for Discord-linked teams */}
-											{discordServerUrl && (
-												<a
-													href={discordServerUrl}
-													target="_blank"
-													rel="noopener noreferrer"
-													title="Open Discord Server"
-													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+											{/* Discord marker - not an invite link */}
+											{team.discord_guild_id && (
+												<div
+													title="Discord team"
+													aria-label="Discord team"
+													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
 												>
 													<MessageSquare className="w-5 h-5" />
 													Discord
-												</a>
+												</div>
 											)}
 
 											{/* Leave Team - for non-owner members */}
@@ -885,6 +883,14 @@ export default function TeamClient() {
 							</TabsList>
 						</div>
 					</div>
+
+					<TeamMilestoneBadges
+						metrics={{
+							trees: actualTreesPlanted,
+							members: members.length,
+							desktopMembers: desktopMemberCount,
+						}}
+					/>
 
 					{/* Invite Section - Expandable */}
 					{showInviteSection && isMember && (

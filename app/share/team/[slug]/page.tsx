@@ -3,24 +3,24 @@ import { createClient as createServerClient } from '@/lib/supabase/server'
 import TeamShareClient from './TeamShareClient'
 
 type Props = {
-    params: Promise<{ id: string }>
+    params: { slug: string }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { id } = await params
+    const { slug } = params
     const supabase = await createServerClient()
 
     try {
         const { data: team } = await supabase
             .from('teams')
-            .select('name, description, total_points, image_url')
-            .eq('id', id)
+            .select('id, name, description, total_points, image_url')
+            .eq('slug', slug)
             .single()
 
         const { count: memberCount } = await supabase
             .from('team_members')
             .select('*', { count: 'exact', head: true })
-            .eq('team_id', id)
+            .eq('team_id', team?.id || '')
 
         const teamName = team?.name || 'Team'
         const description = team?.description

@@ -29,10 +29,13 @@ export async function GET(request: Request) {
         const userIds = members?.map((member) => member.user_id).filter(Boolean) ?? []
 
         if (userIds.length === 0) {
-            return NextResponse.json({ actualTreesPlanted: 0 })
+            return NextResponse.json({
+                actualTreesPlanted: 0,
+                desktopMemberCount: 0,
+            })
         }
 
-        const [claimsResult, rewardsResult, treeBadgeResult] = await Promise.all([
+        const [claimsResult, rewardsResult, treeBadgeResult, desktopNodesResult] = await Promise.all([
             admin
                 .from('pending_tree_claims')
                 .select('trees_earned')
@@ -48,6 +51,11 @@ export async function GET(request: Request) {
                 .select('badge_tiers (id)')
                 .eq('name', 'Tree')
                 .maybeSingle(),
+            admin
+                .from('nodes')
+                .select('user_id, platform')
+                .in('user_id', userIds)
+                .in('platform', ['win32', 'darwin']),
         ])
 
         if (claimsResult.error) {
@@ -57,6 +65,14 @@ export async function GET(request: Request) {
         if (rewardsResult.error) {
             console.error('Team stats reward lookup failed', rewardsResult.error)
         }
+
+        if (desktopNodesResult.error) {
+            console.error('Team stats desktop node lookup failed', desktopNodesResult.error)
+        }
+
+        const desktopMemberCount = new Set(
+            desktopNodesResult.data?.map((node) => node.user_id).filter(Boolean) ?? []
+        ).size
 
         const claimedTrees = claimsResult.data?.reduce(
             (sum, claim) => sum + (claim.trees_earned || 0),
@@ -99,6 +115,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json({
             actualTreesPlanted: claimedTrees + rewardTrees + legacyBadgeTrees,
+            desktopMemberCount,
             sources: {
                 claimedTrees,
                 rewardTrees,

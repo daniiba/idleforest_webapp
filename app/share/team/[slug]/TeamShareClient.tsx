@@ -6,12 +6,17 @@ import { createClient } from '@/lib/supabase/client'
 import StatsCard3D, { TeamCardData } from '@/components/StatsCard3D'
 import { Copy, Check, Twitter, Facebook, Linkedin, Users, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { TeamMilestoneBadges } from '@/components/TeamMilestoneBadges'
+import { getFeaturedTeamMilestone, TeamMilestoneMetrics } from '@/lib/team-milestones'
+import { useTranslations } from 'next-intl'
 
 const supabase = createClient()
 
 export default function TeamShareClient() {
     const params = useParams()
+    const t = useTranslations('Teams')
     const [team, setTeam] = useState<TeamCardData | null>(null)
+    const [metrics, setMetrics] = useState<TeamMilestoneMetrics | null>(null)
     const [loading, setLoading] = useState(true)
     const [copied, setCopied] = useState(false)
 
@@ -33,14 +38,33 @@ export default function TeamShareClient() {
                     .select('*', { count: 'exact', head: true })
                     .eq('team_id', teamData.id)
 
+                let treesPlanted = Math.floor((teamData.total_points || 0) / 1000)
+                let desktopMemberCount = 0
+
+                try {
+                    const statsResponse = await fetch(`/api/teams/stats?teamId=${teamData.id}`)
+                    if (statsResponse.ok) {
+                        const stats = await statsResponse.json()
+                        treesPlanted = stats.actualTreesPlanted || treesPlanted
+                        desktopMemberCount = stats.desktopMemberCount || 0
+                    }
+                } catch (error) {
+                    console.error('Error fetching share stats:', error)
+                }
+
                 setTeam({
                     id: teamData.id,
                     name: teamData.name,
                     imageUrl: teamData.image_url,
                     totalPoints: teamData.total_points || 0,
                     memberCount: memberCount || 0,
-                    treesPlanted: Math.floor((teamData.total_points || 0) / 1000), // Estimate
+                    treesPlanted,
                     slug: teamData.slug
+                })
+                setMetrics({
+                    trees: treesPlanted,
+                    members: memberCount || 0,
+                    desktopMembers: desktopMemberCount,
                 })
 
                 /* We are using the teamData.slug for the button link directly, 
@@ -59,8 +83,19 @@ export default function TeamShareClient() {
         ? `${window.location.origin}/share/team/${params.slug}`
         : ''
 
+    const featuredMilestone = team
+        ? getFeaturedTeamMilestone(metrics || {
+            trees: team.treesPlanted || 0,
+            members: team.memberCount,
+            desktopMembers: 0,
+        })
+        : null
+
     const shareText = team
-        ? `Check out ${team.name} on IdleForest! 🌲 ${team.totalPoints.toLocaleString()} points earned planting trees together.`
+        ? `Check out ${team.name} on IdleForest: ${featuredMilestone
+            ? t(`milestones.${featuredMilestone.id}.shareText`)
+            : t('share_points_earned', { points: team.totalPoints.toLocaleString() })
+        }.`
         : ''
 
     const handleCopy = async () => {
@@ -115,6 +150,8 @@ export default function TeamShareClient() {
             <div className="relative z-10 w-full max-w-md mx-auto space-y-8">
                 {/* 3D Card */}
                 <StatsCard3D variant="team" teamData={team} />
+
+                {metrics && <TeamMilestoneBadges metrics={metrics} />}
 
                 {/* Share buttons */}
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">

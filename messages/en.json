@@ -433,7 +433,84 @@
         "all_time": "All Time",
         "top_users": "Top Users",
         "points": "Points",
-        "new_members": "New Members"
+        "new_members": "New Members",
+        "hero_badge": "Teams",
+        "hero_title": "Join a team. Plant more trees together.",
+        "hero_description": "Create a team for your community, join an existing one, and turn everyday IdleForest activity into visible shared impact.",
+        "create_team_cta": "Create team",
+        "find_team_cta": "Find a team",
+        "active_teams": "Active teams",
+        "teams_active_today": "Teams active today",
+        "growing_this_period": "Growing this period",
+        "team_milestones": "Team milestones",
+        "badges_earned_together": "Badges earned together",
+        "milestones_intro": "Milestones unlock shareable proof for trees planted, team growth, and desktop-connected members.",
+        "milestone_prize": "Prize",
+        "next_milestone": "Next milestone",
+        "milestone_remaining": "{count} more to unlock: {reward}",
+        "share_points_earned": "{points} points earned",
+        "milestones": {
+            "trees-10": {
+                "title": "Seedling Squad",
+                "description": "The team planted its first 10 trees together.",
+                "reward": "Shareable team badge",
+                "shareText": "planted 10 trees together"
+            },
+            "trees-100": {
+                "title": "Hundred Tree Grove",
+                "description": "The team reached 100 verified trees planted.",
+                "reward": "Permanent team badge",
+                "shareText": "reached 100 trees planted"
+            },
+            "trees-500": {
+                "title": "Canopy Builders",
+                "description": "The team helped fund 500 trees.",
+                "reward": "Featured share card badge",
+                "shareText": "helped fund 500 trees"
+            },
+            "trees-1000": {
+                "title": "Thousand Tree Forest",
+                "description": "The team crossed 1,000 trees planted.",
+                "reward": "Team page highlight",
+                "shareText": "crossed 1,000 trees planted"
+            },
+            "members-10": {
+                "title": "Growing Circle",
+                "description": "10 members joined the team.",
+                "reward": "Team growth badge",
+                "shareText": "grew to 10 members"
+            },
+            "members-50": {
+                "title": "Community Grove",
+                "description": "50 members are planting as one team.",
+                "reward": "Featured team eligibility",
+                "shareText": "grew to 50 members"
+            },
+            "members-100": {
+                "title": "Forest Movement",
+                "description": "100 members joined the mission.",
+                "reward": "Public team spotlight",
+                "shareText": "grew to 100 members"
+            },
+            "desktop-10": {
+                "title": "Desktop Grove",
+                "description": "10 members connected the desktop app.",
+                "reward": "Desktop activation badge",
+                "shareText": "connected 10 desktop members"
+            },
+            "desktop-25": {
+                "title": "Always-On Canopy",
+                "description": "25 members are contributing from desktop.",
+                "reward": "Premium share badge",
+                "shareText": "connected 25 desktop members"
+            },
+            "desktop-100": {
+                "title": "Conservation Patron",
+                "description": "100 desktop members unlocked a conservation prize.",
+                "reward": "Symbolic animal adoption prize",
+                "shareText": "unlocked a symbolic animal adoption prize"
+            }
+        }
     },
     "Report": {
         "title": "Annual Report & Analytics | IdleForest",
