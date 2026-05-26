@@ -31,6 +31,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '1clickimpact.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'commons.wikimedia.org',
+      },
     ],
   },
   async rewrites() {
