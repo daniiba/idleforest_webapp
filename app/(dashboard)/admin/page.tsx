@@ -20,9 +20,9 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart'
-import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, getNodeTransferRequestsAdmin, approveNodeTransferAdmin, rejectNodeTransferAdmin, type CompanyAdmin, type NodeTransferRequestAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
+import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, getTeamAdoptionRewardRequestsAdmin, approveTeamAdoptionRewardAdmin, rejectTeamAdoptionRewardAdmin, fulfillTeamAdoptionRewardAdmin, getNodeTransferRequestsAdmin, approveNodeTransferAdmin, rejectNodeTransferAdmin, type CompanyAdmin, type TeamAdoptionRewardRequestAdmin, type NodeTransferRequestAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
-import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor } from 'lucide-react'
+import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor, PawPrint, ExternalLink } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Email Preview Component with proper scaling
@@ -118,11 +118,42 @@ const formatDateTime = (value: string | null | undefined) => {
     }).format(new Date(value))
 }
 
+const formatCurrencyCents = (value: number) =>
+    new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    }).format(value / 100)
+
+const impactModeLabels: Record<CompanyAdmin['impact_mode'], string> = {
+    idleforest_planting: 'IdleForest planting',
+    company_named_donation: 'Company named donation',
+    partner_payout: 'Partner payout',
+}
+
+const getCompanyPayoutDestination = (company: CompanyAdmin) => {
+    if (company.impact_mode === 'partner_payout') {
+        return company.payout_recipient_name || company.name
+    }
+
+    if (company.impact_mode === 'company_named_donation') {
+        return `${company.name} named donation`
+    }
+
+    return 'IdleForest planting pool'
+}
+
 const getTransferStatusClass = (status: NodeTransferRequestAdmin['status']) => {
     if (status === 'pending') return 'bg-yellow-100 text-yellow-900 border-yellow-400'
     if (status === 'approved') return 'bg-green-100 text-green-900 border-green-500'
     if (status === 'rejected') return 'bg-red-100 text-red-900 border-red-500'
     return 'bg-neutral-100 text-neutral-700 border-neutral-400'
+}
+
+const getAdoptionRewardStatusClass = (status: TeamAdoptionRewardRequestAdmin['status']) => {
+    if (status === 'pending') return 'bg-yellow-100 text-yellow-900 border-yellow-400'
+    if (status === 'approved') return 'bg-blue-100 text-blue-900 border-blue-500'
+    if (status === 'fulfilled') return 'bg-green-100 text-green-900 border-green-500'
+    return 'bg-red-100 text-red-900 border-red-500'
 }
 
 export default function AdminPage() {
@@ -238,15 +269,128 @@ export default function AdminPage() {
     const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
     const [companyModalMode, setCompanyModalMode] = useState<'create' | 'edit'>('create')
     const [editingCompanyId, setEditingCompanyId] = useState<string | null>(null)
-    const [newCompany, setNewCompany] = useState({ name: '', slug: '', invite_code: '', theme_color: '#10B981', website: '', video_url: '', logo_url: '', description: '', is_invite_only: true })
+    const [newCompany, setNewCompany] = useState({
+        name: '',
+        slug: '',
+        invite_code: '',
+        theme_color: '#10B981',
+        website: '',
+        video_url: '',
+        logo_url: '',
+        description: '',
+        is_invite_only: true,
+        impact_mode: 'idleforest_planting' as CompanyAdmin['impact_mode'],
+        payout_recipient_name: '',
+        payout_recipient_url: '',
+        payout_notes: '',
+        payout_rate_cents_per_1000_points: 55,
+    })
     const [isSavingCompany, setIsSavingCompany] = useState(false)
     const [previewCompany, setPreviewCompany] = useState<CompanyAdmin | null>(null)
+
+    // Animal Reward Approval State
+    const [adoptionRewardRequests, setAdoptionRewardRequests] = useState<TeamAdoptionRewardRequestAdmin[]>([])
+    const [isLoadingAdoptionRewards, setIsLoadingAdoptionRewards] = useState(false)
+    const [adoptionRewardActionId, setAdoptionRewardActionId] = useState<string | null>(null)
+    const [adoptionRewardResult, setAdoptionRewardResult] = useState<{ success: boolean; message: string } | null>(null)
 
     // Node Transfer Requests State
     const [nodeTransferRequests, setNodeTransferRequests] = useState<NodeTransferRequestAdmin[]>([])
     const [isLoadingNodeTransfers, setIsLoadingNodeTransfers] = useState(false)
     const [nodeTransferActionId, setNodeTransferActionId] = useState<string | null>(null)
     const [nodeTransferResult, setNodeTransferResult] = useState<{ success: boolean; message: string } | null>(null)
+
+    const fetchAdoptionRewardRequests = async (preserveResult = false) => {
+        setIsLoadingAdoptionRewards(true)
+        if (!preserveResult) {
+            setAdoptionRewardResult(null)
+        }
+        try {
+            const result = await getTeamAdoptionRewardRequestsAdmin()
+            setAdoptionRewardRequests(result.requests)
+            if (result.error) {
+                setAdoptionRewardResult({ success: false, message: result.error })
+            }
+        } catch (error) {
+            console.error('Error fetching animal reward requests:', error)
+            setAdoptionRewardResult({ success: false, message: 'Failed to load animal reward requests. Has the latest migration been applied?' })
+        } finally {
+            setIsLoadingAdoptionRewards(false)
+        }
+    }
+
+    const handleAdoptionRewardDecision = async (requestId: string, decision: 'approve' | 'reject') => {
+        const request = adoptionRewardRequests.find(item => item.id === requestId)
+        if (!request) return
+
+        if (decision === 'approve' && !confirm(`Approve the ${request.animal} Fahlo reward for ${request.team_name || 'this team'}? This only approves fulfillment; it does not purchase automatically.`)) return
+        const rejectNotes = decision === 'reject'
+            ? prompt(`Why reject the ${request.animal} reward for ${request.team_name || 'this team'}?`, request.notes || '')
+            : null
+        if (decision === 'reject' && rejectNotes === null) return
+
+        setAdoptionRewardActionId(requestId)
+        setAdoptionRewardResult(null)
+        try {
+            const result = decision === 'approve'
+                ? await approveTeamAdoptionRewardAdmin(requestId)
+                : await rejectTeamAdoptionRewardAdmin(requestId, rejectNotes || undefined)
+
+            if (result.success) {
+                setAdoptionRewardResult({
+                    success: true,
+                    message: decision === 'approve'
+                        ? `${request.team_name || 'Team'} approved for the ${request.animal} Fahlo reward.`
+                        : `${request.team_name || 'Team'} reward request rejected.`
+                })
+                await fetchAdoptionRewardRequests(true)
+            } else {
+                setAdoptionRewardResult({ success: false, message: result.error || `Failed to ${decision} reward request` })
+            }
+        } catch (error) {
+            console.error(`Error trying to ${decision} animal reward request:`, error)
+            setAdoptionRewardResult({ success: false, message: `Failed to ${decision} reward request` })
+        } finally {
+            setAdoptionRewardActionId(null)
+        }
+    }
+
+    const handleFulfillAdoptionReward = async (requestId: string) => {
+        const request = adoptionRewardRequests.find(item => item.id === requestId)
+        if (!request) return
+
+        const animalName = prompt('Animal name from Fahlo tracking card/app', request.animal_name || '')
+        if (animalName === null) return
+        const trackingUrl = prompt('Tracking URL or Fahlo reward URL', request.tracking_url || request.reward_url)
+        if (trackingUrl === null) return
+        const certificateUrl = prompt('IdleForest certificate URL (optional)', request.certificate_url || '')
+        if (certificateUrl === null) return
+        const notes = prompt('Internal notes (optional)', request.notes || '')
+        if (notes === null) return
+
+        setAdoptionRewardActionId(requestId)
+        setAdoptionRewardResult(null)
+        try {
+            const result = await fulfillTeamAdoptionRewardAdmin(requestId, {
+                animal_name: animalName,
+                tracking_url: trackingUrl,
+                certificate_url: certificateUrl,
+                notes
+            })
+
+            if (result.success) {
+                setAdoptionRewardResult({ success: true, message: `${request.team_name || 'Team'} reward marked fulfilled.` })
+                await fetchAdoptionRewardRequests(true)
+            } else {
+                setAdoptionRewardResult({ success: false, message: result.error || 'Failed to mark reward fulfilled' })
+            }
+        } catch (error) {
+            console.error('Error fulfilling animal reward request:', error)
+            setAdoptionRewardResult({ success: false, message: 'Failed to mark reward fulfilled' })
+        } finally {
+            setAdoptionRewardActionId(null)
+        }
+    }
 
     const fetchNodeTransferRequests = async (preserveResult = false) => {
         setIsLoadingNodeTransfers(true)
@@ -367,7 +511,12 @@ export default function AdminPage() {
             video_url: company.video_url || '',
             logo_url: company.logo_url || '',
             description: company.description || '',
-            is_invite_only: company.is_invite_only
+            is_invite_only: company.is_invite_only,
+            impact_mode: company.impact_mode || 'idleforest_planting',
+            payout_recipient_name: company.payout_recipient_name || '',
+            payout_recipient_url: company.payout_recipient_url || '',
+            payout_notes: company.payout_notes || '',
+            payout_rate_cents_per_1000_points: company.payout_rate_cents_per_1000_points ?? 55,
         })
         setIsCompanyModalOpen(true)
     }
@@ -375,7 +524,22 @@ export default function AdminPage() {
     const openCreateCompany = () => {
         setCompanyModalMode('create')
         setEditingCompanyId(null)
-        setNewCompany({ name: '', slug: '', invite_code: '', theme_color: '#10B981', website: '', video_url: '', logo_url: '', description: '', is_invite_only: true })
+        setNewCompany({
+            name: '',
+            slug: '',
+            invite_code: '',
+            theme_color: '#10B981',
+            website: '',
+            video_url: '',
+            logo_url: '',
+            description: '',
+            is_invite_only: true,
+            impact_mode: 'idleforest_planting',
+            payout_recipient_name: '',
+            payout_recipient_url: '',
+            payout_notes: '',
+            payout_rate_cents_per_1000_points: 55,
+        })
         setIsCompanyModalOpen(true)
     }
 
@@ -1524,12 +1688,15 @@ export default function AdminPage() {
                         if (value === 'companies') {
                             fetchCompanies()
                         }
+                        if (value === 'animal-rewards') {
+                            fetchAdoptionRewardRequests()
+                        }
                         if (value === 'node-transfers') {
                             fetchNodeTransferRequests()
                         }
                     }}
                     className="w-full" defaultValue={'real-data'}                 >
-                    <TabsList className="grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
+                    <TabsList className="grid w-full max-w-6xl grid-cols-2 sm:grid-cols-3 lg:grid-cols-10 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
                         <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
@@ -1537,6 +1704,7 @@ export default function AdminPage() {
                         <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
                         <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
                         <TabsTrigger value="companies" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🏢 Companies</TabsTrigger>
+                        <TabsTrigger value="animal-rewards" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">Rewards</TabsTrigger>
                         <TabsTrigger value="node-transfers" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">Transfers</TabsTrigger>
                         <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
                     </TabsList>
@@ -3005,6 +3173,180 @@ export default function AdminPage() {
                         </div>
                     </TabsContent>
 
+                    {/* ANIMAL REWARDS TAB */}
+                    <TabsContent value="animal-rewards" className="space-y-6 mt-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div>
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                    <PawPrint className="h-5 w-5 text-brand-navy" />
+                                    Animal Reward Approvals
+                                </h2>
+                                <p className="text-sm text-neutral-600 mt-1">Qualified teams appear here before any Fahlo purchase or certificate fulfillment happens.</p>
+                            </div>
+                            <button
+                                onClick={() => fetchAdoptionRewardRequests()}
+                                disabled={isLoadingAdoptionRewards}
+                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${isLoadingAdoptionRewards ? 'animate-spin' : ''}`} />
+                                Refresh Candidates
+                            </button>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-3">
+                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Pending Approval</p>
+                                <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'pending').length}</p>
+                            </div>
+                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Approved Not Fulfilled</p>
+                                <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'approved').length}</p>
+                            </div>
+                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Estimated Retail Exposure</p>
+                                <p className="text-3xl font-extrabold font-candu text-black">
+                                    ${(adoptionRewardRequests.filter(request => request.status === 'pending' || request.status === 'approved').length * 16.95).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+
+                        {adoptionRewardResult && (
+                            <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 font-bold ${adoptionRewardResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                                {adoptionRewardResult.message}
+                            </div>
+                        )}
+
+                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                            {isLoadingAdoptionRewards ? (
+                                <div className="p-12 flex justify-center text-neutral-500">
+                                    <Loader2 className="h-8 w-8 animate-spin" />
+                                </div>
+                            ) : adoptionRewardRequests.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="border-b-2 border-black bg-neutral-50">
+                                                <TableHead className="font-bold text-black uppercase text-xs">Team</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Reward</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Desktop Milestone</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Fulfillment</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {adoptionRewardRequests.map((request) => {
+                                                const canApprove = request.status === 'pending'
+                                                const canReject = request.status === 'pending' || request.status === 'approved'
+                                                const canFulfill = request.status === 'approved' || request.status === 'pending'
+                                                return (
+                                                    <TableRow key={request.id} className="border-b border-neutral-200 hover:bg-neutral-50 align-top">
+                                                        <TableCell className="min-w-[220px]">
+                                                            <div className="font-bold text-black">{request.team_name || 'Unknown team'}</div>
+                                                            <div className="text-xs text-neutral-500 mt-1">
+                                                                {request.team_slug ? (
+                                                                    <a href={`/teams/${request.team_slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-bold text-brand-navy hover:underline">
+                                                                        /teams/{request.team_slug}
+                                                                        <ExternalLink className="h-3 w-3" />
+                                                                    </a>
+                                                                ) : (
+                                                                    compactId(request.team_id)
+                                                                )}
+                                                            </div>
+                                                            <div className="text-xs text-neutral-500 mt-1">{(request.team_total_points || 0).toLocaleString()} points</div>
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[240px]">
+                                                            <div className="font-bold text-black">{request.animal}</div>
+                                                            <div className="text-xs text-neutral-500">{request.provider} · {request.partner_name}</div>
+                                                            <a href={request.reward_url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-brand-navy hover:underline">
+                                                                Open Fahlo reward
+                                                                <ExternalLink className="h-3 w-3" />
+                                                            </a>
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[180px]">
+                                                            <div className="text-sm font-black text-black">{request.active_desktop_members.toLocaleString()} / {request.threshold.toLocaleString()}</div>
+                                                            <div className="mt-2 h-2 border border-black bg-neutral-100">
+                                                                <div className="h-full bg-green-500" style={{ width: `${Math.min(100, Math.round((request.active_desktop_members / request.threshold) * 100))}%` }} />
+                                                            </div>
+                                                            <div className="mt-1 text-xs text-neutral-500 font-mono">{request.milestone_id}</div>
+                                                        </TableCell>
+                                                        <TableCell className="min-w-[250px]">
+                                                            <div className="text-sm font-bold text-black">{request.animal_name || 'No animal assigned yet'}</div>
+                                                            {request.tracking_url && (
+                                                                <a href={request.tracking_url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-green-700 hover:underline">
+                                                                    Tracking link
+                                                                    <ExternalLink className="h-3 w-3" />
+                                                                </a>
+                                                            )}
+                                                            {request.certificate_url && (
+                                                                <a href={request.certificate_url} target="_blank" rel="noopener noreferrer" className="ml-2 mt-1 inline-flex items-center gap-1 text-xs font-bold text-green-700 hover:underline">
+                                                                    Certificate
+                                                                    <ExternalLink className="h-3 w-3" />
+                                                                </a>
+                                                            )}
+                                                            {request.notes && <div className="mt-2 text-xs text-neutral-500">{request.notes}</div>}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold uppercase ${getAdoptionRewardStatusClass(request.status)}`}>
+                                                                {request.status}
+                                                            </span>
+                                                            <div className="text-xs text-neutral-500 mt-2">
+                                                                {request.fulfilled_at ? `Fulfilled ${formatDateTime(request.fulfilled_at)}` : request.approved_at ? `Approved ${formatDateTime(request.approved_at)}` : formatDateTime(request.created_at)}
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="text-right min-w-[260px]">
+                                                            <div className="flex flex-wrap items-center justify-end gap-2">
+                                                                {canApprove && (
+                                                                    <button
+                                                                        onClick={() => handleAdoptionRewardDecision(request.id, 'approve')}
+                                                                        disabled={adoptionRewardActionId === request.id}
+                                                                        className="bg-green-100 text-green-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-green-200 disabled:opacity-50 flex items-center gap-1"
+                                                                    >
+                                                                        {adoptionRewardActionId === request.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                                                                        Approve
+                                                                    </button>
+                                                                )}
+                                                                {canFulfill && (
+                                                                    <button
+                                                                        onClick={() => handleFulfillAdoptionReward(request.id)}
+                                                                        disabled={adoptionRewardActionId === request.id}
+                                                                        className="bg-blue-100 text-blue-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-blue-200 disabled:opacity-50 flex items-center gap-1"
+                                                                    >
+                                                                        <PawPrint className="h-3 w-3" />
+                                                                        Fulfill
+                                                                    </button>
+                                                                )}
+                                                                {canReject && (
+                                                                    <button
+                                                                        onClick={() => handleAdoptionRewardDecision(request.id, 'reject')}
+                                                                        disabled={adoptionRewardActionId === request.id}
+                                                                        className="bg-red-100 text-red-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-red-200 disabled:opacity-50 flex items-center gap-1"
+                                                                    >
+                                                                        <X className="h-3 w-3" />
+                                                                        Reject
+                                                                    </button>
+                                                                )}
+                                                                {!canApprove && !canFulfill && !canReject && (
+                                                                    <span className="text-xs text-neutral-500 font-bold uppercase">No action</span>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            ) : (
+                                <div className="p-12 text-center text-neutral-500 flex flex-col items-center">
+                                    <PawPrint className="h-12 w-12 text-neutral-300 mb-4" />
+                                    <p className="font-bold text-black text-lg">No Animal Reward Requests</p>
+                                    <p className="text-sm mt-1">Refresh after teams reach 25, 50, or 100 active desktop users.</p>
+                                </div>
+                            )}
+                        </div>
+                    </TabsContent>
+
                     {/* NODE TRANSFERS TAB */}
                     <TabsContent value="node-transfers" className="space-y-6 mt-6">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
@@ -3145,6 +3487,98 @@ export default function AdminPage() {
                             >
                                 <Plus className="h-4 w-4" /> New Company
                             </button>
+                        </div>
+
+                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                            <div className="flex flex-col gap-3 border-b-2 border-black bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <h3 className="text-lg font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                        <DollarSign className="h-5 w-5 text-green-700" />
+                                        Company Payout Routing
+                                    </h3>
+                                    <p className="text-sm text-neutral-600 mt-1">Where generated company value should go. Amounts use each company's cents per 1,000 points rate.</p>
+                                </div>
+                                <div className="text-left sm:text-right">
+                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Estimated open amount</div>
+                                    <div className="text-2xl font-extrabold font-candu text-black">
+                                        {formatCurrencyCents(companies.reduce((sum, company) => sum + (company.estimated_payout_cents || 0), 0))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {isLoadingCompanies ? (
+                                <div className="p-8 flex justify-center text-neutral-500">
+                                    <Loader2 className="h-7 w-7 animate-spin" />
+                                </div>
+                            ) : companies.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="border-b-2 border-black bg-white">
+                                                <TableHead className="font-bold text-black uppercase text-xs">Company</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Send To</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Generated</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Rate</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Amount</TableHead>
+                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {companies
+                                                .slice()
+                                                .sort((a, b) => (b.estimated_payout_cents || 0) - (a.estimated_payout_cents || 0))
+                                                .map((company) => {
+                                                    const destination = getCompanyPayoutDestination(company)
+                                                    const needsRecipient = company.impact_mode === 'partner_payout' && !company.payout_recipient_name
+                                                    const hasAmount = (company.estimated_payout_cents || 0) > 0
+
+                                                    return (
+                                                        <TableRow key={`payout-${company.id}`} className="border-b border-neutral-200 hover:bg-neutral-50">
+                                                            <TableCell>
+                                                                <div className="font-bold text-black">{company.name}</div>
+                                                                <div className="mt-1 text-xs text-neutral-500">{impactModeLabels[company.impact_mode]}</div>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <div className="font-semibold text-black">{destination}</div>
+                                                                {company.payout_recipient_url ? (
+                                                                    <a href={company.payout_recipient_url} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-brand-navy hover:underline">
+                                                                        Recipient link
+                                                                        <ExternalLink className="h-3 w-3" />
+                                                                    </a>
+                                                                ) : null}
+                                                                {company.payout_notes ? <div className="mt-1 max-w-[360px] text-xs leading-5 text-neutral-500">{company.payout_notes}</div> : null}
+                                                            </TableCell>
+                                                            <TableCell className="text-right">
+                                                                <div className="font-extrabold text-black">{(company.generated_points || 0).toLocaleString()}</div>
+                                                                <div className="text-xs text-neutral-500">{company.member_count || 0} members</div>
+                                                            </TableCell>
+                                                            <TableCell className="text-right text-sm font-semibold">
+                                                                {formatCurrencyCents(company.payout_rate_cents_per_1000_points || 0)} / 1k pts
+                                                            </TableCell>
+                                                            <TableCell className="text-right">
+                                                                <div className="text-lg font-extrabold text-black">{formatCurrencyCents(company.estimated_payout_cents || 0)}</div>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {needsRecipient ? (
+                                                                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800">
+                                                                        <AlertTriangle className="h-3 w-3" />
+                                                                        Set recipient
+                                                                    </span>
+                                                                ) : hasAmount ? (
+                                                                    <span className="inline-flex items-center rounded-full border border-green-300 bg-green-50 px-2.5 py-1 text-xs font-bold text-green-800">Ready to route</span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs font-bold text-neutral-600">No balance</span>
+                                                                )}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
+                                                })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            ) : (
+                                <div className="p-8 text-center text-neutral-500">No company payout routing yet.</div>
+                            )}
                         </div>
 
                         <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
@@ -3419,6 +3853,69 @@ export default function AdminPage() {
                                             <label htmlFor="invite_only_check" className="text-sm font-bold uppercase tracking-wider text-black block cursor-pointer">Invite Only Registration</label>
                                             <p className="text-xs text-neutral-500">Requires valid invite code to join</p>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4 border-t border-neutral-200 pt-4 mt-4">
+                                    <div>
+                                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-black">Impact Routing</h3>
+                                        <p className="mt-1 text-xs text-neutral-500">Controls where generated company value appears in the admin payout table.</p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Routing Mode</label>
+                                            <select
+                                                value={newCompany.impact_mode}
+                                                onChange={e => setNewCompany({ ...newCompany, impact_mode: e.target.value as CompanyAdmin['impact_mode'] })}
+                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-medium bg-white"
+                                            >
+                                                <option value="idleforest_planting">IdleForest planting pool</option>
+                                                <option value="company_named_donation">Donation in company name</option>
+                                                <option value="partner_payout">Direct partner payout</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">USD Cents / 1k Points</label>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                value={newCompany.payout_rate_cents_per_1000_points}
+                                                onChange={e => setNewCompany({ ...newCompany, payout_rate_cents_per_1000_points: Number(e.target.value) || 0 })}
+                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            />
+                                            <p className="text-xs text-neutral-500">Default 55 cents matches 1 estimated tree per 1,000 points.</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Recipient Name</label>
+                                            <input
+                                                type="text"
+                                                value={newCompany.payout_recipient_name}
+                                                onChange={e => setNewCompany({ ...newCompany, payout_recipient_name: e.target.value })}
+                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                                placeholder="Silveira Tech"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Recipient URL</label>
+                                            <input
+                                                type="url"
+                                                value={newCompany.payout_recipient_url}
+                                                onChange={e => setNewCompany({ ...newCompany, payout_recipient_url: e.target.value })}
+                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                                placeholder="https://..."
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Routing Notes</label>
+                                        <textarea
+                                            value={newCompany.payout_notes}
+                                            onChange={e => setNewCompany({ ...newCompany, payout_notes: e.target.value })}
+                                            className="w-full min-h-[72px] px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy resize-y"
+                                            placeholder="How this company should be paid or donated..."
+                                        />
                                     </div>
                                 </div>
 

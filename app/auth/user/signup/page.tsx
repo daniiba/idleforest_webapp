@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
 import { trackOnboardingEvent } from '@/lib/onboarding-events';
+import { getCanonicalSilveiraCompanySlug } from '@/lib/company-partners';
 
 interface InviteInfo {
   teamName: string;
@@ -17,6 +18,8 @@ function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlInviteCode = searchParams.get('invite');
+  const companySlugParam = searchParams.get('company');
+  const companySlug = companySlugParam ? getCanonicalSilveiraCompanySlug(companySlugParam) : null;
 
   // Check cookie for company_invite if no URL param
   const [cookieInviteCode, setCookieInviteCode] = useState<string | null>(null);
@@ -39,15 +42,9 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null);
+  const [companyInfo, setCompanyInfo] = useState<{ name: string; slug: string } | null>(null);
 
-  // Fetch invite info if there's an invite code
-  useEffect(() => {
-    if (inviteCode) {
-      fetchInviteInfo();
-    }
-  }, [inviteCode]);
-
-  const fetchInviteInfo = async () => {
+  const fetchInviteInfo = useCallback(async () => {
     try {
       const { data: invite } = await supabase
         .from('team_invites')
@@ -78,7 +75,36 @@ function SignupForm() {
     } catch (err) {
       console.error('Error fetching invite info:', err);
     }
-  };
+  }, [inviteCode]);
+
+  const fetchCompanyInfo = useCallback(async () => {
+    try {
+      const { data: company } = await supabase
+        .from('companies')
+        .select('name, slug')
+        .eq('slug', companySlug)
+        .single();
+
+      if (company) {
+        setCompanyInfo(company);
+      }
+    } catch (err) {
+      console.error('Error fetching company info:', err);
+    }
+  }, [companySlug]);
+
+  // Fetch invite info if there's an invite code
+  useEffect(() => {
+    if (inviteCode) {
+      fetchInviteInfo();
+    }
+  }, [inviteCode, fetchInviteInfo]);
+
+  useEffect(() => {
+    if (companySlug && !inviteCode) {
+      fetchCompanyInfo();
+    }
+  }, [companySlug, inviteCode, fetchCompanyInfo]);
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,8 +119,9 @@ function SignupForm() {
         data: {
           display_name: displayName,
           // Only set referral_code for non-invite signups (team invites tracked separately via invite_code)
-          referral_code: inviteCode ? undefined : (referralCode || undefined),
+          referral_code: inviteCode || companySlug ? undefined : (referralCode || undefined),
           invite_code: inviteCode || undefined,
+          company_slug: inviteCode ? undefined : companySlug || undefined,
         },
       },
     });
@@ -122,13 +149,13 @@ function SignupForm() {
       });
 
       // If there's an invite code, join the team/company
-      if (inviteCode) {
+      if (inviteCode || companySlug) {
         setMessage('Signup successful! Joining...');
         try {
           const response = await fetch('/api/teams/join', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ inviteCode, isNewSignup: true }),
+            body: JSON.stringify({ inviteCode, companySlug, isNewSignup: true }),
           });
 
           if (response.ok) {
@@ -179,8 +206,19 @@ function SignupForm() {
         </div>
       )}
 
+      {companyInfo && !inviteInfo && (
+        <div className="mb-6 p-4 bg-brand-navy text-white border-2 border-black">
+          <div className="flex items-center gap-2 mb-1">
+            <Users className="w-4 h-4 text-brand-yellow" />
+            <span className="text-xs uppercase tracking-wider text-gray-300">Joining Company Forest</span>
+          </div>
+          <p className="font-bold text-lg">{companyInfo.name}</p>
+          <p className="text-sm text-gray-400">No invite required</p>
+        </div>
+      )}
+
       <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-8 leading-none">
-        {inviteInfo ? 'Create Account' : <>Join the <br /><span className="bg-brand-yellow px-2">Forest</span></>}
+        {inviteInfo || companyInfo ? 'Create Account' : <>Join the <br /><span className="bg-brand-yellow px-2">Forest</span></>}
       </h1>
 
       <form onSubmit={handleSignup} className="space-y-4">
@@ -232,7 +270,7 @@ function SignupForm() {
           />
         </div>
         {/* Only show referral input when not signing up via invite */}
-        {!inviteCode && (
+        {!inviteCode && !companySlug && (
           <div>
             <label htmlFor="referralCode" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
               Referral Code <span className="text-neutral-400 font-normal normal-case">(Optional)</span>

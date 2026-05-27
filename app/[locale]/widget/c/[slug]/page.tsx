@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { TreePine, Users } from 'lucide-react'
+import { getCompanyGeneratedPointStats } from '@/lib/company-node-points'
 
 // Basic standalone Layout for Widget to override the root layout's header/footer if needed
 // Actually, since it's an app dir, we can rely on standard page layout, 
@@ -26,19 +28,12 @@ export default async function CompanyWidgetPage({
         return notFound()
     }
 
-    // Fetch members and points for social proof
-    const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('total_points')
-        .eq('company_id', company.id)
-
     let memberCount = 0
     let totalPoints = 0
 
-    if (!profilesError && profiles) {
-        memberCount = profiles.length
-        totalPoints = profiles.reduce((acc, p) => acc + (p.total_points || 0), 0)
-    }
+    const companyPointStats = await getCompanyGeneratedPointStats(createAdminClient(), company.id)
+    memberCount = companyPointStats.memberCount
+    totalPoints = companyPointStats.generatedPoints
 
     const themeColor = company.theme_color || '#10B981'
     const joinUrl = `/${params.locale}/c/${company.slug}?invite=${company.invite_code}`

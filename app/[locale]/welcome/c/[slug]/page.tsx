@@ -108,16 +108,11 @@ export default function CompanyWelcomePage() {
 
             setCompany(companyData)
 
-            // Fetch member count and points
-            const { data: profiles, error: profilesError } = await supabase
-                .from('profiles')
-                .select('total_points')
-                .eq('company_id', companyData.id)
-
-            if (!profilesError && profiles) {
-                setMemberCount(profiles.length)
-                const sum = profiles.reduce((acc, p) => acc + (p.total_points || 0), 0)
-                setTotalPoints(sum)
+            const statsResponse = await fetch(`/api/companies/${companyData.slug}/stats`)
+            if (statsResponse.ok) {
+                const companyStats = await statsResponse.json()
+                setMemberCount(companyStats.memberCount || 0)
+                setTotalPoints(companyStats.generatedPoints || 0)
             }
 
             // Fetch node status

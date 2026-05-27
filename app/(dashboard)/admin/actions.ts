@@ -357,6 +357,8 @@ import {
     listContacts,
     type ResendContact
 } from '@/lib/resend'
+import { TEAM_ADOPTION_REWARDS } from '@/lib/team-adoption-rewards'
+import { getCompanyGeneratedPointStats } from '@/lib/company-node-points'
 
 export type { ResendContact }
 
@@ -2730,6 +2732,14 @@ export interface CompanyAdmin {
     is_invite_only: boolean
     invite_code: string | null
     theme_color: string | null
+    impact_mode: 'idleforest_planting' | 'company_named_donation' | 'partner_payout'
+    payout_recipient_name: string | null
+    payout_recipient_url: string | null
+    payout_notes: string | null
+    payout_rate_cents_per_1000_points: number
+    member_count: number
+    generated_points: number
+    estimated_payout_cents: number
     created_at: string
 }
 
@@ -2749,7 +2759,26 @@ export async function getCompaniesAdmin(): Promise<CompanyAdmin[]> {
         console.error('Error fetching companies:', error)
         return []
     }
-    return data || []
+
+    const companies = data || []
+    const companyStats = await Promise.all(
+        companies.map((company) => getCompanyGeneratedPointStats(adminClient, company.id))
+    )
+
+    return companies.map((company, index) => {
+        const stats = companyStats[index]
+        const generatedPoints = stats.generatedPoints
+        const payoutRate = company.payout_rate_cents_per_1000_points ?? 55
+
+        return {
+            ...company,
+            impact_mode: company.impact_mode || 'idleforest_planting',
+            payout_rate_cents_per_1000_points: payoutRate,
+            member_count: stats.memberCount,
+            generated_points: generatedPoints,
+            estimated_payout_cents: Math.floor((generatedPoints / 1000) * payoutRate),
+        }
+    })
 }
 
 export async function createCompanyAdmin(input: {
@@ -2762,6 +2791,11 @@ export async function createCompanyAdmin(input: {
     is_invite_only?: boolean
     invite_code?: string
     theme_color?: string
+    impact_mode?: CompanyAdmin['impact_mode']
+    payout_recipient_name?: string
+    payout_recipient_url?: string
+    payout_notes?: string
+    payout_rate_cents_per_1000_points?: number
 }): Promise<{ success: boolean; company?: CompanyAdmin; error?: string }> {
     const isAuthenticated = await verifyAdminSession()
     if (!isAuthenticated) {
@@ -2795,7 +2829,12 @@ export async function createCompanyAdmin(input: {
             logo_url: input.logo_url || null,
             is_invite_only: input.is_invite_only !== undefined ? input.is_invite_only : true,
             invite_code: input.invite_code || null,
-            theme_color: input.theme_color || '#10B981'
+            theme_color: input.theme_color || '#10B981',
+            impact_mode: input.impact_mode || 'idleforest_planting',
+            payout_recipient_name: input.payout_recipient_name || null,
+            payout_recipient_url: input.payout_recipient_url || null,
+            payout_notes: input.payout_notes || null,
+            payout_rate_cents_per_1000_points: input.payout_rate_cents_per_1000_points ?? 55
         })
         .select()
         .single()
@@ -2854,6 +2893,308 @@ export async function deleteCompanyAdmin(id: string): Promise<{ success: boolean
 
     if (error) {
         console.error('Error deleting company:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
+
+// ========================================
+// TEAM ANIMAL REWARD APPROVALS
+// ========================================
+
+export type TeamAdoptionRewardStatus = 'pending' | 'approved' | 'rejected' | 'fulfilled'
+
+export interface TeamAdoptionRewardRequestAdmin {
+    id: string
+    team_id: string
+    milestone_id: string
+    threshold: number
+    provider: string
+    animal: string
+    reward_url: string
+    partner_name: string
+    partner_url: string | null
+    active_desktop_members: number
+    status: TeamAdoptionRewardStatus
+    approved_at: string | null
+    rejected_at: string | null
+    fulfilled_at: string | null
+    animal_name: string | null
+    tracking_url: string | null
+    certificate_url: string | null
+    notes: string | null
+    created_at: string
+    updated_at: string
+    team_name: string | null
+    team_slug: string | null
+    team_total_points: number | null
+}
+
+type RawTeamAdoptionRewardRequest = Omit<TeamAdoptionRewardRequestAdmin, 'team_name' | 'team_slug' | 'team_total_points'>
+
+type TeamRewardTeam = {
+    id: string
+    name: string | null
+    slug: string | null
+    total_points: number | null
+}
+
+type TeamRewardMember = {
+    team_id: string
+    user_id: string
+}
+
+type TeamRewardNode = {
+    user_id: string | null
+    platform: string | null
+    total_requests: number | null
+    opt_in: boolean | null
+}
+
+async function syncPendingTeamAdoptionRewards(adminClient: ReturnType<typeof createAdminClient>) {
+    const [{ data: teams, error: teamsError }, { data: members, error: membersError }] = await Promise.all([
+        adminClient
+            .from('teams')
+            .select('id, name, slug, total_points'),
+        adminClient
+            .from('team_members')
+            .select('team_id, user_id')
+    ])
+
+    if (teamsError) {
+        console.error('Error fetching teams for adoption rewards:', teamsError)
+        return { error: teamsError.message }
+    }
+
+    if (membersError) {
+        console.error('Error fetching team members for adoption rewards:', membersError)
+        return { error: membersError.message }
+    }
+
+    const teamRows = (teams || []) as TeamRewardTeam[]
+    const memberRows = (members || []) as TeamRewardMember[]
+    const memberUserIds = Array.from(new Set(memberRows.map(member => member.user_id).filter(Boolean)))
+
+    const activeDesktopUsers = new Set<string>()
+    if (memberUserIds.length > 0) {
+        const { data: nodes, error: nodesError } = await adminClient
+            .from('nodes')
+            .select('user_id, platform, total_requests, opt_in')
+            .in('user_id', memberUserIds)
+
+        if (nodesError) {
+            console.error('Error fetching desktop nodes for adoption rewards:', nodesError)
+            return { error: nodesError.message }
+        }
+
+        ;((nodes || []) as TeamRewardNode[]).forEach(node => {
+            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            if (node.user_id && isDesktop && node.opt_in !== false && (node.total_requests || 0) > 0) {
+                activeDesktopUsers.add(node.user_id)
+            }
+        })
+    }
+
+    const teamMembers = new Map<string, Set<string>>()
+    memberRows.forEach(member => {
+        if (!teamMembers.has(member.team_id)) {
+            teamMembers.set(member.team_id, new Set())
+        }
+        teamMembers.get(member.team_id)?.add(member.user_id)
+    })
+
+    const qualifiedRows = teamRows.flatMap(team => {
+        const activeDesktopMembers = Array.from(teamMembers.get(team.id) || [])
+            .filter(userId => activeDesktopUsers.has(userId)).length
+
+        return TEAM_ADOPTION_REWARDS
+            .filter(reward => activeDesktopMembers >= reward.threshold)
+            .map(reward => ({
+                team_id: team.id,
+                milestone_id: reward.milestoneId,
+                threshold: reward.threshold,
+                provider: reward.provider,
+                animal: reward.animal,
+                reward_url: reward.url,
+                partner_name: reward.partner,
+                partner_url: reward.partnerUrl,
+                active_desktop_members: activeDesktopMembers,
+                status: 'pending' as TeamAdoptionRewardStatus
+            }))
+    })
+
+    if (qualifiedRows.length === 0) {
+        return {}
+    }
+
+    const { data: existingRows, error: existingError } = await adminClient
+        .from('team_adoption_reward_requests')
+        .select('team_id, milestone_id')
+
+    if (existingError) {
+        console.error('Error fetching existing adoption reward requests:', existingError)
+        return { error: existingError.message }
+    }
+
+    const existingKeys = new Set((existingRows || []).map(row => `${row.team_id}:${row.milestone_id}`))
+    const rowsToInsert = qualifiedRows.filter(row => !existingKeys.has(`${row.team_id}:${row.milestone_id}`))
+
+    if (rowsToInsert.length > 0) {
+        const { error: insertError } = await adminClient
+            .from('team_adoption_reward_requests')
+            .insert(rowsToInsert)
+
+        if (insertError) {
+            console.error('Error creating adoption reward requests:', insertError)
+            return { error: insertError.message }
+        }
+    }
+
+    await Promise.all(qualifiedRows.map(row => adminClient
+        .from('team_adoption_reward_requests')
+        .update({
+            active_desktop_members: row.active_desktop_members,
+            updated_at: new Date().toISOString()
+        })
+        .eq('team_id', row.team_id)
+        .eq('milestone_id', row.milestone_id)
+    ))
+
+    return {}
+}
+
+export async function getTeamAdoptionRewardRequestsAdmin(): Promise<{ requests: TeamAdoptionRewardRequestAdmin[]; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const syncResult = await syncPendingTeamAdoptionRewards(adminClient)
+
+    const { data: requests, error } = await adminClient
+        .from('team_adoption_reward_requests')
+        .select('id, team_id, milestone_id, threshold, provider, animal, reward_url, partner_name, partner_url, active_desktop_members, status, approved_at, rejected_at, fulfilled_at, animal_name, tracking_url, certificate_url, notes, created_at, updated_at')
+        .order('created_at', { ascending: false })
+        .limit(200)
+
+    if (error) {
+        console.error('Error fetching adoption reward requests:', error)
+        return { requests: [], error: error.message }
+    }
+
+    const requestRows = (requests || []) as RawTeamAdoptionRewardRequest[]
+    const teamIds = Array.from(new Set(requestRows.map(request => request.team_id)))
+    const teamMap = new Map<string, TeamRewardTeam>()
+
+    if (teamIds.length > 0) {
+        const { data: teams, error: teamsError } = await adminClient
+            .from('teams')
+            .select('id, name, slug, total_points')
+            .in('id', teamIds)
+
+        if (teamsError) {
+            console.error('Error fetching reward request teams:', teamsError)
+        } else {
+            ;((teams || []) as TeamRewardTeam[]).forEach(team => {
+                teamMap.set(team.id, team)
+            })
+        }
+    }
+
+    return {
+        requests: requestRows.map(request => {
+            const team = teamMap.get(request.team_id)
+            return {
+                ...request,
+                team_name: team?.name || null,
+                team_slug: team?.slug || null,
+                team_total_points: team?.total_points ?? null
+            }
+        }),
+        error: syncResult.error
+    }
+}
+
+export async function approveTeamAdoptionRewardAdmin(requestId: string): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient
+        .from('team_adoption_reward_requests')
+        .update({
+            status: 'approved',
+            approved_at: new Date().toISOString(),
+            rejected_at: null,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId)
+        .eq('status', 'pending')
+
+    if (error) {
+        console.error('Error approving adoption reward request:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
+
+export async function rejectTeamAdoptionRewardAdmin(requestId: string, notes?: string): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient
+        .from('team_adoption_reward_requests')
+        .update({
+            status: 'rejected',
+            rejected_at: new Date().toISOString(),
+            notes: notes?.trim() || null,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId)
+        .in('status', ['pending', 'approved'])
+
+    if (error) {
+        console.error('Error rejecting adoption reward request:', error)
+        return { success: false, error: error.message }
+    }
+
+    return { success: true }
+}
+
+export async function fulfillTeamAdoptionRewardAdmin(
+    requestId: string,
+    details: { animal_name?: string; tracking_url?: string; certificate_url?: string; notes?: string }
+): Promise<{ success: boolean; error?: string }> {
+    const isAuthenticated = await verifyAdminSession()
+    if (!isAuthenticated) {
+        throw new Error('Unauthorized: Admin session required')
+    }
+
+    const adminClient = createAdminClient()
+    const { error } = await adminClient
+        .from('team_adoption_reward_requests')
+        .update({
+            status: 'fulfilled',
+            fulfilled_at: new Date().toISOString(),
+            animal_name: details.animal_name?.trim() || null,
+            tracking_url: details.tracking_url?.trim() || null,
+            certificate_url: details.certificate_url?.trim() || null,
+            notes: details.notes?.trim() || null,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId)
+        .in('status', ['approved', 'pending'])
+
+    if (error) {
+        console.error('Error fulfilling adoption reward request:', error)
         return { success: false, error: error.message }
     }
 
