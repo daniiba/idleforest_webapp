@@ -26,34 +26,34 @@ const screenshots = [
     "/landing/screenshot-3.png",
 ];
 
-const comparisonRows = [
+const comparisonCriteria = [
+    "Cost",
+    "Effort",
+    "How trees are funded",
+    "Works with your browser",
+];
+
+const comparisonProducts = [
     {
-        label: "Cost",
-        idleforest: "Free, no signup",
-        ecosia: "Free search",
-        mossyEarth: "$10-25/month",
-        donationApps: "Recurring donation",
+        name: "IdleForest",
+        summary: "Passive impact beside the browser you already use.",
+        values: ["Free, no signup", "Install once, forget", "Idle bandwidth", "Yes, all browsers"],
+        featured: true,
     },
     {
-        label: "Effort",
-        idleforest: "Install once, forget",
-        ecosia: "Switch your search engine",
-        mossyEarth: "Active subscription",
-        donationApps: "Manual payments",
+        name: "Ecosia",
+        summary: "Tree planting funded by changing search behavior.",
+        values: ["Free search", "Switch your search engine", "Search ads", "Browser-specific"],
     },
     {
-        label: "How trees are funded",
-        idleforest: "Idle bandwidth",
-        ecosia: "Search ads",
-        mossyEarth: "Subscription fees",
-        donationApps: "Your money",
+        name: "Mossy Earth",
+        summary: "Membership model for active conservation supporters.",
+        values: ["$10-25/month", "Active subscription", "Subscription fees", "N/A"],
     },
     {
-        label: "Works with your browser",
-        idleforest: "Yes, all browsers",
-        ecosia: "Browser-specific",
-        mossyEarth: "N/A",
-        donationApps: "N/A",
+        name: "Donation apps",
+        summary: "Traditional giving with repeated manual action.",
+        values: ["Recurring donation", "Manual payments", "Your money", "N/A"],
     },
 ];
 
@@ -308,29 +308,61 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </p>
                         </div>
 
-                        <div className="mt-12 overflow-x-auto border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                            <table className="w-full min-w-[760px] border-collapse text-left">
-                                <thead className="bg-brand-navy text-brand-yellow">
-                                    <tr>
-                                        <th className="border-b-2 border-black p-4 text-sm uppercase tracking-wide">Compare</th>
-                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">IdleForest</th>
-                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Ecosia</th>
-                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Mossy Earth</th>
-                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Donation apps</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {comparisonRows.map((row) => (
-                                        <tr key={row.label} className="odd:bg-brand-yellow/20">
-                                            <th className="border-b border-black/20 p-4 font-extrabold">{row.label}</th>
-                                            <td className="border-b border-l border-black/20 p-4 font-semibold">{row.idleforest}</td>
-                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.ecosia}</td>
-                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.mossyEarth}</td>
-                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.donationApps}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                        {/* Hallmark · component: comparison-proof · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
+                        <div className="mt-12 grid gap-4 lg:grid-cols-4">
+                            {comparisonProducts.map((product) => (
+                                <article
+                                    key={product.name}
+                                    className={`relative flex min-w-0 flex-col border-2 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${product.featured
+                                        ? "bg-brand-navy text-brand-yellow"
+                                        : "bg-white text-black"
+                                        }`}
+                                >
+                                    {product.featured ? (
+                                        <div className="absolute right-4 top-4 border-2 border-brand-yellow bg-brand-yellow px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-black">
+                                            Best fit
+                                        </div>
+                                    ) : null}
+                                    <div className={product.featured ? "pr-24" : ""}>
+                                        <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight">
+                                            {product.name}
+                                        </h3>
+                                        <p className={`mt-3 text-sm leading-6 ${product.featured ? "text-brand-yellow/80" : "text-neutral-700"}`}>
+                                            {product.summary}
+                                        </p>
+                                    </div>
+                                    <dl className="mt-6 flex-1">
+                                        {comparisonCriteria.map((criterion, index) => (
+                                            <div
+                                                key={`${product.name}-${criterion}`}
+                                                className={`border-t py-4 ${product.featured ? "border-brand-yellow/25" : "border-black/10"}`}
+                                            >
+                                                <dt className={`text-[11px] font-extrabold uppercase tracking-[0.16em] ${product.featured ? "text-brand-yellow/65" : "text-neutral-500"}`}>
+                                                    {criterion}
+                                                </dt>
+                                                <dd className={`mt-1 text-sm font-semibold leading-6 ${product.featured ? "text-brand-yellow" : "text-black"}`}>
+                                                    {product.values[index]}
+                                                </dd>
+                                            </div>
+                                        ))}
+                                    </dl>
+                                </article>
+                            ))}
+                        </div>
+
+                        <div className="mt-6 grid gap-4 md:grid-cols-2">
+                            <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/70">No habit tax</p>
+                                <p className="mt-2 text-sm font-semibold leading-6">
+                                    IdleForest is designed around behavior you already have: leaving your browser or computer connected.
+                                </p>
+                            </div>
+                            <div className="border-2 border-black bg-white p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-500">Works alongside others</p>
+                                <p className="mt-2 text-sm font-semibold leading-6">
+                                    You can still use Ecosia, donate, or support subscriptions. IdleForest adds a passive layer on top.
+                                </p>
+                            </div>
                         </div>
 
                         <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-bold">

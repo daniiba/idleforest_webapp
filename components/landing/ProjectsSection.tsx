@@ -34,16 +34,28 @@ const partnerDetails = [
     {
         name: "Trees for the Future",
         href: "https://trees.org",
+        logoSrc: "/partner-logos/trees-for-the-future.png",
+        logoAlt: "Trees for the Future logo",
+        logoWidth: 220,
+        logoHeight: 90,
         description: "Trees for the Future plants food forests with smallholder farmers across Sub-Saharan Africa. Their Forest Garden model trains farmers to grow trees, vegetables, and cash crops on the same land, restoring soil while supporting long-term local income.",
     },
     {
         name: "Tree-Nation",
         href: "https://tree-nation.com",
+        logoSrc: "/partner-logos/tree-nation.svg",
+        logoAlt: "Tree-Nation logo",
+        logoWidth: 220,
+        logoHeight: 64,
         description: "Tree-Nation restores native forests in 35+ countries, including Madagascar, Senegal, and Tanzania. They focus on species native to each region, which gives planted forests stronger survival rates and better long-term ecological value than monoculture planting.",
     },
     {
         name: "1ClickImpact",
         href: "https://1clickimpact.com",
+        logoSrc: "/partner-logos/1clickimpact.png",
+        logoAlt: "1ClickImpact logo",
+        logoWidth: 220,
+        logoHeight: 41,
         description: "1ClickImpact funds planting projects with traceability across certificates, project records, and impact reporting. We link their verified planting records in our transparency work so you can follow where funded trees go.",
     },
 ];
@@ -158,9 +170,20 @@ export default function ProjectsSection() {
                     })}
                 </div>
 
+                {/* Hallmark · component: partner-logo-proof · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
                 <div className="mt-12 grid gap-5 lg:grid-cols-3">
                     {partnerDetails.map((partner) => (
                         <article key={partner.name} className="flex h-full flex-col border-2 border-brand-yellow bg-black/20 p-6">
+                            <div className="mb-5 flex h-24 items-center justify-center border-2 border-brand-yellow bg-white p-4">
+                                <Image
+                                    src={partner.logoSrc}
+                                    alt={partner.logoAlt}
+                                    width={partner.logoWidth}
+                                    height={partner.logoHeight}
+                                    unoptimized
+                                    className="max-h-14 w-auto max-w-full object-contain"
+                                />
+                            </div>
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-brand-yellow">
                                 {partner.name}
                             </h3>
