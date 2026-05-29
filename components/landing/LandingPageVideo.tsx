@@ -1,523 +1,767 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
 import Navigation from "@/components/navigation";
+import { useEffect, useState } from "react";
+
+import { EmailForm } from "@/components/email-form";
+import { useDeviceDetection } from "@/hooks/useDeviceDetection";
+import { DeviceDetection } from "@/lib/device-detection";
 import { ReviewsSection } from "@/components/reviews-section";
+import { SmartCTA } from "@/components/smart-cta";
+import TopTeamsBanner from "@/components/TopTeamsBanner";
+import { useTranslations } from "next-intl";
+import { trackPinterestEvent } from "@/lib/pinterest/client";
+import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
 import ProjectsSection from "@/components/landing/ProjectsSection";
 import TeamSection from "@/components/landing/TeamSection";
-import { DeviceDetection } from "@/lib/device-detection";
-import { useDeviceDetection } from "@/hooks/useDeviceDetection";
-import { trackPinterestEvent } from "@/lib/pinterest/client";
-import { ArrowRight, Chrome, Download, ExternalLink, Leaf, ShieldCheck, Sprout, TreePine } from "lucide-react";
 
-const CHROME_URL = "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk";
-const MAC_URL = "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip";
-const WINDOWS_URL = "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe";
-
-const comparisonRows = [
-    ["Cost", "Free, no signup", "Free search", "$10-25/month", "Recurring donation"],
-    ["Effort", "Install once, forget", "Switch your search engine", "Active subscription", "Manual payments"],
-    ["How trees are funded", "Idle bandwidth", "Search ads", "Subscription fees", "Your money"],
-    ["Works with your browser", "Yes, all browsers", "Browser-specific", "N/A", "N/A"],
-];
-
-const impactStats = [
-    ["5,364", "verified trees planted"],
-    ["$2,796", "contributed"],
-    ["10.1M", "requests powered"],
-    ["1,000+", "users"],
-];
-
-const howItWorksScreenshots = ["/landing/screenshot-1.png", "/landing/screenshot-2.png", "/landing/screenshot-3.png"];
-
-const faqItems = [
-    {
-        question: "Is the tree planting app really free?",
-        answer: "Yes. There is no subscription, no donation, no signup, and no paid tier. The app is funded by the revenue from idle bandwidth tasks, not by you.",
-    },
-    {
-        question: "Does the app slow down my computer or internet?",
-        answer: "No. The app uses only the bandwidth you're not using. When you start a video call, open a heavy site, or download a file, IdleForest steps back. You can also pause it at any time from the extension menu.",
-    },
-    {
-        question: "How does IdleForest plant trees?",
-        answer: "The app uses your unused internet bandwidth to power small backend tasks for paying clients. The revenue from those tasks funds tree-planting with Trees for the Future, Tree-Nation, and 1ClickImpact. You can see the live count of trees funded on the transparency page.",
-    },
-    {
-        question: 'What is "idle bandwidth"?',
-        answer: "Idle bandwidth is the part of your internet connection that isn't being used. Most home connections sit unused most of the time. IdleForest uses that unused capacity to generate revenue, and routes the revenue to reforestation.",
-    },
-    {
-        question: "Can I use IdleForest with Ecosia or another browser?",
-        answer: "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, and any other browser. You can stack the impact.",
-    },
-    {
-        question: "What data does the app collect?",
-        answer: "None. The traffic that runs through the app is sessionless, meaning it doesn't carry cookies, personal identifiers, or browsing history. The app doesn't read your tabs, your bookmarks, or your search history.",
-    },
-    {
-        question: "Is the bandwidth used for anything harmful?",
-        answer: "No. The tasks routed through your connection are limited to uptime monitoring, market research, and similar passive data collection from public sites. The app doesn't participate in ad fraud, crypto mining, scraping of private data, or any malicious activity.",
-    },
-    {
-        question: "How many trees has IdleForest planted?",
-        answer: "As of May 2026, IdleForest has funded 5,364 verified trees through our partners. The count updates monthly based on confirmed planting reports from each partner.",
-    },
-    {
-        question: "How much money does IdleForest make from my bandwidth?",
-        answer: "The revenue per user is small, a few cents per month for an average user. That's why the model works at scale, not per individual. With 1,000 active users, the total reaches a level where we can fund verified trees every month.",
-    },
-    {
-        question: "Is IdleForest available on mobile?",
-        answer: "Not yet. The app runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections, so the impact per user would be lower.",
-    },
-    {
-        question: "Can I uninstall the app at any time?",
-        answer: "Yes. Uninstall the Chrome extension from the extensions menu, or remove the desktop app like any other application. Once uninstalled, no bandwidth is used and no data is collected. The trees you've already funded stay funded.",
-    },
+const screenshots = [
+    "/landing/screenshot-1.png",
+    "/landing/screenshot-2.png",
+    "/landing/screenshot-3.png",
 ];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
+    const [stats, setStats] = useState({
+        totalUsers: 0,
+        totalRequests: 0,
+        earnings: "$0",
+        treesPlanted: 0,
+    });
+
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection(deviceInfo);
+    const t = useTranslations('Landing');
+    const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
     const [currentScreenshot, setCurrentScreenshot] = useState(0);
-    const { isMac } = useDeviceDetection(deviceInfo);
-    const desktopUrl = isMac ? MAC_URL : WINDOWS_URL;
-    const desktopLabel = isMac ? "Download for Mac" : "Download for Windows";
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentScreenshot((previous) => (previous + 1) % howItWorksScreenshots.length);
-        }, 2500);
+            setCurrentScreenshot((prev) => (prev + 1) % screenshots.length);
+        }, 2000);
 
         return () => clearInterval(timer);
     }, []);
 
-    const trackLead = (eventSourceUrl: string, leadType: string) => {
-        trackPinterestEvent({
-            eventName: "lead",
-            eventSourceUrl,
-            customData: { lead_type: leadType },
-        });
-    };
+    useEffect(() => {
+        // Clarity tracking
+        if (typeof window !== "undefined" && window.clarity) {
+            window.clarity("set", "ab_variant", "video");
+        }
 
-    const faqSchema = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: faqItems.map((item) => ({
-            "@type": "Question",
-            name: item.question,
-            acceptedAnswer: {
-                "@type": "Answer",
-                text: item.answer,
-            },
-        })),
-    };
+        const fetchStats = async () => {
+            try {
+                const [nodesResponse, statsResponse] = await Promise.all([
+                    fetch("https://api.mellow.tel/provider-count?public_key=8418f448"),
+                    fetch(
+                        "https://fcgv4rovovvlixqc2a7qncvev40dbxsy.lambda-url.us-east-1.on.aws/?publicKey=8418f448"
+                    ),
+                ]);
 
-    const howToSchema = {
-        "@context": "https://schema.org",
-        "@type": "HowTo",
-        name: "How to plant trees by browsing with IdleForest",
-        totalTime: "PT10S",
-        step: [
-            {
-                "@type": "HowToStep",
-                position: 1,
-                name: "Install the app",
-                text: "Add IdleForest to Chrome or download the desktop app for Mac or Windows. Takes 10 seconds.",
-                url: "https://www.idleforest.com/#step-1",
-            },
-            {
-                "@type": "HowToStep",
-                position: 2,
-                name: "Browse normally",
-                text: "The app runs quietly in the background, using only your unused internet bandwidth.",
-                url: "https://www.idleforest.com/#step-2",
-            },
-            {
-                "@type": "HowToStep",
-                position: 3,
-                name: "Trees get planted",
-                text: "Every gigabyte of idle bandwidth funds verified tree-planting projects.",
-                url: "https://www.idleforest.com/#step-3",
-            },
-        ],
-    };
+                const nodesData = await nodesResponse.json();
+                const statsData = await statsResponse.json();
+
+                // Calculate trees planted (legacy formula from previous version)
+                const earningsNum = parseFloat(String(statsData.earnings).replace("$", "")) + 25;
+                const treesPlanted = Math.floor((earningsNum - 205) / 0.55) + 652;
+                const formattedEarnings = `$${earningsNum.toFixed(2)}`;
+
+                setStats((prev) => ({
+                    ...prev,
+                    totalRequests: statsData.requestsTotal ?? 0,
+                    earnings: formattedEarnings,
+                    treesPlanted: Number.isFinite(treesPlanted) ? Math.max(0, treesPlanted) : 0,
+                    totalUsers: nodesData.active_node_count ?? 0,
+                }));
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+            }
+        };
+
+        fetchStats();
+        const interval = setInterval(fetchStats, 30000); // Refresh every 30 seconds
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <>
             <Navigation />
-            <main className="min-h-screen bg-brand-gray text-black">
-                <section className="relative overflow-hidden border-b-4 border-black">
-                    <Image src="/Vector (Stroke).svg" alt="" fill priority sizes="150vw" className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none" />
-                    <div className="container relative mx-auto grid min-h-[calc(100vh-120px)] grid-cols-1 items-center gap-10 px-6 py-16 lg:grid-cols-[0.92fr_1.08fr]">
-                        <div className="max-w-3xl">
-                            <div className="mb-6 flex items-center gap-3">
-                                <Image src="/europelogo.svg" alt="European Union flag" width={74} height={62} />
-                                <span className="text-sm font-bold uppercase tracking-[0.18em] text-neutral-700">Free tree planting app</span>
-                            </div>
-                            <h1 className="font-candu text-[44px] uppercase leading-[0.98] text-black sm:text-6xl lg:text-7xl">The Free Tree Planting App You Install Once and Forget</h1>
-                            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-800">
-                                IdleForest is a free Chrome extension and desktop app that funds verified tree-planting projects with your idle internet bandwidth. Install it once and let it run while
-                                you browse.
-                            </p>
-                            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                                <Button asChild className="rounded-full bg-brand-yellow px-7 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
-                                    <Link
-                                        href={CHROME_URL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={() => trackLead(CHROME_URL, "Extension Download - Chrome")}
-                                        className="flex items-center justify-center gap-2"
-                                    >
-                                        <Chrome className="h-5 w-5" />
-                                        Add to Chrome - It's Free
-                                    </Link>
-                                </Button>
-                                <Button asChild className="rounded-full bg-black px-7 py-6 font-bold text-brand-yellow hover:bg-neutral-900">
-                                    <Link
-                                        href={desktopUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={() => trackLead(desktopUrl, isMac ? "Desktop Download - Mac" : "Desktop Download - Windows")}
-                                        className="flex items-center justify-center gap-2"
-                                    >
-                                        <Download className="h-5 w-5" />
-                                        {desktopLabel}
-                                    </Link>
-                                </Button>
-                                <Button asChild variant="link" className="px-0 font-bold text-black">
-                                    <Link href="#how-it-works" className="flex items-center justify-center gap-2">
-                                        See how it works <ArrowRight className="h-4 w-4" />
-                                    </Link>
-                                </Button>
-                            </div>
-                            <div className="mt-6 flex flex-wrap gap-2 text-sm font-bold text-neutral-700">
-                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">Featured on Chrome Web Store</span>
-                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">4.8 ★ from 33 reviews</span>
-                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">5,364 verified trees planted</span>
-                            </div>
-                        </div>
-                        <div className="relative mx-auto w-full max-w-2xl">
-                            <div className="relative aspect-[4/3] overflow-hidden rounded-lg border-2 border-black bg-white shadow-[10px_10px_0_0_#000]">
-                                <Image src="/landing/screenshot-1.png" alt="IdleForest app dashboard showing tree planting progress" fill priority className="object-contain" />
-                            </div>
-                            <div className="absolute -bottom-6 left-4 right-4 grid grid-cols-2 gap-3 sm:left-auto sm:right-[-18px] sm:w-[310px]">
-                                <div className="border-2 border-black bg-brand-yellow p-4 shadow-[5px_5px_0_0_#000]">
-                                    <p className="font-candu text-3xl leading-none">10 sec</p>
-                                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-black/70">install time</p>
+            <main className="min-h-screen bg-brand-gray text-white">
+                {/* HERO */}
+
+                <section className="relative overflow-hidden">
+                    {/* Decorative wavy background */}
+                    <Image
+                        src="/Vector (Stroke).svg"
+                        alt=""
+                        fill
+                        priority
+                        sizes="150vw"
+                        className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none"
+                    />
+                    <div className="container mx-auto px-6 py-24 ">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2">
+                                    <Image src="/europelogo.svg" alt="European Union flag" width={74} height={62} />
                                 </div>
-                                <div className="border-2 border-black bg-black p-4 text-brand-yellow shadow-[5px_5px_0_0_#000]">
-                                    <p className="font-candu text-3xl leading-none">$0</p>
-                                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-brand-yellow/70">cost to use</p>
+                                <h1 className="font-candu text-black uppercase text-[38px] sm:text-5xl md:text-6xl leading-[1.05]">
+                                    <span className="font-extrabold">{t('hero.title_line1')} </span>
+                                    <br className="hidden sm:block" />
+                                    <span className="font-extrabold">{t('hero.title_line2')} </span>
+                                    <br className="hidden sm:block" />
+                                    <span className="font-extrabold">{t('hero.title_line3')} </span>
+                                </h1>
+                                <p className="text-base md:text-lg text-neutral-800 max-w-xl">
+                                    {t('hero.description')}
+                                </p>
+                                <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
+                                    {/* CTAs based on Device/Browser */}
+                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} desktopOnly showExtensionDownload={false} />
+                                </div>
+                                <HeroTrustSignals />
+                            </div>
+                            {/* HERO ART PLACEHOLDER */}
+                            <div className="relative w-full flex items-center justify-center">
+                                <div className="w-full max-w-lg lg:max-w-full aspect-video rounded-xl overflow-hidden shadow-2xl border-4 border-white/20">
+                                    <iframe
+                                        className="w-full h-full"
+                                        src="https://www.youtube.com/embed/tCnupe1tkfs?rel=0"
+                                        title="Idleforest - How it works"
+                                        loading="lazy"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerPolicy="strict-origin-when-cross-origin"
+                                        allowFullScreen
+                                    />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="how-it-works" className="relative scroll-mt-24 bg-brand-yellow px-6 py-20 text-black md:py-24">
-                    <div className="container mx-auto">
-                        <div className="flex justify-center">
-                            <div className="inline-flex items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-bold text-brand-yellow shadow">
-                                <Leaf className="h-4 w-4" />
-                                <span>5,364 verified trees planted</span>
-                            </div>
-                        </div>
-
-                        <div className="mx-auto mt-6 max-w-3xl text-center">
-                            <h2 className="font-rethink-sans text-4xl font-extrabold leading-tight md:text-6xl">How the Tree Planting App Works</h2>
-                            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-neutral-800 md:text-lg">
-                                Install IdleForest once, keep browsing normally, and let your unused internet bandwidth fund verified reforestation in the background.
-                            </p>
-                        </div>
-
-                        <div className="mt-12 grid place-items-center">
-                            <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-lg border-2 border-black bg-white shadow-[10px_10px_0_0_#000]">
-                                <Image
-                                    src={howItWorksScreenshots[currentScreenshot]}
-                                    alt={`IdleForest app screenshot ${currentScreenshot + 1}`}
-                                    fill
-                                    className="object-contain"
-                                    sizes="(min-width: 1024px) 672px, calc(100vw - 48px)"
-                                />
-
-                                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-                                    {howItWorksScreenshots.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            type="button"
-                                            aria-label={`Show IdleForest screenshot ${index + 1}`}
-                                            onClick={() => setCurrentScreenshot(index)}
-                                            className={`h-2.5 w-2.5 rounded-full border border-black transition-colors ${currentScreenshot === index ? "bg-black" : "bg-white"}`}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-16 grid gap-10 lg:grid-cols-3">
-                            <StepPanel
-                                id="step-1"
-                                number="1."
-                                title="Install the App in One Click"
-                                text="Add IdleForest to Chrome, or download the desktop app for Mac or Windows. No account, payment method, or browser settings change required."
-                            />
-                            <StepPanel
-                                id="step-2"
-                                number="2."
-                                title="Browse Normally"
-                                text="IdleForest runs quietly in the background and uses only idle bandwidth, so your browser stays fast and your personal data stays private."
-                            />
-                            <StepPanel
-                                id="step-3"
-                                number="3."
-                                title="Watch Your Forest Grow"
-                                text="Idle bandwidth generates revenue. That revenue funds verified planting with Trees for the Future, Tree-Nation, and 1ClickImpact."
-                            />
-                        </div>
-
-                        <div className="mt-12 text-center">
-                            <Link href="#idle-bandwidth" className="inline-flex items-center gap-2 font-bold underline">
-                                See how idle bandwidth funds trees <ArrowRight className="h-4 w-4" />
-                            </Link>
                         </div>
                     </div>
                 </section>
 
                 <ProjectsSection />
 
-                <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-white md:py-24">
-                    <div className="container mx-auto">
-                        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
-                            <div className="max-w-3xl">
-                                <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-yellow">Comparison</p>
-                                <h2 className="mt-3 font-rethink-sans text-4xl font-extrabold leading-tight md:text-6xl">Why IdleForest Is Different From Other Tree Planting Apps</h2>
-                                <p className="mt-5 text-lg leading-relaxed text-white/75">
-                                    Most tree planting apps ask you to change a habit, switch your search engine, pay a monthly fee, or remember to donate. IdleForest doesn't. You install it, then
-                                    forget it.
+                {/* HOW IT WORKS */}
+                <section id="how-it-works" className="relative bg-brand-yellow text-black scroll-mt-24">
+                    <div className="container mx-auto px-6 py-24 md:py-28">
+                        {/* Badge */}
+                        <div className="w-full flex justify-center">
+                            <div className="text-brand-yellow inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium shadow">
+                                <Leaf className="h-4 w-4" />
+                                <span>{t('how_it_works.trees_planted_badge', { count: stats.treesPlanted.toLocaleString() })}</span>
+                            </div>
+                        </div>
+
+                        {/* Heading */}
+                        <div className="text-center mt-6">
+                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                {t('how_it_works.heading')}
+                            </h2>
+                            <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+                                {t('how_it_works.subheading')}
+                            </p>
+                        </div>
+
+                        {/* Screenshots Carousel area */}
+                        <div className="mt-14 grid place-items-center">
+                            <div className="w-full max-w-xl aspect-video rounded-lg overflow-hidden shadow-lg relative group ">
+                                <div className="relative w-full h-full">
+                                    <Image
+                                        src={screenshots[currentScreenshot]}
+                                        alt={`Screenshot ${currentScreenshot + 1}`}
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+
+                                {/* Indicators */}
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                                    {screenshots.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setCurrentScreenshot(index)}
+                                            className={`w-2 h-2 rounded-full transition-colors ${currentScreenshot === index ? "bg-black/50" : "bg-black/20"
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        {/* Three steps */}
+                        <div className="mt-20 grid gap-12 lg:grid-cols-3">
+                            <div>
+                                <div className="text-6xl font-extrabold">1.</div>
+                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                    {t('how_it_works.step1_title')}
+                                </h3>
+                                <p className="mt-3 text-neutral-800 max-w-sm">
+                                    {t('how_it_works.step1_desc')}
                                 </p>
                             </div>
-                            <div className="grid gap-3 sm:grid-cols-2">
-                                <ComparisonCallout title="No behavior change" text="Keep your browser, search engine, and routine." />
-                                <ComparisonCallout title="No payment loop" text="Idle bandwidth funds the planting, not donations." />
-                            </div>
-                        </div>
-
-                        <div className="mt-12 overflow-hidden rounded-lg border-2 border-black bg-brand-gray shadow-[10px_10px_0_0_#000]">
-                            <div className="overflow-x-auto">
-                                <table className="w-full min-w-[760px] border-collapse text-left text-black">
-                                    <thead className="bg-black text-brand-yellow">
-                                        <tr>
-                                            <th className="p-4"> </th>
-                                            <th className="p-4">IdleForest</th>
-                                            <th className="p-4">Ecosia</th>
-                                            <th className="p-4">Mossy Earth</th>
-                                            <th className="p-4">Donation apps</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {comparisonRows.map((row) => (
-                                            <tr key={row[0]} className="border-t-2 border-black">
-                                                {row.map((cell, index) => (
-                                                    <td key={`${row[0]}-${index}`} className={`p-4 ${index === 0 ? "font-bold" : ""}`}>
-                                                        {index === 1 ? <span className="font-bold">{cell}</span> : cell}
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold">
-                            <Link
-                                href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025"
-                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
-                            >
-                                IdleForest vs Ecosia
-                            </Link>
-                            <Link
-                                href="/blog/planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025"
-                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
-                            >
-                                Planet Wild vs Mossy Earth
-                            </Link>
-                            <Link
-                                href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025"
-                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
-                            >
-                                9 alternatives to Ecosia
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="idle-bandwidth" className="bg-black px-6 py-20 text-brand-yellow md:py-24">
-                    <div className="container mx-auto grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-                        <div>
-                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">How Idle Bandwidth Funds Trees</h2>
-                            <Link href="/transparency" className="mt-8 inline-flex items-center gap-2 font-bold underline">
-                                Read the full technical explanation <ArrowRight className="h-4 w-4" />
-                            </Link>
-                        </div>
-                        <div className="space-y-5 text-lg leading-relaxed text-brand-yellow/90">
-                            <p>
-                                Idle bandwidth is the part of your internet connection you're not using. Most of the time, your connection sits at a small fraction of its capacity. The rest is wasted.
-                            </p>
-                            <p>
-                                IdleForest puts that unused capacity to work. The app routes small data tasks through your connection, like checking website uptime or running market research queries.
-                                These tasks are sessionless: they don't carry personal data, cookies, or browsing history.
-                            </p>
-                            <p>
-                                Clients pay for those tasks. We take that revenue and send it to our reforestation partners. The result: you plant trees with bandwidth you weren't using anyway. The
-                                cost to you is zero.
-                            </p>
-                            <p>This model is why IdleForest is free. We don't need your money, your search history, or your email. We just need the gigabytes you would have wasted.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="px-6 py-20 md:py-24">
-                    <div className="container mx-auto">
-                        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                            <div className="max-w-3xl">
-                                <p className="text-xs font-bold uppercase tracking-[0.22em] text-neutral-600">Verified impact</p>
-                                <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">Verified Tree-Planting Partners</h2>
-                                <p className="mt-5 text-lg leading-relaxed text-neutral-800">
-                                    We work with three reforestation organizations. Each one publishes its planting records. Each one operates in regions where reforestation has measurable carbon and
-                                    biodiversity impact.
+                            <div>
+                                <div className="text-6xl font-extrabold">2.</div>
+                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                    {t('how_it_works.step2_title')}
+                                </h3>
+                                <p className="mt-3 text-neutral-800 max-w-sm">
+                                    {t('how_it_works.step2_desc')}{" "}
+                                    <Link href="/transparency" className="font-bold underline hover:text-black">
+                                        {t('how_it_works.step2_link')}
+                                    </Link>
                                 </p>
                             </div>
-                            <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:w-[430px]">
-                                {impactStats.map(([value, label]) => (
-                                    <div key={label} className="border-2 border-black bg-brand-yellow p-4 shadow-[4px_4px_0_0_#000]">
-                                        <p className="font-candu text-3xl leading-none">{value}</p>
-                                        <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-black/70">{label}</p>
-                                    </div>
-                                ))}
+                            <div>
+                                <div className="text-6xl font-extrabold">3.</div>
+                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                    {t('how_it_works.step3_title')}
+                                </h3>
+                                <p className="mt-3 text-neutral-800 max-w-sm">
+                                    {t('how_it_works.step3_desc')}
+                                </p>
                             </div>
                         </div>
-                        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                            <PartnerCard
-                                icon={<TreePine className="h-8 w-8" />}
-                                title="Trees for the Future"
-                                text="Trees for the Future plants food forests with smallholder farmers across Sub-Saharan Africa. Their Forest Garden model restores soil, captures carbon, and gives farmers a living income for decades."
-                                href="https://trees.org"
-                            />
-                            <PartnerCard
-                                icon={<Leaf className="h-8 w-8" />}
-                                title="Tree-Nation"
-                                text="Tree-Nation restores native forests in 35+ countries, including Madagascar, Senegal, and Tanzania. They focus on native species for stronger survival rates and long-term ecological value."
-                                href="https://tree-nation.com"
-                            />
-                            <PartnerCard
-                                icon={<ShieldCheck className="h-8 w-8" />}
-                                title="1ClickImpact"
-                                text="1ClickImpact funds planting projects with traceability. Every tree they fund is geo-tagged and verified by an independent third party, with quarterly impact reports."
-                                href="https://1clickimpact.com"
-                            />
-                        </div>
-                        <Link href="/transparency" className="mt-8 inline-flex items-center gap-2 font-bold underline">
-                            Read our full transparency report <ArrowRight className="h-4 w-4" />
-                        </Link>
                     </div>
                 </section>
 
+                {/* DESKTOP APPS */}
+                <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24">
+                    <div className="container mx-auto px-6 py-20 md:py-24">
+                        <div className="text-center mb-12">
+                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                {t('desktop_apps.heading')}
+                            </h2>
+                            <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-3xl mx-auto">
+                                {t('desktop_apps.description')}
+                            </p>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+                            {/* Windows Card */}
+                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
+                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                                </div>
+                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
+                                    WINDOWS
+                                </h3>
+                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                    {t('desktop_apps.windows_desc')}
+                                </p>
+                                <Button
+                                    asChild
+                                    className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
+                                >
+                                    <Link
+                                        href="https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe"
+                                        className="flex items-center gap-2"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => trackPinterestEvent({
+                                            eventName: "lead",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
+                                            customData: { lead_type: 'Desktop Download - Windows' }
+                                        })}
+                                    >
+                                        <Download className="h-5 w-5" />
+                                        {t('desktop_apps.download_windows')}
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/* Mac OS Card */}
+                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
+                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                                </div>
+                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
+                                    MAC OS
+                                </h3>
+                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                    {t('desktop_apps.mac_desc')}
+                                </p>
+                                <Button
+                                    asChild
+                                    className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
+                                >
+                                    <Link
+                                        href="https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
+                                        className="flex items-center gap-2"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => trackPinterestEvent({
+                                            eventName: "lead",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip",
+                                            customData: { lead_type: 'Desktop Download - Mac' }
+                                        })}
+                                    >
+                                        <Download className="h-5 w-5" />
+                                        {t('desktop_apps.download_mac')}
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* IMPACT */}
+                <section id="impact" className="relative overflow-visible scroll-mt-24 bg-brand-gray">
+                    {/* Decorative background lines */}
+                    <Image
+                        src="/yellow-shape.svg"
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="text-brand-yellow absolute top-[100px] right-[100px] object-fill pointer-events-none select-none"
+                    />
+
+                    <div className="relative container mx-auto px-6 py-20 md:py-24">
+                        <div className="text-center mb-10 md:mb-12">
+                            <h2 className="font-rethink-sans text-black text-3xl sm:text-4xl md:text-5xl font-extrabold">{t('impact.heading')}</h2>
+                        </div>
+                        {/* 2x2 grid, no gaps so borders align perfectly */}
+                        <div className="grid gap-2 sm:grid-cols-2">
+                            <ImpactCard icon={<TreePine className="h-6 w-6 text-brand-yellow" />} value={stats.treesPlanted.toLocaleString()} label={t('impact.trees_label')} />
+                            <ImpactCard icon={<Globe className="h-6 w-6 text-brand-yellow" />} value={stats.totalRequests.toLocaleString()} label={t('impact.requests_label')} />
+                            <ImpactCard icon={<Users className="h-6 w-6 text-brand-yellow" />} value={stats.totalUsers.toLocaleString()} label={t('impact.users_label')} />
+                            <ImpactCard icon={<DollarSign className="h-6 w-6 text-brand-yellow" />} value={stats.earnings} label={t('impact.contributions_label')} />
+                        </div>
+                    </div>
+                </section>
+
+                {/* TEAM */}
                 <TeamSection />
 
-                <section id="faq" className="bg-brand-yellow px-6 py-20 text-black md:py-24">
-                    <div className="container mx-auto">
-                        <h2 className="text-center font-rethink-sans text-4xl font-extrabold md:text-6xl">Frequently Asked Questions</h2>
-                        <div className="mx-auto mt-12 grid max-w-5xl gap-4">
-                            {faqItems.map((item) => (
-                                <details key={item.question} className="border-2 border-black bg-brand-navy p-5 text-brand-yellow">
-                                    <summary className="cursor-pointer font-rethink-sans text-lg font-bold">{item.question}</summary>
-                                    <p className="mt-4 leading-relaxed">{item.answer}</p>
-                                    {item.question === "What data does the app collect?" ? (
-                                        <Link href="/privacy" className="mt-3 inline-flex font-bold underline">
-                                            See our privacy policy
-                                        </Link>
-                                    ) : null}
-                                    {item.question === "Is the bandwidth used for anything harmful?" ? (
-                                        <Link href="/transparency" className="mt-3 inline-flex font-bold underline">
-                                            See our transparency report
-                                        </Link>
-                                    ) : null}
-                                </details>
-                            ))}
+                {/* REVIEWS */}
+                <ReviewsSection />
+
+                {/* ACHIEVEMENTS */}
+                <section id="achievements" className="relative bg-brand-gray text-black scroll-mt-24">
+                    <div className="relative container mx-auto px-6 py-20 md:py-24">
+                        <div className="text-center mb-10 md:mb-12">
+                            <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold">
+                                {t('achievements.heading_line1')}
+                                <br className="hidden sm:block" />
+                                {t('achievements.heading_line2')}
+                            </h2>
+                        </div>
+
+                        <div className="space-y-6">
+                            <RoadmapItem
+                                icon={<Chrome className="h-6 w-6" />}
+                                title={t('achievements.browser_ext_title')}
+                                status={{ label: t('achievements.browser_ext_status'), variant: "success" }}
+                                description={t('achievements.browser_ext_desc')}
+                            />
+
+                            <RoadmapItem
+                                icon={<Monitor className="h-6 w-6" />}
+                                title={t('achievements.desktop_title')}
+                                status={{ label: t('achievements.desktop_status'), variant: "warning" }}
+                                description={t('achievements.desktop_desc')}
+                            />
+
+                            <RoadmapItem
+                                icon={<Share2 className="h-6 w-6" />}
+                                title={t('achievements.referral_title')}
+                                status={{ label: t('achievements.referral_status'), variant: "info" }}
+                                description={t('achievements.referral_desc')}
+                            />
+
+                            <RoadmapItem
+                                icon={<Smartphone className="h-6 w-6" />}
+                                title={t('achievements.mobile_title')}
+                                status={{ label: t('achievements.mobile_status'), variant: "neutral" }}
+                                description={t('achievements.mobile_desc')}
+                            />
+
+                            <RoadmapItem
+                                icon={<Award className="h-6 w-6" />}
+                                title={t('achievements.corporate_title')}
+                                status={{ label: t('achievements.corporate_status'), variant: "neutral" }}
+                                description={t('achievements.corporate_desc')}
+                            />
                         </div>
                     </div>
                 </section>
 
-                <ReviewsSection />
-
-                <section className="bg-black px-6 py-20 text-center text-brand-yellow md:py-24">
-                    <div className="mx-auto max-w-3xl">
-                        <Sprout className="mx-auto h-12 w-12" />
-                        <h2 className="mt-6 font-rethink-sans text-4xl font-extrabold md:text-6xl">Start Planting Trees in 10 Seconds</h2>
-                        <p className="mt-5 text-lg text-brand-yellow/90">Install IdleForest. Browse like you always do. Watch trees get planted.</p>
-                        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                            <Button asChild className="rounded-full bg-brand-yellow px-7 py-6 font-bold text-black hover:bg-white">
-                                <Link href={CHROME_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackLead(CHROME_URL, "Extension Download - Chrome")}>
-                                    <Chrome className="mr-2 h-5 w-5" />
-                                    Add to Chrome
-                                </Link>
-                            </Button>
-                            <Button asChild className="rounded-full bg-white px-7 py-6 font-bold text-black hover:bg-brand-yellow">
-                                <Link
-                                    href={desktopUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={() => trackLead(desktopUrl, isMac ? "Desktop Download - Mac" : "Desktop Download - Windows")}
-                                >
-                                    <Download className="mr-2 h-5 w-5" />
-                                    {desktopLabel}
-                                </Link>
-                            </Button>
+                {/* FAQ */}
+                <section id="faq" className="relative bg-brand-yellow text-black scroll-mt-24">
+                    <div className="container mx-auto px-6 py-20 md:py-24">
+                        <div className="text-center mb-12">
+                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                {t('faq.heading')}
+                            </h2>
+                            <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+                                {t('faq.subheading')}
+                            </p>
                         </div>
-                        <a href={CHROME_URL} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center justify-center gap-2 font-bold underline">
-                            Read all 33 reviews on Chrome Web Store <ExternalLink className="h-4 w-4" />
-                        </a>
+
+                        <div className="max-w-3xl mx-auto space-y-4">
+                            <FaqItem
+                                question="How do I get started?"
+                                answer={
+                                    <div className="w-full mt-4 aspect-video rounded-lg overflow-hidden">
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            src="https://www.youtube.com/embed/tCnupe1tkfs"
+                                            title="How to install and use IdleForest"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
+                                }
+                                isOpen={openFaqIndex === 10}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 10 ? null : 10)}
+                            />
+
+                            <FaqItem
+                                question="Why does the extension ask for 'read and change all data on all pages' permission?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            We understand this permission sounds broader than expected. Here's what's actually happening: <strong>We don't read or access any data from the websites you visit.</strong>
+                                        </p>
+                                        <p className="mb-3">
+                                            Instead, the extension uses your unused bandwidth by fetching websites in a sessionless manner, ensuring no personal data is transmitted. This operates in complete isolation and doesn't have access to the page's content or your browsing data.
+                                        </p>
+                                        <p className="mb-3">
+                                            The reason we need this broad permission is a technical limitation of how browser extensions work. To enable this functionality on any page, we need the permission that allows content injection. Unfortunately, browsers don't offer a more granular permission option—it's bundled under the "read and change" category, even though we're only using the injection capability.
+                                        </p>
+                                        <p className="mb-3">
+                                            <strong>Your privacy and security are important to us.</strong> We're committed to only using the minimum functionality necessary to make the extension work.
+                                        </p>
+                                        <p>
+                                            The good news is that our code is open source, so you don't have to take our word for it. You can review the code yourself to verify our claims. Learn more about{" "}
+                                            <a
+                                                href="https://developer.mozilla.org/en-US/docs/Web/Security/IFrame_credentialless"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="font-bold underline hover:text-white"
+                                            >
+                                                credentialless iframes and their security
+                                            </a>.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 0}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 0 ? null : 0)}
+                            />
+
+                            <FaqItem
+                                question="Is IdleForest safe to use?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            Yes! IdleForest is completely safe. We use industry-standard security practices and our code is open source for full transparency.
+                                        </p>
+                                        <p className="mb-3">
+                                            Your unused bandwidth is only used for approved research and content delivery purposes. We never access your personal data, browsing history, or any sensitive information.
+                                        </p>
+                                        <p>
+                                            For complete details about who uses your bandwidth and how we protect you legally, visit our{" "}
+                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                                Transparency Page
+                                            </Link>.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 1}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 1 ? null : 1)}
+                            />
+
+                            <FaqItem
+                                question="Will this slow down my internet?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            No. IdleForest only uses your <strong>idle</strong> bandwidth—the internet capacity you're not actively using.
+                                        </p>
+                                        <p>
+                                            Our extension is designed to have zero impact on your browsing experience. If you're streaming, gaming, or doing anything that requires bandwidth, IdleForest automatically scales back to ensure your activities aren't affected.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 2}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 2 ? null : 2)}
+                            />
+
+                            <FaqItem
+                                question="How are trees actually planted?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world.
+                                        </p>
+                                        <p>
+                                            We partner with established organizations like Trees for the Future and Tree-Nation to ensure every tree is planted, tracked, and contributes to real environmental impact. You can track your personal contribution in real-time through your dashboard.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 3}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 3 ? null : 3)}
+                            />
+
+                            <FaqItem
+                                question="Do I need to keep my browser open?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            <strong>Not directly!</strong> If you use our Desktop App for Windows or Mac, it runs in the background independently of your browser.
+                                        </p>
+                                        <p>
+                                            If you choose to use the Browser Extension only, then yes, your browser needs to be open to contribute.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 4}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 4 ? null : 4)}
+                            />
+
+                            <FaqItem
+                                question="I'm concerned about supporting AI companies. Why should I use IdleForest?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            We understand this concern. Here's the reality: AI companies will collect web data regardless—it's essential for training models and powering applications.
+                                        </p>
+                                        <p className="mb-3">
+                                            <strong>The question isn't whether data collection happens, but how.</strong> Traditional web scraping uses massive data centers that consume enormous amounts of electricity and water. These server farms are responsible for 1-2% of global electricity consumption.
+                                        </p>
+                                        <p className="mb-3">
+                                            Distributed networks like the one we use are <strong>80-90% more environmentally friendly</strong> than traditional data centers. They use existing devices and idle bandwidth instead of dedicated servers running 24/7 with intensive cooling systems.
+                                        </p>
+                                        <p>
+                                            By using IdleForest, you're not enabling something new—you're helping make an existing industry significantly greener while funding reforestation. It's harm reduction that creates positive environmental impact.{" "}
+                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                                Learn more about the environmental benefits
+                                            </Link>
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 5}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
+                            />
+
+                            {/* Disambiguation note for GEO - helps AI engines distinguish from "Idle Forest" mobile game */}
+                            <p className="mt-6 text-center text-sm text-neutral-600 italic">
+                                {t('faq.disclaimer')}
+                            </p>
+                        </div>
                     </div>
                 </section>
             </main>
 
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+            {/* FAQPage Schema for Google rich results */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": [
+                            {
+                                "@type": "Question",
+                                "name": "How do I get started with IdleForest?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome, Edge, or Firefox. It runs in the background and starts planting trees automatically using your idle bandwidth."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Why does the extension ask for 'read and change all data on all pages' permission?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "We don't read or access any data from the websites you visit. The extension uses your unused bandwidth by fetching websites in a sessionless manner, ensuring no personal data is transmitted. The broad permission is a technical limitation of how browser extensions work — browsers don't offer a more granular option. Our code is open source so you can verify this yourself."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Is IdleForest safe to use?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Yes! IdleForest is completely safe. We use industry-standard security practices and our code is open source for full transparency. Your unused bandwidth is only used for approved research and content delivery purposes. We never access your personal data, browsing history, or any sensitive information."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Will IdleForest slow down my internet?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "No. IdleForest only uses your idle bandwidth — the internet capacity you're not actively using. If you're streaming, gaming, or doing anything that requires bandwidth, IdleForest automatically scales back to ensure your activities aren't affected."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "How are trees actually planted?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world through partners like Trees for the Future and Tree-Nation. You can track your personal contribution in real-time through your dashboard."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Do I need to keep my browser open?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Not if you use the Desktop App for Windows or Mac — it runs in the background independently of your browser. If you choose to use the Browser Extension only, then your browser needs to be open to contribute."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "I'm concerned about supporting AI companies. Why should I use IdleForest?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "AI companies will collect web data regardless. The question is how. Traditional web scraping uses massive data centers consuming enormous amounts of electricity and water. Distributed networks like the one IdleForest uses are 80-90% more environmentally friendly than traditional data centers. By using IdleForest, you're helping make an existing industry significantly greener while funding reforestation."
+                                }
+                            }
+                        ]
+                    })
+                }}
+            />
+
+            {/* HowTo Schema */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "HowTo",
+                        "name": "How to Plant Trees for Free with IdleForest",
+                        "description": "Three simple steps to start making an environmental impact with your unused internet connection.",
+                        "step": [
+                            {
+                                "@type": "HowToStep",
+                                "position": 1,
+                                "name": "Download Desktop App",
+                                "text": "Download the IdleForest desktop app for Windows or Mac. It runs quietly in the background, utilizing idle resources to plant trees."
+                            },
+                            {
+                                "@type": "HowToStep",
+                                "position": 2,
+                                "name": "Share Unused Bandwidth",
+                                "text": "Your idle internet connection is securely used for approved research and content delivery — replacing traditional data centers that consume massive amounts of energy and water. This approach is 80-90% greener than server farms."
+                            },
+                            {
+                                "@type": "HowToStep",
+                                "position": 3,
+                                "name": "We Plant Trees",
+                                "text": "Revenue generated funds verified tree planting projects worldwide. Track your impact in real-time through your dashboard."
+                            }
+                        ]
+                    })
+                }}
+            />
         </>
     );
 }
 
-function StepPanel({ id, number, title, text }: { id: string; number: string; title: string; text: string }) {
+function HowCard({ number, title, description, icon }: { number: number; title: string; description: string; icon: React.ReactNode }) {
     return (
-        <article id={id}>
-            <div className="font-rethink-sans text-6xl font-extrabold leading-none">{number}</div>
-            <h3 className="mt-4 max-w-sm font-rethink-sans text-4xl font-light leading-none md:text-5xl">{title}</h3>
-            <p className="mt-4 max-w-sm leading-relaxed text-neutral-800">{text}</p>
-        </article>
+        <Card className="bg-black border-2 border-neutral-800 p-6 h-full">
+            <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-brand-yellow text-black grid place-items-center font-bold">
+                    {number}
+                </div>
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                        <span className="text-brand-yellow">{icon}</span>
+                        <h3 className="font-rethink-sans text-2xl">{title}</h3>
+                    </div>
+                    <p className="text-brand-gray leading-relaxed">{description}</p>
+                </div>
+            </div>
+        </Card>
     );
 }
 
-function ComparisonCallout({ title, text }: { title: string; text: string }) {
+function RoadmapItem({
+    icon,
+    title,
+    description,
+    status,
+}: {
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+    status: { label: string; variant: "success" | "warning" | "info" | "neutral" };
+}) {
+    // Badges: brand yellow background, black text, square corners, Candu font
+    const badgeClass = "bg-brand-yellow text-black font-rethink-sans rounded-none" as const;
+
     return (
-        <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-[5px_5px_0_0_#000]">
-            <p className="font-rethink-sans text-xl font-extrabold">{title}</p>
-            <p className="mt-2 text-sm leading-6 text-black/75">{text}</p>
+        <div className="relative border-b-2 border-r-2 border-black bg-transparent p-6 overflow-hidden">
+            <div className="flex flex-col md:flex-row items-start gap-3 md:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-neutral-900 text-brand-yellow grid place-items-center mb-2 md:mb-0">
+                    {icon}
+                </div>
+                <div className="flex-1">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-4">
+                        <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold break-words">{title}</h3>
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-extrabold tracking-wide self-start md:self-auto mt-1 md:mt-0 ${badgeClass}`}>
+                            {status.label === "COMPLETED" && <Check className="h-3.5 w-3.5" />}
+                            {status.label}
+                        </span>
+                    </div>
+                    <p className="mt-2 text-neutral-800 max-w-3xl">{description}</p>
+                </div>
+            </div>
         </div>
     );
 }
 
-function PartnerCard({ icon, title, text, href }: { icon: ReactNode; title: string; text: string; href: string }) {
+function ImpactCard({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
     return (
-        <article className="flex h-full flex-col border-2 border-black bg-white p-6">
-            <div className="text-brand-yellow">{icon}</div>
-            <h3 className="mt-5 font-rethink-sans text-2xl font-extrabold">{title}</h3>
-            <p className="mt-4 flex-1 leading-relaxed text-neutral-800">{text}</p>
-            <a href={href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 font-bold underline">
-                Visit their site <ExternalLink className="h-4 w-4" />
-            </a>
-        </article>
+        <div className="font-candu bg-brand-navy rounded-none border border-neutral-800 px-6 py-10 md:px-2 md:py-32 text-center flex flex-col items-center justify-center min-h-[180px]">
+            <div className="flex items-center justify-center text-brand-yellow mb-2">{icon}</div>
+            <div className="text-3xl sm:text-4xl md:text-5xl text-brand-yellow leading-none">{value}</div>
+            <div className="mt-3 text-brand-yellow text-xs sm:text-sm md:text-base tracking-wide">{label}</div>
+        </div>
+    );
+}
+
+function FaqItem({
+    question,
+    answer,
+    isOpen,
+    onClick
+}: {
+    question: string;
+    answer: React.ReactNode;
+    isOpen: boolean;
+    onClick: () => void;
+}) {
+    return (
+        <div className="border-2 border-black bg-brand-navy overflow-hidden">
+            <button
+                onClick={onClick}
+                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-brand-navy/90 transition-colors"
+            >
+                <h3 className="font-rethink-sans text-lg md:text-xl font-bold pr-4 text-brand-yellow">{question}</h3>
+                <ChevronDown
+                    className={`h-5 w-5 flex-shrink-0 transition-transform duration-200 text-brand-yellow ${isOpen ? 'rotate-180' : ''
+                        }`}
+                />
+            </button>
+            <div
+                className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+            >
+                <div className="px-6 pb-5 text-brand-yellow leading-relaxed">
+                    {answer}
+                </div>
+            </div>
+        </div>
     );
 }
