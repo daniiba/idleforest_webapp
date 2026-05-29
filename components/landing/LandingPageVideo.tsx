@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@/navigation";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
@@ -30,6 +30,8 @@ const impactStats = [
     ["10.1M", "requests powered"],
     ["1,000+", "users"],
 ];
+
+const howItWorksScreenshots = ["/landing/screenshot-1.png", "/landing/screenshot-2.png", "/landing/screenshot-3.png"];
 
 const faqItems = [
     {
@@ -79,9 +81,18 @@ const faqItems = [
 ];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
+    const [currentScreenshot, setCurrentScreenshot] = useState(0);
     const { isMac } = useDeviceDetection(deviceInfo);
     const desktopUrl = isMac ? MAC_URL : WINDOWS_URL;
     const desktopLabel = isMac ? "Download for Mac" : "Download for Windows";
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentScreenshot((previous) => (previous + 1) % howItWorksScreenshots.length);
+        }, 2500);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const trackLead = (eventSourceUrl: string, leadType: string) => {
         trackPinterestEvent({
@@ -206,34 +217,70 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
-                <section id="how-it-works" className="bg-brand-yellow px-6 py-20 text-black md:py-24">
+                <section id="how-it-works" className="relative scroll-mt-24 bg-brand-yellow px-6 py-20 text-black md:py-24">
                     <div className="container mx-auto">
-                        <div className="mx-auto max-w-3xl text-center">
-                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">How the Tree Planting App Works</h2>
+                        <div className="flex justify-center">
+                            <div className="inline-flex items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-bold text-brand-yellow shadow">
+                                <Leaf className="h-4 w-4" />
+                                <span>5,364 verified trees planted</span>
+                            </div>
                         </div>
-                        <div className="mt-14 grid gap-8 lg:grid-cols-3">
-                            <StepCard
+
+                        <div className="mx-auto mt-6 max-w-3xl text-center">
+                            <h2 className="font-rethink-sans text-4xl font-extrabold leading-tight md:text-6xl">How the Tree Planting App Works</h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-neutral-800 md:text-lg">
+                                Install IdleForest once, keep browsing normally, and let your unused internet bandwidth fund verified reforestation in the background.
+                            </p>
+                        </div>
+
+                        <div className="mt-12 grid place-items-center">
+                            <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-lg border-2 border-black bg-white shadow-[10px_10px_0_0_#000]">
+                                <Image
+                                    src={howItWorksScreenshots[currentScreenshot]}
+                                    alt={`IdleForest app screenshot ${currentScreenshot + 1}`}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(min-width: 1024px) 672px, calc(100vw - 48px)"
+                                />
+
+                                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+                                    {howItWorksScreenshots.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            type="button"
+                                            aria-label={`Show IdleForest screenshot ${index + 1}`}
+                                            onClick={() => setCurrentScreenshot(index)}
+                                            className={`h-2.5 w-2.5 rounded-full border border-black transition-colors ${currentScreenshot === index ? "bg-black" : "bg-white"}`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-16 grid gap-10 lg:grid-cols-3">
+                            <StepPanel
                                 id="step-1"
-                                number="1"
+                                number="1."
                                 title="Install the App in One Click"
-                                text="Add IdleForest to Chrome from the Web Store, or download the desktop app for Mac or Windows. The install takes ten seconds. You don't need to create an account, enter a payment method, or change any browser settings."
+                                text="Add IdleForest to Chrome, or download the desktop app for Mac or Windows. No account, payment method, or browser settings change required."
                             />
-                            <StepCard
+                            <StepPanel
                                 id="step-2"
-                                number="2"
+                                number="2."
                                 title="Browse Normally"
-                                text="The app stays in the background. It uses only the bandwidth you're not using, what we call idle bandwidth, to power small backend tasks. Your browser stays fast. Your data stays on your machine."
+                                text="IdleForest runs quietly in the background and uses only idle bandwidth, so your browser stays fast and your personal data stays private."
                             />
-                            <StepCard
+                            <StepPanel
                                 id="step-3"
-                                number="3"
+                                number="3."
                                 title="Watch Your Forest Grow"
-                                text="Every gigabyte of idle bandwidth generates revenue. That revenue funds tree-planting with our partners: Trees for the Future, Tree-Nation, and 1ClickImpact."
+                                text="Idle bandwidth generates revenue. That revenue funds verified planting with Trees for the Future, Tree-Nation, and 1ClickImpact."
                             />
                         </div>
-                        <div className="mt-10 text-center">
+
+                        <div className="mt-12 text-center">
                             <Link href="#idle-bandwidth" className="inline-flex items-center gap-2 font-bold underline">
-                                See how it works in detail <ArrowRight className="h-4 w-4" />
+                                See how idle bandwidth funds trees <ArrowRight className="h-4 w-4" />
                             </Link>
                         </div>
                     </div>
@@ -443,12 +490,12 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
     );
 }
 
-function StepCard({ id, number, title, text }: { id: string; number: string; title: string; text: string }) {
+function StepPanel({ id, number, title, text }: { id: string; number: string; title: string; text: string }) {
     return (
-        <article id={id} className="border-2 border-black bg-white p-6 shadow-[6px_6px_0_0_#000]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black font-bold text-brand-yellow">{number}</div>
-            <h3 className="mt-6 font-rethink-sans text-2xl font-extrabold">{title}</h3>
-            <p className="mt-4 leading-relaxed text-neutral-800">{text}</p>
+        <article id={id}>
+            <div className="font-rethink-sans text-6xl font-extrabold leading-none">{number}</div>
+            <h3 className="mt-4 max-w-sm font-rethink-sans text-4xl font-light leading-none md:text-5xl">{title}</h3>
+            <p className="mt-4 max-w-sm leading-relaxed text-neutral-800">{text}</p>
         </article>
     );
 }
