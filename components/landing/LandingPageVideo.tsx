@@ -122,7 +122,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </p>
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
-                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} desktopOnly showExtensionDownload={false} />
+                                    <SmartCTA className="text-black" deviceInfo={deviceInfo} showExtensionDownload />
                                 </div>
                                 <HeroTrustSignals />
                             </div>
@@ -197,7 +197,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
                         {/* Three steps */}
                         <div className="mt-20 grid gap-12 lg:grid-cols-3">
-                            <div>
+                            <div id="step-1">
                                 <div className="text-6xl font-extrabold">1.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
                                     {t('how_it_works.step1_title')}
@@ -206,7 +206,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     {t('how_it_works.step1_desc')}
                                 </p>
                             </div>
-                            <div>
+                            <div id="step-2">
                                 <div className="text-6xl font-extrabold">2.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
                                     {t('how_it_works.step2_title')}
@@ -218,7 +218,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     </Link>
                                 </p>
                             </div>
-                            <div>
+                            <div id="step-3">
                                 <div className="text-6xl font-extrabold">3.</div>
                                 <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
                                     {t('how_it_works.step3_title')}
@@ -350,6 +350,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold">
                                 {t('achievements.heading_line1')}
                                 <br className="hidden sm:block" />
+                                <span className="sm:hidden"> </span>
                                 {t('achievements.heading_line2')}
                             </h2>
                         </div>
@@ -407,7 +408,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
                         <div className="max-w-3xl mx-auto space-y-4">
                             <FaqItem
-                                question="How do I get started?"
+                                question="How do I get started with IdleForest?"
                                 answer={
                                     <div className="w-full mt-4 aspect-video rounded-lg overflow-hidden">
                                         <iframe
@@ -426,31 +427,11 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="Why does the extension ask for 'read and change all data on all pages' permission?"
+                                question="Is the tree planting app really free?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            We understand this permission sounds broader than expected. Here's what's actually happening: <strong>We don't read or access any data from the websites you visit.</strong>
-                                        </p>
-                                        <p className="mb-3">
-                                            Instead, the extension uses your unused bandwidth by fetching websites in a sessionless manner, ensuring no personal data is transmitted. This operates in complete isolation and doesn't have access to the page's content or your browsing data.
-                                        </p>
-                                        <p className="mb-3">
-                                            The reason we need this broad permission is a technical limitation of how browser extensions work. To enable this functionality on any page, we need the permission that allows content injection. Unfortunately, browsers don't offer a more granular permission option—it's bundled under the "read and change" category, even though we're only using the injection capability.
-                                        </p>
-                                        <p className="mb-3">
-                                            <strong>Your privacy and security are important to us.</strong> We're committed to only using the minimum functionality necessary to make the extension work.
-                                        </p>
-                                        <p>
-                                            The good news is that our code is open source, so you don't have to take our word for it. You can review the code yourself to verify our claims. Learn more about{" "}
-                                            <a
-                                                href="https://developer.mozilla.org/en-US/docs/Web/Security/IFrame_credentialless"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="font-bold underline hover:text-white"
-                                            >
-                                                credentialless iframes and their security
-                                            </a>.
+                                            Yes. There is no subscription, no donation, no signup, and no paid tier. IdleForest is funded by revenue from idle bandwidth tasks, not by you.
                                         </p>
                                     </>
                                 }
@@ -459,20 +440,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="Is IdleForest safe to use?"
+                                question="Does the app slow down my computer or internet?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            Yes! IdleForest is completely safe. We use industry-standard security practices and our code is open source for full transparency.
-                                        </p>
-                                        <p className="mb-3">
-                                            Your unused bandwidth is only used for approved research and content delivery purposes. We never access your personal data, browsing history, or any sensitive information.
+                                            No. IdleForest uses only the bandwidth you are not using. When you start a video call, open a heavy site, or download a file, IdleForest steps back.
                                         </p>
                                         <p>
-                                            For complete details about who uses your bandwidth and how we protect you legally, visit our{" "}
-                                            <Link href="/transparency" className="font-bold underline hover:text-white">
-                                                Transparency Page
-                                            </Link>.
+                                            You can also pause it at any time from the extension menu.
                                         </p>
                                     </>
                                 }
@@ -481,14 +456,17 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="Will this slow down my internet?"
+                                question="How does IdleForest plant trees?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            No. IdleForest only uses your <strong>idle</strong> bandwidth—the internet capacity you're not actively using.
+                                            The app uses your unused internet bandwidth to power small backend tasks for paying clients. Revenue from those tasks funds tree planting with partners like Trees for the Future, Tree-Nation, and 1ClickImpact.
                                         </p>
                                         <p>
-                                            Our extension is designed to have zero impact on your browsing experience. If you're streaming, gaming, or doing anything that requires bandwidth, IdleForest automatically scales back to ensure your activities aren't affected.
+                                            You can see the live count of trees funded on our{" "}
+                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                                transparency page
+                                            </Link>.
                                         </p>
                                     </>
                                 }
@@ -497,14 +475,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="How are trees actually planted?"
+                                question="What is idle bandwidth?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world.
+                                            Idle bandwidth is the part of your internet connection that is not being used. Most home connections sit below their full capacity most of the time.
                                         </p>
                                         <p>
-                                            We partner with established organizations like Trees for the Future and Tree-Nation to ensure every tree is planted, tracked, and contributes to real environmental impact. You can track your personal contribution in real-time through your dashboard.
+                                            IdleForest uses that unused capacity to generate revenue, then routes that revenue to verified reforestation.
                                         </p>
                                     </>
                                 }
@@ -513,14 +491,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="Do I need to keep my browser open?"
+                                question="Can I use IdleForest with Ecosia or another browser?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            <strong>Not directly!</strong> If you use our Desktop App for Windows or Mac, it runs in the background independently of your browser.
+                                            Yes. IdleForest does not change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, Chrome, Edge, and other browsers.
                                         </p>
                                         <p>
-                                            If you choose to use the Browser Extension only, then yes, your browser needs to be open to contribute.
+                                            You can stack the impact from IdleForest with other environmentally focused tools.
                                         </p>
                                     </>
                                 }
@@ -529,28 +507,110 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             />
 
                             <FaqItem
-                                question="I'm concerned about supporting AI companies. Why should I use IdleForest?"
+                                question="What data does the app collect?"
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            We understand this concern. Here's the reality: AI companies will collect web data regardless—it's essential for training models and powering applications.
-                                        </p>
-                                        <p className="mb-3">
-                                            <strong>The question isn't whether data collection happens, but how.</strong> Traditional web scraping uses massive data centers that consume enormous amounts of electricity and water. These server farms are responsible for 1-2% of global electricity consumption.
-                                        </p>
-                                        <p className="mb-3">
-                                            Distributed networks like the one we use are <strong>80-90% more environmentally friendly</strong> than traditional data centers. They use existing devices and idle bandwidth instead of dedicated servers running 24/7 with intensive cooling systems.
+                                            None of your personal browsing data. The traffic that runs through IdleForest is sessionless, meaning it does not carry cookies, personal identifiers, or browsing history.
                                         </p>
                                         <p>
-                                            By using IdleForest, you're not enabling something new—you're helping make an existing industry significantly greener while funding reforestation. It's harm reduction that creates positive environmental impact.{" "}
-                                            <Link href="/transparency" className="font-bold underline hover:text-white">
-                                                Learn more about the environmental benefits
+                                            The app does not read your tabs, bookmarks, or search history. See our{" "}
+                                            <Link href="/privacy" className="font-bold underline hover:text-white">
+                                                privacy policy
                                             </Link>
+                                            {" "}for the full breakdown.
                                         </p>
                                     </>
                                 }
                                 isOpen={openFaqIndex === 5}
                                 onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
+                            />
+
+                            <FaqItem
+                                question="Is the bandwidth used for anything harmful?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            No. Tasks are limited to uptime monitoring, market research, and similar passive data collection from public sites.
+                                        </p>
+                                        <p>
+                                            IdleForest does not participate in ad fraud, crypto mining, scraping private data, or malicious activity. We publish more detail in our{" "}
+                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                                transparency report
+                                            </Link>.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 6}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 6 ? null : 6)}
+                            />
+
+                            <FaqItem
+                                question="How many trees has IdleForest planted?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            IdleForest has funded {stats.treesPlanted.toLocaleString()} trees through our partners, based on the current live counter.
+                                        </p>
+                                        <p>
+                                            See the{" "}
+                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                                transparency report
+                                            </Link>
+                                            {" "}for the latest breakdown by partner and region.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 7}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 7 ? null : 7)}
+                            />
+
+                            <FaqItem
+                                question="How much money does IdleForest make from my bandwidth?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            The revenue per user is small, often just a few cents per month for an average user. The model works at scale, not because any one person contributes a large amount.
+                                        </p>
+                                        <p>
+                                            The more users join, the more idle bandwidth becomes available, and the more trees can be funded.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 8}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 8 ? null : 8)}
+                            />
+
+                            <FaqItem
+                                question="Is IdleForest available on mobile?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac and Windows.
+                                        </p>
+                                        <p>
+                                            Mobile is on the roadmap, but mobile networks usually have less idle bandwidth than home connections, so the impact per user would be lower.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 9}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 9 ? null : 9)}
+                            />
+
+                            <FaqItem
+                                question="Can I uninstall the app at any time?"
+                                answer={
+                                    <>
+                                        <p className="mb-3">
+                                            Yes. Remove the Chrome extension from your extensions menu, or uninstall the desktop app like any other application.
+                                        </p>
+                                        <p>
+                                            Once uninstalled, no bandwidth is used. The trees you have already helped fund stay funded.
+                                        </p>
+                                    </>
+                                }
+                                isOpen={openFaqIndex === 11}
+                                onClick={() => setOpenFaqIndex(openFaqIndex === 11 ? null : 11)}
                             />
 
                             {/* Disambiguation note for GEO - helps AI engines distinguish from "Idle Forest" mobile game */}
@@ -572,58 +632,90 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         "mainEntity": [
                             {
                                 "@type": "Question",
-                                "name": "How do I get started with IdleForest?",
+                                "name": "Is the tree planting app really free?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome, Edge, or Firefox. It runs in the background and starts planting trees automatically using your idle bandwidth."
+                                    "text": "Yes. There is no subscription, no donation, no signup, and no paid tier. The app is funded by the revenue from idle bandwidth tasks, not by you."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "Why does the extension ask for 'read and change all data on all pages' permission?",
+                                "name": "Does the app slow down my computer or internet?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "We don't read or access any data from the websites you visit. The extension uses your unused bandwidth by fetching websites in a sessionless manner, ensuring no personal data is transmitted. The broad permission is a technical limitation of how browser extensions work — browsers don't offer a more granular option. Our code is open source so you can verify this yourself."
+                                    "text": "No. The app uses only the bandwidth you're not using. When you start a video call, open a heavy site, or download a file, IdleForest steps back. You can also pause it at any time from the extension menu."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "Is IdleForest safe to use?",
+                                "name": "How does IdleForest plant trees?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Yes! IdleForest is completely safe. We use industry-standard security practices and our code is open source for full transparency. Your unused bandwidth is only used for approved research and content delivery purposes. We never access your personal data, browsing history, or any sensitive information."
+                                    "text": "The app uses your unused internet bandwidth to power small backend tasks for paying clients. The revenue from those tasks funds tree planting with Trees for the Future, Tree-Nation, and 1ClickImpact."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "Will IdleForest slow down my internet?",
+                                "name": "What is idle bandwidth?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "No. IdleForest only uses your idle bandwidth — the internet capacity you're not actively using. If you're streaming, gaming, or doing anything that requires bandwidth, IdleForest automatically scales back to ensure your activities aren't affected."
+                                    "text": "Idle bandwidth is the part of your internet connection that isn't being used. Most home connections sit unused most of the time. IdleForest uses that unused capacity to generate revenue, and routes the revenue to reforestation."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "How are trees actually planted?",
+                                "name": "Can I use IdleForest with Ecosia or another browser?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "When you use IdleForest, your shared bandwidth generates revenue. We use 100% of our profits to fund verified tree planting projects around the world through partners like Trees for the Future and Tree-Nation. You can track your personal contribution in real-time through your dashboard."
+                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, and any other browser."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "Do I need to keep my browser open?",
+                                "name": "What data does the app collect?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Not if you use the Desktop App for Windows or Mac — it runs in the background independently of your browser. If you choose to use the Browser Extension only, then your browser needs to be open to contribute."
+                                    "text": "None of your personal browsing data. The traffic that runs through the app is sessionless, meaning it doesn't carry cookies, personal identifiers, or browsing history."
                                 }
                             },
                             {
                                 "@type": "Question",
-                                "name": "I'm concerned about supporting AI companies. Why should I use IdleForest?",
+                                "name": "Is the bandwidth used for anything harmful?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "AI companies will collect web data regardless. The question is how. Traditional web scraping uses massive data centers consuming enormous amounts of electricity and water. Distributed networks like the one IdleForest uses are 80-90% more environmentally friendly than traditional data centers. By using IdleForest, you're helping make an existing industry significantly greener while funding reforestation."
+                                    "text": "No. The tasks routed through your connection are limited to uptime monitoring, market research, and similar passive data collection from public sites. The app doesn't participate in ad fraud, crypto mining, scraping of private data, or any malicious activity."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "How many trees has IdleForest planted?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": `IdleForest has funded ${stats.treesPlanted.toLocaleString()} trees through our partners, based on the current live counter.`
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "How much money does IdleForest make from my bandwidth?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "The revenue per user is small, often just a few cents per month for an average user. That's why the model works at scale, not per individual."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Is IdleForest available on mobile?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Not yet. The app runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "Can I uninstall the app at any time?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Yes. Uninstall the Chrome extension from the extensions menu, or remove the desktop app like any other application. Once uninstalled, no bandwidth is used and the trees you've already funded stay funded."
                                 }
                             }
                         ]
@@ -638,26 +730,29 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "HowTo",
-                        "name": "How to Plant Trees for Free with IdleForest",
-                        "description": "Three simple steps to start making an environmental impact with your unused internet connection.",
+                        "name": "How to plant trees by browsing with IdleForest",
+                        "totalTime": "PT10S",
                         "step": [
                             {
                                 "@type": "HowToStep",
                                 "position": 1,
-                                "name": "Download Desktop App",
-                                "text": "Download the IdleForest desktop app for Windows or Mac. It runs quietly in the background, utilizing idle resources to plant trees."
+                                "name": "Install the app",
+                                "text": "Add IdleForest to Chrome or download the desktop app for Mac or Windows. Takes 10 seconds.",
+                                "url": "https://www.idleforest.com/#step-1"
                             },
                             {
                                 "@type": "HowToStep",
                                 "position": 2,
-                                "name": "Share Unused Bandwidth",
-                                "text": "Your idle internet connection is securely used for approved research and content delivery — replacing traditional data centers that consume massive amounts of energy and water. This approach is 80-90% greener than server farms."
+                                "name": "Browse normally",
+                                "text": "The app runs quietly in the background, using only your unused internet bandwidth.",
+                                "url": "https://www.idleforest.com/#step-2"
                             },
                             {
                                 "@type": "HowToStep",
                                 "position": 3,
-                                "name": "We Plant Trees",
-                                "text": "Revenue generated funds verified tree planting projects worldwide. Track your impact in real-time through your dashboard."
+                                "name": "Trees get planted",
+                                "text": "Every gigabyte of idle bandwidth funds verified tree-planting projects.",
+                                "url": "https://www.idleforest.com/#step-3"
                             }
                         ]
                     })
