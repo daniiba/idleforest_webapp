@@ -6,19 +6,12 @@ import { Link } from "@/navigation";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
 import { ReviewsSection } from "@/components/reviews-section";
+import ProjectsSection from "@/components/landing/ProjectsSection";
+import TeamSection from "@/components/landing/TeamSection";
 import { DeviceDetection } from "@/lib/device-detection";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
-import {
-    ArrowRight,
-    Chrome,
-    Download,
-    ExternalLink,
-    Leaf,
-    ShieldCheck,
-    Sprout,
-    TreePine,
-} from "lucide-react";
+import { ArrowRight, Chrome, Download, ExternalLink, Leaf, ShieldCheck, Sprout, TreePine } from "lucide-react";
 
 const CHROME_URL = "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk";
 const MAC_URL = "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip";
@@ -29,6 +22,13 @@ const comparisonRows = [
     ["Effort", "Install once, forget", "Switch your search engine", "Active subscription", "Manual payments"],
     ["How trees are funded", "Idle bandwidth", "Search ads", "Subscription fees", "Your money"],
     ["Works with your browser", "Yes, all browsers", "Browser-specific", "N/A", "N/A"],
+];
+
+const impactStats = [
+    ["5,364", "verified trees planted"],
+    ["$2,796", "contributed"],
+    ["10.1M", "requests powered"],
+    ["1,000+", "users"],
 ];
 
 const faqItems = [
@@ -138,28 +138,18 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
         <>
             <Navigation />
             <main className="min-h-screen bg-brand-gray text-black">
-                <section className="relative overflow-hidden">
-                    <Image
-                        src="/Vector (Stroke).svg"
-                        alt=""
-                        fill
-                        priority
-                        sizes="150vw"
-                        className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none"
-                    />
-                    <div className="container relative mx-auto grid min-h-[calc(100vh-120px)] grid-cols-1 items-center gap-10 px-6 py-16 lg:grid-cols-[0.95fr_1.05fr]">
+                <section className="relative overflow-hidden border-b-4 border-black">
+                    <Image src="/Vector (Stroke).svg" alt="" fill priority sizes="150vw" className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none" />
+                    <div className="container relative mx-auto grid min-h-[calc(100vh-120px)] grid-cols-1 items-center gap-10 px-6 py-16 lg:grid-cols-[0.92fr_1.08fr]">
                         <div className="max-w-3xl">
                             <div className="mb-6 flex items-center gap-3">
                                 <Image src="/europelogo.svg" alt="European Union flag" width={74} height={62} />
-                                <span className="text-sm font-bold uppercase tracking-[0.18em] text-neutral-700">
-                                    Free tree planting app
-                                </span>
+                                <span className="text-sm font-bold uppercase tracking-[0.18em] text-neutral-700">Free tree planting app</span>
                             </div>
-                            <h1 className="font-candu text-[44px] uppercase leading-[0.98] text-black sm:text-6xl lg:text-7xl">
-                                The Free Tree Planting App You Install Once and Forget
-                            </h1>
+                            <h1 className="font-candu text-[44px] uppercase leading-[0.98] text-black sm:text-6xl lg:text-7xl">The Free Tree Planting App You Install Once and Forget</h1>
                             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-800">
-                                IdleForest is a free Chrome extension and desktop app that funds verified tree-planting projects with your idle internet bandwidth. Install it once and let it run while you browse.
+                                IdleForest is a free Chrome extension and desktop app that funds verified tree-planting projects with your idle internet bandwidth. Install it once and let it run while
+                                you browse.
                             </p>
                             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                                 <Button asChild className="rounded-full bg-brand-yellow px-7 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
@@ -192,19 +182,25 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     </Link>
                                 </Button>
                             </div>
-                            <p className="mt-6 text-sm font-semibold text-neutral-700">
-                                Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 5,364 verified trees planted
-                            </p>
+                            <div className="mt-6 flex flex-wrap gap-2 text-sm font-bold text-neutral-700">
+                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">Featured on Chrome Web Store</span>
+                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">4.8 ★ from 33 reviews</span>
+                                <span className="rounded-full border border-black/10 bg-white px-3 py-2">5,364 verified trees planted</span>
+                            </div>
                         </div>
                         <div className="relative mx-auto w-full max-w-2xl">
                             <div className="relative aspect-[4/3] overflow-hidden rounded-lg border-2 border-black bg-white shadow-[10px_10px_0_0_#000]">
-                                <Image
-                                    src="/landing/screenshot-1.png"
-                                    alt="IdleForest app dashboard showing tree planting progress"
-                                    fill
-                                    priority
-                                    className="object-contain"
-                                />
+                                <Image src="/landing/screenshot-1.png" alt="IdleForest app dashboard showing tree planting progress" fill priority className="object-contain" />
+                            </div>
+                            <div className="absolute -bottom-6 left-4 right-4 grid grid-cols-2 gap-3 sm:left-auto sm:right-[-18px] sm:w-[310px]">
+                                <div className="border-2 border-black bg-brand-yellow p-4 shadow-[5px_5px_0_0_#000]">
+                                    <p className="font-candu text-3xl leading-none">10 sec</p>
+                                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-black/70">install time</p>
+                                </div>
+                                <div className="border-2 border-black bg-black p-4 text-brand-yellow shadow-[5px_5px_0_0_#000]">
+                                    <p className="font-candu text-3xl leading-none">$0</p>
+                                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-brand-yellow/70">cost to use</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -213,9 +209,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 <section id="how-it-works" className="bg-brand-yellow px-6 py-20 text-black md:py-24">
                     <div className="container mx-auto">
                         <div className="mx-auto max-w-3xl text-center">
-                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                                How the Tree Planting App Works
-                            </h2>
+                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">How the Tree Planting App Works</h2>
                         </div>
                         <div className="mt-14 grid gap-8 lg:grid-cols-3">
                             <StepCard
@@ -245,48 +239,68 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
-                <section className="px-6 py-20 md:py-24">
+                <ProjectsSection />
+
+                <section className="relative overflow-hidden bg-brand-navy px-6 py-20 text-white md:py-24">
                     <div className="container mx-auto">
-                        <div className="max-w-3xl">
-                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                                Why IdleForest Is Different From Other Tree Planting Apps
-                            </h2>
-                            <p className="mt-5 text-lg leading-relaxed text-neutral-800">
-                                Most tree planting apps ask you to change a habit, switch your search engine, pay a monthly fee, or remember to donate. IdleForest doesn't. You install it, then forget it.
-                            </p>
+                        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+                            <div className="max-w-3xl">
+                                <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-yellow">Comparison</p>
+                                <h2 className="mt-3 font-rethink-sans text-4xl font-extrabold leading-tight md:text-6xl">Why IdleForest Is Different From Other Tree Planting Apps</h2>
+                                <p className="mt-5 text-lg leading-relaxed text-white/75">
+                                    Most tree planting apps ask you to change a habit, switch your search engine, pay a monthly fee, or remember to donate. IdleForest doesn't. You install it, then
+                                    forget it.
+                                </p>
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                <ComparisonCallout title="No behavior change" text="Keep your browser, search engine, and routine." />
+                                <ComparisonCallout title="No payment loop" text="Idle bandwidth funds the planting, not donations." />
+                            </div>
                         </div>
-                        <div className="mt-10 overflow-x-auto border-2 border-black bg-white">
-                            <table className="w-full min-w-[760px] border-collapse text-left">
-                                <thead className="bg-black text-brand-yellow">
-                                    <tr>
-                                        <th className="p-4"> </th>
-                                        <th className="p-4">IdleForest</th>
-                                        <th className="p-4">Ecosia</th>
-                                        <th className="p-4">Mossy Earth</th>
-                                        <th className="p-4">Donation apps</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {comparisonRows.map((row) => (
-                                        <tr key={row[0]} className="border-t-2 border-black">
-                                            {row.map((cell, index) => (
-                                                <td key={`${row[0]}-${index}`} className={`p-4 ${index === 0 ? "font-bold" : ""}`}>
-                                                    {index === 1 ? <span className="font-bold">{cell}</span> : cell}
-                                                </td>
-                                            ))}
+
+                        <div className="mt-12 overflow-hidden rounded-lg border-2 border-black bg-brand-gray shadow-[10px_10px_0_0_#000]">
+                            <div className="overflow-x-auto">
+                                <table className="w-full min-w-[760px] border-collapse text-left text-black">
+                                    <thead className="bg-black text-brand-yellow">
+                                        <tr>
+                                            <th className="p-4"> </th>
+                                            <th className="p-4">IdleForest</th>
+                                            <th className="p-4">Ecosia</th>
+                                            <th className="p-4">Mossy Earth</th>
+                                            <th className="p-4">Donation apps</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {comparisonRows.map((row) => (
+                                            <tr key={row[0]} className="border-t-2 border-black">
+                                                {row.map((cell, index) => (
+                                                    <td key={`${row[0]}-${index}`} className={`p-4 ${index === 0 ? "font-bold" : ""}`}>
+                                                        {index === 1 ? <span className="font-bold">{cell}</span> : cell}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div className="mt-6 flex flex-wrap gap-4 text-sm font-bold">
-                            <Link href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" className="underline">
+                        <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold">
+                            <Link
+                                href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025"
+                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                            >
                                 IdleForest vs Ecosia
                             </Link>
-                            <Link href="/blog/planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025" className="underline">
+                            <Link
+                                href="/blog/planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025"
+                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                            >
                                 Planet Wild vs Mossy Earth
                             </Link>
-                            <Link href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" className="underline">
+                            <Link
+                                href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025"
+                                className="rounded-full border border-brand-yellow/40 px-4 py-2 text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                            >
                                 9 alternatives to Ecosia
                             </Link>
                         </div>
@@ -296,17 +310,23 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 <section id="idle-bandwidth" className="bg-black px-6 py-20 text-brand-yellow md:py-24">
                     <div className="container mx-auto grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
                         <div>
-                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                                How Idle Bandwidth Funds Trees
-                            </h2>
+                            <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">How Idle Bandwidth Funds Trees</h2>
                             <Link href="/transparency" className="mt-8 inline-flex items-center gap-2 font-bold underline">
                                 Read the full technical explanation <ArrowRight className="h-4 w-4" />
                             </Link>
                         </div>
                         <div className="space-y-5 text-lg leading-relaxed text-brand-yellow/90">
-                            <p>Idle bandwidth is the part of your internet connection you're not using. Most of the time, your connection sits at a small fraction of its capacity. The rest is wasted.</p>
-                            <p>IdleForest puts that unused capacity to work. The app routes small data tasks through your connection, like checking website uptime or running market research queries. These tasks are sessionless: they don't carry personal data, cookies, or browsing history.</p>
-                            <p>Clients pay for those tasks. We take that revenue and send it to our reforestation partners. The result: you plant trees with bandwidth you weren't using anyway. The cost to you is zero.</p>
+                            <p>
+                                Idle bandwidth is the part of your internet connection you're not using. Most of the time, your connection sits at a small fraction of its capacity. The rest is wasted.
+                            </p>
+                            <p>
+                                IdleForest puts that unused capacity to work. The app routes small data tasks through your connection, like checking website uptime or running market research queries.
+                                These tasks are sessionless: they don't carry personal data, cookies, or browsing history.
+                            </p>
+                            <p>
+                                Clients pay for those tasks. We take that revenue and send it to our reforestation partners. The result: you plant trees with bandwidth you weren't using anyway. The
+                                cost to you is zero.
+                            </p>
                             <p>This model is why IdleForest is free. We don't need your money, your search history, or your email. We just need the gigabytes you would have wasted.</p>
                         </div>
                     </div>
@@ -316,15 +336,20 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     <div className="container mx-auto">
                         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
                             <div className="max-w-3xl">
-                                <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                                    Verified Tree-Planting Partners
-                                </h2>
+                                <p className="text-xs font-bold uppercase tracking-[0.22em] text-neutral-600">Verified impact</p>
+                                <h2 className="font-rethink-sans text-4xl font-extrabold md:text-6xl">Verified Tree-Planting Partners</h2>
                                 <p className="mt-5 text-lg leading-relaxed text-neutral-800">
-                                    We work with three reforestation organizations. Each one publishes its planting records. Each one operates in regions where reforestation has measurable carbon and biodiversity impact.
+                                    We work with three reforestation organizations. Each one publishes its planting records. Each one operates in regions where reforestation has measurable carbon and
+                                    biodiversity impact.
                                 </p>
                             </div>
-                            <div className="rounded-lg bg-brand-yellow p-5 font-bold text-black">
-                                5,364 trees planted · $2,796 contributed · 10.1M requests powered · 1,000+ users
+                            <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:w-[430px]">
+                                {impactStats.map(([value, label]) => (
+                                    <div key={label} className="border-2 border-black bg-brand-yellow p-4 shadow-[4px_4px_0_0_#000]">
+                                        <p className="font-candu text-3xl leading-none">{value}</p>
+                                        <p className="mt-2 text-xs font-bold uppercase tracking-[0.14em] text-black/70">{label}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="mt-10 grid gap-6 lg:grid-cols-3">
@@ -353,11 +378,11 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
+                <TeamSection />
+
                 <section id="faq" className="bg-brand-yellow px-6 py-20 text-black md:py-24">
                     <div className="container mx-auto">
-                        <h2 className="text-center font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                            Frequently Asked Questions
-                        </h2>
+                        <h2 className="text-center font-rethink-sans text-4xl font-extrabold md:text-6xl">Frequently Asked Questions</h2>
                         <div className="mx-auto mt-12 grid max-w-5xl gap-4">
                             {faqItems.map((item) => (
                                 <details key={item.question} className="border-2 border-black bg-brand-navy p-5 text-brand-yellow">
@@ -384,12 +409,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 <section className="bg-black px-6 py-20 text-center text-brand-yellow md:py-24">
                     <div className="mx-auto max-w-3xl">
                         <Sprout className="mx-auto h-12 w-12" />
-                        <h2 className="mt-6 font-rethink-sans text-4xl font-extrabold md:text-6xl">
-                            Start Planting Trees in 10 Seconds
-                        </h2>
-                        <p className="mt-5 text-lg text-brand-yellow/90">
-                            Install IdleForest. Browse like you always do. Watch trees get planted.
-                        </p>
+                        <h2 className="mt-6 font-rethink-sans text-4xl font-extrabold md:text-6xl">Start Planting Trees in 10 Seconds</h2>
+                        <p className="mt-5 text-lg text-brand-yellow/90">Install IdleForest. Browse like you always do. Watch trees get planted.</p>
                         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                             <Button asChild className="rounded-full bg-brand-yellow px-7 py-6 font-bold text-black hover:bg-white">
                                 <Link href={CHROME_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackLead(CHROME_URL, "Extension Download - Chrome")}>
@@ -398,32 +419,26 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </Link>
                             </Button>
                             <Button asChild className="rounded-full bg-white px-7 py-6 font-bold text-black hover:bg-brand-yellow">
-                                <Link href={desktopUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackLead(desktopUrl, isMac ? "Desktop Download - Mac" : "Desktop Download - Windows")}>
+                                <Link
+                                    href={desktopUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => trackLead(desktopUrl, isMac ? "Desktop Download - Mac" : "Desktop Download - Windows")}
+                                >
                                     <Download className="mr-2 h-5 w-5" />
                                     {desktopLabel}
                                 </Link>
                             </Button>
                         </div>
-                        <a
-                            href={CHROME_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-8 inline-flex items-center justify-center gap-2 font-bold underline"
-                        >
+                        <a href={CHROME_URL} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center justify-center gap-2 font-bold underline">
                             Read all 33 reviews on Chrome Web Store <ExternalLink className="h-4 w-4" />
                         </a>
                     </div>
                 </section>
             </main>
 
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
         </>
     );
 }
@@ -431,26 +446,23 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 function StepCard({ id, number, title, text }: { id: string; number: string; title: string; text: string }) {
     return (
         <article id={id} className="border-2 border-black bg-white p-6 shadow-[6px_6px_0_0_#000]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black font-bold text-brand-yellow">
-                {number}
-            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black font-bold text-brand-yellow">{number}</div>
             <h3 className="mt-6 font-rethink-sans text-2xl font-extrabold">{title}</h3>
             <p className="mt-4 leading-relaxed text-neutral-800">{text}</p>
         </article>
     );
 }
 
-function PartnerCard({
-    icon,
-    title,
-    text,
-    href,
-}: {
-    icon: ReactNode;
-    title: string;
-    text: string;
-    href: string;
-}) {
+function ComparisonCallout({ title, text }: { title: string; text: string }) {
+    return (
+        <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-[5px_5px_0_0_#000]">
+            <p className="font-rethink-sans text-xl font-extrabold">{title}</p>
+            <p className="mt-2 text-sm leading-6 text-black/75">{text}</p>
+        </div>
+    );
+}
+
+function PartnerCard({ icon, title, text, href }: { icon: ReactNode; title: string; text: string; href: string }) {
     return (
         <article className="flex h-full flex-col border-2 border-black bg-white p-6">
             <div className="text-brand-yellow">{icon}</div>
