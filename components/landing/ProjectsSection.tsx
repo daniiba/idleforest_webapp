@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ArrowUpRight, Globe2, Leaf, MapPin } from "lucide-react";
+import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { groupByProject, plantingsData } from "@/lib/plantings";
 
@@ -29,6 +30,24 @@ const projects: ProjectCard[] = [
     },
 ];
 
+const partnerDetails = [
+    {
+        name: "Trees for the Future",
+        href: "https://trees.org",
+        description: "Trees for the Future plants food forests with smallholder farmers across Sub-Saharan Africa. Their Forest Garden model trains farmers to grow trees, vegetables, and cash crops on the same land, restoring soil while supporting long-term local income.",
+    },
+    {
+        name: "Tree-Nation",
+        href: "https://tree-nation.com",
+        description: "Tree-Nation restores native forests in 35+ countries, including Madagascar, Senegal, and Tanzania. They focus on species native to each region, which gives planted forests stronger survival rates and better long-term ecological value than monoculture planting.",
+    },
+    {
+        name: "1ClickImpact",
+        href: "https://1clickimpact.com",
+        description: "1ClickImpact funds planting projects with traceability across certificates, project records, and impact reporting. We link their verified planting records in our transparency work so you can follow where funded trees go.",
+    },
+];
+
 export default function ProjectsSection() {
     const t = useTranslations("Landing.projects");
     const projectStats = groupByProject(plantingsData.events);
@@ -46,6 +65,14 @@ export default function ProjectsSection() {
                     <p className="mt-4 text-base text-white/75 md:text-lg">
                         {t("subheading")}
                     </p>
+                </div>
+
+                <div className="mt-10 grid gap-3 text-center sm:grid-cols-4">
+                    {["5,364 trees planted", "$2,796 contributed", "10.1M requests powered", "1,000+ users"].map((stat) => (
+                        <div key={stat} className="border-2 border-brand-yellow bg-black/20 px-4 py-4 font-candu text-xl uppercase leading-tight text-brand-yellow">
+                            {stat}
+                        </div>
+                    ))}
                 </div>
 
                 <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
@@ -129,6 +156,36 @@ export default function ProjectsSection() {
                             </a>
                         );
                     })}
+                </div>
+
+                <div className="mt-12 grid gap-5 lg:grid-cols-3">
+                    {partnerDetails.map((partner) => (
+                        <article key={partner.name} className="flex h-full flex-col border-2 border-brand-yellow bg-black/20 p-6">
+                            <h3 className="font-rethink-sans text-2xl font-extrabold text-brand-yellow">
+                                {partner.name}
+                            </h3>
+                            <p className="mt-4 flex-1 text-sm leading-6 text-white/75">
+                                {partner.description}
+                            </p>
+                            <a
+                                href={partner.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-6 inline-flex items-center gap-2 font-bold text-brand-yellow underline decoration-2 underline-offset-4 hover:text-white"
+                            >
+                                Visit their site <ArrowUpRight className="h-4 w-4" />
+                            </a>
+                        </article>
+                    ))}
+                </div>
+
+                <div className="mt-12 text-center">
+                    <Link
+                        href="/transparency"
+                        className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(224,241,70,0.35)] transition-all hover:bg-white"
+                    >
+                        Read our full transparency report <ArrowUpRight className="h-4 w-4" />
+                    </Link>
                 </div>
             </div>
         </section>

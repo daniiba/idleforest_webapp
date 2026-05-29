@@ -26,6 +26,52 @@ const screenshots = [
     "/landing/screenshot-3.png",
 ];
 
+const comparisonRows = [
+    {
+        label: "Cost",
+        idleforest: "Free, no signup",
+        ecosia: "Free search",
+        mossyEarth: "$10-25/month",
+        donationApps: "Recurring donation",
+    },
+    {
+        label: "Effort",
+        idleforest: "Install once, forget",
+        ecosia: "Switch your search engine",
+        mossyEarth: "Active subscription",
+        donationApps: "Manual payments",
+    },
+    {
+        label: "How trees are funded",
+        idleforest: "Idle bandwidth",
+        ecosia: "Search ads",
+        mossyEarth: "Subscription fees",
+        donationApps: "Your money",
+    },
+    {
+        label: "Works with your browser",
+        idleforest: "Yes, all browsers",
+        ecosia: "Browser-specific",
+        mossyEarth: "N/A",
+        donationApps: "N/A",
+    },
+];
+
+const comparisonLinks = [
+    {
+        label: "IdleForest vs Ecosia",
+        href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
+    },
+    {
+        label: "Planet Wild vs Mossy Earth",
+        href: "/blog/planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025",
+    },
+    {
+        label: "9 alternatives to Ecosia",
+        href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
+    },
+];
+
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const [stats, setStats] = useState({
         totalUsers: 0,
@@ -116,6 +162,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     <span className="font-extrabold">{t('hero.title_line2')} </span>
                                     <br className="hidden sm:block" />
                                     <span className="font-extrabold">{t('hero.title_line3')} </span>
+                                    <br className="hidden sm:block" />
+                                    <span className="font-extrabold">{t('hero.title_line4')} </span>
                                 </h1>
                                 <p className="text-base md:text-lg text-neutral-800 max-w-xl">
                                     {t('hero.description')}
@@ -123,7 +171,16 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
                                     <SmartCTA className="text-black" deviceInfo={deviceInfo} showExtensionDownload />
+                                    <Link
+                                        href="/how-it-works"
+                                        className="inline-flex items-center justify-center gap-2 text-sm font-bold text-black underline decoration-2 underline-offset-4 hover:text-brand-navy sm:justify-start"
+                                    >
+                                        See how it works <ArrowRight className="h-4 w-4" />
+                                    </Link>
                                 </div>
+                                <p className="text-sm font-semibold text-neutral-800">
+                                    Featured on Chrome Web Store | 4.8/5 from 33 reviews | 5,364 verified trees planted
+                                </p>
                                 <HeroTrustSignals />
                             </div>
                             {/* HERO ART PLACEHOLDER */}
@@ -213,7 +270,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
                                     {t('how_it_works.step2_desc')}{" "}
-                                    <Link href="/transparency" className="font-bold underline hover:text-black">
+                                    <Link href="/how-it-works" className="font-bold underline hover:text-black">
                                         {t('how_it_works.step2_link')}
                                     </Link>
                                 </p>
@@ -226,6 +283,90 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 <p className="mt-3 text-neutral-800 max-w-sm">
                                     {t('how_it_works.step3_desc')}
                                 </p>
+                            </div>
+                        </div>
+                        <div className="mt-14 text-center">
+                            <Link
+                                href="/how-it-works"
+                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-black hover:shadow-none"
+                            >
+                                See how it works in detail <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+
+                {/* COMPARISON */}
+                <section id="comparison" className="relative bg-brand-gray text-black scroll-mt-24">
+                    <div className="container mx-auto px-6 py-20 md:py-24">
+                        <div className="mx-auto max-w-3xl text-center">
+                            <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                Why IdleForest Is Different From Other Tree Planting Apps
+                            </h2>
+                            <p className="mt-4 text-base md:text-lg text-neutral-800">
+                                Most tree planting apps ask you to change a habit, switch your search engine, pay a monthly fee, or remember to donate. IdleForest does not. You install it, then forget it.
+                            </p>
+                        </div>
+
+                        <div className="mt-12 overflow-x-auto border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <table className="w-full min-w-[760px] border-collapse text-left">
+                                <thead className="bg-brand-navy text-brand-yellow">
+                                    <tr>
+                                        <th className="border-b-2 border-black p-4 text-sm uppercase tracking-wide">Compare</th>
+                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">IdleForest</th>
+                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Ecosia</th>
+                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Mossy Earth</th>
+                                        <th className="border-b-2 border-l-2 border-black p-4 text-sm uppercase tracking-wide">Donation apps</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {comparisonRows.map((row) => (
+                                        <tr key={row.label} className="odd:bg-brand-yellow/20">
+                                            <th className="border-b border-black/20 p-4 font-extrabold">{row.label}</th>
+                                            <td className="border-b border-l border-black/20 p-4 font-semibold">{row.idleforest}</td>
+                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.ecosia}</td>
+                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.mossyEarth}</td>
+                                            <td className="border-b border-l border-black/20 p-4 text-neutral-700">{row.donationApps}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-bold">
+                            <span className="text-neutral-700">Compare in detail:</span>
+                            {comparisonLinks.map((item) => (
+                                <Link key={item.label} href={item.href} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* IDLE BANDWIDTH */}
+                <section id="idle-bandwidth" className="relative bg-brand-navy text-brand-yellow scroll-mt-24">
+                    <div className="container mx-auto px-6 py-20 md:py-24">
+                        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-yellow/70">
+                                    Background impact
+                                </p>
+                                <h2 className="mt-3 font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                    How Idle Bandwidth Funds Trees
+                                </h2>
+                                <Link
+                                    href="/how-it-works"
+                                    className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(224,241,70,0.35)] transition-all hover:bg-white"
+                                >
+                                    Read the full technical explanation <ArrowRight className="h-4 w-4" />
+                                </Link>
+                            </div>
+                            <div className="space-y-5 text-base leading-8 text-brand-yellow/90 md:text-lg">
+                                <p>Idle bandwidth is the part of your internet connection you are not using. Most of the time, your connection sits at a small fraction of its capacity. The rest is wasted.</p>
+                                <p>IdleForest puts that unused capacity to work. The app routes small data tasks through your connection, like checking website uptime or running market research queries. These tasks are sessionless: they do not carry personal data, cookies, or browsing history.</p>
+                                <p>Clients pay for those tasks. We take that revenue and send it to our reforestation partners. The result: you plant trees with bandwidth you were not using anyway. The cost to you is zero.</p>
+                                <p>This model is why IdleForest is free. We do not need your money, your search history, or your email. We just need the gigabytes you would have wasted.</p>
                             </div>
                         </div>
                     </div>
@@ -570,7 +711,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            The revenue per user is small, often just a few cents per month for an average user. The model works at scale, not because any one person contributes a large amount.
+                                            The revenue per user is small, often just a few cents per month for an average user. The model works at scale, not because any one person contributes a large amount. With 1,000 active users, the total reaches a level where we can fund verified trees every month.
                                         </p>
                                         <p>
                                             The more users join, the more idle bandwidth becomes available, and the more trees can be funded.
@@ -589,7 +730,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                             Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac and Windows.
                                         </p>
                                         <p>
-                                            Mobile is on the roadmap, but mobile networks usually have less idle bandwidth than home connections, so the impact per user would be lower.
+                                            Mobile is on the roadmap, but mobile networks usually have less idle bandwidth than home connections, so the impact per user would be lower. We will launch when the math works.
                                         </p>
                                     </>
                                 }
@@ -605,7 +746,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                             Yes. Remove the Chrome extension from your extensions menu, or uninstall the desktop app like any other application.
                                         </p>
                                         <p>
-                                            Once uninstalled, no bandwidth is used. The trees you have already helped fund stay funded.
+                                            Once uninstalled, no bandwidth is used and no data is collected. The trees you have already helped fund stay funded.
                                         </p>
                                     </>
                                 }
@@ -617,6 +758,23 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             <p className="mt-6 text-center text-sm text-neutral-600 italic">
                                 {t('faq.disclaimer')}
                             </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FINAL CTA */}
+                <section id="start" className="relative bg-brand-navy text-brand-yellow scroll-mt-24">
+                    <div className="container mx-auto px-6 py-20 md:py-24">
+                        <div className="mx-auto max-w-3xl text-center">
+                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                                Start Planting Trees in 10 Seconds
+                            </h2>
+                            <p className="mt-4 text-base md:text-lg text-brand-yellow/80">
+                                Install IdleForest. Browse like you always do. Watch trees get planted.
+                            </p>
+                            <div className="mt-8 flex justify-center">
+                                <SmartCTA deviceInfo={deviceInfo} buttonVariant="default" showExtensionDownload />
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -667,7 +825,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Can I use IdleForest with Ecosia or another browser?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, and any other browser."
+                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, and any other browser. You can stack the impact."
                                 }
                             },
                             {
@@ -699,7 +857,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "How much money does IdleForest make from my bandwidth?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "The revenue per user is small, often just a few cents per month for an average user. That's why the model works at scale, not per individual."
+                                    "text": "The revenue per user is small, often just a few cents per month for an average user. That's why the model works at scale, not per individual. With 1,000 active users, the total reaches a level where we can fund verified trees every month."
                                 }
                             },
                             {
@@ -707,7 +865,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Is IdleForest available on mobile?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Not yet. The app runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections."
+                                    "text": "Not yet. The app runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections, so the impact per user would be lower. We will launch when the math works."
                                 }
                             },
                             {
@@ -715,7 +873,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Can I uninstall the app at any time?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Yes. Uninstall the Chrome extension from the extensions menu, or remove the desktop app like any other application. Once uninstalled, no bandwidth is used and the trees you've already funded stay funded."
+                                    "text": "Yes. Uninstall the Chrome extension from the extensions menu, or remove the desktop app like any other application. Once uninstalled, no bandwidth is used and no data is collected. The trees you've already funded stay funded."
                                 }
                             }
                         ]

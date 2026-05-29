@@ -18,6 +18,7 @@ export function SmartCTA({
     onDarkBackground = false,
     deviceInfo,
     desktopOnly = false,
+    showExtensionDownload = false,
 }: {
     className?: string;
     showLearnMore?: boolean;
@@ -82,6 +83,20 @@ export function SmartCTA({
             {/* Desktop: Show Desktop App Download */}
             {isDesktop && (
                 <div className={`flex flex-col ${forceVertical ? '' : 'sm:flex-row'} w-full sm:w-auto items-stretch ${forceVertical ? '' : 'sm:items-center'} gap-3`}>
+                    {showExtensionDownload && !desktopOnly && (
+                        <Button asChild className={buttonClass}>
+                            <Link
+                                href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                                className="flex items-center justify-center gap-2 w-full sm:w-auto"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => trackLead("https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk", "Extension Download - Desktop")}
+                            >
+                                <Chrome className="h-8 w-8" />
+                                Add to Chrome - It's Free
+                            </Link>
+                        </Button>
+                    )}
                     <div className="relative inline-block w-full sm:w-fit sm:self-center">
                         <Button asChild className={buttonClass}>
                             <Link
