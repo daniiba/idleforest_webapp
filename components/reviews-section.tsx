@@ -2,24 +2,6 @@
 
 import Image from "next/image";
 
-const reviews = [
-    {
-        quote: "works great and I like to support planting trees",
-        name: "Charles P.",
-        date: "12.08.2025",
-    },
-    {
-        quote: "Great concept, a brilliant and great idea for reforestation!",
-        name: "Joao V.",
-        date: "27.09.2025",
-    },
-    {
-        quote: "Great way to contribute to the environment without any extra efforts!",
-        name: "Kroes",
-        date: "05.02.2025",
-    },
-];
-
 export function ReviewsSection() {
     return (
         <section id="reviews" className="relative bg-brand-gray text-black scroll-mt-24">
@@ -34,19 +16,6 @@ export function ReviewsSection() {
                 </div>
 
                 <div className="flex flex-col items-center gap-8 max-w-4xl mx-auto">
-                    <div className="grid w-full gap-4 md:grid-cols-3">
-                        {reviews.map((review) => (
-                            <article key={`${review.name}-${review.date}`} className="flex h-full flex-col border-2 border-black bg-white p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                <div className="text-sm font-extrabold uppercase tracking-[0.18em] text-black" aria-label="5 star review">5/5 stars</div>
-                                <p className="mt-4 flex-1 text-base leading-7 text-neutral-800">
-                                    "{review.quote}"
-                                </p>
-                                <div className="mt-5 border-t border-black/10 pt-3 text-sm font-bold text-neutral-700">
-                                    {review.name} - {review.date}
-                                </div>
-                            </article>
-                        ))}
-                    </div>
                     <div className="relative w-full">
                         <Image
                             src="/reviews/image.png"
