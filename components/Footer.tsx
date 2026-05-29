@@ -13,19 +13,51 @@ const Footer = () => {
     return null;
   }
 
+  const footerColumns = [
+    {
+      title: 'Product',
+      links: [
+        { href: '/how-it-works', label: 'How it Works' },
+        { href: '/download/chrome', label: 'Chrome Extension' },
+        { href: '/download/windows', label: 'Windows App' },
+        { href: '/download/mac', label: 'Mac App' },
+        { href: '/transparency', label: 'Transparency' },
+      ],
+    },
+    {
+      title: 'Community',
+      links: [
+        { href: '/teams', label: 'Rankings' },
+        { href: '/map', label: 'Map' },
+        { href: '/report', label: 'Report' },
+        { href: '/business', label: 'Business' },
+        { href: '/discord-bot', label: 'Discord Bot' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { href: '/blog', label: 'Blog' },
+        { href: '/eco-friendly-search-engine', label: 'Eco Search' },
+        { href: '/privacy', label: 'Privacy' },
+        { href: '/terms', label: 'Terms of Service' },
+      ],
+    },
+  ];
+
   return (
-    <footer className="relative z-10 border-t border-gray-800 py-6 bg-black backdrop-blur-sm">
+    <footer className="relative z-10 border-t border-gray-800 bg-black py-10 backdrop-blur-sm">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row items-center gap-2">
-            <p className="text-sm text-gray-400">
-              {t('copyright', { year: new Date().getFullYear() })}
-            </p>
-            <div className="flex items-center">
-              <span className="text-sm text-gray-400 flex items-center gap-1">
-                <span className="text-brand-yellow">🇪🇺</span> Proudly made in Lisbon, Portugal
-              </span>
-            </div>
+        <div className="grid gap-10 lg:grid-cols-[1.2fr_2fr_auto]">
+          <div className="space-y-3">
+            <Link href="/" className="inline-flex">
+              <span className="font-rethink-sans text-2xl font-extrabold text-brand-yellow">IdleForest</span>
+            </Link>
+            <p className="max-w-sm text-sm leading-6 text-gray-400">{t('tagline')}</p>
+            <p className="text-sm text-gray-400">{t('copyright', { year: new Date().getFullYear() })}</p>
+            <span className="flex items-center gap-1 text-sm text-gray-400">
+              <span className="text-brand-yellow">🇪🇺</span> Proudly made in Lisbon, Portugal
+            </span>
             <div className="inline-flex min-h-8 items-center" data-1ci-container="W8034005">
               <a href="https://1clickimpact.com" target="_blank" rel="noopener" className="text-sm text-gray-400 hover:text-brand-yellow">
                 Climate Action by 1ClickImpact
@@ -39,24 +71,26 @@ const Footer = () => {
               strategy="afterInteractive"
             />
           </div>
-          <div className="flex items-center gap-4">
-            {/* Footer quick links */}
-            <nav className="hidden sm:flex items-center gap-3 text-sm">
-              <Link href="/blog" className="text-gray-400 hover:text-brand-yellow">{t('blog')}</Link>
-              <span className="text-gray-700">•</span>
-              <Link href="/report" className="text-gray-400 hover:text-brand-yellow">Report</Link>
-              <span className="text-gray-700">•</span>
-              <Link href="/eco-friendly-search-engine" className="text-gray-400 hover:text-brand-yellow">Eco Search</Link>
-              <span className="text-gray-700">•</span>
-              <Link href="/transparency" className="text-gray-400 hover:text-brand-yellow">{t('transparency')}</Link>
-              <span className="text-gray-700">•</span>
-              <Link href="/privacy" className="text-gray-400 hover:text-brand-yellow">Privacy</Link>
-              <span className="text-gray-700">•</span>
-              <Link href="/terms" className="text-gray-400 hover:text-brand-yellow">{t('terms')}</Link>
-            </nav>
-            <span className="hidden sm:inline-block h-4 w-px bg-gray-800" />
-            {/* Social media links */}
-            <div className="flex items-center gap-4">
+
+          <nav className="grid gap-8 sm:grid-cols-3">
+            {footerColumns.map((column) => (
+              <div key={column.title}>
+                <h2 className="mb-4 text-sm font-extrabold uppercase tracking-widest text-brand-yellow">{column.title}</h2>
+                <ul className="space-y-3">
+                  {column.links.map(({ href, label }) => (
+                    <li key={href}>
+                      <Link href={href} className="text-sm font-semibold text-gray-400 hover:text-brand-yellow">
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+
+          {/* Social media links */}
+          <div className="flex gap-4 lg:justify-end">
               <a href="https://discord.gg/y9jZmRQtad" target="_blank" rel="noopener noreferrer" className="text-brand-yellow hover:text-brand-yellow" aria-label="Join our Discord">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
               </a>
@@ -72,7 +106,6 @@ const Footer = () => {
               <a href="https://www.instagram.com/idleforest" target="_blank" rel="noopener noreferrer" className="text-brand-yellow hover:text-brand-yellow" aria-label="Follow on Instagram">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5 bi bi-instagram" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" /></svg>
               </a>
-            </div>
           </div>
         </div>
 

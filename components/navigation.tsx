@@ -1,6 +1,6 @@
 'use client'
 
-import { Menu, X, LogOut } from "lucide-react"
+import { ChevronDown, Chrome, LogOut, Menu, X } from "lucide-react"
 import { Link, usePathname, useRouter } from "@/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -11,6 +11,21 @@ import TopTeamsBanner from "@/components/TopTeamsBanner"
 import { LanguageSelector } from "./LanguageSelector"
 import { useTranslations } from "next-intl"
 
+const chromeWebStoreUrl = "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+
+const downloadLinks = [
+  { href: '/download/chrome', label: 'Chrome Extension' },
+  { href: '/download/windows', label: 'Windows App' },
+  { href: '/download/mac', label: 'Mac App' },
+]
+
+const moreLinks = [
+  { href: '/teams', label: 'Rankings' },
+  { href: '/map', label: 'Map' },
+  { href: '/report', label: 'Report' },
+  { href: '/business', label: 'Business' },
+  { href: '/discord-bot', label: 'Discord Bot' },
+]
 
 interface NavigationProps {
   variant?: 'default' | 'dashboard'
@@ -70,46 +85,56 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
     router.refresh()
   }
 
-  const navLinks = [
-    { href: '/teams', label: t('rankings') },
-    { href: '/discord-bot', label: t('discord_bot') },
-    { href: '/report', label: t('report') },
-    { href: '/transparency', label: t('transparency') },
-    { href: '/map', label: t('map') },
-    { href: '/business', label: t('business') },
-    { href: '/blog', label: t('blog') },
-  ]
+  const trackChromeInstallClick = () => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const analyticsWindow = window as Window & {
+      gtag?: (command: string, eventName: string, params?: Record<string, string>) => void
+    }
+
+    analyticsWindow.gtag?.('event', 'select_content', {
+      content_type: 'install_cta',
+      item_id: 'add_to_chrome_header',
+      source_page: pathname,
+    })
+  }
+
+  const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href)
+  const hasActiveChild = (items: Array<{ href: string }>) => items.some(({ href }) => isActive(href))
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
       {!hideBanner && <TopTeamsBanner />}
-      <div className="relative mx-auto px-4 h-24 grid grid-cols-3 items-center">
+      <div className="relative mx-auto px-4 h-24 grid grid-cols-[auto_1fr_auto] items-center gap-3">
         <Link href='/' className="flex items-center gap-2 col-start-1 justify-self-start">
           <Image src="/logo.png" alt="IdleForest logo" width={121} height={33} className="w-[100px] md:w-[121px]" />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-4 lg:gap-6 col-start-2 justify-self-center items-center whitespace-nowrap">
-          {navLinks.map(({ href, label }) => {
-            const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={
-                  `relative px-1 pb-1 pt-2 text-base lg:text-lg font-bold leading-none tracking-normal text-center transition-colors duration-150 text-black hover:text-brand-yellow ${isActive ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-brand-yellow after:content-[""]' : ''
-                  }`
-                }
-              >
-                {label}
-              </Link>
-            )
-          })}
+          <NavLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} />
+          <NavDropdown label="Download" active={hasActiveChild(downloadLinks)} items={downloadLinks} />
+          <NavLink href="/transparency" label="Transparency" active={isActive('/transparency')} />
+          <NavDropdown label="More" active={hasActiveChild(moreLinks)} items={moreLinks} />
         </nav>
         <div className="absolute z-[-100] top-0 left-0 bg-brand-gray opacity-50 h-full w-full"></div>
 
+        <a
+          href={chromeWebStoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-source-page={pathname}
+          onClick={trackChromeInstallClick}
+          className="md:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
+        >
+          <Chrome className="h-4 w-4 shrink-0" />
+          Add to Chrome — It’s Free
+        </a>
+
         {/* Desktop CTA / User */}
-        <div className="hidden md:flex justify-self-end col-start-3 items-center gap-4">
+        <div className="hidden md:flex justify-self-end col-start-3 items-center gap-3">
           <LanguageSelector />
           {user ? (
             <div className="flex items-center gap-2">
@@ -134,6 +159,17 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
               </Button>
             </Link>
           )}
+          <a
+            href={chromeWebStoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-source-page={pathname}
+            onClick={trackChromeInstallClick}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-5 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none"
+          >
+            <Chrome className="h-5 w-5" />
+            Add to Chrome — It’s Free
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -150,26 +186,28 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <nav className="md:hidden bg-brand-gray/95 backdrop-blur-xl border-t border-black/10 absolute w-full left-0 top-full shadow-xl">
-          <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
-            {navLinks.map(({ href, label }) => {
-              const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={
-                    `text-2xl font-bold text-center py-2 transition-colors ${isActive ? 'text-brand-yellow' : 'text-black hover:text-brand-yellow'}`
-                  }
-                >
-                  {label}
-                </Link>
-              )
-            })}
+          <div className="container mx-auto px-4 py-6 flex max-h-[calc(100vh-6rem)] flex-col gap-3 overflow-y-auto">
+            <MobileLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} onClick={() => setIsMenuOpen(false)} />
 
-            <LanguageSelector variant="mobile" />
+            <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
+              <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">Download</p>
+              <div className="flex flex-col gap-2">
+                {downloadLinks.map(({ href, label }) => (
+                  <MobileLink key={href} href={href} label={label} active={isActive(href)} onClick={() => setIsMenuOpen(false)} compact />
+                ))}
+              </div>
+            </div>
 
-            <div className="h-px bg-black/10 my-2" />
+            <MobileLink href="/transparency" label="Transparency" active={isActive('/transparency')} onClick={() => setIsMenuOpen(false)} />
+
+            <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
+              <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">More</p>
+              <div className="flex flex-col gap-2">
+                {moreLinks.map(({ href, label }) => (
+                  <MobileLink key={href} href={href} label={label} active={isActive(href)} onClick={() => setIsMenuOpen(false)} compact />
+                ))}
+              </div>
+            </div>
 
             {user ? (
               <div className="space-y-4">
@@ -192,6 +230,8 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
                 </Button>
               </Link>
             )}
+
+            <LanguageSelector variant="mobile" />
           </div>
         </nav>
       )}
@@ -199,4 +239,73 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   )
 }
 
+function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`relative px-1 pb-1 pt-2 text-base lg:text-lg font-bold leading-none tracking-normal text-center transition-colors duration-150 text-black hover:text-brand-yellow ${active ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-brand-yellow after:content-[""]' : ''
+        }`}
+    >
+      {label}
+    </Link>
+  )
+}
+
+function NavDropdown({
+  label,
+  active,
+  items,
+}: {
+  label: string
+  active: boolean
+  items: Array<{ href: string; label: string }>
+}) {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className={`relative inline-flex items-center gap-1 px-1 pb-1 pt-2 text-base lg:text-lg font-bold leading-none tracking-normal text-black transition-colors duration-150 hover:text-brand-yellow ${active ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-brand-yellow after:content-[""]' : ''
+          }`}
+      >
+        {label}
+        <ChevronDown className="h-4 w-4" />
+      </button>
+      <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-lg border-2 border-black bg-white p-2 opacity-0 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        {items.map(({ href, label: itemLabel }) => (
+          <Link
+            key={href}
+            href={href}
+            className="block rounded-md px-4 py-3 text-sm font-bold text-black hover:bg-brand-yellow"
+          >
+            {itemLabel}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MobileLink({
+  href,
+  label,
+  active,
+  onClick,
+  compact = false,
+}: {
+  href: string
+  label: string
+  active: boolean
+  onClick: () => void
+  compact?: boolean
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`${compact ? 'py-2 text-lg' : 'py-2 text-2xl'} text-center font-bold transition-colors ${active ? 'text-brand-yellow' : 'text-black hover:text-brand-yellow'}`}
+    >
+      {label}
+    </Link>
+  )
+}
 
