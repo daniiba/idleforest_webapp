@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -9,6 +10,11 @@ import { TreeStatsProvider } from "@/contexts/TreeStatsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { chromeDownloadSchemas } from "@/lib/chrome-download-schema";
+import { howItWorksSchemas } from "@/lib/how-it-works-schema";
+import { macDownloadSchemas } from "@/lib/mac-download-schema";
+import { windowsDownloadSchemas } from "@/lib/windows-download-schema";
+import { pathWithoutLocale } from "@/lib/i18n-routes";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -48,6 +54,34 @@ export default async function RootLayout({
     const locale = await getLocale();
     const messages = await getMessages();
     const pinterestTagId = process.env.PINTEREST_TAG_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID;
+    const pathname = headers().get('x-pathname') || '/';
+    const normalizedPathname = pathWithoutLocale(pathname);
+    const shouldRenderChromeDownloadSchemas = normalizedPathname === '/download/chrome';
+    const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
+    const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
+    const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
+    const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
+    const softwareApplicationSchema = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "IdleForest",
+        "applicationCategory": isDesktopDownloadPage ? "GreenApplication" : "BrowserExtension",
+        "operatingSystem": shouldRenderMacDownloadSchemas
+            ? "macOS 11+"
+            : shouldRenderWindowsDownloadSchemas
+                ? "Windows 10, Windows 11"
+                : "Chrome, macOS, Windows",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "33"
+        }
+    };
 
     return (
         <html lang={locale}>
@@ -121,23 +155,7 @@ fbq('track', 'PageView');
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify([
-                            {
-                                "@context": "https://schema.org",
-                                "@type": "SoftwareApplication",
-                                "name": "IdleForest",
-                                "applicationCategory": "BrowserExtension",
-                                "operatingSystem": "Chrome, macOS, Windows",
-                                "offers": {
-                                    "@type": "Offer",
-                                    "price": "0",
-                                    "priceCurrency": "USD"
-                                },
-                                "aggregateRating": {
-                                    "@type": "AggregateRating",
-                                    "ratingValue": "4.8",
-                                    "reviewCount": "33"
-                                }
-                            },
+                            softwareApplicationSchema,
                             {
                                 "@context": "https://schema.org",
                                 "@type": "Organization",
@@ -161,6 +179,34 @@ fbq('track', 'PageView');
                         ])
                     }}
                 />
+                {shouldRenderHowItWorksSchemas ? howItWorksSchemas.map((schema) => (
+                    <script
+                        key={schema["@type"]}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                    />
+                )) : null}
+                {shouldRenderChromeDownloadSchemas ? chromeDownloadSchemas.map((schema) => (
+                    <script
+                        key={schema["@type"]}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                    />
+                )) : null}
+                {shouldRenderMacDownloadSchemas ? macDownloadSchemas.map((schema) => (
+                    <script
+                        key={schema["@type"]}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                    />
+                )) : null}
+                {shouldRenderWindowsDownloadSchemas ? windowsDownloadSchemas.map((schema) => (
+                    <script
+                        key={schema["@type"]}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                    />
+                )) : null}
 
             </head>
             <body
