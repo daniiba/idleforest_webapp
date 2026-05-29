@@ -6,8 +6,43 @@ const handleI18nRouting = createMiddleware({
   locales: ['en', 'es', 'de', 'pt', 'fr'],
   defaultLocale: 'en',
   localePrefix: 'as-needed',
-  localeDetection: false
+  localeDetection: false,
+  alternateLinks: false
 });
+
+async function entityExists(table: 'teams' | 'profiles', column: 'slug' | 'display_name', operator: 'eq' | 'ilike', value: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null;
+  }
+
+  const params = new URLSearchParams({
+    select: 'id',
+    [column]: `${operator}.${value}`,
+    limit: '1',
+  });
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${table}?${params.toString()}`, {
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const rows = await response.json();
+    return Array.isArray(rows) && rows.length > 0;
+  } catch {
+    return null;
+  }
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -26,6 +61,22 @@ export async function middleware(request: NextRequest) {
     url.pathname = '/teams';
     url.search = '';
     return NextResponse.redirect(url, 301);
+  }
+
+  const teamMatch = pathname.match(/^\/(?:(?:es|de|pt|fr)\/)?teams\/([^/]+)$/);
+  if (teamMatch) {
+    const exists = await entityExists('teams', 'slug', 'eq', decodeURIComponent(teamMatch[1]));
+    if (exists === false) {
+      return new Response(null, { status: 410 });
+    }
+  }
+
+  const profileMatch = pathname.match(/^\/profile\/([^/]+)$/);
+  if (profileMatch) {
+    const exists = await entityExists('profiles', 'display_name', 'ilike', decodeURIComponent(profileMatch[1]));
+    if (exists === false) {
+      return new Response(null, { status: 410 });
+    }
   }
 
   const requestHeaders = new Headers(request.headers);

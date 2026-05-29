@@ -45,15 +45,6 @@ const nextConfig = {
       },
     ];
   },
-  async redirects() {
-    return [
-      {
-        source: '/rankings',
-        destination: '/teams',
-        permanent: true,
-      },
-    ];
-  },
 };
 
 export default withNextIntl(nextConfig);

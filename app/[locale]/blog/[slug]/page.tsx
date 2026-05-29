@@ -59,8 +59,38 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     )
   }
 
+  const blogPostUrl = `https://www.idleforest.com/blog/${params.slug}`;
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.idleforest.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: "https://www.idleforest.com/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: blogPostUrl,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-brand-gray">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="container mx-auto px-4 py-32 ">
 
 

@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "idleforest.com"
+        }
+      ],
+      "destination": "https://www.idleforest.com/:path*",
+      "statusCode": 301
+    }
+  ]
+}
