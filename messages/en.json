@@ -494,21 +494,27 @@
             },
             "desktop-10": {
                 "title": "Desktop Grove",
-                "description": "10 members connected the desktop app.",
+                "description": "10 active desktop users are contributing in the background.",
                 "reward": "Desktop activation badge",
-                "shareText": "connected 10 desktop members"
+                "shareText": "activated 10 desktop contributors"
             },
             "desktop-25": {
-                "title": "Always-On Canopy",
-                "description": "25 members are contributing from desktop.",
-                "reward": "Premium share badge",
-                "shareText": "connected 25 desktop members"
+                "title": "Satellite Pathfinders",
+                "description": "25 active desktop users unlock a tracked sea turtle profile and IdleForest team certificate.",
+                "reward": "Tracked sea turtle team certificate",
+                "shareText": "unlocked a tracked sea turtle reward"
+            },
+            "desktop-50": {
+                "title": "Ocean Trackers",
+                "description": "50 active desktop users unlock a tracked shark profile with an interactive map.",
+                "reward": "Tracked shark team certificate",
+                "shareText": "unlocked a tracked shark reward"
             },
             "desktop-100": {
-                "title": "Conservation Patron",
-                "description": "100 desktop members unlocked a conservation prize.",
-                "reward": "Symbolic animal adoption prize",
-                "shareText": "unlocked a symbolic animal adoption prize"
+                "title": "Migration Guardians",
+                "description": "100 active desktop users unlock a tracked elephant profile with safety-delayed map updates.",
+                "reward": "Tracked elephant team certificate",
+                "shareText": "unlocked a tracked elephant reward"
             }
         }
     },

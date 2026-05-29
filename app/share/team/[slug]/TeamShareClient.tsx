@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/client'
 import StatsCard3D, { TeamCardData } from '@/components/StatsCard3D'
 import { Copy, Check, Twitter, Facebook, Linkedin, Users, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { TeamMilestoneBadges } from '@/components/TeamMilestoneBadges'
 import { getFeaturedTeamMilestone, TeamMilestoneMetrics } from '@/lib/team-milestones'
 import { useTranslations } from 'next-intl'
 
@@ -46,7 +45,7 @@ export default function TeamShareClient() {
                     if (statsResponse.ok) {
                         const stats = await statsResponse.json()
                         treesPlanted = stats.actualTreesPlanted || treesPlanted
-                        desktopMemberCount = stats.desktopMemberCount || 0
+                        desktopMemberCount = stats.activeDesktopMemberCount ?? stats.desktopMemberCount ?? 0
                     }
                 } catch (error) {
                     console.error('Error fetching share stats:', error)
@@ -150,8 +149,6 @@ export default function TeamShareClient() {
             <div className="relative z-10 w-full max-w-md mx-auto space-y-8">
                 {/* 3D Card */}
                 <StatsCard3D variant="team" teamData={team} />
-
-                {metrics && <TeamMilestoneBadges metrics={metrics} />}
 
                 {/* Share buttons */}
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">

@@ -458,8 +458,9 @@
             "members-50": { "title": "Arboleda Comunitaria", "description": "50 miembros plantan como un solo equipo.", "reward": "Elegibilidad para equipo destacado", "shareText": "creció a 50 miembros" },
             "members-100": { "title": "Movimiento Forestal", "description": "100 miembros se unieron a la misión.", "reward": "Destacado público del equipo", "shareText": "creció a 100 miembros" },
             "desktop-10": { "title": "Arboleda de Escritorio", "description": "10 miembros conectaron la app de escritorio.", "reward": "Insignia de activación de escritorio", "shareText": "conectó 10 miembros de escritorio" },
-            "desktop-25": { "title": "Dosel Siempre Activo", "description": "25 miembros contribuyen desde escritorio.", "reward": "Insignia premium para compartir", "shareText": "conectó 25 miembros de escritorio" },
-            "desktop-100": { "title": "Patrocinador de Conservación", "description": "100 miembros de escritorio desbloquearon un premio de conservación.", "reward": "Adopción simbólica de un animal", "shareText": "desbloqueó una adopción simbólica de un animal" }
+            "desktop-25": { "title": "Exploradores Satelitales", "description": "25 usuarios activos de escritorio desbloquean el perfil de una tortuga marina rastreada y un certificado de equipo de IdleForest.", "reward": "Certificado de equipo de tortuga marina rastreada", "shareText": "desbloqueó una recompensa de tortuga marina rastreada" },
+            "desktop-50": { "title": "Rastreadores del Océano", "description": "50 usuarios activos de escritorio desbloquean el perfil de un tiburón rastreado con mapa interactivo.", "reward": "Certificado de equipo de tiburón rastreado", "shareText": "desbloqueó una recompensa de tiburón rastreado" },
+            "desktop-100": { "title": "Guardianes de Migración", "description": "100 usuarios activos de escritorio desbloquean el perfil de un elefante rastreado con actualizaciones de mapa retrasadas por seguridad.", "reward": "Certificado de equipo de elefante rastreado", "shareText": "desbloqueó una recompensa de elefante rastreado" }
         }
     },
     "Report": {

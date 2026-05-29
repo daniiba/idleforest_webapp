@@ -458,8 +458,9 @@
             "members-50": { "title": "Community-Hain", "description": "50 Mitglieder pflanzen als ein Team.", "reward": "Berechtigung für vorgestellte Teams", "shareText": "ist auf 50 Mitglieder gewachsen" },
             "members-100": { "title": "Waldbewegung", "description": "100 Mitglieder haben sich der Mission angeschlossen.", "reward": "Öffentliches Team-Spotlight", "shareText": "ist auf 100 Mitglieder gewachsen" },
             "desktop-10": { "title": "Desktop-Hain", "description": "10 Mitglieder haben die Desktop-App verbunden.", "reward": "Desktop-Aktivierungsabzeichen", "shareText": "hat 10 Desktop-Mitglieder verbunden" },
-            "desktop-25": { "title": "Immergrüne Krone", "description": "25 Mitglieder tragen über den Desktop bei.", "reward": "Premium-Share-Abzeichen", "shareText": "hat 25 Desktop-Mitglieder verbunden" },
-            "desktop-100": { "title": "Naturschutz-Pate", "description": "100 Desktop-Mitglieder haben einen Naturschutzpreis freigeschaltet.", "reward": "Symbolische Tierpatenschaft", "shareText": "hat eine symbolische Tierpatenschaft freigeschaltet" }
+            "desktop-25": { "title": "Satelliten-Pfadfinder", "description": "25 aktive Desktop-Nutzer schalten ein getracktes Meeresschildkrötenprofil und ein IdleForest-Teamzertifikat frei.", "reward": "Teamzertifikat für getrackte Meeresschildkröte", "shareText": "hat eine Belohnung für eine getrackte Meeresschildkröte freigeschaltet" },
+            "desktop-50": { "title": "Ozean-Tracker", "description": "50 aktive Desktop-Nutzer schalten ein getracktes Hai-Profil mit interaktiver Karte frei.", "reward": "Teamzertifikat für getrackten Hai", "shareText": "hat eine Belohnung für einen getrackten Hai freigeschaltet" },
+            "desktop-100": { "title": "Migrations-Hüter", "description": "100 aktive Desktop-Nutzer schalten ein getracktes Elefantenprofil mit sicherheitsverzögerten Kartenupdates frei.", "reward": "Teamzertifikat für getrackten Elefanten", "shareText": "hat eine Belohnung für einen getrackten Elefanten freigeschaltet" }
         }
     },
     "Report": {

@@ -3,15 +3,17 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Card } from "@/components/ui/card"
-import { Users, Trophy, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, Download, Apple, Info, RefreshCw, Pencil, Upload, X, Share2, TreePine, MessageSquare } from "lucide-react"
+import { Users, UserPlus, Copy, Check, Loader2, Trash2, Link as LinkIcon, LogOut, AlertTriangle, RefreshCw, Pencil, Upload, X, Share2, TreePine, MessageSquare, PawPrint, Award, MapPinned, ExternalLink } from "lucide-react"
 import { useParams } from "next/navigation"
 import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"
 import { TeamMembers } from "@/components/TeamMembers"
-import { TeamMilestoneBadges } from "@/components/TeamMilestoneBadges"
+import { TeamMilestoneList } from "@/components/TeamMilestoneBadges"
 import { trackOnboardingEvent } from "@/lib/onboarding-events"
+import { SmartCTA } from "@/components/smart-cta"
+import { getNextTeamAdoptionReward, TEAM_ADOPTION_REWARDS } from "@/lib/team-adoption-rewards"
 
 
 
@@ -51,105 +53,162 @@ interface Invite {
 	new_signups?: number
 }
 
-// Install Banner Component with platform detection
-function InstallBanner({
+function TeamAdoptionGoalCta({
 	teamName,
+	teamSlug,
+	activeDesktopMembers,
+	isMember,
+	hasDesktopNode,
+	isAuthenticated,
+	joiningTeam,
+	isCheckingConnection,
+	onJoin,
+	onInvite,
 	onCheckConnection,
-	isChecking,
-	teamSlug
 }: {
-	teamName: string,
-	onCheckConnection: () => void,
-	isChecking: boolean,
+	teamName: string
 	teamSlug: string
+	activeDesktopMembers: number
+	isMember: boolean
+	hasDesktopNode: boolean | null
+	isAuthenticated: boolean
+	joiningTeam: boolean
+	isCheckingConnection: boolean
+	onJoin: () => void
+	onInvite: () => void
+	onCheckConnection: () => void
 }) {
-	const [platform, setPlatform] = useState<'windows' | 'mac' | 'other'>('other')
-	const [hasClickedInstall, setHasClickedInstall] = useState(false)
-
-	useEffect(() => {
-		const platformString = navigator.platform.toLowerCase()
-		if (platformString.includes('win')) {
-			setPlatform('windows')
-		} else if (platformString.includes('mac')) {
-			setPlatform('mac')
-		}
-	}, [])
-
-	const handleInstallClick = () => {
-		setHasClickedInstall(true)
-	}
-
-	// Direct download URLs
-	const windowsUrl = 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
-	const macUrl = 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
-	const downloadUrl = platform === 'mac' ? macUrl : platform === 'windows' ? windowsUrl : '/downloads#desktop-apps'
+	const loginHref = `/auth/user/login?redirect=/teams/${teamSlug}`
+	const nextReward = getNextTeamAdoptionReward(activeDesktopMembers)
+	const nextGoal = nextReward.threshold
+	const remaining = Math.max(0, nextGoal - activeDesktopMembers)
+	const progressPercent = Math.min(100, Math.round((activeDesktopMembers / nextGoal) * 100))
+	const certificateUnlocked = activeDesktopMembers >= TEAM_ADOPTION_REWARDS[0].threshold
 
 	return (
-		<div className="mb-8">
-			<div className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 z-10 relative transition-all duration-300">
-				<div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-					<div className="bg-brand-navy p-3 border-2 border-black">
-						<Download className="w-6 h-6 text-brand-yellow" />
+		<section className="mb-6 border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+			<div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+				<div className="min-w-0 flex-1">
+					<div className="mb-2 inline-flex items-center gap-2 border-2 border-black bg-green-100 px-3 py-1 text-xs font-extrabold uppercase text-green-900">
+						<PawPrint className="h-4 w-4" />
+						Animal adoption goal
 					</div>
-					<div className="flex-1">
-						<h3 className="font-bold text-lg text-black">Unlock 3 Desktop Bonus Trees for Your Team</h3>
-						<p className="text-neutral-700 text-sm">Install the desktop app to keep contributing to {teamName} even when your browser is closed.</p>
+					<h2 className="text-2xl font-black uppercase leading-tight text-black">
+						Help {teamName} unlock a tracked {nextReward.animal.toLowerCase()}
+					</h2>
+					<p className="mt-2 max-w-2xl text-sm font-medium text-neutral-700">
+						The fastest path is active desktop users. We prioritize tagged animals with real tracking, so teams can unlock an animal profile, a map summary of where it is moving, and a certificate-style team reward.
+					</p>
+					<div className="mt-4 max-w-xl">
+						<div className="mb-2 flex items-center justify-between gap-3 text-xs font-extrabold uppercase text-neutral-600">
+							<span>{activeDesktopMembers.toLocaleString()} active desktop users</span>
+							<span>{certificateUnlocked ? `${remaining.toLocaleString()} to next certificate` : `${remaining.toLocaleString()} to first certificate`}</span>
+						</div>
+						<div className="h-3 border-2 border-black bg-neutral-100">
+							<div className="h-full bg-green-500" style={{ width: `${progressPercent}%` }} />
+						</div>
 					</div>
-					<div className="flex gap-2 flex-wrap">
-						<Link
-							href={downloadUrl}
-							target="_blank"
-							onClick={() => {
-								handleInstallClick()
-								trackOnboardingEvent('desktop_download_clicked', {
-									source: 'team_page_banner',
-									metadata: { teamSlug, platform }
-								})
-							}}
-							className="flex items-center gap-2 px-5 py-3 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
-						>
-							{platform === 'mac' ? <Apple className="w-4 h-4" /> : <Download className="w-4 h-4" />}
-							{platform === 'windows' ? 'Download for Windows' : platform === 'mac' ? 'Download for Mac' : 'Download Desktop App'}
-						</Link>
+
+					<div className="mt-4 grid gap-2 sm:grid-cols-3">
+						{TEAM_ADOPTION_REWARDS.map((reward) => {
+							const isCurrent = reward.milestoneId === nextReward.milestoneId
+							const isReached = activeDesktopMembers >= reward.threshold
+
+							return (
+								<div
+									key={reward.milestoneId}
+									className={`group border-2 border-black p-3 transition-all hover:translate-x-[1px] hover:translate-y-[1px] ${reward.colorClass} ${
+										isCurrent ? 'shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : ''
+									}`}
+								>
+									<div className="flex items-center gap-2">
+										<span className="flex h-9 w-9 items-center justify-center border-2 border-black bg-white text-xl" aria-hidden="true">
+											{reward.art}
+										</span>
+										<div className="min-w-0">
+											<p className="truncate text-xs font-black uppercase text-black">{reward.animal}</p>
+											<p className="truncate text-[10px] font-bold uppercase text-neutral-600">{reward.threshold} desktop users</p>
+										</div>
+									</div>
+									<p className="mt-2 line-clamp-3 min-h-[48px] text-[11px] font-bold leading-snug text-neutral-700">{reward.trackingSummary}</p>
+									<div className="mt-2 flex items-center gap-1 text-[10px] font-extrabold uppercase text-brand-navy">
+										<MapPinned className="h-3 w-3" />
+										{reward.trackingLabel}
+									</div>
+									<p className="mt-1 text-[10px] font-extrabold uppercase text-green-800">
+										{isReached ? 'Unlocked' : isCurrent ? 'Next goal' : reward.certificate}
+									</p>
+									<div className="mt-2 flex flex-wrap gap-2">
+										<a
+											href={reward.partnerUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase text-black underline-offset-2 hover:underline"
+										>
+											Partner <ExternalLink className="h-3 w-3" />
+										</a>
+									</div>
+								</div>
+							)
+						})}
 					</div>
 				</div>
 
-				{/* Connection Status - Integrated inside */}
-				<div className={`
-					overflow-hidden transition-all duration-500 ease-in-out
-					${hasClickedInstall ? 'max-h-[300px] opacity-100 mt-6 pt-6 border-t-2 border-black/10' : 'max-h-0 opacity-0'}
-				`}>
-					<div className="bg-white/50 border-2 border-black/20 p-4 rounded-lg">
-						<div className="flex items-start gap-3 mb-3">
-							<Info className="w-5 h-5 text-brand-navy flex-shrink-0 mt-0.5" />
-							<div>
-								<p className="font-bold text-brand-navy">
-									Important: Log in after installing
-								</p>
-								<p className="text-sm text-neutral-800 mt-1">
-									After installing, open the desktop app and <strong>log in with your account</strong>.
-									We'll automatically detect when desktop is connected.
-								</p>
-							</div>
-						</div>
-						<div className="flex items-center justify-between mt-4 pt-3 border-t border-black/10">
-							<div className="flex items-center gap-2 text-sm text-brand-navy font-medium">
-								<div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-								Waiting for connection...
-							</div>
-							<button
-								onClick={onCheckConnection}
-								disabled={isChecking}
-								className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white border-2 border-black hover:bg-neutral-50 disabled:opacity-50 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]"
-							>
-								<RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`} />
-								Check Connection
-							</button>
-						</div>
-					</div>
+				<div className="flex w-full flex-col gap-3 sm:w-auto sm:min-w-[260px]">
+					{!isMember && (isAuthenticated ? (
+						<button
+							onClick={onJoin}
+							disabled={joiningTeam}
+							className="inline-flex items-center justify-center gap-2 border-2 border-black bg-green-500 px-5 py-3 text-sm font-extrabold uppercase text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+						>
+							{joiningTeam ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
+							Join team
+						</button>
+					) : (
+						<Link
+							href={loginHref}
+							className="inline-flex items-center justify-center gap-2 border-2 border-black bg-green-500 px-5 py-3 text-sm font-extrabold uppercase text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+						>
+							<UserPlus className="h-4 w-4" />
+							Join team
+						</Link>
+					))}
+
+					{(!isMember || hasDesktopNode === false) && (
+						<SmartCTA
+							className="w-full sm:w-full"
+							showLearnMore={false}
+							forceVertical
+							buttonVariant="inverse"
+							desktopOnly
+							showExtensionDownload={false}
+						/>
+					)}
+
+					{isMember && hasDesktopNode !== true && (
+						<button
+							onClick={onCheckConnection}
+							disabled={isCheckingConnection}
+							className="inline-flex items-center justify-center gap-2 border-2 border-black bg-white px-5 py-3 text-sm font-extrabold uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+						>
+							<RefreshCw className={`h-4 w-4 ${isCheckingConnection ? 'animate-spin' : ''}`} />
+							Check desktop
+						</button>
+					)}
+
+					{isMember && (
+						<button
+							onClick={onInvite}
+							className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-extrabold uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+						>
+							<Award className="h-4 w-4" />
+							Invite desktop users
+						</button>
+					)}
+
 				</div>
 			</div>
-		</div>
+		</section>
 	)
 }
 
@@ -187,7 +246,7 @@ export default function TeamClient() {
 	const [uploadingImage, setUploadingImage] = useState(false)
 	const [historicalData, setHistoricalData] = useState<any[]>([])
 	const [actualTreesPlanted, setActualTreesPlanted] = useState(0)
-	const [desktopMemberCount, setDesktopMemberCount] = useState(0)
+	const [activeDesktopMemberCount, setActiveDesktopMemberCount] = useState(0)
 	const [currentUserRole, setCurrentUserRole] = useState<'owner' | 'admin' | 'member' | null>(null)
 	const params = useParams()
 	const router = useRouter()
@@ -388,7 +447,7 @@ export default function TeamClient() {
 
 			const data = await response.json()
 			setActualTreesPlanted(data.actualTreesPlanted || 0)
-			setDesktopMemberCount(data.desktopMemberCount || 0)
+			setActiveDesktopMemberCount(data.activeDesktopMemberCount ?? data.desktopMemberCount ?? 0)
 		} catch (error) {
 			console.error('Error fetching team stats:', error)
 		}
@@ -561,6 +620,7 @@ export default function TeamClient() {
 	}
 
 	const isOwner = currentUser && team && currentUser.id === team.created_by
+	const teamSlug = Array.isArray(params.slug) ? params.slug[0] : params.slug
 
 	const openEditModal = () => {
 		setEditDescription(team?.description || '')
@@ -687,17 +747,19 @@ export default function TeamClient() {
 					</div>
 				)}
 
-				{/* Install Banner - for members without desktop */}
-				{isMember && hasDesktopNode === false && (
-					<div className="mb-8">
-						<InstallBanner
-							teamName={team?.name || 'your team'}
-							onCheckConnection={refetchNodeStatus}
-							isChecking={isCheckingConnection}
-							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
-						/>
-					</div>
-				)}
+				<TeamAdoptionGoalCta
+					teamName={team.name}
+					teamSlug={teamSlug}
+					activeDesktopMembers={activeDesktopMemberCount}
+					isMember={isMember}
+					hasDesktopNode={hasDesktopNode}
+					isAuthenticated={Boolean(currentUser)}
+					joiningTeam={joiningTeam}
+					isCheckingConnection={isCheckingConnection}
+					onJoin={() => handleJoinTeam()}
+					onInvite={toggleInviteSection}
+					onCheckConnection={refetchNodeStatus}
+				/>
 
 				<Tabs defaultValue="stats" className="w-full">
 					{/* Team Header Card - Now wraps TabsList */}
@@ -874,6 +936,12 @@ export default function TeamClient() {
 									Members
 								</TabsTrigger>
 								<TabsTrigger
+									value="badges"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+								>
+									Badges
+								</TabsTrigger>
+								<TabsTrigger
 									value="discussions"
 									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
 								>
@@ -883,14 +951,6 @@ export default function TeamClient() {
 							</TabsList>
 						</div>
 					</div>
-
-					<TeamMilestoneBadges
-						metrics={{
-							trees: actualTreesPlanted,
-							members: members.length,
-							desktopMembers: desktopMemberCount,
-						}}
-					/>
 
 					{/* Invite Section - Expandable */}
 					{showInviteSection && isMember && (
@@ -984,10 +1044,20 @@ export default function TeamClient() {
 					</TabsContent>
 					<TabsContent value="discussions" className="mt-0">
 						<ThreadList
-							teamSlug={Array.isArray(params.slug) ? params.slug[0] : params.slug}
+							teamSlug={teamSlug}
 							teamId={team?.id || ''}
 							teamName={team.name}
 							currentUserRole={currentUserRole}
+						/>
+					</TabsContent>
+
+					<TabsContent value="badges" className="mt-0">
+						<TeamMilestoneList
+							metrics={{
+								trees: actualTreesPlanted,
+								members: members.length,
+								desktopMembers: activeDesktopMemberCount,
+							}}
 						/>
 					</TabsContent>
 

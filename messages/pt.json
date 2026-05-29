@@ -458,8 +458,9 @@
             "members-50": { "title": "Bosque Comunitário", "description": "50 membros plantam como uma só equipe.", "reward": "Elegibilidade para equipe em destaque", "shareText": "cresceu para 50 membros" },
             "members-100": { "title": "Movimento Florestal", "description": "100 membros entraram na missão.", "reward": "Destaque público da equipe", "shareText": "cresceu para 100 membros" },
             "desktop-10": { "title": "Bosque Desktop", "description": "10 membros conectaram o app desktop.", "reward": "Emblema de ativação desktop", "shareText": "conectou 10 membros desktop" },
-            "desktop-25": { "title": "Copa Sempre Ativa", "description": "25 membros contribuem pelo desktop.", "reward": "Emblema premium compartilhável", "shareText": "conectou 25 membros desktop" },
-            "desktop-100": { "title": "Patrono da Conservação", "description": "100 membros desktop desbloquearam um prêmio de conservação.", "reward": "Adoção simbólica de animal", "shareText": "desbloqueou uma adoção simbólica de animal" }
+            "desktop-25": { "title": "Exploradores por Satélite", "description": "25 usuários ativos de desktop desbloqueiam o perfil de uma tartaruga marinha rastreada e um certificado de equipe do IdleForest.", "reward": "Certificado de equipe de tartaruga marinha rastreada", "shareText": "desbloqueou uma recompensa de tartaruga marinha rastreada" },
+            "desktop-50": { "title": "Rastreadores do Oceano", "description": "50 usuários ativos de desktop desbloqueiam o perfil de um tubarão rastreado com mapa interativo.", "reward": "Certificado de equipe de tubarão rastreado", "shareText": "desbloqueou uma recompensa de tubarão rastreado" },
+            "desktop-100": { "title": "Guardiões de Migração", "description": "100 usuários ativos de desktop desbloqueiam o perfil de um elefante rastreado com atualizações de mapa atrasadas por segurança.", "reward": "Certificado de equipe de elefante rastreado", "shareText": "desbloqueou uma recompensa de elefante rastreado" }
         }
     },
     "Report": {
