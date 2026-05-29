@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronDown, Chrome, LogOut, Menu, X } from "lucide-react"
+import { Apple, ChevronDown, Chrome, LogOut, Menu, Monitor, X } from "lucide-react"
 import { Link, usePathname, useRouter } from "@/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -10,6 +10,7 @@ import { Button } from "./ui/button"
 import TopTeamsBanner from "@/components/TopTeamsBanner"
 import { LanguageSelector } from "./LanguageSelector"
 import { useTranslations } from "next-intl"
+import { useDeviceDetection } from "@/hooks/useDeviceDetection"
 
 const chromeWebStoreUrl = "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
 
@@ -38,6 +39,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const pathname = usePathname()
   const router = useRouter()
   const t = useTranslations('Navigation')
+  const { isMobile, isChrome, isMac, isWindows } = useDeviceDetection()
 
   // Use centralized auth context
   const { user, signOut } = useAuth()
@@ -85,7 +87,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
     router.refresh()
   }
 
-  const trackChromeInstallClick = () => {
+  const trackHeaderInstallClick = (itemId: string) => {
     if (typeof window === 'undefined') {
       return
     }
@@ -96,13 +98,20 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
     analyticsWindow.gtag?.('event', 'select_content', {
       content_type: 'install_cta',
-      item_id: 'add_to_chrome_header',
+      item_id: itemId,
       source_page: pathname,
     })
   }
 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href)
   const hasActiveChild = (items: Array<{ href: string }>) => items.some(({ href }) => isActive(href))
+  const desktopDownloadHref = isMac ? '/download/mac' : '/download/windows'
+  const desktopDownloadLabel = isMac
+    ? 'Download for Mac — It’s Free'
+    : isWindows
+      ? 'Download for Windows — It’s Free'
+      : 'Download Desktop — It’s Free'
+  const DesktopDownloadIcon = isMac ? Apple : Monitor
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
@@ -121,17 +130,19 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         </nav>
         <div className="absolute z-[-100] top-0 left-0 bg-brand-gray opacity-50 h-full w-full"></div>
 
-        <a
-          href={chromeWebStoreUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-source-page={pathname}
-          onClick={trackChromeInstallClick}
-          className="md:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
-        >
-          <Chrome className="h-4 w-4 shrink-0" />
-          Add to Chrome — It’s Free
-        </a>
+        {isMobile && isChrome && (
+          <a
+            href={chromeWebStoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-source-page={pathname}
+            onClick={() => trackHeaderInstallClick('add_to_chrome_header_mobile')}
+            className="md:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
+          >
+            <Chrome className="h-4 w-4 shrink-0" />
+            Add to Chrome — It’s Free
+          </a>
+        )}
 
         {/* Desktop CTA / User */}
         <div className="hidden md:flex justify-self-end col-start-3 items-center gap-3">
@@ -159,17 +170,15 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
               </Button>
             </Link>
           )}
-          <a
-            href={chromeWebStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={desktopDownloadHref}
             data-source-page={pathname}
-            onClick={trackChromeInstallClick}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-5 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none"
+            onClick={() => trackHeaderInstallClick(isMac ? 'download_mac_header' : 'download_windows_header')}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
           >
-            <Chrome className="h-5 w-5" />
-            Add to Chrome — It’s Free
-          </a>
+            <DesktopDownloadIcon className="h-5 w-5 shrink-0" />
+            <span>{desktopDownloadLabel}</span>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -308,4 +317,3 @@ function MobileLink({
     </Link>
   )
 }
-

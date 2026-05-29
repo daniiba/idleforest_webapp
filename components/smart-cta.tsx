@@ -2,7 +2,7 @@
 
 import { Link } from "@/navigation";
 import { Button } from "@/components/ui/button";
-import { Chrome, Monitor, Apple, Globe, Download, ArrowRight } from "lucide-react";
+import { Chrome, Monitor, Apple, ArrowRight } from "lucide-react";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
 import { cn } from "@/lib/utils";
 import { EmailForm } from "@/components/email-form";
@@ -18,7 +18,6 @@ export function SmartCTA({
     onDarkBackground = false,
     deviceInfo,
     desktopOnly = false,
-    showExtensionDownload = true
 }: {
     className?: string;
     showLearnMore?: boolean;
@@ -29,7 +28,7 @@ export function SmartCTA({
     desktopOnly?: boolean;
     showExtensionDownload?: boolean;
 }) {
-    const { isMobile, isDesktop, isChrome, isEdge, isMac } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isMac } = useDeviceDetection(deviceInfo);
 
     const buttonClass = buttonVariant === "inverse"
         ? "w-full sm:w-auto bg-black text-brand-yellow font-bold hover:bg-black/80 rounded-full px-8 py-6 justify-center"
@@ -45,7 +44,7 @@ export function SmartCTA({
 
     return (
         <div className={cn("flex flex-col w-full sm:w-auto items-stretch gap-3", className)}>
-            {/* Mobile Chrome: Show "Add to Desktop" */}
+            {/* Mobile Chrome: Show Chrome install option */}
             {!desktopOnly && isMobile && isChrome && (
                 <Button asChild className={buttonClass}>
                     <Link
@@ -56,7 +55,7 @@ export function SmartCTA({
                         onClick={() => trackLead("https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk", "Extension Download - Mobile Chrome")}
                     >
                         <Chrome className="h-8 w-8 mr-2" />
-                        Add to Desktop
+                        Add to Chrome — It’s Free
                     </Link>
                 </Button>
             )}
@@ -106,7 +105,7 @@ export function SmartCTA({
                                 ) : (
                                     <Monitor className="h-8 w-8" />
                                 )}
-                                {isMac ? "Download for Mac" : "Download for Windows"}
+                                {isMac ? "Download for Mac — It’s Free" : "Download for Windows — It’s Free"}
                             </Link>
                         </Button>
                         {/* Angled overlay badge */}
@@ -115,39 +114,6 @@ export function SmartCTA({
                         </div>
                     </div>
 
-                    {/* Desktop Chrome/Edge: Show Extension Button */}
-                    {showExtensionDownload && (isChrome || isEdge) && (
-                        <>
-                            {!forceVertical && <span className="font-bold text-lg hidden sm:block">or</span>}
-                            {forceVertical && <span className="font-bold text-lg text-center">or</span>}
-                            <Button asChild className={buttonClass}>
-                                <Link
-                                    href={
-                                        isEdge
-                                            ? "https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
-                                            : "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
-                                    }
-                                    className="flex items-center justify-center w-full sm:w-auto"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={() => trackLead(
-                                        isEdge
-                                            ? "https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
-                                            : "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk",
-                                        isEdge ? "Extension Download - Edge" : "Extension Download - Chrome"
-                                    )}
-                                >
-                                    {isEdge ? (
-                                        <Globe className="h-8 w-8" />
-                                    ) : (
-                                        <Chrome className="h-8 w-8" />
-                                    )}
-                                    {" "}
-                                    {isEdge ? "Add to Edge - It's free" : "Add to Chrome - It's free"}
-                                </Link>
-                            </Button>
-                        </>
-                    )}
                 </div>
             )}
 
