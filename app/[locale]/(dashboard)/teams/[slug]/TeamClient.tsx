@@ -10,6 +10,7 @@ import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"
 import { TeamMembers } from "@/components/TeamMembers"
+import { TeamMilestoneList } from "@/components/TeamMilestoneBadges"
 import { trackOnboardingEvent } from "@/lib/onboarding-events"
 
 
@@ -83,6 +84,7 @@ export default function TeamClient() {
 	const [uploadingImage, setUploadingImage] = useState(false)
 	const [historicalData, setHistoricalData] = useState<any[]>([])
 	const [actualTreesPlanted, setActualTreesPlanted] = useState(0)
+	const [activeDesktopMemberCount, setActiveDesktopMemberCount] = useState(0)
 	const [currentUserRole, setCurrentUserRole] = useState<'owner' | 'admin' | 'member' | null>(null)
 	const params = useParams()
 	const router = useRouter()
@@ -261,6 +263,7 @@ export default function TeamClient() {
 
 			const data = await response.json()
 			setActualTreesPlanted(data.actualTreesPlanted || 0)
+			setActiveDesktopMemberCount(data.activeDesktopMemberCount ?? data.desktopMemberCount ?? 0)
 		} catch (error) {
 			console.error('Error fetching team stats:', error)
 		}
@@ -735,6 +738,12 @@ export default function TeamClient() {
 									Members
 								</TabsTrigger>
 								<TabsTrigger
+									value="badges"
+									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+								>
+									Badges
+								</TabsTrigger>
+								<TabsTrigger
 									value="discussions"
 									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
 								>
@@ -841,6 +850,16 @@ export default function TeamClient() {
 							teamId={team?.id || ''}
 							teamName={team.name}
 							currentUserRole={currentUserRole}
+						/>
+					</TabsContent>
+
+					<TabsContent value="badges" className="mt-0">
+						<TeamMilestoneList
+							metrics={{
+								trees: actualTreesPlanted,
+								members: members.length,
+								desktopMembers: activeDesktopMemberCount,
+							}}
 						/>
 					</TabsContent>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { Award, CheckCircle2, Circle, ExternalLink, MapPinned, Monitor, PawPrint, TreePine, Users } from 'lucide-react'
+import { Award, CheckCircle2, Circle, Monitor, PawPrint, TreePine, Users } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import {
     getEarnedTeamMilestones,
@@ -10,7 +10,6 @@ import {
     TeamMilestoneMetrics,
     TeamMilestoneProgress,
 } from '@/lib/team-milestones'
-import { getTeamAdoptionRewardByMilestone } from '@/lib/team-adoption-rewards'
 
 const iconMap: Record<TeamMilestoneMetric, typeof TreePine> = {
     trees: TreePine,
@@ -129,6 +128,7 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
         members: 'members',
     }
     const milestones = getTeamMilestoneProgress(metrics)
+        .filter((milestone) => !milestone.hasPrize)
         .sort((a, b) => metricPriority[a.metric] - metricPriority[b.metric] || a.threshold - b.threshold)
 
     return (
@@ -139,10 +139,10 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
                         <Award className="h-4 w-4" />
                         {t('team_milestones')}
                     </div>
-                    <h2 className="text-2xl font-black uppercase text-black">Adoption certificates</h2>
+                    <h2 className="text-2xl font-black uppercase text-black">Team badges</h2>
                 </div>
                 <p className="max-w-sm text-sm font-medium text-neutral-600">
-                    Active desktop users are the priority: they unlock tagged animals, tracking summaries, and team certificates.
+                    Track the team milestones earned through points, trees, members, and desktop activity.
                 </p>
             </div>
 
@@ -150,7 +150,6 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
                 {milestones.map((milestone) => {
                     const Icon = milestone.hasPrize ? PawPrint : iconMap[milestone.metric]
                     const StatusIcon = milestone.earned ? CheckCircle2 : Circle
-                    const adoptionReward = getTeamAdoptionRewardByMilestone(milestone.id)
 
                     return (
                         <div
@@ -162,11 +161,7 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
                             <div className={`flex h-10 w-10 shrink-0 items-center justify-center border-2 border-black ${
                                 milestone.earned ? 'bg-green-500 text-white' : 'bg-brand-yellow text-black'
                             }`}>
-                                {adoptionReward ? (
-                                    <span className="text-xl" aria-hidden="true">{adoptionReward.art}</span>
-                                ) : (
-                                    <Icon className="h-5 w-5" />
-                                )}
+                                <Icon className="h-5 w-5" />
                             </div>
                             <div className="min-w-0 flex-1">
                                 <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
@@ -174,17 +169,6 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
                                         <h3 className="font-extrabold uppercase leading-tight text-black">
                                             {t(`milestones.${milestone.id}.title`)}
                                         </h3>
-                                        {adoptionReward && (
-                                            <a
-                                                href={adoptionReward.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="mt-1 inline-flex text-[10px] font-extrabold uppercase tracking-wide text-green-700 underline-offset-2 hover:underline"
-                                            >
-                                                {adoptionReward.animal} with {adoptionReward.partner}
-                                                <ExternalLink className="ml-1 h-3 w-3" />
-                                            </a>
-                                        )}
                                     </div>
                                     <span className={`inline-flex shrink-0 items-center gap-1 border-2 border-black px-2 py-0.5 text-[10px] font-extrabold uppercase ${
                                         milestone.earned ? 'bg-green-500 text-white' : 'bg-white text-neutral-700'
@@ -194,25 +178,6 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
                                     </span>
                                 </div>
                                 <p className="text-sm font-medium text-neutral-600">{t(`milestones.${milestone.id}.description`)}</p>
-                                {adoptionReward && (
-                                    <div className="mt-2 border border-black bg-white/70 p-2">
-                                        <div className="mb-1 flex items-center gap-1 text-[10px] font-extrabold uppercase text-brand-navy">
-                                            <MapPinned className="h-3 w-3" />
-                                            {adoptionReward.trackingLabel}
-                                        </div>
-                                        <p className="text-xs font-medium leading-snug text-neutral-700">
-                                            {adoptionReward.trackingSummary}
-                                        </p>
-                                        <a
-                                            href={adoptionReward.trackingUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="mt-1 inline-flex items-center gap-1 text-[10px] font-extrabold uppercase text-green-700 underline-offset-2 hover:underline"
-                                        >
-                                            View tracking <ExternalLink className="h-3 w-3" />
-                                        </a>
-                                    </div>
-                                )}
                                 <div className="mt-3 h-3 border-2 border-black bg-white">
                                     <div className={milestone.earned ? 'h-full bg-green-500' : 'h-full bg-brand-yellow'} style={{ width: `${milestone.progressPercent}%` }} />
                                 </div>
