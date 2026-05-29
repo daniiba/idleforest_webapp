@@ -65,6 +65,13 @@ export const TEAM_MILESTONES: TeamMilestoneDefinition[] = [
         id: 'desktop-25',
         metric: 'desktopMembers',
         threshold: 25,
+        hasPrize: true,
+    },
+    {
+        id: 'desktop-50',
+        metric: 'desktopMembers',
+        threshold: 50,
+        hasPrize: true,
     },
     {
         id: 'desktop-100',

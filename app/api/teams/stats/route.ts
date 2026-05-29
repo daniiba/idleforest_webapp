@@ -32,6 +32,7 @@ export async function GET(request: Request) {
             return NextResponse.json({
                 actualTreesPlanted: 0,
                 desktopMemberCount: 0,
+                activeDesktopMemberCount: 0,
             })
         }
 
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
                 .maybeSingle(),
             admin
                 .from('nodes')
-                .select('user_id, platform')
+                .select('user_id, platform, total_requests, opt_in')
                 .in('user_id', userIds)
                 .in('platform', ['win32', 'darwin']),
         ])
@@ -72,6 +73,12 @@ export async function GET(request: Request) {
 
         const desktopMemberCount = new Set(
             desktopNodesResult.data?.map((node) => node.user_id).filter(Boolean) ?? []
+        ).size
+        const activeDesktopMemberCount = new Set(
+            desktopNodesResult.data
+                ?.filter((node) => node.opt_in !== false && (node.total_requests || 0) > 0)
+                .map((node) => node.user_id)
+                .filter(Boolean) ?? []
         ).size
 
         const claimedTrees = claimsResult.data?.reduce(
@@ -116,6 +123,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             actualTreesPlanted: claimedTrees + rewardTrees + legacyBadgeTrees,
             desktopMemberCount,
+            activeDesktopMemberCount,
             sources: {
                 claimedTrees,
                 rewardTrees,

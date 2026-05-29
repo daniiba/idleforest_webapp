@@ -458,8 +458,9 @@
             "members-50": { "title": "Bosquet Communautaire", "description": "50 membres plantent comme une seule équipe.", "reward": "Éligibilité à une mise en avant", "shareText": "a atteint 50 membres" },
             "members-100": { "title": "Mouvement Forestier", "description": "100 membres ont rejoint la mission.", "reward": "Mise en avant publique de l'équipe", "shareText": "a atteint 100 membres" },
             "desktop-10": { "title": "Bosquet Desktop", "description": "10 membres ont connecté l'application desktop.", "reward": "Badge d'activation desktop", "shareText": "a connecté 10 membres desktop" },
-            "desktop-25": { "title": "Canopée Toujours Active", "description": "25 membres contribuent depuis le desktop.", "reward": "Badge premium partageable", "shareText": "a connecté 25 membres desktop" },
-            "desktop-100": { "title": "Parrain de Conservation", "description": "100 membres desktop ont débloqué un prix de conservation.", "reward": "Adoption symbolique d'un animal", "shareText": "a débloqué une adoption symbolique d'animal" }
+            "desktop-25": { "title": "Éclaireurs Satellites", "description": "25 utilisateurs desktop actifs débloquent le profil d’une tortue marine suivie et un certificat d’équipe IdleForest.", "reward": "Certificat d’équipe de tortue marine suivie", "shareText": "a débloqué une récompense de tortue marine suivie" },
+            "desktop-50": { "title": "Traceurs de l’Océan", "description": "50 utilisateurs desktop actifs débloquent le profil d’un requin suivi avec une carte interactive.", "reward": "Certificat d’équipe de requin suivi", "shareText": "a débloqué une récompense de requin suivi" },
+            "desktop-100": { "title": "Gardiens de Migration", "description": "100 utilisateurs desktop actifs débloquent le profil d’un éléphant suivi avec des mises à jour de carte retardées pour sa sécurité.", "reward": "Certificat d’équipe d’éléphant suivi", "shareText": "a débloqué une récompense d’éléphant suivi" }
         }
     },
     "Report": {
