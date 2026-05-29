@@ -39,7 +39,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const pathname = usePathname()
   const router = useRouter()
   const t = useTranslations('Navigation')
-  const { isMobile, isChrome, isMac, isWindows } = useDeviceDetection()
+  const { isMobile, isChrome, isMac } = useDeviceDetection()
 
   // Use centralized auth context
   const { user, signOut } = useAuth()
@@ -105,13 +105,13 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href)
   const hasActiveChild = (items: Array<{ href: string }>) => items.some(({ href }) => isActive(href))
-  const desktopDownloadHref = isMac ? '/download/mac' : '/download/windows'
-  const desktopDownloadLabel = isMac
+  const pathSuggestsMac = pathname.startsWith('/download/mac')
+  const headerCtaIsMac = isMac || pathSuggestsMac
+  const desktopDownloadHref = headerCtaIsMac ? '/download/mac' : '/download/windows'
+  const desktopDownloadLabel = headerCtaIsMac
     ? 'Download for Mac — It’s Free'
-    : isWindows
-      ? 'Download for Windows — It’s Free'
-      : 'Download Desktop — It’s Free'
-  const DesktopDownloadIcon = isMac ? Apple : Monitor
+    : 'Download for Windows — It’s Free'
+  const DesktopDownloadIcon = headerCtaIsMac ? Apple : Monitor
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
@@ -173,7 +173,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
           <Link
             href={desktopDownloadHref}
             data-source-page={pathname}
-            onClick={() => trackHeaderInstallClick(isMac ? 'download_mac_header' : 'download_windows_header')}
+            onClick={() => trackHeaderInstallClick(headerCtaIsMac ? 'download_mac_header' : 'download_windows_header')}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
           >
             <DesktopDownloadIcon className="h-5 w-5 shrink-0" />
