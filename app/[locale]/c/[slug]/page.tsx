@@ -58,6 +58,19 @@ function formatNumber(value: number, locale?: string) {
     return locale ? new Intl.NumberFormat(locale).format(value) : numberFormatter.format(value)
 }
 
+function formatCurrencyCents(value: number, locale?: string) {
+    return new Intl.NumberFormat(locale || 'en-US', {
+        style: 'currency',
+        currency: 'USD',
+    }).format(value / 100)
+}
+
+function getEstimatedCompanyFundingCents(company: any, totalPoints: number) {
+    const payoutRate = company?.payout_rate_cents_per_1000_points ?? 55
+
+    return Math.floor((Math.max(0, totalPoints) / 1000) * payoutRate)
+}
+
 function getYouTubeEmbedUrl(url: string) {
     if (url.includes('youtu.be/')) {
         return url.replace('youtu.be/', 'youtube.com/embed/')
@@ -314,7 +327,7 @@ function SilveiraPartnerPage({
 }) {
     const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
     const primaryCta = isMember ? 'Open portal' : 'Join the forest'
-    const fundingRaised = '$0'
+    const fundingRaised = formatCurrencyCents(getEstimatedCompanyFundingCents(company, totalPoints), params.locale)
     const stats = [
         { value: '230', label: 'hectares in regeneration', detail: 'Mountain land in central Portugal' },
         { value: fundingRaised, label: 'raised so far', detail: 'Partner funding tracked for Silveira projects' },
