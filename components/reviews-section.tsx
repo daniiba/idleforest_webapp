@@ -8,7 +8,7 @@ export function ReviewsSection() {
             <div className="container mx-auto px-6 py-20 md:py-24">
                 <div className="text-center mb-12">
                     <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                        Loved by our users
+                        Join 1,000+ Users Planting Trees Just by Browsing
                     </h2>
                     <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
                         See what the community is saying about IdleForest on the Chrome Web Store.
@@ -46,6 +46,14 @@ export function ReviewsSection() {
                             priority={false}
                         />
                     </div>
+                    <a
+                        href="https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-bold text-black underline hover:text-brand-yellow"
+                    >
+                        Read all 33 reviews on Chrome Web Store
+                    </a>
                 </div>
             </div>
         </section>

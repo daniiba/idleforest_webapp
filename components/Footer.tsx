@@ -50,6 +50,8 @@ const Footer = () => {
               <span className="text-gray-700">•</span>
               <Link href="/transparency" className="text-gray-400 hover:text-brand-yellow">{t('transparency')}</Link>
               <span className="text-gray-700">•</span>
+              <Link href="/privacy" className="text-gray-400 hover:text-brand-yellow">Privacy</Link>
+              <span className="text-gray-700">•</span>
               <Link href="/terms" className="text-gray-400 hover:text-brand-yellow">{t('terms')}</Link>
             </nav>
             <span className="hidden sm:inline-block h-4 w-px bg-gray-800" />

@@ -1,6 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import { updateSession } from '@/lib/supabase/middleware';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const handleI18nRouting = createMiddleware({
   locales: ['en', 'es', 'de', 'pt', 'fr'],
@@ -11,12 +11,35 @@ const handleI18nRouting = createMiddleware({
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get('host');
+
+  if (host === 'idleforest.com') {
+    const url = request.nextUrl.clone();
+    url.protocol = 'https:';
+    url.hostname = 'www.idleforest.com';
+    url.port = '';
+    return NextResponse.redirect(url, 301);
+  }
+
+  if (pathname === '/rankings') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/teams';
+    url.search = '';
+    return NextResponse.redirect(url, 301);
+  }
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
+  const requestWithPathname = new NextRequest(request.url, {
+    headers: requestHeaders,
+    method: request.method,
+  });
 
   // Skip i18n for API routes, specific paths, and non-locale app routes
   // Only skip i18n for app-internal routes (API, auth, game, dashboard pages)
   const skipI18nPaths = ['/api', '/auth', '/game', '/install', '/extension-auth', '/onboarding', '/create-team', '/test-donation', '/claim-tree', '/share', '/download-success', '/stats', '/profile', '/admin', '/record'];
   if (skipI18nPaths.some(path => pathname.startsWith(path))) {
-    return await updateSession(request);
+    return await updateSession(requestWithPathname);
   }
 
   const homepagePaths = ['/', '/es', '/de', '/pt', '/fr'];
@@ -36,10 +59,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // 1. Run i18n middleware
-  const response = handleI18nRouting(request);
+  const response = handleI18nRouting(requestWithPathname);
 
   // 2. Run Supabase middleware (auth)
-  const supabaseResponse = await updateSession(request, response);
+  const supabaseResponse = await updateSession(requestWithPathname, response);
+  supabaseResponse.headers.set('x-pathname', pathname);
 
   // 3. A/B Testing Logic
   const url = request.nextUrl

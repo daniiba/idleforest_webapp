@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next'
-import { CARBON_LOCALES, getIndexableComparisonPaths } from '@/lib/carbon-routing'
+import { getIndexableComparisonPaths } from '@/lib/carbon-routing'
 import { getAllCarbonData } from '@/lib/carbon-data'
+import { canonicalUrl, translatedLocalesForPath } from '@/lib/i18n-routes'
 
-const SITE_URL = 'https://www.idleforest.com'
 const SEO_CLUSTER_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
 const CORE_SITE_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
 
@@ -65,35 +65,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const carbonPagesData = await getAllCarbonData()
   const carbonComparisonPaths = getIndexableComparisonPaths()
 
-  const locales = [...CARBON_LOCALES]
-
   // Helper to generate alternates for a given path
   const getAlternates = (path: string) => {
+    const normalizedPath = path === '' ? '/' : path
+    const translatedLocales = translatedLocalesForPath(normalizedPath)
+
+    if (!translatedLocales) {
+      return undefined
+    }
+
     const alternates: Record<string, string> = {}
-    locales.forEach(locale => {
-      // For 'en', the path is exactly the base path. Others get the prefix.
-      const prefix = locale === 'en' ? '' : `/${locale}`
-      alternates[locale] = `${SITE_URL}${prefix}${path}`
+    translatedLocales.forEach(locale => {
+      alternates[locale] = canonicalUrl(normalizedPath, locale)
     })
-    alternates['x-default'] = `${SITE_URL}${path}`
+    alternates['x-default'] = canonicalUrl(normalizedPath, 'en')
     return { languages: alternates }
   }
 
   // Helper to generate entries for all languages for a given path
   const generateLocalizedUrls = (path: string, options: { lastModified: Date; changeFrequency: 'monthly' | 'weekly' | 'daily' | 'yearly'; priority: number }, translated = true) => {
-    if (!translated) {
+    const normalizedPath = path === '' ? '/' : path
+    const translatedLocales = translated ? translatedLocalesForPath(normalizedPath) : undefined
+
+    if (!translatedLocales) {
       return [{
-        url: `${SITE_URL}${path}`,
+        url: canonicalUrl(normalizedPath, 'en'),
         ...options
       }]
     }
 
-    const alternates = getAlternates(path)
-    return locales.map(locale => {
-      const prefix = locale === 'en' ? '' : `/${locale}`
+    const alternates = getAlternates(normalizedPath)
+    return translatedLocales.map(locale => {
       return {
-        url: `${SITE_URL}${prefix}${path}`,
-        alternates,
+        url: canonicalUrl(normalizedPath, locale),
+        ...(alternates ? { alternates } : {}),
         ...options
       }
     })
@@ -141,6 +146,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/discord-bot', changeFrequency: 'monthly', priority: 0.6, lastModified: CORE_SITE_LAST_MODIFIED },
     { path: '/downloads', changeFrequency: 'monthly', priority: 0.7, lastModified: CORE_SITE_LAST_MODIFIED },
     { path: '/contact', changeFrequency: 'monthly', priority: 0.5, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '/privacy', changeFrequency: 'yearly', priority: 0.4, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/terms', changeFrequency: 'monthly', priority: 0.4, lastModified: CORE_SITE_LAST_MODIFIED },
     { path: '/report', changeFrequency: 'weekly', priority: 0.7, lastModified: CORE_SITE_LAST_MODIFIED },
     { path: '/compare/idleforest-vs-ecosia-vs-treeclicks', changeFrequency: 'weekly', priority: 0.7, lastModified: SEO_CLUSTER_LAST_MODIFIED, translated: false },

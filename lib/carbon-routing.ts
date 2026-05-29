@@ -1,33 +1,21 @@
 import type { CarbonData } from "@/lib/carbon-data";
 import { INDEXABLE_COMPARE_SLUGS } from "@/lib/carbon-compares";
+import { SUPPORTED_LOCALES, canonicalUrl, localePrefix, routeAlternates } from "@/lib/i18n-routes";
 
 const SITE_URL = "https://www.idleforest.com";
 
-export const CARBON_LOCALES = ["en", "es", "de", "pt", "fr"] as const;
+export const CARBON_LOCALES = SUPPORTED_LOCALES;
 
 export function getLocalizedPath(path: string, locale: string): string {
-    return locale === "en" ? path : `/${locale}${path}`;
+    return `${localePrefix(locale)}${path === "/" ? "" : path}` || "/";
 }
 
 export function getLocalizedUrl(path: string, locale: string): string {
-    return `${SITE_URL}${getLocalizedPath(path, locale)}`;
+    return canonicalUrl(path === "" ? "/" : path, locale);
 }
 
 export function buildLocalizedAlternates(path: string, locale: string) {
-    const languages = Object.fromEntries(
-        CARBON_LOCALES.map((supportedLocale) => [
-            supportedLocale,
-            getLocalizedUrl(path, supportedLocale),
-        ])
-    );
-
-    return {
-        canonical: getLocalizedUrl(path, locale),
-        languages: {
-            ...languages,
-            "x-default": getLocalizedUrl(path, "en"),
-        },
-    };
+    return routeAlternates(path === "" ? "/" : path, locale);
 }
 
 export function normalizeComparisonSlugs(slugA: string, slugB: string): [string, string] {

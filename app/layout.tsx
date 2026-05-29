@@ -35,8 +35,8 @@ const rethinkSans = Rethink_Sans({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-    title: "Plant Trees For Free While Browsing | IdleForest - Passive Reforestation",
-    description: "Plant trees automatically without changing how you browse. IdleForest's browser extension uses idle bandwidth to fund reforestation—no donations, no search engine switch required.",
+    title: "IdleForest: The Free Tree Planting App, Plant While Browsing",
+    description: "The free tree planting app that works in the background. Install IdleForest and plant verified trees while you browse, no donations, no signup needed.",
     metadataBase: new URL('https://www.idleforest.com'),
 };
 
@@ -120,24 +120,45 @@ fbq('track', 'PageView');
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@type": "SoftwareApplication",
-                            "name": "IdleForest",
-                            "applicationCategory": "BrowserExtension",
-                            "operatingSystem": "Chrome, Edge, Windows, macOS",
-                            "offers": {
-                                "@type": "Offer",
-                                "price": "0",
-                                "priceCurrency": "USD"
+                        __html: JSON.stringify([
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "SoftwareApplication",
+                                "name": "IdleForest",
+                                "applicationCategory": "BrowserExtension",
+                                "operatingSystem": "Chrome, macOS, Windows",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "price": "0",
+                                    "priceCurrency": "USD"
+                                },
+                                "aggregateRating": {
+                                    "@type": "AggregateRating",
+                                    "ratingValue": "4.8",
+                                    "reviewCount": "33"
+                                }
                             },
-                            "description": "A browser extension and desktop app that uses idle bandwidth to fund reforestation projects. Not a game.",
-                            "aggregateRating": {
-                                "@type": "AggregateRating",
-                                "ratingValue": "4.7",
-                                "reviewCount": "27"
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "Organization",
+                                "name": "IdleForest",
+                                "url": "https://www.idleforest.com",
+                                "logo": "https://www.idleforest.com/logo.png",
+                                "sameAs": [
+                                    "https://github.com/daniiba/idleforest",
+                                    "https://www.linkedin.com/company/idleforest",
+                                    "https://www.tiktok.com/@idleforest",
+                                    "https://www.instagram.com/idleforest",
+                                    "https://discord.gg/y9jZmRQtad"
+                                ]
+                            },
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "WebSite",
+                                "name": "IdleForest",
+                                "url": "https://www.idleforest.com"
                             }
-                        })
+                        ])
                     }}
                 />
 

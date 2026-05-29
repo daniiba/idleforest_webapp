@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
 import TeamClient from "./TeamClient";
 import { notFound } from "next/navigation";
-import { buildLocalizedAlternates, getLocalizedUrl } from "@/lib/carbon-routing";
+import { getLocalizedUrl } from "@/lib/carbon-routing";
 import { LOCALE_NAMES } from "@/lib/seo-locales";
 
 // Define Page Params
@@ -31,6 +31,7 @@ export async function generateMetadata(
 	if (!team) {
 		return {
 			title: `Team Not Found | IdleForest ${LOCALE_NAMES[params.locale] || 'English'}`,
+			robots: { index: false, follow: false },
 		};
 	}
 
@@ -42,7 +43,7 @@ export async function generateMetadata(
 	return {
 		title,
 		description,
-		alternates: buildLocalizedAlternates(path, params.locale),
+		robots: { index: false, follow: true },
 		openGraph: {
 			title: `${team.name} - IdleForest Team (${localeName})`,
 			description,

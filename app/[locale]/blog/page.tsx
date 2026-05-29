@@ -10,19 +10,26 @@ import { getHashnodePosts } from '@/lib/hashnode-blog'
 const POSTS_PER_PAGE = 6
 
 
-export const metadata: Metadata = {
-  title: 'Blog | Idle Forest',
-  description: 'Explore our latest articles and insights',
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  const localePrefix = params.locale === 'en' ? '' : `/${params.locale}`;
+
+  return {
     title: 'Blog | Idle Forest',
     description: 'Explore our latest articles and insights',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Blog | Idle Forest',
-    description: 'Explore our latest articles and insights',
-  }
+    alternates: {
+      canonical: `https://www.idleforest.com${localePrefix}/blog`,
+    },
+    openGraph: {
+      title: 'Blog | Idle Forest',
+      description: 'Explore our latest articles and insights',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Blog | Idle Forest',
+      description: 'Explore our latest articles and insights',
+    }
+  };
 }
 
 export default async function BlogPage({
