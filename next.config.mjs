@@ -33,6 +33,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'images.1clickimpact.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'commons.wikimedia.org',
       },
     ],

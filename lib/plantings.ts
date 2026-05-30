@@ -100,10 +100,10 @@ export const plantingsData: PlantingsData = {
   projects: [
     { id: "tn-eden-madagascar", name: "Eden Reforestation Projects – Madagascar", partnerId: "tree-nation", countryCode: "MG", externalRef: "https://tree-nation.com/projects/eden-reforestation-madagascar" },
     { id: "if-kenya", name: "Global Forest Initiative – Kenya", partnerId: "tree-nation", countryCode: "KE", externalRef: "https://tree-nation.com/projects/global-forest-initiative-kenya" },
-    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-kenya-fgp%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/climate-projects/trees-kenya-fgp" },
+    { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://images.1clickimpact.com/projects/trees-kenya-fgp/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-kenya-fgp" },
     { id: "tftf-homa-bay-19", name: "Homa Bay 19 – Ndhiwa, Kenya", partnerId: "tftf", countryCode: "KE", externalRef: "https://1clickimpact.com/climate-projects/trees-kenya-fgp" },
-    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-senegal-ggw%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/climate-projects/trees-senegal-ggw" },
-    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-uganda-fgp%2F1.jpg&w=1920&q=50"], externalRef: "https://1clickimpact.com/climate-projects/trees-uganda-di" },
+    { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://images.1clickimpact.com/projects/trees-senegal-ggw/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-senegal-ggw" },
+    { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://images.1clickimpact.com/projects/trees-uganda-fgp/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-uganda-di" },
     { id: "pod-cameroon", name: "POD – Cameroon Agroforestry", partnerId: "pod", countryCode: "CM", externalRef: "https://1clickimpact.com/climate-projects/trees-cameroon" },
     {
       id: "tn-syzygium",
