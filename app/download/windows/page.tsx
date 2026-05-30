@@ -99,9 +99,6 @@ export default function WindowsDownloadPage() {
                   download it once. There is no account, no payment, and nothing to change about how you work.
                 </p>
                 <WindowsCtas />
-                <p className="mt-5 text-sm font-bold text-neutral-800 md:text-base">
-                  Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 1,000+ users · 5,364 verified trees planted
-                </p>
               </div>
 
               <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
@@ -174,13 +171,6 @@ export default function WindowsDownloadPage() {
               Trees You Can Verify
             </h2>
             <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {["5,364 trees planted", "$2,796 contributed", "10.1M requests powered", "1,000+ users"].map((stat) => (
-                  <div key={stat} className="rounded-lg border-2 border-black bg-brand-yellow p-4 font-bold text-black">
-                    {stat}
-                  </div>
-                ))}
-              </div>
               <p>
                 The app funds planting with three reforestation partners: Trees for the Future, Tree-Nation, and
                 1ClickImpact. Each one publishes its planting records, and each works in regions where reforestation has

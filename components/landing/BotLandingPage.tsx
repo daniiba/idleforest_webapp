@@ -182,7 +182,7 @@ export default function BotLandingPage() {
                                             <div className="bg-brand-navy p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white">
                                                 <div className="text-xs uppercase font-bold text-brand-yellow mb-1">Impact Level</div>
                                                 <div className="flex items-end justify-between">
-                                                    <div className="text-3xl font-black">12,482</div>
+                                                    <div className="text-3xl font-black">{stats.treesPlanted}</div>
                                                     <div className="text-sm font-bold text-brand-yellow">TREES</div>
                                                 </div>
                                                 <div className="w-full h-2 bg-white/20 rounded-full mt-3 overflow-hidden">

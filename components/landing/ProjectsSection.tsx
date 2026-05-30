@@ -16,7 +16,7 @@ const projects: ProjectCard[] = [
     {
         key: "kisumu",
         projectId: "tftf-kisumu7-awach",
-        imageSrc: "https://1clickimpact.com/_next/image?url=%2Fimages%2Fprojects%2Ftrees-kenya-fgp%2F1.jpg&w=1920&q=50",
+        imageSrc: "https://images.1clickimpact.com/projects/trees-kenya-fgp/thumb.jpg",
     },
     {
         key: "mkussu",
@@ -77,14 +77,6 @@ export default function ProjectsSection() {
                     <p className="mt-4 text-base text-white/75 md:text-lg">
                         {t("subheading")}
                     </p>
-                </div>
-
-                <div className="mt-10 grid gap-3 text-center sm:grid-cols-4">
-                    {["5,364 trees planted", "$2,796 contributed", "10.1M requests powered", "1,000+ users"].map((stat) => (
-                        <div key={stat} className="border-2 border-brand-yellow bg-black/20 px-4 py-4 font-candu text-xl uppercase leading-tight text-brand-yellow">
-                            {stat}
-                        </div>
-                    ))}
                 </div>
 
                 <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">

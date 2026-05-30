@@ -178,9 +178,6 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         See how it works <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 </div>
-                                <p className="text-sm font-semibold text-neutral-800">
-                                    Featured on Chrome Web Store | 4.8/5 from 33 reviews | 5,364 verified trees planted
-                                </p>
                                 <HeroTrustSignals />
                             </div>
                             {/* HERO ART PLACEHOLDER */}

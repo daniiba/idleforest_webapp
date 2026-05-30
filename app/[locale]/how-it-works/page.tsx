@@ -142,9 +142,6 @@ export default function HowItWorksPage() {
                   plants trees while you go about your day.
                 </p>
                 <CtaGroup desktopDownloadHref={desktopDownloadHref} desktopDownloadLabel={desktopDownloadLabel} />
-                <p className="mt-5 text-sm font-bold text-neutral-800 md:text-base">
-                  Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 5,364 verified trees planted
-                </p>
               </div>
 
               <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
