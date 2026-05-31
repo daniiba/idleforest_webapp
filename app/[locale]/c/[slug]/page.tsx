@@ -364,12 +364,12 @@ function WastefreePlanetPage({
     const fundingRaised = formatCurrencyCents(getEstimatedCompanyFundingCents(company, totalPoints), params.locale)
     const proofRows = [
         { label: 'Members', value: formatNumber(memberCount, params.locale), detail: 'Supporters in this company forest' },
-        { label: 'Points generated', value: formatNumber(totalPoints, params.locale), detail: 'Converted into company forest funding' },
-        { label: 'Estimated funding', value: fundingRaised, detail: 'Reserved for plastic removal donations' },
+        { label: 'Points generated', value: formatNumber(totalPoints, params.locale), detail: 'Building company forest funding' },
+        { label: 'Estimated funding', value: fundingRaised, detail: 'Available for clean-ocean support' },
     ]
     const wastefreeFacts = [
-        ['91%', "of plastic isn't recycled", 'Waste Free Planet leads with reducing and reusing before recycling claims.'],
-        ['11M', 'metric tons enter oceans yearly', 'The page connects home-level plastic reduction with funded ocean-bound plastic removal.'],
+        ['91%', "of plastic isn't recycled", 'Reducing and reusing matter before anything reaches the bin.'],
+        ['11M', 'metric tons enter oceans yearly', 'Clean-ocean projects help intercept plastic before it reaches the water.'],
         ['40%', 'of U.S. food is wasted', 'Waste Free Planet covers wider household waste habits, from food waste to composting.'],
     ]
     const routeStages = [
@@ -377,34 +377,33 @@ function WastefreePlanetPage({
             number: '1.0',
             title: 'Reduce first.',
             body:
-                'Waste Free Planet keeps the starting point practical: reduce, reuse, compost, choose better household swaps, and avoid pretending recycling can carry the whole job.',
+                'Waste Free Planet helps people cut waste at the source with practical home guides, a workbook, and everyday sustainability education.',
             proofTitle: 'Waste Free Planet',
-            proof: 'Home guides, a workbook, and daily education give supporters something concrete to do before money enters the story.',
+            proof: 'Start with habits: reduce, reuse, compost, and choose better swaps before relying on recycling.',
         },
         {
             number: '2.0',
             title: 'Let idle time help.',
             body:
-                'Supporters join this company forest and install IdleForest. Eligible idle desktop activity creates funding in the background without changing Waste Free Planet’s education work.',
-            proofTitle: 'IdleForest route',
-            proof:
-                'The company forest keeps member activity, generated points, and estimated funding visible without mixing this lane into the general tree-planting portfolio.',
+                'Supporters join this company forest and install IdleForest. Eligible idle desktop activity earns points in the background.',
+            proofTitle: 'IdleForest',
+            proof: 'Member activity, generated points, and estimated funding stay visible on this page.',
         },
         {
             number: '3.0',
-            title: 'Donate in the name.',
+            title: 'Support clean-ocean work.',
             body:
-                'Generated company-forest funds are reserved for clean-ocean giving through 1ClickImpact, with Waste Free Planet named on the donation route.',
+                'Company-forest funds can be directed through 1ClickImpact toward Plastic Bank clean-ocean projects in Waste Free Planet’s name.',
             proofTitle: '1ClickImpact',
-            proof: 'Cleanup totals belong after donation records are available, not as decorative proof.',
+            proof: '1ClickImpact connects business donations with environmental projects and keeps the giving record clear.',
         },
         {
             number: '4.0',
-            title: 'Publish proof when it lands.',
+            title: 'Share updates.',
             body:
-                'Once the first donation records land, the page can report Waste Free Planet’s plastic-removal impact with the same care IdleForest uses for planting records.',
+                'As donations are made, this page can add receipts and impact updates so supporters can see what their activity helped fund.',
             proofTitle: 'Plastic Bank',
-            proof: 'Plastic Bank collection communities connect recovered plastic with local income, grocery support, insurance, and other local benefits.',
+            proof: 'Plastic Bank works with collection communities that recover plastic and receive local benefits.',
         },
     ]
     const cleanupProjects = [
@@ -446,8 +445,7 @@ function WastefreePlanetPage({
                             <p className="wfp-kicker">IdleForest x Waste Free Planet</p>
                             <h1 className="wfp-display">Less waste at home. Less plastic at sea.</h1>
                             <p className="wfp-lede">
-                                Join the Waste Free Planet company forest. Eligible idle desktop activity creates a reserved funding lane for named plastic-removal donations through 1ClickImpact and
-                                Plastic Bank.
+                                Join the Waste Free Planet company forest. Eligible idle desktop activity helps build funding for clean-ocean support through 1ClickImpact and Plastic Bank.
                             </p>
                             <div className="wfp-actions">
                                 {isMember ? (
@@ -534,10 +532,9 @@ function WastefreePlanetPage({
                 <section id="wastefree-proof" className="wfp-dark-band">
                     <div className="wfp-section wfp-dark-layout">
                         <div>
-                            <h2 className="wfp-section-title">Cleanup routes, named plainly.</h2>
+                            <h2 className="wfp-section-title">Where clean-ocean support can go.</h2>
                             <p className="wfp-section-copy">
-                                This page names the possible Plastic Bank routes without turning them into Waste Free Planet totals before verified records exist. The useful claim today is the route, not a
-                                decorative impact count.
+                                Waste Free Planet support can be directed through 1ClickImpact to Plastic Bank projects that collect ocean-bound plastic and support local collection communities.
                             </p>
                             <div className="wfp-cleanup-grid">
                                 {cleanupProjects.map(([location, label, detail]) => (
@@ -568,27 +565,26 @@ function WastefreePlanetPage({
                 <section className="wfp-section wfp-join">
                     <div className="wfp-join__panel">
                         <div>
-                            <h2 className="wfp-section-title">The careful version is the point.</h2>
+                            <h2 className="wfp-section-title">Clear updates, no guesswork.</h2>
                             <p className="wfp-section-copy">
-                                Generated funds are reserved for clean-ocean giving in Waste Free Planet&apos;s name. Receipts can be added when recorded; until then, the page stays specific about
-                                what is known.
+                                When donations are recorded, this page can add receipts and impact updates. Until then, the live numbers show members, points, and estimated funding.
                             </p>
                         </div>
-                        <div className="wfp-actions">
+                        <div className="wfp-proof-cluster">
                             <div className="wfp-proof-panel">
                                 <ReceiptText className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Named donation</h3>
-                                <p>Funding generated here is separated from IdleForest&apos;s default planting lane.</p>
+                                <h3>Separate funding</h3>
+                                <p>Company forest funding for this page is tracked separately from IdleForest&apos;s tree-planting lane.</p>
                             </div>
                             <div className="wfp-proof-panel">
                                 <ShieldCheck className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Proof first</h3>
-                                <p>Impact totals should wait for recorded 1ClickImpact donation proof.</p>
+                                <h3>Donation records</h3>
+                                <p>Receipts and impact totals can be added after clean-ocean donations are made.</p>
                             </div>
                             <div className="wfp-proof-panel">
                                 <ZapOff className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Quiet support</h3>
-                                <p>Supporters install IdleForest once; eligible idle activity can contribute later.</p>
+                                <h3>Easy support</h3>
+                                <p>Supporters install IdleForest once; eligible idle activity can help grow the fund.</p>
                             </div>
                         </div>
                     </div>
@@ -599,7 +595,7 @@ function WastefreePlanetPage({
                         <div>
                             <h2 className="wfp-section-title">Join the Waste Free Planet forest.</h2>
                             <p className="wfp-section-copy">
-                                Connect your account, install the desktop app, and let eligible idle activity build the funding lane for Waste Free Planet&apos;s named plastic-removal donations.
+                                Connect your account, install the desktop app, and support Waste Free Planet&apos;s clean-ocean fund through eligible idle activity.
                             </p>
                         </div>
                         <div className="wfp-actions">
@@ -630,7 +626,7 @@ function WastefreePlanetPage({
                     Waste Free Planet and IdleForest.
                 </p>
                 <div className="wfp-footer__meta">
-                    <span>Named-donation route</span>
+                    <span>Clean-ocean support</span>
                     <span>Company forest funding</span>
                     {companyWebsite ? (
                         <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link">
