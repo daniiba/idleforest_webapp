@@ -14,9 +14,12 @@ import {
     Leaf,
     MapPin,
     Play,
+    Recycle,
+    ReceiptText,
     ShieldCheck,
     TreePine,
     Users,
+    Waves,
     ZapOff,
 } from 'lucide-react'
 import Navigation from '@/components/navigation'
@@ -25,9 +28,13 @@ import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree
 import { getTranslations } from 'next-intl/server'
 import {
     SILVEIRA_COMPANY_SLUG,
+    WASTEFREE_COMPANY_SLUG,
+    getCanonicalCompanySlug,
     getCompanySlugLookupCandidates,
     isSilveiraCompanyIdentity,
     isSilveiraCompanySlug,
+    isWastefreeCompanyIdentity,
+    isWastefreeCompanySlug,
 } from '@/lib/company-partners'
 import { getCompanyGeneratedPointStats } from '@/lib/company-node-points'
 
@@ -52,6 +59,12 @@ const silveiraImages = {
     journeyFive: '/partner/silveira/journey-5.jpg',
     grid: '/partner/silveira/grid-1.jpg',
     footer: '/partner/silveira/footer-bg.jpg',
+}
+
+const wastefreeImages = {
+    logo: '/partner/wastefree/wfp-logo-white.webp',
+    plasticBankCollection: '/partner/wastefree/plastic-bank-collection.webp',
+    plasticBankWeighing: '/partner/wastefree/plastic-bank-weighing.jpg',
 }
 
 function formatNumber(value: number, locale?: string) {
@@ -119,6 +132,27 @@ function getSilveiraTechFallbackCompany() {
         is_invite_only: false,
         invite_code: null,
         user_id: null,
+    }
+}
+
+function getWastefreePlanetFallbackCompany() {
+    return {
+        id: emptyCompanyId,
+        name: 'Waste Free Planet',
+        slug: WASTEFREE_COMPANY_SLUG,
+        website: 'https://www.wastefreeplanet.org/',
+        description:
+            "Waste Free Planet makes sustainability practical with waste-reduction education, a workbook, and everyday guides. IdleForest support from this company forest funds plastic removal in Waste Free Planet's name through 1ClickImpact and Plastic Bank.",
+        theme_color: '#67d7d1',
+        logo_url: null,
+        video_url: null,
+        is_invite_only: false,
+        invite_code: null,
+        user_id: null,
+        impact_mode: 'company_named_donation',
+        payout_recipient_name: 'Waste Free Planet',
+        payout_recipient_url: 'https://www.wastefreeplanet.org/',
+        payout_notes: "Donate generated company forest funds through 1ClickImpact clean-ocean projects with Plastic Bank in Waste Free Planet's name.",
     }
 }
 
@@ -300,6 +334,313 @@ function PhoneRepairWireframePanel({
 
                 <div />
             </div>
+        </div>
+    )
+}
+
+/* Hallmark · genre: editorial · macrostructure: Narrative Workflow · theme: Garden · enrichment: none · nav: N9 · footer: Ft6 · pre-emit critique: P4 H4 E4 S4 R4 V5 */
+function WastefreePlanetPage({
+    company,
+    params,
+    invite,
+    isMember,
+    isValidInvite,
+    isOwner,
+    memberCount,
+    totalPoints,
+    companyWebsite,
+}: {
+    company: any
+    params: { slug: string; locale: string }
+    invite?: string
+    isMember: boolean
+    isValidInvite: boolean
+    isOwner: boolean
+    memberCount: number
+    totalPoints: number
+    companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
+}) {
+    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const fundingRaised = formatCurrencyCents(getEstimatedCompanyFundingCents(company, totalPoints), params.locale)
+    const proofRows = [
+        { label: 'Members', value: formatNumber(memberCount, params.locale), detail: 'Supporters in this company forest' },
+        { label: 'Points generated', value: formatNumber(totalPoints, params.locale), detail: 'Converted into company forest funding' },
+        { label: 'Estimated funding', value: fundingRaised, detail: 'Reserved for plastic removal donations' },
+    ]
+    const wastefreeFacts = [
+        ['91%', "of plastic isn't recycled", 'Waste Free Planet leads with reducing and reusing before recycling claims.'],
+        ['11M', 'metric tons enter oceans yearly', 'The page connects home-level plastic reduction with funded ocean-bound plastic removal.'],
+        ['40%', 'of U.S. food is wasted', 'Waste Free Planet covers wider household waste habits, from food waste to composting.'],
+    ]
+    const routeStages = [
+        {
+            number: '1.0',
+            title: 'Reduce first.',
+            body:
+                'Waste Free Planet keeps the starting point practical: reduce, reuse, compost, choose better household swaps, and avoid pretending recycling can carry the whole job.',
+            proofTitle: 'Waste Free Planet',
+            proof: 'Home guides, a workbook, and daily education give supporters something concrete to do before money enters the story.',
+        },
+        {
+            number: '2.0',
+            title: 'Let idle time help.',
+            body:
+                'Supporters join this company forest and install IdleForest. Eligible idle desktop activity creates funding in the background without changing Waste Free Planet’s education work.',
+            proofTitle: 'IdleForest route',
+            proof:
+                'The company forest keeps member activity, generated points, and estimated funding visible without mixing this lane into the general tree-planting portfolio.',
+        },
+        {
+            number: '3.0',
+            title: 'Donate in the name.',
+            body:
+                'Generated company-forest funds are reserved for clean-ocean giving through 1ClickImpact, with Waste Free Planet named on the donation route.',
+            proofTitle: '1ClickImpact',
+            proof: 'Cleanup totals belong after donation records are available, not as decorative proof.',
+        },
+        {
+            number: '4.0',
+            title: 'Publish proof when it lands.',
+            body:
+                'Once the first donation records land, the page can report Waste Free Planet’s plastic-removal impact with the same care IdleForest uses for planting records.',
+            proofTitle: 'Plastic Bank',
+            proof: 'Plastic Bank collection communities connect recovered plastic with local income, grocery support, insurance, and other local benefits.',
+        },
+    ]
+    const cleanupProjects = [
+        ['Bali, Indonesia', 'Plastic Bank Indonesia', '806 collection communities with health, life insurance, and grocery support.'],
+        ['Manila, Philippines', 'Plastic Bank Philippines', '692 communities with grocery vouchers, Red Cross insurance, and consistent plastic collection.'],
+        ['Rayong, Thailand', 'Plastic Bank Thailand', 'Coastal collection networks intercept ocean-bound plastics and create local income.'],
+        ['Cairo, Egypt', 'Plastic Bank Egypt', '314 collection members and more than 20M kg of plastic gathered.'],
+        ['Rio de Janeiro, Brazil', 'Plastic Bank Brazil', 'Coastal plastic interception with collector income, health benefits, and insurance.'],
+    ]
+
+    return (
+        <div className="wfp-shell">
+            {isValidInvite && invite && (
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `document.cookie = "company_invite=${invite}; path=/; max-age=604800; samesite=lax";`,
+                    }}
+                />
+            )}
+
+            <header className="wfp-nav">
+                <div className="wfp-nav__inner">
+                    <a href="#top" className="wfp-wordmark" aria-label={`${company.name} company forest`}>
+                        <span>{company.name}</span>
+                    </a>
+                    {isValidInvite || isMember ? (
+                        <Link href={joinHref} className="wfp-button">
+                            {isMember ? 'Open portal' : 'Join WFP'}
+                            <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
+                        </Link>
+                    ) : null}
+                </div>
+            </header>
+
+            <main id="top">
+                <section className="wfp-section wfp-hero">
+                    <div className="wfp-hero__grid">
+                        <div>
+                            <p className="wfp-kicker">IdleForest x Waste Free Planet</p>
+                            <h1 className="wfp-display">Less waste at home. Less plastic at sea.</h1>
+                            <p className="wfp-lede">
+                                Join the Waste Free Planet company forest. Eligible idle desktop activity creates a reserved funding lane for named plastic-removal donations through 1ClickImpact and
+                                Plastic Bank.
+                            </p>
+                            <div className="wfp-actions">
+                                {isMember ? (
+                                    <Link href={joinHref} className="wfp-button">
+                                        Open portal
+                                        <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : isValidInvite ? (
+                                    <Link href={joinHref} className="wfp-button">
+                                        Join WFP
+                                        <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : null}
+                                {companyWebsite ? (
+                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link">
+                                        Visit WFP
+                                        <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                    </a>
+                                ) : null}
+                            </div>
+                        </div>
+
+                        <div className="wfp-media-stack">
+                            <figure className="wfp-photo wfp-photo--portrait">
+                                <Image
+                                    src={wastefreeImages.plasticBankCollection}
+                                    alt="Plastic Bank Indonesia collection members holding recovered plastic on a beach."
+                                    width={496}
+                                    height={715}
+                                    priority
+                                    sizes="(min-width: 960px) 34rem, 100vw"
+                                />
+                                <figcaption>Plastic Bank Indonesia collection members on a coastal cleanup route.</figcaption>
+                            </figure>
+
+                            <div className="wfp-logo-card" aria-label="Waste Free Planet logo">
+                                <Image src={wastefreeImages.logo} alt="Waste Free Planet logo" width={2500} height={1500} sizes="(min-width: 960px) 18rem, 14rem" />
+                            </div>
+
+                            <aside className="wfp-route-card" aria-label="Waste Free Planet funding route">
+                                {proofRows.map((row) => (
+                                    <div key={row.label} className="wfp-route-card__row">
+                                        <b>{row.value}</b>
+                                        <span>
+                                            {row.label}: {row.detail}
+                                        </span>
+                                    </div>
+                                ))}
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="wfp-section" aria-label="Waste Free Planet impact context">
+                    <div className="wfp-stat-strip">
+                        {wastefreeFacts.map(([value, label, detail]) => (
+                            <article key={label} className="wfp-stat">
+                                <strong>{value}</strong>
+                                <span>{label}</span>
+                                <p>{detail}</p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section id="wastefree-route" className="wfp-section">
+                    <ol className="wfp-stage-list">
+                        {routeStages.map((stage) => (
+                            <li key={stage.number} className="wfp-stage">
+                                <span className="wfp-stage__number">{stage.number}</span>
+                                <div>
+                                    <h2>{stage.title}</h2>
+                                    <p>{stage.body}</p>
+                                </div>
+                                <aside className="wfp-proof-panel">
+                                    <h3>{stage.proofTitle}</h3>
+                                    <p>{stage.proof}</p>
+                                </aside>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+
+                <section id="wastefree-proof" className="wfp-dark-band">
+                    <div className="wfp-section wfp-dark-layout">
+                        <div>
+                            <h2 className="wfp-section-title">Cleanup routes, named plainly.</h2>
+                            <p className="wfp-section-copy">
+                                This page names the possible Plastic Bank routes without turning them into Waste Free Planet totals before verified records exist. The useful claim today is the route, not a
+                                decorative impact count.
+                            </p>
+                            <div className="wfp-cleanup-grid">
+                                {cleanupProjects.map(([location, label, detail]) => (
+                                    <article key={location} className="wfp-cleanup-card">
+                                        <h3>{location}</h3>
+                                        <p>
+                                            <strong>{label}</strong>
+                                        </p>
+                                        <p>{detail}</p>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+
+                        <figure className="wfp-photo wfp-photo--landscape">
+                            <Image
+                                src={wastefreeImages.plasticBankWeighing}
+                                alt="A Plastic Bank Indonesia collection member weighing recovered plastic beside stacked collection bags."
+                                width={1200}
+                                height={630}
+                                sizes="(min-width: 960px) 29rem, 100vw"
+                            />
+                            <figcaption>Recovered plastic is weighed and recorded before moving through Plastic Bank collection systems.</figcaption>
+                        </figure>
+                    </div>
+                </section>
+
+                <section className="wfp-section wfp-join">
+                    <div className="wfp-join__panel">
+                        <div>
+                            <h2 className="wfp-section-title">The careful version is the point.</h2>
+                            <p className="wfp-section-copy">
+                                Generated funds are reserved for clean-ocean giving in Waste Free Planet&apos;s name. Receipts can be added when recorded; until then, the page stays specific about
+                                what is known.
+                            </p>
+                        </div>
+                        <div className="wfp-actions">
+                            <div className="wfp-proof-panel">
+                                <ReceiptText className="h-6 w-6" strokeWidth={2.5} aria-hidden />
+                                <h3>Named donation</h3>
+                                <p>Funding generated here is separated from IdleForest&apos;s default planting lane.</p>
+                            </div>
+                            <div className="wfp-proof-panel">
+                                <ShieldCheck className="h-6 w-6" strokeWidth={2.5} aria-hidden />
+                                <h3>Proof first</h3>
+                                <p>Impact totals should wait for recorded 1ClickImpact donation proof.</p>
+                            </div>
+                            <div className="wfp-proof-panel">
+                                <ZapOff className="h-6 w-6" strokeWidth={2.5} aria-hidden />
+                                <h3>Quiet support</h3>
+                                <p>Supporters install IdleForest once; eligible idle activity can contribute later.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="wastefree-join" className="wfp-section wfp-join">
+                    <div className="wfp-join__panel">
+                        <div>
+                            <h2 className="wfp-section-title">Join the Waste Free Planet forest.</h2>
+                            <p className="wfp-section-copy">
+                                Connect your account, install the desktop app, and let eligible idle activity build the funding lane for Waste Free Planet&apos;s named plastic-removal donations.
+                            </p>
+                        </div>
+                        <div className="wfp-actions">
+                            {isMember ? (
+                                <Link href={joinHref} className="wfp-button">
+                                    Open portal
+                                    <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                </Link>
+                            ) : isValidInvite ? (
+                                <Link href={joinHref} className="wfp-button">
+                                    Join WFP
+                                    <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                </Link>
+                            ) : null}
+                            <a href="https://1clickimpact.com/business/clean-ocean" target="_blank" rel="noreferrer" className="wfp-link">
+                                1ClickImpact oceans
+                                <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer className="wfp-footer">
+                <p className="wfp-footer__close">
+                    Yours in fewer throwaway habits,
+                    <br />
+                    Waste Free Planet and IdleForest.
+                </p>
+                <div className="wfp-footer__meta">
+                    <span>Named-donation route</span>
+                    <span>Company forest funding</span>
+                    {companyWebsite ? (
+                        <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link">
+                            Waste Free Planet
+                        </a>
+                    ) : null}
+                </div>
+            </footer>
+
+            {isOwner && <CompanySettingsPanel company={company} memberCount={memberCount} totalPoints={totalPoints} />}
         </div>
     )
 }
@@ -763,13 +1104,16 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
         namespace: 'PhoneRepairCompany',
     })
 
+    const canonicalCompanySlug = getCanonicalCompanySlug(params.slug)
     const companySlugCandidates = getCompanySlugLookupCandidates(params.slug)
     const { data: companyRecords, error } = await supabase.from('companies').select('*').in('slug', companySlugCandidates)
-    const companyRecord = companyRecords?.find((record) => record.slug === SILVEIRA_COMPANY_SLUG) ?? companyRecords?.[0] ?? null
+    const companyRecord = companyRecords?.find((record) => record.slug === canonicalCompanySlug) ?? companyRecords?.[0] ?? null
 
-    const company = companyRecord ?? (isSilveiraCompanySlug(params.slug) ? getSilveiraTechFallbackCompany() : null)
+    const company =
+        companyRecord ??
+        (isSilveiraCompanySlug(params.slug) ? getSilveiraTechFallbackCompany() : isWastefreeCompanySlug(params.slug) ? getWastefreePlanetFallbackCompany() : null)
 
-    if ((error && !isSilveiraCompanySlug(params.slug)) || !company) {
+    if ((error && !isSilveiraCompanySlug(params.slug) && !isWastefreeCompanySlug(params.slug)) || !company) {
         return notFound()
     }
 
@@ -863,7 +1207,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     const companyWebsite = getCompanyWebsiteLink(company.website)
     const usePhoneRepairPage = isPhoneRepairCompany(company, companyWebsite)
     const useSilveiraTechPage = isSilveiraCompanyIdentity(company, companyWebsite?.hostname)
-    const isValidInvite = useSilveiraTechPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
+    const useWastefreePlanetPage = isWastefreeCompanyIdentity(company, companyWebsite?.hostname)
+    const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
 
     if (usePhoneRepairPage) {
         const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`
@@ -1085,6 +1430,22 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     if (useSilveiraTechPage) {
         return (
             <SilveiraPartnerPage
+                company={company}
+                params={params}
+                invite={invite}
+                isMember={isMember}
+                isValidInvite={Boolean(isValidInvite)}
+                isOwner={isOwner}
+                memberCount={memberCount}
+                totalPoints={totalPoints}
+                companyWebsite={companyWebsite}
+            />
+        )
+    }
+
+    if (useWastefreePlanetPage) {
+        return (
+            <WastefreePlanetPage
                 company={company}
                 params={params}
                 invite={invite}

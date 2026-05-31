@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getCanonicalSilveiraCompanySlug } from '@/lib/company-partners'
+import { getCanonicalCompanySlug } from '@/lib/company-partners'
 import { getCompanyGeneratedPointStats } from '@/lib/company-node-points'
 
 export async function GET(_request: Request, { params }: { params: { slug: string } }) {
     try {
         const admin = createAdminClient()
-        const companySlug = getCanonicalSilveiraCompanySlug(params.slug)
+        const companySlug = getCanonicalCompanySlug(params.slug)
 
         const { data: company, error: companyError } = await admin
             .from('companies')

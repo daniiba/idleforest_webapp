@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import { getCanonicalSilveiraCompanySlug } from '@/lib/company-partners'
+import { getCanonicalCompanySlug } from '@/lib/company-partners'
 
 type CompanyInfo = {
     name: string
@@ -31,7 +31,7 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     const [joining, setJoining] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [switchWarning, setSwitchWarning] = useState<JoinResponse | null>(null)
-    const companySlug = getCanonicalSilveiraCompanySlug(params.slug)
+    const companySlug = getCanonicalCompanySlug(params.slug)
 
     const joinPath = `/${params.locale}/join/company/${companySlug}`
     const loginHref = `/auth/user/login?redirect=${encodeURIComponent(joinPath)}`

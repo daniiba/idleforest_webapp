@@ -2,7 +2,13 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getCanonicalSilveiraCompanySlug, isSilveiraCompanyIdentity, isSilveiraCompanySlug } from '@/lib/company-partners'
+import {
+    getCanonicalCompanySlug,
+    isSilveiraCompanyIdentity,
+    isSilveiraCompanySlug,
+    isWastefreeCompanyIdentity,
+    isWastefreeCompanySlug,
+} from '@/lib/company-partners'
 import { createCompanyMembershipForUser, finalizeActiveCompanyMembershipForUser } from '@/lib/company-node-points'
 
 // Helper to create Supabase client for route handlers
@@ -137,7 +143,7 @@ export async function POST(request: Request) {
         }
 
         if (companySlug) {
-            const canonicalCompanySlug = getCanonicalSilveiraCompanySlug(companySlug)
+            const canonicalCompanySlug = getCanonicalCompanySlug(companySlug)
             const { data: publicCompany, error: publicCompanyError } = await supabase
                 .from('companies')
                 .select('id, name, slug, website, is_invite_only')
@@ -148,9 +154,13 @@ export async function POST(request: Request) {
                 return NextResponse.json({ error: 'Company not found' }, { status: 404 })
             }
 
-            const isSilveiraCompany = isSilveiraCompanySlug(companySlug) || isSilveiraCompanyIdentity(publicCompany)
+            const isPublicPartnerCompany =
+                isSilveiraCompanySlug(companySlug) ||
+                isSilveiraCompanyIdentity(publicCompany) ||
+                isWastefreeCompanySlug(companySlug) ||
+                isWastefreeCompanyIdentity(publicCompany)
 
-            if (publicCompany.is_invite_only && !isSilveiraCompany) {
+            if (publicCompany.is_invite_only && !isPublicPartnerCompany) {
                 return NextResponse.json({ error: 'This company requires an invite code' }, { status: 403 })
             }
 

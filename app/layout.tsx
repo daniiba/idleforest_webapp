@@ -60,6 +60,7 @@ export default async function RootLayout({
     const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
+    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree');
     const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
     const softwareApplicationSchema = {
         "@context": "https://schema.org",
@@ -217,7 +218,7 @@ fbq('track', 'PageView');
                         <AuthProvider>
                             {children}
                             <Toaster />
-                            <Footer />
+                            {!shouldHideGlobalFooter && <Footer />}
                         </AuthProvider>
                     </TreeStatsProvider>
                 </NextIntlClientProvider>
