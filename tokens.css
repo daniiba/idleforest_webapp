@@ -533,14 +533,29 @@ body {
 }
 
 @media (min-width: 60rem) {
+  .wfp-hero {
+    padding-block: clamp(2.5rem, 6vh, 4.5rem) var(--space-wfp-xl);
+  }
+
   .wfp-hero__grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-    align-items: end;
+    grid-template-columns: minmax(0, 1.18fr) minmax(18rem, 0.82fr);
+    align-items: center;
   }
 
   .wfp-media-stack {
     grid-template-columns: minmax(0, 0.98fr) minmax(10rem, 0.62fr);
-    align-items: end;
+    align-items: start;
+  }
+
+  .wfp-display {
+    max-width: 10.8ch;
+    font-size: clamp(4.75rem, 10vw, 7.25rem);
+    line-height: 0.88;
+  }
+
+  .wfp-lede {
+    max-width: 39rem;
+    line-height: 1.55;
   }
 
   .wfp-photo--portrait {
