@@ -14,12 +14,9 @@ import {
     Leaf,
     MapPin,
     Play,
-    Recycle,
-    ReceiptText,
     ShieldCheck,
     TreePine,
     Users,
-    Waves,
     ZapOff,
 } from 'lucide-react'
 import Navigation from '@/components/navigation'
@@ -363,7 +360,7 @@ function PhoneRepairWireframePanel({
     )
 }
 
-/* Hallmark · genre: editorial · macrostructure: Narrative Workflow · theme: Garden · enrichment: none · nav: N9 · footer: Ft6 · pre-emit critique: P4 H4 E4 S4 R4 V5 */
+/* Hallmark · genre: technical editorial · macrostructure: Partnership Ledger · theme: Deep Ocean · enrichment: supplied imagery · nav: N5 · footer: Ft6 · pre-emit critique: P4 H4 E4 S4 R5 V4 */
 function WastefreePlanetPage({
     company,
     params,
@@ -395,102 +392,75 @@ function WastefreePlanetPage({
         estimatedPlasticCleanup.pounds >= 10 ? 0 : 1,
     )} lb`
     const estimatedBottleEquivalents = formatRoundedNumber(estimatedPlasticCleanup.bottleEquivalents, params.locale)
-    const proofRows = [
-        { label: 'Members', value: formatNumber(memberCount, params.locale), detail: 'Supporters in this cleanup circle' },
-        { label: 'Points generated', value: formatNumber(totalPoints, params.locale), detail: 'Building clean-ocean funding' },
-        { label: 'Money collected', value: fundingRaised, detail: 'Estimated clean-ocean funding from activity' },
-        { label: 'Cleanup capacity', value: estimatedPlasticPounds, detail: `${estimatedBottleEquivalents} Plastic Bank bottle equivalents from money collected` },
-    ]
-    const wastefreeFacts = [
-        ['91%', "of plastic isn't recycled", 'Reducing and reusing matter before anything reaches the bin.'],
-        ['11M', 'metric tons enter oceans yearly', 'Clean-ocean projects help intercept plastic before it reaches the water.'],
-        ['40%', 'of U.S. food is wasted', 'Waste Free Planet brings a community already paying attention to everyday waste habits.'],
-    ]
-    const routeStages = [
+    const partnershipCards = [
         {
-            number: '1.0',
-            title: 'Community gathers here.',
+            number: '01',
+            label: 'Community',
+            title: 'Waste Free Planet',
+            tagline: 'Brings the community',
             body:
-                'Waste Free Planet is the community partner. Their role is not to run the cleanup itself; they bring people who already care about reducing waste.',
-            proofTitle: 'Waste Free Planet',
-            proof: 'The community gives this page a clear audience and a shared reason to care about the cleanup lane.',
+                'WFP gathers people who already pay attention to everyday waste habits, the audience that turns this lane into real momentum.',
         },
         {
-            number: '2.0',
-            title: 'IdleForest funds the lane.',
+            number: '02',
+            label: 'Funding mechanism',
+            title: 'IdleForest',
+            tagline: 'Turns idle bandwidth into funding',
             body:
-                'Supporters join this Waste Free Planet page and install IdleForest. Eligible idle desktop activity earns points that build a dedicated clean-ocean fund.',
-            proofTitle: 'IdleForest',
-            proof: 'Member activity, generated points, and estimated funding stay visible on this page.',
+                'Install the free Chrome extension or Windows app. While you browse, eligible idle internet bandwidth quietly earns points that build a dedicated clean-ocean fund.',
         },
         {
-            number: '3.0',
-            title: 'The community sees the impact.',
+            number: '03',
+            label: 'Cleanup partner',
+            title: 'Plastic Bank',
+            tagline: 'Recovers ocean-bound plastic',
             body:
-                'This page keeps the Waste Free Planet community connected to members, points, money collected, and estimated plastic removal.',
-            proofTitle: 'Waste Free Planet',
-            proof: 'The partnership is visible without making Waste Free Planet responsible for donation routing or project operations.',
-        },
-        {
-            number: '4.0',
-            title: 'Plastic Bank does the cleanup work.',
-            body:
-                'Cleanup funds can be routed through 1ClickImpact toward Plastic Bank clean-ocean projects. Receipts and impact updates can be added as donations are made.',
-            proofTitle: 'Plastic Bank',
-            proof: 'Plastic Bank works with collection communities that recover plastic and receive local benefits.',
+                'Funds flow through 1ClickImpact to Plastic Bank collection members in Indonesia, the Philippines, Brazil and Egypt, intercepting plastic before it reaches the sea.',
         },
     ]
-    const cleanupMissions = [
+    const installSteps = [
         {
-            id: 'bali',
-            location: 'Bali, Indonesia',
-            label: 'Plastic Bank Indonesia',
-            image: wastefreeImages.plasticBankBaliHaris,
-            alt: 'Haris, a Plastic Bank collection member in Bali, Indonesia.',
-            metric: '806 collection communities',
-            route: 'Haris has been a Plastic Bank collection member in Bali and collects plastic waste near Biaung-Saba Beach in Gianyar.',
-            assets: ['Community collection routes', 'Health and life insurance access', 'Grocery support benefits'],
+            number: '01',
+            title: 'Join through Waste Free Planet',
+            body: 'Sign up on the WFP + IdleForest page so your activity counts toward the shared clean-ocean lane.',
         },
         {
-            id: 'manila',
-            location: 'Manila, Philippines',
-            label: 'Plastic Bank Philippines',
-            image: wastefreeImages.plasticBankManilaElizabeth,
-            alt: 'Elizabeth, a Plastic Bank member from Baseco Compound in the Port Area of Manila.',
-            metric: '692 collection communities',
-            route: 'Elizabeth is a Plastic Bank member from Baseco Compound in the Port Area of Manila and works as a street sweeper in her community.',
-            assets: ['Recorded weigh-ins', 'Grocery vouchers', 'Red Cross insurance support'],
+            number: '02',
+            title: 'Install IdleForest',
+            body: 'Add the free Chrome extension or Windows desktop app. Takes about a minute.',
         },
         {
-            id: 'rayong',
-            location: 'Rayong, Thailand',
-            label: 'Plastic Bank Thailand',
-            image: wastefreeImages.plasticBankRayongSutha,
-            alt: 'Sutha, a Plastic Bank collection member in Rayong, Thailand.',
-            metric: 'Coastal interception network',
-            route: 'Sutha is a Plastic Bank collection member in Rayong, Thailand, where community collection helps recover plastic and support local income.',
-            assets: ['Coastal pickup routes', 'Collection-member income', 'Ocean-bound plastic recovery'],
+            number: '03',
+            title: 'Browse like normal',
+            body: 'Eligible idle bandwidth quietly earns points. No popups, no slowdowns, no donations.',
         },
         {
-            id: 'cairo',
-            location: 'Cairo, Egypt',
-            label: 'Plastic Bank Egypt',
-            image: wastefreeImages.plasticBankCairoBashay,
-            alt: 'Bashay, a Plastic Bank collector in Cairo, Egypt.',
-            metric: '314 collection members',
-            route: 'Bashay is a Plastic Bank collector in Cairo, Egypt, where he collects discarded plastic bound for the Nile and seas.',
-            assets: ['Weighing records', 'Local collection members', 'More than 20M kg gathered'],
+            number: '04',
+            title: 'Plastic Bank does the cleanup',
+            body: 'Points convert into funding routed via 1ClickImpact to Plastic Bank collectors on the ground.',
+        },
+    ]
+    const proofStats = [
+        {
+            value: '91%',
+            label: "of plastic isn't recycled",
+            body: 'Most plastic produced ends up in landfills, incinerators, or the natural environment.',
         },
         {
-            id: 'rio',
-            location: 'Rio de Janeiro, Brazil',
-            label: 'Plastic Bank Brazil',
-            image: wastefreeImages.plasticBankRioVanessaMarcio,
-            alt: 'Vanessa and Marcio, Plastic Bank collection members in Itaguai, Rio de Janeiro.',
-            metric: 'Coastal plastic interception',
-            route: 'Vanessa and Marcio are registered Plastic Bank members in Itaguai, Rio de Janeiro, where local waterways connect to broader coastal pollution challenges.',
-            assets: ['Coastal recovery routes', 'Collector income', 'Health and insurance benefits'],
+            value: '11M',
+            label: 'tons reach the ocean yearly',
+            body: 'Roughly one garbage truck of plastic enters the sea every minute. Interception works.',
         },
+        {
+            value: '0¢',
+            label: 'cost to participate',
+            body: 'No donations, no subscriptions. Just install once and let your idle bandwidth do the work.',
+        },
+    ]
+    const groundBullets = [
+        'Verified ethical recovery network',
+        'Traceable Social Plastic receipts',
+        'Income paid above local market rates',
     ]
 
     return (
@@ -505,19 +475,20 @@ function WastefreePlanetPage({
 
             <header className="wfp-nav">
                 <div className="wfp-nav__inner">
-                    <a href="#top" className="wfp-wordmark" aria-label={`${company.name} cleanup support`}>
-                        <span className="wfp-wordmark__logo" aria-hidden="true">
-                            <Image src={wastefreeImages.logo} alt="" width={2500} height={1500} sizes="3rem" />
-                        </span>
-                        <span className="wfp-wordmark__copy">
-                            <span>{company.name}</span>
-                            <small>Cleanup support</small>
-                        </span>
+                    <a href="#top" className="wfp-wordmark" aria-label={`${company.name} clean-ocean lane`}>
+                        <span className="wfp-wordmark__mark" aria-hidden="true" />
+                        <span>IDLEFOREST</span>
+                        <span className="wfp-wordmark__x">x</span>
+                        <span>WFP</span>
                     </a>
+                    <nav className="wfp-nav-links" aria-label="Waste Free Planet page sections">
+                        <a href="#wastefree-partnership">The partnership</a>
+                        <a href="#wastefree-how">How it works</a>
+                        <a href="#wastefree-impact">Impact</a>
+                    </nav>
                     {isValidInvite || isMember ? (
-                        <Link href={joinHref} className="wfp-button">
+                        <Link href={joinHref} className="wfp-button wfp-button--small">
                             {isMember ? 'Open portal' : 'Join WFP'}
-                            <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                         </Link>
                     ) : null}
                 </div>
@@ -527,252 +498,195 @@ function WastefreePlanetPage({
                 <section className="wfp-section wfp-hero">
                     <div className="wfp-hero__grid">
                         <div className="wfp-hero__copy">
-                            <p className="wfp-kicker">IdleForest x Waste Free Planet</p>
-                            <h1 className="wfp-display">Less waste at home. Less plastic at sea.</h1>
+                            <p className="wfp-kicker">IdleForest + Waste Free Planet</p>
+                            <h1 className="wfp-display">
+                                Less waste at home. <em>Less plastic</em> at sea.
+                            </h1>
                             <p className="wfp-lede">
-                                This is a partnership between IdleForest and Waste Free Planet: IdleForest turns eligible idle desktop activity into clean-ocean funding, while Waste Free Planet brings the community. 1ClickImpact and Plastic Bank handle the clean-ocean project path.
+                                This is a dedicated clean-ocean lane built by <strong>Waste Free Planet</strong> and <strong>IdleForest</strong>. WFP brings the community.
+                                IdleForest turns your eligible idle internet bandwidth into funding. Plastic Bank intercepts ocean-bound plastic on the ground.
                             </p>
-                            <div className="wfp-partnership-note" aria-label="Partnership roles">
-                                <span>
-                                    <Leaf aria-hidden className="h-4 w-4" strokeWidth={2.5} />
-                                    IdleForest tracks activity and funding
-                                </span>
-                                <span>
-                                    <Recycle aria-hidden className="h-4 w-4" strokeWidth={2.5} />
-                                    Waste Free Planet brings the community
-                                </span>
-                                <span>
-                                    <Waves aria-hidden className="h-4 w-4" strokeWidth={2.5} />
-                                    Plastic Bank projects recover ocean-bound plastic
-                                </span>
-                            </div>
                             <div className="wfp-actions">
                                 {isMember ? (
                                     <Link href={joinHref} className="wfp-button">
                                         Open portal
-                                        <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </Link>
                                 ) : isValidInvite ? (
                                     <Link href={joinHref} className="wfp-button">
                                         Join WFP
-                                        <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </Link>
                                 ) : null}
                                 {companyWebsite ? (
-                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link">
-                                        Visit WFP
-                                        <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
+                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button">
+                                        Visit Waste Free Planet
                                     </a>
                                 ) : null}
                             </div>
+                            <p className="wfp-microcopy">Free Chrome extension and Windows desktop app. Install once, then forget.</p>
                         </div>
 
-                        <div className="wfp-media-stack">
-                            <div className="wfp-hero-collage" aria-label="Plastic Bank cleanup imagery and live cleanup counter">
-                                <figure className="wfp-photo wfp-photo--feature">
-                                    <Image
-                                        src={wastefreeImages.plasticBankBaliHaris}
-                                        alt="Haris, a Plastic Bank collection member in Bali, Indonesia."
-                                        width={655}
-                                        height={380}
-                                        priority
-                                        sizes="(min-width: 960px) 34rem, 100vw"
-                                    />
-                                    <figcaption>Haris, a Plastic Bank collection member in Bali, Indonesia.</figcaption>
-                                </figure>
-                                <figure className="wfp-photo wfp-photo--landscape wfp-photo--inset">
-                                    <Image
-                                        src={wastefreeImages.plasticBankManilaElizabeth}
-                                        alt="Elizabeth, a Plastic Bank member from Baseco Compound in the Port Area of Manila."
-                                        width={655}
-                                        height={380}
-                                        sizes="(min-width: 960px) 14rem, 58vw"
-                                    />
-                                </figure>
-                                <aside className="wfp-impact-counter" aria-label="Estimated Plastic Bank cleanup capacity">
-                                    <span className="wfp-impact-counter__rate">Estimated plastic removal</span>
-                                    <strong>{estimatedPlasticPounds}</strong>
-                                    <p>plastic removal capacity from {fundingRaised} collected.</p>
-                                    <span className="wfp-impact-counter__bottles">
-                                        <Recycle aria-hidden className="h-4 w-4" strokeWidth={2.5} />
-                                        {estimatedBottleEquivalents} bottle equivalents
-                                    </span>
-                                </aside>
-                            </div>
-
-                            <aside className="wfp-route-card" aria-label="Waste Free Planet cleanup funding">
-                                {proofRows.map((row) => (
-                                    <div key={row.label} className="wfp-route-card__row">
-                                        <b>{row.value}</b>
-                                        <span>
-                                            {row.label}: {row.detail}
-                                        </span>
-                                    </div>
-                                ))}
+                        <div className="wfp-hero-collage" aria-label="Plastic Bank clean-ocean collection imagery and fund balance">
+                            <figure className="wfp-photo wfp-photo--feature">
+                                <Image
+                                    src={wastefreeImages.plasticBankCollection}
+                                    alt="Plastic Bank collection member with family by the coastline."
+                                    width={655}
+                                    height={820}
+                                    priority
+                                    sizes="(min-width: 960px) 21rem, 100vw"
+                                />
+                            </figure>
+                            <figure className="wfp-photo wfp-photo--portrait">
+                                <Image
+                                    src={wastefreeImages.plasticBankEgyptMabrooka}
+                                    alt="Plastic Bank collection member in Egypt."
+                                    width={450}
+                                    height={560}
+                                    sizes="(min-width: 960px) 13rem, 48vw"
+                                />
+                            </figure>
+                            <figure className="wfp-photo wfp-photo--wide">
+                                <Image
+                                    src={wastefreeImages.plasticBankManilaElizabeth}
+                                    alt="Elizabeth, a Plastic Bank member from Baseco Compound in Manila."
+                                    width={655}
+                                    height={380}
+                                    sizes="(min-width: 960px) 20rem, 100vw"
+                                />
+                            </figure>
+                            <aside className="wfp-impact-counter" aria-label="WFP clean-ocean fund balance">
+                                <span className="wfp-impact-counter__rate">WFP clean-ocean fund</span>
+                                <strong>{fundingRaised}</strong>
+                                <p>Dedicated balance. Estimated cleanup capacity: {estimatedPlasticPounds}, or {estimatedBottleEquivalents} Plastic Bank bottle equivalents.</p>
                             </aside>
                         </div>
                     </div>
                 </section>
 
-                <section className="wfp-section" aria-label="Waste Free Planet impact context">
-                    <div className="wfp-stat-strip">
-                        {wastefreeFacts.map(([value, label, detail]) => (
-                            <article key={label} className="wfp-stat">
-                                <strong>{value}</strong>
-                                <span>{label}</span>
-                                <p>{detail}</p>
+                <section id="wastefree-partnership" className="wfp-band">
+                    <div className="wfp-section">
+                        <div className="wfp-section-head">
+                            <p className="wfp-kicker">The partnership</p>
+                            <h2 className="wfp-section-title">
+                                One lane. Three roles. <em>Zero guilt-tripping.</em>
+                            </h2>
+                            <p className="wfp-section-copy">
+                                Waste Free Planet and IdleForest built this page together. It is not a campaign or a fundraiser; it is a small piece of plumbing that converts the time your computer is already running into measurable cleanup.
+                            </p>
+                        </div>
+                        <div className="wfp-role-grid">
+                            {partnershipCards.map((card) => (
+                                <article key={card.number} className="wfp-role-card">
+                                    <span>{card.number}</span>
+                                    <p>{card.label}</p>
+                                    <h3>{card.title}</h3>
+                                    <strong>{card.tagline}</strong>
+                                    <small>{card.body}</small>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="wastefree-how" className="wfp-section wfp-how">
+                    <div className="wfp-section-head">
+                        <p className="wfp-kicker">What is IdleForest?</p>
+                        <h2 className="wfp-section-title">A free app you install once and forget.</h2>
+                        <p className="wfp-section-copy">
+                            IdleForest is a free Chrome extension and Windows desktop app. While you browse, it uses a small amount of your unused internet bandwidth to fund verified environmental projects,
+                            originally tree-planting, and now, through this Waste Free Planet partnership, ocean-bound plastic recovery.
+                        </p>
+                        <p className="wfp-section-copy">
+                            All projects are run by trusted partners with published records and traceable receipts. You do not pay anything. You do not change how you use your computer. The clean-ocean fund grows in the background.
+                        </p>
+                    </div>
+                    <div className="wfp-step-list">
+                        {installSteps.map((step) => (
+                            <article key={step.number} className="wfp-step">
+                                <span>{step.number}</span>
+                                <div>
+                                    <h3>{step.title}</h3>
+                                    <p>{step.body}</p>
+                                </div>
                             </article>
                         ))}
                     </div>
                 </section>
 
-                <section id="wastefree-route" className="wfp-section">
-                    <ol className="wfp-stage-list">
-                        {routeStages.map((stage) => (
-                            <li key={stage.number} className="wfp-stage">
-                                <span className="wfp-stage__number">{stage.number}</span>
-                                <div>
-                                    <h2>{stage.title}</h2>
-                                    <p>{stage.body}</p>
-                                </div>
-                                <aside className="wfp-proof-panel">
-                                    <h3>{stage.proofTitle}</h3>
-                                    <p>{stage.proof}</p>
-                                </aside>
-                            </li>
+                <section id="wastefree-impact" className="wfp-stat-band" aria-label="Plastic impact context">
+                    <div className="wfp-section wfp-stat-strip">
+                        {proofStats.map((stat) => (
+                            <article key={stat.label} className="wfp-stat">
+                                <strong>{stat.value}</strong>
+                                <span>{stat.label}</span>
+                                <p>{stat.body}</p>
+                            </article>
                         ))}
-                    </ol>
-                </section>
-
-                <section id="wastefree-proof" className="wfp-dark-band">
-                    <div className="wfp-section wfp-dark-layout">
-                        <div>
-                            <h2 className="wfp-section-title">Where clean-ocean support can go.</h2>
-                            <p className="wfp-section-copy">
-                                Support from this community can be routed through 1ClickImpact to Plastic Bank missions that collect ocean-bound plastic and support local collection communities. Switch missions to see the route, image, and support assets for each place.
-                            </p>
-                            <div className="wfp-mission-switcher" aria-label="Plastic Bank mission switcher">
-                                {cleanupMissions.map((mission, index) => (
-                                    <input
-                                        key={mission.id}
-                                        className="wfp-mission-input"
-                                        type="radio"
-                                        name="wfp-mission"
-                                        id={`wfp-mission-${mission.id}`}
-                                        defaultChecked={index === 0}
-                                    />
-                                ))}
-
-                                <div className="wfp-mission-tabs" role="tablist" aria-label="Plastic Bank missions">
-                                    {cleanupMissions.map((mission) => (
-                                        <label key={mission.id} className="wfp-mission-tab" htmlFor={`wfp-mission-${mission.id}`} role="tab">
-                                            <span>{mission.location}</span>
-                                            <small>{mission.label}</small>
-                                        </label>
-                                    ))}
-                                </div>
-
-                                <div className="wfp-mission-panels">
-                                    {cleanupMissions.map((mission, index) => (
-                                        <article key={mission.id} className={`wfp-mission-panel wfp-mission-panel--${mission.id}`}>
-                                            <figure className="wfp-photo wfp-photo--landscape">
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img src={mission.image} alt={mission.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
-                                            </figure>
-                                            <div className="wfp-mission-panel__copy">
-                                                <p className="wfp-mission-panel__eyebrow">{mission.label}</p>
-                                                <h3>{mission.location}</h3>
-                                                <strong>{mission.metric}</strong>
-                                                <p>{mission.route}</p>
-                                                <ul className="wfp-mission-assets" aria-label={`${mission.location} support assets`}>
-                                                    {mission.assets.map((asset) => (
-                                                        <li key={asset}>
-                                                            <BadgeCheck aria-hidden className="h-4 w-4" strokeWidth={2.5} />
-                                                            {asset}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </article>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
 
-                <section className="wfp-section wfp-join">
-                    <div className="wfp-join__panel">
-                        <div>
-                            <h2 className="wfp-section-title">Clear updates, no guesswork.</h2>
-                            <p className="wfp-section-copy">
-                                When donations are recorded, this page can add receipts and impact updates. Until then, the live numbers show members, points, and estimated funding.
-                            </p>
-                        </div>
-                        <div className="wfp-proof-cluster">
-                            <div className="wfp-proof-panel">
-                                <ReceiptText className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Separate funding</h3>
-                                <p>Clean-ocean funding for this page is tracked separately from IdleForest&apos;s tree-planting lane.</p>
-                            </div>
-                            <div className="wfp-proof-panel">
-                                <ShieldCheck className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Donation records</h3>
-                                <p>Receipts and impact totals can be added after clean-ocean donations are made.</p>
-                            </div>
-                            <div className="wfp-proof-panel">
-                                <ZapOff className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-                                <h3>Easy support</h3>
-                                <p>Supporters install IdleForest once; eligible idle activity can help grow the fund.</p>
-                            </div>
-                        </div>
+                <section className="wfp-section wfp-ground">
+                    <div className="wfp-ground__photos">
+                        <figure className="wfp-photo wfp-photo--ground-one">
+                            <Image
+                                src={wastefreeImages.plasticBankCairoBashay}
+                                alt="Bashay, a Plastic Bank collector in Cairo, Egypt."
+                                width={420}
+                                height={520}
+                                sizes="(min-width: 960px) 16rem, 48vw"
+                            />
+                        </figure>
+                        <figure className="wfp-photo wfp-photo--ground-two">
+                            <Image
+                                src={wastefreeImages.plasticBankBaliHaris}
+                                alt="Haris, a Plastic Bank collection member in Bali, Indonesia."
+                                width={430}
+                                height={520}
+                                sizes="(min-width: 960px) 17rem, 48vw"
+                            />
+                        </figure>
+                    </div>
+                    <div className="wfp-section-head">
+                        <p className="wfp-kicker">On the ground</p>
+                        <h2 className="wfp-section-title">
+                            Real collectors. <em>Real coastlines.</em>
+                        </h2>
+                        <p className="wfp-section-copy">
+                            The WFP clean-ocean fund flows to Plastic Bank collection members across Indonesia, the Philippines, Brazil and Egypt, turning ocean-bound plastic into income, healthcare and school tuition for their families.
+                        </p>
+                        <ul className="wfp-bullet-list">
+                            {groundBullets.map((bullet) => (
+                                <li key={bullet}>{bullet}</li>
+                            ))}
+                        </ul>
                     </div>
                 </section>
 
-                <section id="wastefree-join" className="wfp-section wfp-join">
-                    <div className="wfp-join__panel">
-                        <div>
-                            <h2 className="wfp-section-title">Join the Waste Free Planet cleanup.</h2>
-                            <p className="wfp-section-copy">
-                                Connect your account, install the desktop app, and support the Waste Free Planet community cleanup fund through eligible idle activity.
-                            </p>
-                        </div>
-                        <div className="wfp-actions">
-                            {isMember ? (
-                                <Link href={joinHref} className="wfp-button">
-                                    Open portal
-                                    <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
-                                </Link>
-                            ) : isValidInvite ? (
-                                <Link href={joinHref} className="wfp-button">
-                                    Join WFP
-                                    <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
-                                </Link>
-                            ) : null}
-                            <a href="https://1clickimpact.com/business/clean-ocean" target="_blank" rel="noreferrer" className="wfp-link">
-                                1ClickImpact oceans
-                                <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
+                <section id="wastefree-join" className="wfp-section wfp-final-cta">
+                    <p className="wfp-kicker">IdleForest + Waste Free Planet</p>
+                    <h2>Less waste at home. Less plastic at sea.</h2>
+                    <div className="wfp-actions">
+                        {isMember ? (
+                            <Link href={joinHref} className="wfp-button">
+                                Open portal
+                            </Link>
+                        ) : isValidInvite ? (
+                            <Link href={joinHref} className="wfp-button">
+                                Join the WFP lane
+                            </Link>
+                        ) : null}
+                        {companyWebsite ? (
+                            <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button">
+                                Visit WFP
                             </a>
-                        </div>
+                        ) : null}
                     </div>
+                    <p className="wfp-microcopy">Free Chrome extension and Windows desktop app</p>
                 </section>
             </main>
 
             <footer className="wfp-footer">
-                <p className="wfp-footer__close">
-                    Yours in fewer throwaway habits,
-                    <br />
-                    Waste Free Planet and IdleForest.
-                </p>
-                <div className="wfp-footer__meta">
-                    <span>Clean-ocean support</span>
-                    <span>Clean-ocean funding</span>
-                    {companyWebsite ? (
-                        <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link">
-                            Waste Free Planet
-                        </a>
-                    ) : null}
-                </div>
+                <p>© 2026 IdleForest x Waste Free Planet · cleanup delivered by Plastic Bank via 1ClickImpact</p>
             </footer>
 
             {isOwner && <CompanySettingsPanel company={company} memberCount={memberCount} totalPoints={totalPoints} />}
