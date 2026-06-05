@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { aggregateProjects, plantingsData } from '@/lib/plantings'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -23,6 +24,7 @@ import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree'
 import { getTranslations } from 'next-intl/server'
+import { canonicalUrl, routeAlternates } from '@/lib/i18n-routes'
 import {
     SILVEIRA_COMPANY_SLUG,
     WASTEFREE_COMPANY_SLUG,
@@ -42,6 +44,9 @@ const emptyCompanyId = '00000000-0000-0000-0000-000000000000'
 const plasticRemovalCentsPerPound = 56
 const plasticBankBottleEquivalentsPerKg = 50
 const poundsPerKg = 2.2046226218
+const wastefreePlanetMetaTitle = 'Remove Plastic for Free | Waste Free Planet x IdleForest'
+const wastefreePlanetMetaDescription =
+    'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the Chrome extension or Mac/Windows app; Plastic Bank handles cleanup through 1ClickImpact.'
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -399,7 +404,7 @@ function WastefreePlanetPage({
             title: 'Waste Free Planet',
             tagline: 'Brings the community',
             body:
-                'WFP gathers people who already pay attention to everyday waste habits, the audience that turns this lane into real momentum.',
+                'WFP brings people who care about everyday waste reduction into one shared cleanup effort.',
         },
         {
             number: '02',
@@ -407,7 +412,7 @@ function WastefreePlanetPage({
             title: 'IdleForest',
             tagline: 'Turns idle bandwidth into funding',
             body:
-                'Install the free Chrome extension or Windows app. While you browse, eligible idle internet bandwidth quietly earns points that build a dedicated clean-ocean fund.',
+                'The free Chrome extension or Mac/Windows app turns eligible idle internet bandwidth into points for the clean-ocean fund.',
         },
         {
             number: '03',
@@ -422,17 +427,17 @@ function WastefreePlanetPage({
         {
             number: '01',
             title: 'Join through Waste Free Planet',
-            body: 'Sign up on the WFP + IdleForest page so your activity counts toward the shared clean-ocean lane.',
+            body: 'Sign up on this page so your activity counts toward the Waste Free Planet clean-ocean fund.',
         },
         {
             number: '02',
             title: 'Install IdleForest',
-            body: 'Add the free Chrome extension or Windows desktop app. Takes about a minute.',
+            body: 'Add the free Chrome extension or Mac/Windows desktop app. Takes about a minute.',
         },
         {
             number: '03',
             title: 'Browse like normal',
-            body: 'Eligible idle bandwidth quietly earns points. No popups, no slowdowns, no donations.',
+            body: 'Eligible idle bandwidth earns points in the background while you use your computer as usual.',
         },
         {
             number: '04',
@@ -454,7 +459,7 @@ function WastefreePlanetPage({
         {
             value: '0¢',
             label: 'cost to participate',
-            body: 'No donations, no subscriptions. Just install once and let your idle bandwidth do the work.',
+            body: 'Install once for free, then let eligible idle bandwidth fund cleanup in the background.',
         },
     ]
     const groundBullets = [
@@ -475,7 +480,7 @@ function WastefreePlanetPage({
 
             <header className="wfp-nav">
                 <div className="wfp-nav__inner">
-                    <a href="#top" className="wfp-wordmark" aria-label={`${company.name} clean-ocean lane`}>
+                    <a href="#top" className="wfp-wordmark" aria-label={`${company.name} clean-ocean page`}>
                         <span className="wfp-wordmark__mark" aria-hidden="true" />
                         <span>IDLEFOREST</span>
                         <span className="wfp-wordmark__x">x</span>
@@ -503,8 +508,8 @@ function WastefreePlanetPage({
                                 Less waste at home. <em>Less plastic</em> at sea.
                             </h1>
                             <p className="wfp-lede">
-                                This is a dedicated clean-ocean lane built by <strong>Waste Free Planet</strong> and <strong>IdleForest</strong>. WFP brings the community.
-                                IdleForest turns your eligible idle internet bandwidth into funding. Plastic Bank intercepts ocean-bound plastic on the ground.
+                                <strong>Waste Free Planet</strong> and <strong>IdleForest</strong> turn eligible idle internet bandwidth into funding for ocean-bound plastic recovery.
+                                Plastic Bank collection members recover the plastic through 1ClickImpact-supported projects.
                             </p>
                             <div className="wfp-actions">
                                 {isMember ? (
@@ -522,7 +527,7 @@ function WastefreePlanetPage({
                                     </a>
                                 ) : null}
                             </div>
-                            <p className="wfp-microcopy">Free Chrome extension and Windows desktop app. Install once, then forget.</p>
+                            <p className="wfp-microcopy">Free Chrome extension and Mac/Windows desktop app.</p>
                         </div>
 
                         <div className="wfp-hero-collage" aria-label="Plastic Bank clean-ocean collection imagery and fund balance">
@@ -568,10 +573,10 @@ function WastefreePlanetPage({
                         <div className="wfp-section-head">
                             <p className="wfp-kicker">The partnership</p>
                             <h2 className="wfp-section-title">
-                                One lane. Three roles. <em>Zero guilt-tripping.</em>
+                                One cleanup fund. <em>Three clear roles.</em>
                             </h2>
                             <p className="wfp-section-copy">
-                                Waste Free Planet and IdleForest built this page together. It is not a campaign or a fundraiser; it is a small piece of plumbing that converts the time your computer is already running into measurable cleanup.
+                                Waste Free Planet brings the community. IdleForest generates funding from eligible idle bandwidth. Plastic Bank collection members recover ocean-bound plastic on the ground.
                             </p>
                         </div>
                         <div className="wfp-role-grid">
@@ -591,13 +596,13 @@ function WastefreePlanetPage({
                 <section id="wastefree-how" className="wfp-section wfp-how">
                     <div className="wfp-section-head">
                         <p className="wfp-kicker">What is IdleForest?</p>
-                        <h2 className="wfp-section-title">A free app you install once and forget.</h2>
+                        <h2 className="wfp-section-title">A free app that funds cleanup in the background.</h2>
                         <p className="wfp-section-copy">
-                            IdleForest is a free Chrome extension and Windows desktop app. While you browse, it uses a small amount of your unused internet bandwidth to fund verified environmental projects,
+                            IdleForest is a free Chrome extension and Mac/Windows desktop app. While you browse, it uses a small amount of your unused internet bandwidth to fund verified environmental projects,
                             originally tree-planting, and now, through this Waste Free Planet partnership, ocean-bound plastic recovery.
                         </p>
                         <p className="wfp-section-copy">
-                            All projects are run by trusted partners with published records and traceable receipts. You do not pay anything. You do not change how you use your computer. The clean-ocean fund grows in the background.
+                            All projects are run by trusted partners with published records and traceable receipts. Participation is free, and the clean-ocean fund grows in the background.
                         </p>
                     </div>
                     <div className="wfp-step-list">
@@ -672,7 +677,7 @@ function WastefreePlanetPage({
                             </Link>
                         ) : isValidInvite ? (
                             <Link href={joinHref} className="wfp-button">
-                                Join the WFP lane
+                                Join Waste Free Planet
                             </Link>
                         ) : null}
                         {companyWebsite ? (
@@ -681,7 +686,7 @@ function WastefreePlanetPage({
                             </a>
                         ) : null}
                     </div>
-                    <p className="wfp-microcopy">Free Chrome extension and Windows desktop app</p>
+                    <p className="wfp-microcopy">Free Chrome extension and Mac/Windows desktop app</p>
                 </section>
             </main>
 
@@ -1144,6 +1149,48 @@ function SilveiraPartnerPage({
             {isOwner && <CompanySettingsPanel company={company} memberCount={memberCount} totalPoints={totalPoints} />}
         </div>
     )
+}
+
+export function generateMetadata({ params }: { params: { slug: string; locale: string } }): Metadata {
+    if (!isWastefreeCompanySlug(params.slug)) return {}
+
+    const path = `/c/${WASTEFREE_COMPANY_SLUG}`
+    const url = canonicalUrl(path, params.locale)
+
+    return {
+        title: wastefreePlanetMetaTitle,
+        description: wastefreePlanetMetaDescription,
+        keywords: [
+            'remove plastic for free',
+            'free plastic removal',
+            'ocean-bound plastic removal',
+            'Waste Free Planet',
+            'Plastic Bank cleanup',
+            'IdleForest',
+        ],
+        alternates: routeAlternates(path, params.locale),
+        openGraph: {
+            title: wastefreePlanetMetaTitle,
+            description: wastefreePlanetMetaDescription,
+            url,
+            siteName: 'IdleForest',
+            type: 'website',
+            images: [
+                {
+                    url: wastefreeImages.plasticBankCollection,
+                    width: 655,
+                    height: 820,
+                    alt: 'Plastic Bank collection member with family by the coastline.',
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: wastefreePlanetMetaTitle,
+            description: wastefreePlanetMetaDescription,
+            images: [wastefreeImages.plasticBankCollection],
+        },
+    }
 }
 
 export default async function CompanyPortalPage({ params, searchParams }: { params: { slug: string; locale: string }; searchParams: { invite?: string; design?: string; variant?: string } }) {
