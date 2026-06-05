@@ -118,7 +118,11 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
         ? 'Already installed IdleForest? Joining connects future desktop activity to the clean-ocean fund automatically after your app syncs.'
         : isPlanetwild
           ? 'Already installed IdleForest? Joining connects future desktop activity to the Planet Wild rewilding fund automatically after your app syncs.'
-        : 'Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.'
+          : 'Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.'
+    const logoUrl = isWastefree ? '/partner/wastefree/wfp-logo-white.webp' : company?.logo_url
+    const logoClassName = isWastefree
+        ? 'h-16 w-28 rounded-lg border border-[#e4dccc] bg-black object-contain p-1.5'
+        : 'h-12 w-12 rounded-lg border border-[#e4dccc] bg-white object-contain p-2'
     const safetyNotes = [
         { icon: Lock, label: 'No donation or payment method' },
         { icon: ShieldCheck, label: 'No browsing history or private data' },
@@ -130,9 +134,9 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
             <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">
                 <section className="w-full rounded-lg border border-[#e4dccc] bg-white p-6 shadow-[0_24px_80px_rgba(23,33,22,0.12)] sm:p-8">
                     <div className="flex items-center gap-3">
-                        {company?.logo_url ? (
+                        {logoUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={company.logo_url} alt="" className="h-12 w-12 rounded-lg border border-[#e4dccc] bg-white object-contain p-2" />
+                            <img src={logoUrl} alt="" className={logoClassName} />
                         ) : (
                             <div className="h-12 w-12 rounded-lg bg-[#d7e7df]" />
                         )}

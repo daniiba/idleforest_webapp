@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { Apple, BadgeCheck, Chrome, CircleUserRound, Download } from 'lucide-react'
 
 type WastefreeStep = {
@@ -62,7 +63,14 @@ function WastefreeExplainerArt({ visual }: { visual: string }) {
             <div className="wfp-art-join-flow">
                 <div className="wfp-art-box wfp-art-community-card">
                     <small>Join free</small>
-                    <strong>Waste Free Planet</strong>
+                    <Image
+                        src="/partner/wastefree/wfp-logo-white.webp"
+                        alt="Waste Free Planet"
+                        width={250}
+                        height={150}
+                        sizes="11rem"
+                        className="wfp-art-wastefree-logo"
+                    />
                     <div className="wfp-art-member-stack">
                         <span />
                         <span />

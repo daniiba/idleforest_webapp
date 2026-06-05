@@ -877,10 +877,13 @@ function WastefreePlanetPage({
             <header className="wfp-nav">
                 <div className="wfp-nav__inner">
                     <a href="#top" className="wfp-wordmark" aria-label={`${company.name} clean-ocean page`}>
-                        <span className="wfp-wordmark__mark" aria-hidden="true" />
-                        <span>IDLEFOREST</span>
+                        <span className="wfp-wordmark__logo wfp-wordmark__logo--idle">
+                            <Image src="/logo-light.png" alt="IdleForest" width={1000} height={276} sizes="7rem" />
+                        </span>
                         <span className="wfp-wordmark__x">x</span>
-                        <span>Waste Free Planet</span>
+                        <span className="wfp-wordmark__logo wfp-wordmark__logo--wastefree">
+                            <Image src={wastefreeImages.logo} alt="Waste Free Planet" width={250} height={150} sizes="7rem" />
+                        </span>
                     </a>
                     <nav className="wfp-nav-links" aria-label="Waste Free Planet page sections">
                         <a href="#wastefree-partnership">The partnership</a>

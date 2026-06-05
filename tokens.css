@@ -92,23 +92,45 @@ body {
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  gap: 0.45rem;
+  gap: 0.5rem;
   color: var(--color-wfp-text);
   font-size: 0.78rem;
   line-height: 1;
   white-space: nowrap;
 }
 
-.wfp-wordmark__mark {
-  display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 0.38rem solid var(--color-wfp-accent);
-  border-radius: 50%;
+.wfp-wordmark__logo {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.wfp-wordmark__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.wfp-wordmark__logo--idle {
+  width: clamp(4.75rem, 22vw, 7rem);
+  height: clamp(1.3rem, 6vw, 1.9rem);
+}
+
+.wfp-wordmark__logo--wastefree {
+  width: clamp(3.8rem, 18vw, 6.35rem);
+  height: clamp(2.28rem, 10.8vw, 3.8rem);
+  border-radius: 0.35rem;
 }
 
 .wfp-wordmark__x {
   color: var(--color-wfp-accent);
+  font-family: var(--font-wfp-mono);
+  font-size: 0.72rem;
+  font-weight: 950;
 }
 
 .wfp-nav-links {
@@ -719,6 +741,15 @@ body {
 .wfp-art-fund-card {
   position: relative;
   min-height: 7.5rem;
+}
+
+.wfp-art-wastefree-logo {
+  display: block;
+  width: min(100%, 11rem);
+  height: auto;
+  margin-top: 0.45rem;
+  border-radius: 0.45rem;
+  object-fit: contain;
 }
 
 .wfp-art-member-stack {
