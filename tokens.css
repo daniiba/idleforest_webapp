@@ -291,6 +291,7 @@ body {
 
 .wfp-photo {
   position: relative;
+  min-width: 0;
   margin: 0;
   overflow: hidden;
   border-radius: var(--radius-wfp-card);
@@ -652,10 +653,35 @@ body {
 
   .wfp-hero-collage {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-areas:
+      "feature portrait"
+      "feature wide"
+      "counter counter";
+    grid-template-rows: minmax(11rem, 1fr) minmax(8rem, 0.66fr) auto;
   }
 
   .wfp-photo--feature {
-    grid-row: span 2;
+    grid-area: feature;
+  }
+
+  .wfp-photo--portrait {
+    grid-area: portrait;
+  }
+
+  .wfp-photo--wide {
+    grid-area: wide;
+  }
+
+  .wfp-impact-counter {
+    grid-area: counter;
+    min-height: 0;
+  }
+
+  .wfp-photo--feature,
+  .wfp-photo--portrait,
+  .wfp-photo--wide {
+    width: 100%;
+    height: 100%;
   }
 
   .wfp-role-grid,
@@ -684,19 +710,23 @@ body {
 
   .wfp-hero-collage {
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+    grid-template-rows: minmax(15.5rem, 1fr) minmax(10rem, 0.64fr) auto;
   }
 
   .wfp-photo--feature {
-    min-height: 24.5rem;
+    min-height: 0;
   }
 
-  .wfp-photo--portrait,
-  .wfp-impact-counter {
-    min-height: 11.75rem;
+  .wfp-photo--portrait {
+    min-height: 0;
   }
 
   .wfp-photo--wide {
-    min-height: 9.4rem;
+    min-height: 0;
+  }
+
+  .wfp-impact-counter {
+    min-height: 10.25rem;
   }
 
   .wfp-how {
