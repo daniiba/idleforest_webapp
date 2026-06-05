@@ -412,7 +412,7 @@ function WastefreePlanetPage({
             title: 'IdleForest',
             tagline: 'Turns idle bandwidth into funding',
             body:
-                'The free Chrome extension or Mac/Windows app turns eligible idle internet bandwidth into points for the clean-ocean fund.',
+                'The free Chrome extension or Mac/Windows app turns idle bandwidth into points for the clean-ocean fund.',
         },
         {
             number: '03',
@@ -437,7 +437,7 @@ function WastefreePlanetPage({
         {
             number: '03',
             title: 'Browse like normal',
-            body: 'Eligible idle bandwidth earns points in the background while you use your computer as usual.',
+            body: 'IdleForest runs in the background while you use your computer as usual.',
         },
         {
             number: '04',
@@ -459,7 +459,7 @@ function WastefreePlanetPage({
         {
             value: '0¢',
             label: 'cost to participate',
-            body: 'Install once for free, then let eligible idle bandwidth fund cleanup in the background.',
+            body: 'Install once for free, then let idle bandwidth fund cleanup in the background.',
         },
     ]
     const groundBullets = [
@@ -508,7 +508,7 @@ function WastefreePlanetPage({
                                 Less waste at home. <em>Less plastic</em> at sea.
                             </h1>
                             <p className="wfp-lede">
-                                <strong>Waste Free Planet</strong> and <strong>IdleForest</strong> turn eligible idle internet bandwidth into funding for ocean-bound plastic recovery.
+                                <strong>Waste Free Planet</strong> and <strong>IdleForest</strong> turn idle bandwidth into funding for ocean-bound plastic recovery.
                                 Plastic Bank collection members recover the plastic through 1ClickImpact-supported projects.
                             </p>
                             <div className="wfp-actions">
@@ -576,7 +576,7 @@ function WastefreePlanetPage({
                                 One cleanup fund. <em>Three clear roles.</em>
                             </h2>
                             <p className="wfp-section-copy">
-                                Waste Free Planet brings the community. IdleForest generates funding from eligible idle bandwidth. Plastic Bank collection members recover ocean-bound plastic on the ground.
+                                Waste Free Planet brings the community. IdleForest generates funding from idle bandwidth. Plastic Bank collection members recover ocean-bound plastic on the ground.
                             </p>
                         </div>
                         <div className="wfp-role-grid">
@@ -598,7 +598,7 @@ function WastefreePlanetPage({
                         <p className="wfp-kicker">What is IdleForest?</p>
                         <h2 className="wfp-section-title">A free app that funds cleanup in the background.</h2>
                         <p className="wfp-section-copy">
-                            IdleForest is a free Chrome extension and Mac/Windows desktop app. While you browse, it uses a small amount of your unused internet bandwidth to fund verified environmental projects,
+                            IdleForest is a free Chrome extension and Mac/Windows desktop app. It runs in the background and puts unused capacity to work for verified environmental projects,
                             originally tree-planting, and now, through this Waste Free Planet partnership, ocean-bound plastic recovery.
                         </p>
                         <p className="wfp-section-copy">
