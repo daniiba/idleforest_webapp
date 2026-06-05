@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Loader2, Lock, ShieldCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import { getCanonicalCompanySlug } from '@/lib/company-partners'
+import { getCanonicalCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 type CompanyInfo = {
     name: string
@@ -32,6 +32,8 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     const [error, setError] = useState<string | null>(null)
     const [switchWarning, setSwitchWarning] = useState<JoinResponse | null>(null)
     const companySlug = getCanonicalCompanySlug(params.slug)
+    const isWastefree = isWastefreeCompanySlug(companySlug)
+    const isPlanetwild = isPlanetwildCompanySlug(companySlug)
 
     const joinPath = `/${params.locale}/join/company/${companySlug}`
     const loginHref = `/auth/user/login?redirect=${encodeURIComponent(joinPath)}`
@@ -102,11 +104,30 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
         }
     }, [authLoading, joinCompany, user])
 
-    const companyName = company?.name || 'this company forest'
+    const companyName = company?.name || 'this company'
+    const joinLabel = isWastefree ? 'clean-ocean fund' : isPlanetwild ? 'rewilding fund' : 'company forest'
+    const pageTitle = isWastefree ? 'Join Waste Free Planet for free' : isPlanetwild ? 'Join Planet Wild with IdleForest' : `Join ${companyName}`
+    const joinDescription = isWastefree
+        ? 'Connect your IdleForest account to the Waste Free Planet clean-ocean fund. After setup, future activity helps fund ocean-bound plastic recovery through Plastic Bank.'
+        : isPlanetwild
+          ? 'Connect your IdleForest account to Planet Wild. After setup, future activity helps generate passive funding for documented rewilding missions.'
+        : `Connect your IdleForest account to ${companyName}. Future activity will count toward this company forest.`
+    const signupLabel = isWastefree ? 'Create account to join Waste Free Planet' : isPlanetwild ? 'Create account to join Planet Wild' : 'Create account to join'
+    const loginLabel = isWastefree ? 'Log in to join Waste Free Planet' : isPlanetwild ? 'Log in to join Planet Wild' : 'Log in to join'
+    const installedNote = isWastefree
+        ? 'Already installed IdleForest? Joining connects future desktop activity to the clean-ocean fund automatically after your app syncs.'
+        : isPlanetwild
+          ? 'Already installed IdleForest? Joining connects future desktop activity to the Planet Wild rewilding fund automatically after your app syncs.'
+        : 'Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.'
+    const safetyNotes = [
+        { icon: Lock, label: 'No donation or payment method' },
+        { icon: ShieldCheck, label: 'No browsing history or private data' },
+        { icon: BadgeCheck, label: 'You can pause or uninstall anytime' },
+    ]
 
     return (
-        <main className="min-h-screen bg-[#f7f4ec] px-4 py-16 text-[#172116] sm:px-6">
-            <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-3xl items-center justify-center">
+        <main className="min-h-screen bg-[#f7f4ec] px-4 py-12 text-[#172116] sm:px-6">
+            <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">
                 <section className="w-full rounded-lg border border-[#e4dccc] bg-white p-6 shadow-[0_24px_80px_rgba(23,33,22,0.12)] sm:p-8">
                     <div className="flex items-center gap-3">
                         {company?.logo_url ? (
@@ -116,23 +137,20 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
                             <div className="h-12 w-12 rounded-lg bg-[#d7e7df]" />
                         )}
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#4d6f45]">Company forest</p>
-                            <h1 className="mt-1 text-3xl font-black leading-tight text-[#172116] sm:text-4xl">Join {companyName}</h1>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#4d6f45]">{joinLabel}</p>
+                            <h1 className="mt-1 text-3xl font-black leading-tight text-[#172116] sm:text-4xl">{pageTitle}</h1>
                         </div>
                     </div>
 
-                    <p className="mt-6 max-w-2xl text-base font-medium leading-8 text-[#4f5848]">
-                        Connect your IdleForest account to this company forest, then install the desktop app. When your computer is idle, eligible unused bandwidth can help generate impact for the
-                        company forest.
-                    </p>
+                    <p className="mt-6 text-base font-semibold leading-8 text-[#4f5848]">{joinDescription}</p>
 
                     {authLoading || loadingCompany ? (
-                        <div className="mt-8 flex items-center gap-3 rounded-lg bg-[#eef3eb] p-4 text-sm font-bold text-[#4f5848]">
+                        <div className="mt-6 flex items-center gap-3 rounded-lg bg-[#eef3eb] p-4 text-sm font-bold text-[#4f5848]">
                             <Loader2 className="h-4 w-4 animate-spin" />
                             Checking your account...
                         </div>
                     ) : user ? (
-                        <div className="mt-8">
+                        <div className="mt-6">
                             {switchWarning ? (
                                 <div className="rounded-lg border border-[#d6c48f] bg-[#fff8df] p-5">
                                     <h2 className="text-xl font-black text-[#172116]">Switch company forest?</h2>
@@ -167,29 +185,40 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
                             )}
                         </div>
                     ) : (
-                        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
                             <Link
-                                href={loginHref}
+                                href={signupHref}
                                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172116] px-6 py-3 text-sm font-black text-white transition hover:bg-[#4d6f45]"
                             >
-                                Log in to join
+                                {signupLabel}
                                 <ArrowRight className="h-4 w-4" strokeWidth={3} />
                             </Link>
                             <Link
-                                href={signupHref}
+                                href={loginHref}
                                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#172116]/18 bg-[#eef3eb] px-6 py-3 text-sm font-black text-[#172116] transition hover:bg-white"
                             >
-                                Create account
+                                {loginLabel}
                             </Link>
                         </div>
                     )}
 
+                    <div className="mt-6 grid gap-3">
+                        {safetyNotes.map((note) => {
+                            const Icon = note.icon
+
+                            return (
+                                <div key={note.label} className="flex items-start gap-3 rounded-lg bg-[#f7f4ec] p-3">
+                                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[#4d6f45]" strokeWidth={2.8} />
+                                    <p className="text-sm font-bold leading-6 text-[#4f5848]">{note.label}</p>
+                                </div>
+                            )
+                        })}
+                    </div>
+
                     {error ? <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">{error}</div> : null}
 
-                    <div className="mt-8 border-t border-[#e4dccc] pt-5">
-                        <p className="text-sm font-medium leading-6 text-[#606858]">
-                            Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.
-                        </p>
+                    <div className="mt-6 border-t border-[#e4dccc] pt-5">
+                        <p className="text-sm font-medium leading-6 text-[#606858]">{installedNote}</p>
                     </div>
                 </section>
             </div>
