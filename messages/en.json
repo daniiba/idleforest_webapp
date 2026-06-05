@@ -592,6 +592,10 @@
             "tftf-senegal": {
                 "name": "TFTF Projects – Senegal"
             },
+            "tftf-busoga5-buwaiswa": {
+                "name": "Busoga 5 – Buwaiswa, Uganda",
+                "description": "Planting 3,000 trees in Buwaiswa, Uganda with Trees for the Future through 1ClickImpact."
+            },
             "pod-dream-uganda-rwenzori": {
                 "name": "Dream International – Rwenzori Mountains, Uganda"
             },

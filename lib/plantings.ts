@@ -103,6 +103,17 @@ export const plantingsData: PlantingsData = {
     { id: "tftf-kisumu7-awach", name: "Kisumu 7 – Awach, Kenya", partnerId: "tftf", countryCode: "KE", images: ["https://images.1clickimpact.com/projects/trees-kenya-fgp/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-kenya-fgp" },
     { id: "tftf-homa-bay-19", name: "Homa Bay 19 – Ndhiwa, Kenya", partnerId: "tftf", countryCode: "KE", externalRef: "https://1clickimpact.com/climate-projects/trees-kenya-fgp" },
     { id: "tftf-senegal", name: "TFTF Projects – Senegal", partnerId: "tftf", countryCode: "SN", images: ["https://images.1clickimpact.com/projects/trees-senegal-ggw/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-senegal-ggw" },
+    {
+      id: "tftf-busoga5-buwaiswa",
+      name: "Busoga 5 – Buwaiswa, Uganda",
+      partnerId: "tftf",
+      countryCode: "UG",
+      lat: 1.2860601404603067,
+      lng: 33.177104458545706,
+      description: "Planting 3,000 trees in Buwaiswa, Uganda with Trees for the Future through 1ClickImpact.",
+      images: ["https://images.1clickimpact.com/projects/trees-uganda-fgp/thumb.jpg"],
+      externalRef: "https://1clickimpact.com/climate-projects/trees-uganda-fgp",
+    },
     { id: "pod-dream-uganda-rwenzori", name: "Dream International – Rwenzori Mountains, Uganda", partnerId: "pod", countryCode: "UG", images: ["https://images.1clickimpact.com/projects/trees-uganda-fgp/thumb.jpg"], externalRef: "https://1clickimpact.com/climate-projects/trees-uganda-di" },
     { id: "pod-cameroon", name: "POD – Cameroon Agroforestry", partnerId: "pod", countryCode: "CM", externalRef: "https://1clickimpact.com/climate-projects/trees-cameroon" },
     {
@@ -197,6 +208,12 @@ export const plantingsData: PlantingsData = {
       provider: "1ClickImpact / Planting on Demand",
       date: "2025-09-03",
       url: "https://1clickimpact.com/certificate/U156599422-2025-09-03T17:02:48.287Z",
+    },
+    {
+      id: "1ci-2026-05-15-3000",
+      provider: "1ClickImpact / Trees for the Future",
+      date: "2026-05-15",
+      url: "https://1clickimpact.com/certificate/U156599422-2026-05-15T14:42:05.803Z",
     },
   ],
   events: [
@@ -299,6 +316,15 @@ export const plantingsData: PlantingsData = {
       countryCode: "UG",
       receiptId: "1ci-2025-09-03-85",
       species: [{ name: "Food trees", count: 85 }],
+    },
+    {
+      id: "evt-1ci-2026-05-15-busoga5",
+      date: "2026-05-15",
+      trees: 3000,
+      partnerId: "tftf",
+      projectId: "tftf-busoga5-buwaiswa",
+      countryCode: "UG",
+      receiptId: "1ci-2026-05-15-3000",
     },
   ],
 };
