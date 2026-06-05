@@ -60,7 +60,7 @@ export default async function RootLayout({
     const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
-    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree');
+    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree') || normalizedPathname.startsWith('/c/planetwild');
     const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
     const softwareApplicationSchema = {
         "@context": "https://schema.org",

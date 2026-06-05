@@ -28,8 +28,11 @@ import { canonicalUrl, routeAlternates } from '@/lib/i18n-routes'
 import {
     SILVEIRA_COMPANY_SLUG,
     WASTEFREE_COMPANY_SLUG,
+    PLANETWILD_COMPANY_SLUG,
     getCanonicalCompanySlug,
     getCompanySlugLookupCandidates,
+    isPlanetwildCompanyIdentity,
+    isPlanetwildCompanySlug,
     isSilveiraCompanyIdentity,
     isSilveiraCompanySlug,
     isWastefreeCompanyIdentity,
@@ -47,6 +50,11 @@ const poundsPerKg = 2.2046226218
 const wastefreePlanetMetaTitle = 'Remove Plastic for Free | Waste Free Planet x IdleForest'
 const wastefreePlanetMetaDescription =
     'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the Chrome extension or Mac/Windows app; Plastic Bank handles cleanup through 1ClickImpact.'
+const planetwildMetaTitle = 'Fund Rewilding for Free | Planet Wild x IdleForest'
+const planetwildMetaDescription =
+    'Join Planet Wild on IdleForest and turn unused bandwidth into passive funding for rewilding missions. Watch Planet Wild mission videos and install IdleForest for free.'
+const planetwildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/videoseries?list=UU6QFT2c2MJxID-vxHDeX9XQ&rel=0'
+const planetwildMissionsUrl = 'https://planetwild.com/missions'
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -76,6 +84,11 @@ const wastefreeImages = {
     plasticBankCairoBashay: '/partner/wastefree/plastic-bank-cairo-bashay.jpg',
     plasticBankEgyptMabrooka: '/partner/wastefree/plastic-bank-egypt-mabrooka.webp',
     plasticBankRioVanessaMarcio: '/partner/wastefree/plastic-bank-rio-vanessa-marcio.webp',
+}
+
+const planetwildImages = {
+    logo: '/partner/planetwild/pw-logo-black.png',
+    partnerLabel: '/partner/planetwild/rewilding-partner-light.png',
 }
 
 function formatNumber(value: number, locale?: string) {
@@ -181,6 +194,379 @@ function getWastefreePlanetFallbackCompany() {
         payout_recipient_url: 'https://www.wastefreeplanet.org/',
         payout_notes: "Donate generated cleanup funds through 1ClickImpact clean-ocean projects with Plastic Bank for the Waste Free Planet community.",
     }
+}
+
+function getPlanetwildFallbackCompany() {
+    return {
+        id: emptyCompanyId,
+        name: 'Planet Wild',
+        slug: PLANETWILD_COMPANY_SLUG,
+        website: 'https://planetwild.com/',
+        description:
+            'Planet Wild is a Berlin-based nature protection organisation funding monthly rewilding missions for endangered animals, oceans, forests, and wild landscapes.',
+        theme_color: '#E0F146',
+        logo_url: planetwildImages.logo,
+        video_url: null,
+        is_invite_only: false,
+        invite_code: null,
+        user_id: null,
+        impact_mode: 'partner_payout',
+        payout_recipient_name: 'Planet Wild',
+        payout_recipient_url: 'https://planetwild.com/',
+        payout_notes: 'Send generated company forest funds to Planet Wild for documented rewilding missions.',
+    }
+}
+
+function PlanetwildPartnerPage({
+    company,
+    params,
+    invite,
+    isMember,
+    isValidInvite,
+    isOwner,
+    memberCount,
+    totalPoints,
+    companyWebsite,
+}: {
+    company: any
+    params: { slug: string; locale: string }
+    invite?: string
+    isMember: boolean
+    isValidInvite: boolean
+    isOwner: boolean
+    memberCount: number
+    totalPoints: number
+    companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
+}) {
+    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const recentMissions = [
+        {
+            number: '39',
+            date: 'May 15, 2026',
+            title: 'Lasting forest',
+            detail: 'Native trees and monitoring in Kenya.',
+            href: 'https://planetwild.com/missions/39-building-a-lasting-forest',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/6a04e07f85533ea7c3e1d344_card_image.webp',
+        },
+        {
+            number: '38',
+            date: 'April 15, 2026',
+            title: 'Cloud forest',
+            detail: 'Protecting cloud forest habitat in Colombia.',
+            href: 'https://planetwild.com/missions/38-cloud-forests-of-colombia',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/69df7bd9815297fa0577a70e_card_image.webp',
+        },
+        {
+            number: '37',
+            date: 'March 15, 2026',
+            title: 'Wildlife corridor',
+            detail: 'Connecting Cerrado habitat in South America.',
+            href: 'https://planetwild.com/missions/37-building-longest-biodiversity-corridor',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/69df9cf82c211992256234ef_card_image-m37.webp',
+        },
+        {
+            number: '36',
+            date: 'February 15, 2026',
+            title: 'American wild',
+            detail: 'Reconnecting habitat across North America.',
+            href: 'https://planetwild.com/missions/36-reconnecting-the-american-wild',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/69df9d2d6c0884327f8c74b5_card_image-m36.webp',
+        },
+        {
+            number: '35',
+            date: 'January 15, 2026',
+            title: 'Biodiversity farm',
+            detail: 'Turning farmland into a wilder landscape.',
+            href: 'https://planetwild.com/missions/35-farmland-transformation',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/69df9d680775fd2545109ec1_card_image-m35.webp',
+        },
+        {
+            number: '30',
+            date: 'August 15, 2025',
+            title: 'Baby seals',
+            detail: 'Rescue work for lost baby seals.',
+            href: 'https://planetwild.com/missions/30-rescuing-baby-seals',
+            image: 'https://cdn.prod.website-files.com/665f17d0fb4bfc1e811460d3/6894edd66dbd47df5c1b15fa_card_image.webp',
+        },
+    ]
+    const howItWorks = [
+        {
+            title: 'Join Planet Wild',
+            body: 'Connect your IdleForest account to this public company forest.',
+            icon: Users,
+        },
+        {
+            title: 'Install IdleForest',
+            body: 'Add the free desktop app or browser extension once.',
+            icon: Leaf,
+        },
+        {
+            title: 'Let idle bandwidth work',
+            body: 'Eligible background activity becomes points for this company forest.',
+            icon: ZapOff,
+        },
+        {
+            title: 'Fund rewilding',
+            body: 'Generated funds are reserved for Planet Wild rewilding support.',
+            icon: TreePine,
+        },
+    ]
+    return (
+        <div className="min-h-screen overflow-x-clip bg-brand-gray font-rethink-sans text-black selection:bg-brand-yellow selection:text-black">
+            {isValidInvite && invite && (
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `document.cookie = "company_invite=${invite}; path=/; max-age=604800; samesite=lax";`,
+                    }}
+                />
+            )}
+
+            <header className="sticky top-0 z-40 border-b-2 border-black bg-brand-gray/92 px-4 py-3 backdrop-blur sm:px-7">
+                <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-3">
+                    <a href="#top" className="inline-flex min-w-0 items-center gap-3" aria-label="IdleForest and Planet Wild">
+                        <span className="relative h-7 w-[102px] shrink-0 sm:w-[132px]" aria-label="IdleForest">
+                            <Image src="/logo.png" alt="" fill sizes="132px" className="object-contain" />
+                        </span>
+                        <span className="font-rethink-sans text-lg font-black leading-none text-black" aria-hidden="true">x</span>
+                        <span className="relative h-10 w-10 shrink-0" aria-label="Planet Wild">
+                            <Image src={planetwildImages.logo} alt="" fill sizes="40px" className="object-contain" />
+                        </span>
+                    </a>
+                    <nav className="hidden items-center gap-6 text-xs font-black uppercase text-black/62 md:flex">
+                        <a href="#missions" className="hover:text-black">Missions</a>
+                        <a href="#how" className="hover:text-black">How it works</a>
+                        <a href="#join" className="hover:text-black">Join</a>
+                    </nav>
+                    {isMember ? (
+                        <Link href={joinHref} className="inline-flex min-h-10 items-center rounded-full bg-brand-navy px-4 py-2 text-xs font-black uppercase text-brand-yellow transition-colors hover:bg-black">
+                            Portal
+                        </Link>
+                    ) : isValidInvite ? (
+                        <Link href={joinHref} className="inline-flex min-h-10 items-center rounded-full bg-brand-yellow px-4 py-2 text-xs font-black uppercase text-black ring-2 ring-black transition-colors hover:bg-white">
+                            Join
+                        </Link>
+                    ) : null}
+                </div>
+            </header>
+
+            <main id="top">
+                <section className="relative overflow-hidden px-4 py-12 sm:px-7 sm:py-16 lg:min-h-[calc(100vh-74px)] lg:py-20">
+                    <Image
+                        src="/Vector (Stroke).svg"
+                        alt=""
+                        fill
+                        priority
+                        sizes="150vw"
+                        className="pointer-events-none absolute inset-0 object-cover opacity-45"
+                    />
+                    <div className="relative mx-auto grid max-w-[1540px] gap-10 lg:grid-cols-[0.98fr_1.02fr] lg:items-center">
+                        <div className="min-w-0">
+                            <div className="relative w-full max-w-[19rem] sm:max-w-[24rem]" aria-label="Planet Wild rewilding partner">
+                                <Image
+                                    src={planetwildImages.partnerLabel}
+                                    alt="Planet Wild rewilding partner"
+                                    width={1116}
+                                    height={444}
+                                    priority
+                                    sizes="(min-width: 640px) 24rem, 19rem"
+                                    className="h-auto w-full"
+                                />
+                            </div>
+                            <h1 className="mt-8 max-w-[11ch] [overflow-wrap:anywhere] font-candu text-[3rem] font-black uppercase leading-[0.9] tracking-normal text-black sm:text-[4rem] lg:text-[4.7rem] xl:text-[5.15rem]">
+                                Fund Planet Wild for free.
+                            </h1>
+                            <span className="mt-3 block h-3 w-full max-w-[28rem] bg-brand-yellow" aria-hidden="true" />
+                            <p className="mt-7 max-w-xl text-lg font-semibold leading-8 text-neutral-700">
+                                Join the Planet Wild forest, install IdleForest, and your unused bandwidth becomes passive funding for rewilding missions.
+                            </p>
+                            <p className="mt-4 max-w-xl text-base font-black uppercase leading-6 text-black">
+                                Free to join. No donation. No new habit.
+                            </p>
+                            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                                {isMember ? (
+                                    <Link
+                                        href={joinHref}
+                                        className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border-2 border-black bg-brand-yellow px-6 py-4 text-sm font-black uppercase text-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                                    >
+                                        Open portal <ArrowRight className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : isValidInvite ? (
+                                    <Link
+                                        href={joinHref}
+                                        className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border-2 border-black bg-brand-yellow px-6 py-4 text-sm font-black uppercase text-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                                    >
+                                        Install free <ArrowRight className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : null}
+                                <a
+                                    href="#missions"
+                                    className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full px-3 py-4 text-sm font-black uppercase text-black underline decoration-2 underline-offset-8 transition hover:text-brand-navy"
+                                >
+                                    Watch missions <Play className="h-4 w-4" strokeWidth={3} />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="relative min-w-0">
+                            <div className="absolute -top-5 left-4 z-10 rotate-[-2deg] rounded-full border-2 border-black bg-brand-yellow px-4 py-2 text-[0.68rem] font-black uppercase text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:left-8 sm:text-xs">
+                                Latest missions you help fund
+                            </div>
+                            <div className="overflow-hidden rounded-[2rem] border-[5px] border-black bg-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] sm:rounded-[3.5rem] lg:rounded-[999px]">
+                                <div className="aspect-video w-full">
+                                    <iframe
+                                        className="h-full w-full"
+                                        src={planetwildMissionVideoEmbedUrl}
+                                        title="Planet Wild mission videos"
+                                        loading="lazy"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerPolicy="strict-origin-when-cross-origin"
+                                        allowFullScreen
+                                    />
+                                </div>
+                            </div>
+                            <div className="ml-auto mt-4 w-fit rotate-[1deg] rounded-full bg-brand-navy px-5 py-3 text-xs font-black uppercase text-brand-yellow shadow-[5px_5px_0px_0px_rgba(224,241,70,1)]">
+                                filmed by Planet Wild
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="missions" className="bg-white px-4 py-16 text-black sm:px-7 sm:py-20">
+                    <div className="mx-auto max-w-[1540px]">
+                        <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+                            <div>
+                                <p className="text-xs font-black uppercase text-neutral-500">Planet Wild missions</p>
+                                <h2 className="mt-3 max-w-[12ch] font-candu text-[3rem] font-black uppercase leading-[0.92] tracking-normal sm:text-[3.6rem] lg:text-[4rem]">
+                                    See what your idle time supports.
+                                </h2>
+                            </div>
+                            <p className="max-w-2xl text-lg font-semibold leading-8 text-neutral-700">
+                                Planet Wild documents each mission with reports and videos. IdleForest adds a quiet funding layer in the background.
+                            </p>
+                        </div>
+
+                        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                            {recentMissions.map((mission) => (
+                                <a
+                                    key={mission.number}
+                                    href={mission.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="group relative flex min-h-[21rem] min-w-0 overflow-hidden border-2 border-black bg-brand-navy text-white shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                                >
+                                    <Image
+                                        src={mission.image}
+                                        alt=""
+                                        fill
+                                        sizes="(min-width: 1280px) 31vw, (min-width: 768px) 47vw, 100vw"
+                                        className="object-cover transition duration-300 group-hover:scale-[1.04]"
+                                    />
+                                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,16,31,0.08)_0%,rgba(11,16,31,0.36)_38%,rgba(11,16,31,0.94)_100%)]" />
+                                    <div className="relative z-10 flex w-full flex-col justify-between p-5">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="rounded-full border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase text-black">
+                                                Mission {mission.number}
+                                            </div>
+                                            <ArrowUpRight className="h-6 w-6 shrink-0 text-brand-yellow" strokeWidth={3} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-black uppercase text-white/70">{mission.date}</p>
+                                            <h3 className="mt-2 font-rethink-sans text-3xl font-black leading-none text-white">{mission.title}</h3>
+                                            <p className="mt-3 max-w-sm text-sm font-semibold leading-6 text-white/78">{mission.detail}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="how" className="bg-brand-yellow px-4 py-16 text-black sm:px-7 sm:py-20">
+                    <div className="mx-auto grid max-w-[1540px] gap-8 lg:grid-cols-[0.82fr_1.18fr]">
+                        <div>
+                            <p className="text-xs font-black uppercase text-black/60">How this works</p>
+                            <h2 className="mt-3 max-w-[10ch] font-candu text-[3rem] font-black uppercase leading-[0.92] tracking-normal sm:text-[3.6rem] lg:text-[4rem]">
+                                No donation. No new habit.
+                            </h2>
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {howItWorks.map((item, index) => {
+                                const Icon = item.icon
+
+                                return (
+                                    <article key={item.title} className="min-w-0 border-2 border-black bg-white p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                                        <div className="flex items-center justify-between gap-4">
+                                            <Icon className="h-7 w-7 text-brand-navy" strokeWidth={2.8} />
+                                            <span className="font-candu text-4xl font-black leading-none tracking-normal">{index + 1}</span>
+                                        </div>
+                                        <h3 className="mt-6 text-2xl font-black leading-tight">{item.title}</h3>
+                                        <p className="mt-3 text-sm font-semibold leading-6 text-neutral-700">{item.body}</p>
+                                    </article>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </section>
+
+                <section id="join" className="bg-brand-gray px-4 py-16 text-black sm:px-7 sm:py-20">
+                    <div className="mx-auto grid max-w-[1540px] gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                        <div className="min-w-0">
+                            <p className="text-xs font-black uppercase text-neutral-500">IdleForest x Planet Wild</p>
+                            <h2 className="mt-3 max-w-[13ch] font-candu text-[3rem] font-black uppercase leading-[0.92] tracking-normal sm:text-[3.6rem] lg:text-[4rem]">
+                                Add free rewilding to your computer.
+                            </h2>
+                        </div>
+                        <div className="border-2 border-black bg-white p-6 shadow-[9px_9px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="grid gap-3">
+                                {[
+                                    'No payment method',
+                                    'No browsing history',
+                                    'Pause or uninstall anytime',
+                                ].map((item) => (
+                                    <div key={item} className="flex items-center gap-3 bg-brand-gray p-3">
+                                        <ShieldCheck className="h-5 w-5 shrink-0 text-brand-navy" strokeWidth={2.8} />
+                                        <span className="text-sm font-black">{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                                {isMember ? (
+                                    <Link href={joinHref} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-navy px-6 py-3 text-sm font-black uppercase text-brand-yellow transition hover:bg-black">
+                                        Open portal <ArrowRight className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : isValidInvite ? (
+                                    <Link href={joinHref} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-yellow px-6 py-3 text-sm font-black uppercase text-black ring-2 ring-black transition hover:bg-white">
+                                        Join Planet Wild <ArrowRight className="h-4 w-4" strokeWidth={3} />
+                                    </Link>
+                                ) : null}
+                                {companyWebsite ? (
+                                    <a
+                                        href={companyWebsite.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-brand-yellow"
+                                    >
+                                        Planet Wild <ExternalLink className="h-4 w-4" strokeWidth={3} />
+                                    </a>
+                                ) : null}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer className="border-t-2 border-black bg-black px-4 py-6 text-brand-yellow sm:px-7">
+                <div className="mx-auto flex max-w-[1540px] flex-col gap-2 text-xs font-black uppercase sm:flex-row sm:items-center sm:justify-between">
+                    <p>© 2026 IdleForest x Planet Wild</p>
+                    <a href={planetwildMissionsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white">
+                        View all Planet Wild missions <ArrowUpRight className="h-4 w-4" strokeWidth={3} />
+                    </a>
+                </div>
+            </footer>
+
+            {isOwner && <CompanySettingsPanel company={company} memberCount={memberCount} totalPoints={totalPoints} />}
+        </div>
+    )
 }
 
 function PhoneRepairEyebrow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -1152,6 +1538,46 @@ function SilveiraPartnerPage({
 }
 
 export function generateMetadata({ params }: { params: { slug: string; locale: string } }): Metadata {
+    if (isPlanetwildCompanySlug(params.slug)) {
+        const path = `/c/${PLANETWILD_COMPANY_SLUG}`
+        const url = canonicalUrl(path, params.locale)
+
+        return {
+            title: planetwildMetaTitle,
+            description: planetwildMetaDescription,
+            keywords: [
+                'Planet Wild',
+                'Planet Wild missions',
+                'rewilding missions',
+                'fund rewilding for free',
+                'IdleForest',
+                'passive environmental impact',
+            ],
+            alternates: routeAlternates(path, params.locale),
+            openGraph: {
+                title: planetwildMetaTitle,
+                description: planetwildMetaDescription,
+                url,
+                siteName: 'IdleForest',
+                type: 'website',
+                images: [
+                    {
+                        url: '/preview.png',
+                        width: 1280,
+                        height: 800,
+                        alt: 'IdleForest and Planet Wild rewilding partner page.',
+                    },
+                ],
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: planetwildMetaTitle,
+                description: planetwildMetaDescription,
+                images: ['/preview.png'],
+            },
+        }
+    }
+
     if (!isWastefreeCompanySlug(params.slug)) return {}
 
     const path = `/c/${WASTEFREE_COMPANY_SLUG}`
@@ -1207,9 +1633,15 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
 
     const company =
         companyRecord ??
-        (isSilveiraCompanySlug(params.slug) ? getSilveiraTechFallbackCompany() : isWastefreeCompanySlug(params.slug) ? getWastefreePlanetFallbackCompany() : null)
+        (isSilveiraCompanySlug(params.slug)
+            ? getSilveiraTechFallbackCompany()
+            : isWastefreeCompanySlug(params.slug)
+              ? getWastefreePlanetFallbackCompany()
+              : isPlanetwildCompanySlug(params.slug)
+                ? getPlanetwildFallbackCompany()
+                : null)
 
-    if ((error && !isSilveiraCompanySlug(params.slug) && !isWastefreeCompanySlug(params.slug)) || !company) {
+    if ((error && !isSilveiraCompanySlug(params.slug) && !isWastefreeCompanySlug(params.slug) && !isPlanetwildCompanySlug(params.slug)) || !company) {
         return notFound()
     }
 
@@ -1304,7 +1736,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     const usePhoneRepairPage = isPhoneRepairCompany(company, companyWebsite)
     const useSilveiraTechPage = isSilveiraCompanyIdentity(company, companyWebsite?.hostname)
     const useWastefreePlanetPage = isWastefreeCompanyIdentity(company, companyWebsite?.hostname)
-    const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
+    const usePlanetwildPage = isPlanetwildCompanyIdentity(company, companyWebsite?.hostname)
+    const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || usePlanetwildPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
 
     if (usePhoneRepairPage) {
         const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`
@@ -1542,6 +1975,22 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     if (useWastefreePlanetPage) {
         return (
             <WastefreePlanetPage
+                company={company}
+                params={params}
+                invite={invite}
+                isMember={isMember}
+                isValidInvite={Boolean(isValidInvite)}
+                isOwner={isOwner}
+                memberCount={memberCount}
+                totalPoints={totalPoints}
+                companyWebsite={companyWebsite}
+            />
+        )
+    }
+
+    if (usePlanetwildPage) {
+        return (
+            <PlanetwildPartnerPage
                 company={company}
                 params={params}
                 invite={invite}
