@@ -47,6 +47,14 @@
                 "focus": "Agroforstwirtschaft und langfristige Renaturierung",
                 "visual_title": "Kisumu"
             },
+            "busoga": {
+                "title": "Busoga 5 - Buwaiswa",
+                "description": "Unser neuestes 1ClickImpact-Zertifikat finanziert 3.000 Bäume mit Trees for the Future in Buwaiswa, Uganda.",
+                "partner": "Trees for the Future",
+                "location": "Buwaiswa, Uganda",
+                "focus": "Waldgärten und farmergeführte Wiederherstellung",
+                "visual_title": "Busoga"
+            },
             "mkussu": {
                 "title": "Wiederbepflanzung des verbrannten Mkussu-Waldes",
                 "description": "Ein Wiederherstellungsprojekt zur Rückkehr nativer Waldflächen in Lushoto nach Brandschäden.",

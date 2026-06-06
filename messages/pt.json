@@ -47,6 +47,14 @@
                 "focus": "Agrofloresta e restauração do solo a longo prazo",
                 "visual_title": "Kisumu"
             },
+            "busoga": {
+                "title": "Busoga 5 - Buwaiswa",
+                "description": "Nosso certificado 1ClickImpact mais recente financia 3.000 árvores com a Trees for the Future em Buwaiswa, Uganda.",
+                "partner": "Trees for the Future",
+                "location": "Buwaiswa, Uganda",
+                "focus": "Florestas alimentares e restauração liderada por agricultores",
+                "visual_title": "Busoga"
+            },
             "mkussu": {
                 "title": "Replantio da Floresta Mkussu queimada",
                 "description": "Um projeto de restauração focado em recuperar a cobertura florestal nativa em Lushoto após danos causados por incêndios.",

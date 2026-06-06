@@ -47,6 +47,14 @@
                 "focus": "Agroforesterie et restauration durable des terres",
                 "visual_title": "Kisumu"
             },
+            "busoga": {
+                "title": "Busoga 5 - Buwaiswa",
+                "description": "Notre dernier certificat 1ClickImpact finance 3 000 arbres avec Trees for the Future à Buwaiswa, en Ouganda.",
+                "partner": "Trees for the Future",
+                "location": "Buwaiswa, Ouganda",
+                "focus": "Forêts nourricières et restauration menée par les agriculteurs",
+                "visual_title": "Busoga"
+            },
             "mkussu": {
                 "title": "Replantation de la forêt brûlée de Mkussu",
                 "description": "Un projet de restauration visant à rétablir le couvert forestier natif de Lushoto après les dégâts causés par les incendies.",

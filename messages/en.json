@@ -47,6 +47,14 @@
                 "focus": "Agroforestry and long-term land restoration",
                 "visual_title": "Kisumu"
             },
+            "busoga": {
+                "title": "Busoga 5 - Buwaiswa",
+                "description": "Our latest 1ClickImpact certificate funds 3,000 trees with Trees for the Future in Buwaiswa, Uganda.",
+                "partner": "Trees for the Future",
+                "location": "Buwaiswa, Uganda",
+                "focus": "Food forests and farmer-led restoration",
+                "visual_title": "Busoga"
+            },
             "mkussu": {
                 "title": "Replanting the burnt Mkussu Forest",
                 "description": "Tree-Nation supports native forest recovery in Tanzania, prioritizing local species and long-term ecological value over monoculture planting.",

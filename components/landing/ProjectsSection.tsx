@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { groupByProject, plantingsData } from "@/lib/plantings";
 
 type ProjectCard = {
-    key: "kisumu" | "mkussu" | "poverty";
+    key: "kisumu" | "busoga" | "mkussu" | "poverty";
     projectId: string;
     imageSrc: string | null;
 };
@@ -17,6 +17,11 @@ const projects: ProjectCard[] = [
         key: "kisumu",
         projectId: "tftf-kisumu7-awach",
         imageSrc: "https://images.1clickimpact.com/projects/trees-kenya-fgp/thumb.jpg",
+    },
+    {
+        key: "busoga",
+        projectId: "tftf-busoga5-buwaiswa",
+        imageSrc: "https://images.1clickimpact.com/projects/trees-uganda-fgp/thumb.jpg",
     },
     {
         key: "mkussu",
@@ -79,7 +84,7 @@ export default function ProjectsSection() {
                     </p>
                 </div>
 
-                <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
+                <div className="mt-12 grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-4">
                     {projects.map((project) => {
                         const projectMeta = plantingsData.projects.find(
                             (item) => item.id === project.projectId

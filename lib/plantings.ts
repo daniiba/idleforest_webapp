@@ -214,6 +214,8 @@ export const plantingsData: PlantingsData = {
       provider: "1ClickImpact / Trees for the Future",
       date: "2026-05-15",
       url: "https://1clickimpact.com/certificate/U156599422-2026-05-15T14:42:05.803Z",
+      amount: 1500,
+      currency: "USD",
     },
   ],
   events: [
