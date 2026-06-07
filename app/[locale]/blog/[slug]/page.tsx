@@ -197,6 +197,24 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
           )}
 
+          {params.slug === "planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025" && (
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="font-rethink-sans text-2xl font-extrabold">
+                Comparing free tree-planting tools too?
+              </h2>
+              <p className="mt-3 text-neutral-800">
+                Planet Wild and Mossy Earth are paid conservation memberships. IdleForest also keeps a shallow hub for
+                free search, shopping, focus, and passive browser tools.
+              </p>
+              <Link
+                href="/compare"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
+              >
+                compare tree-planting and eco-impact tools <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
           {params.slug === "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" && (
             <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
