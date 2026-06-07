@@ -1,5 +1,4 @@
 "use client"
-import BrowserButtons from "@/components/browser-buttons";
 import { ExpensesChart } from "@/components/ecosia/ExpensesChart";
 import { HistoricalChart } from "@/components/ecosia/HistoricalChart";
 import { KeyMetrics } from "@/components/ecosia/KeyMetrics";
@@ -42,18 +41,6 @@ export default function EcosiaClient({
 }: EcosiaClientProps) {
   return (
     <>
-      <div className="max-w-[800px] mx-auto bg-brand-navy backdrop-blur-sm border-2 rounded-lg border-brand-yellow py-8 mb-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col  items-center justify-center gap-6 text-center">
-            <div>
-              <h2 className="text-2xl  text-white mb-2 font-rethink-sans">Want to help plant even more trees?</h2>
-              <p className="text-gray-300">Join our initiative to turn unused bandwidth into trees - a perfect complement to your Ecosia searches.</p>
-            </div>
-            <BrowserButtons />
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 space-y-12">
         <KeyMetrics
           totalIncome={totalIncome}
@@ -119,37 +106,6 @@ export default function EcosiaClient({
           </div>
         </section>
 
-        <section className="container mx-auto px-4 mt-16 mb-12">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg p-8 shadow-lg">
-            <h2 className="text-3xl font-bold text-black mb-6">Frequently Asked Questions About Ecosia's Financial Data</h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold text-black mb-2">Where does Ecosia's financial data come from?</h3>
-                <p className="text-gray-600">
-                  All financial data presented here is sourced from Ecosia's official financial reports and transparency statements. Ecosia publishes detailed monthly and annual financial reports showing their income, expenses, and tree planting investments.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-black mb-2">How far back does Ecosia's historical data go?</h3>
-                <p className="text-gray-600">
-                  Our analysis includes Ecosia's historical financial data and tree planting records spanning multiple years, allowing you to track their growth and environmental impact over time.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-black mb-2">What financial metrics does Ecosia report?</h3>
-                <p className="text-gray-600">
-                  Ecosia's financial reports include total revenue, operational costs, marketing expenses, taxes, green investments, tree fund allocations, and the number of trees financed. This comprehensive financial transparency sets Ecosia apart from traditional search engines.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-black mb-2">How can I verify Ecosia's financial data?</h3>
-                <p className="text-gray-600">
-                  Ecosia publishes their official financial reports on their website. You can cross-reference the data presented here with their official statements to verify accuracy.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
     </>
   );

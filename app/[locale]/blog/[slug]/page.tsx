@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { Button } from "@/components/ui/button"
-import { TreePine, Calendar, Clock, MessageCircle, Heart, ArrowLeft } from "lucide-react"
+import { ArrowRight, TreePine, Calendar, Clock, MessageCircle, Heart, ArrowLeft } from "lucide-react"
 import Link from 'next/link'
 import { Badge } from "@/components/ui/badge"
 import { BlogPostCard } from '@/components/blog-post-card'
@@ -142,6 +142,78 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             prose-img:rounded-lg prose-img:shadow-lg">
             <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
           </div>
+
+          {params.slug === "does-ecosia-actually-plant-trees" && (
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="font-rethink-sans text-2xl font-extrabold">
+                Checking IdleForest's own planting records?
+              </h2>
+              <p className="mt-3 text-neutral-800">
+                This article focuses on Ecosia's public reporting. If you want the equivalent proof for IdleForest,
+                follow the funding chain from idle bandwidth to partner project receipts.
+              </p>
+              <Link
+                href="/transparency"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
+              >
+                how IdleForest's own planting is verified <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
+          {params.slug === "best-chrome-extensions-for-climate-change-and-environmental-impact-2025-guide" && (
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="font-rethink-sans text-2xl font-extrabold">
+                Want a passive extension that plants verified trees?
+              </h2>
+              <p className="mt-3 text-neutral-800">
+                IdleForest has a dedicated install-intent guide for people who want tree planting without switching
+                search engines, buying through partner shops, or running a focus timer.
+              </p>
+              <Link
+                href="/tree-planting-extension"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
+              >
+                free tree-planting Chrome extension <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
+          {params.slug === "ecosias-ai-user-backlash-and-environmental-impact" && (
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="font-rethink-sans text-2xl font-extrabold">
+                Already using Ecosia, but want more verified planting?
+              </h2>
+              <p className="mt-3 text-neutral-800">
+                You can keep Ecosia for search-funded impact and add IdleForest as a separate passive layer
+                with public planting records, receipts, and no search-engine switch.
+              </p>
+              <Link
+                href="/ecosia"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
+              >
+                use IdleForest with Ecosia for verified planting <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
+          {params.slug === "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" && (
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="font-rethink-sans text-2xl font-extrabold">
+                Want the option that does not require a search switch?
+              </h2>
+              <p className="mt-3 text-neutral-800">
+                The list above covers several sustainable search products. IdleForest has a dedicated alternatives
+                guide for people who want verified tree planting without replacing Ecosia, Google, Brave, or DuckDuckGo.
+              </p>
+              <Link
+                href="/ecosia-alternatives"
+                className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
+              >
+                the no-switch Ecosia alternative <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
         </article>
 
         <div className="max-w-4xl mx-auto w-full bg-brand-navy backdrop-blur-sm border-2 rounded-lg border-brand-yellow py-8 my-12">
