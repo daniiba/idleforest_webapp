@@ -2768,7 +2768,7 @@ export async function getCompaniesAdmin(): Promise<CompanyAdmin[]> {
     return companies.map((company, index) => {
         const stats = companyStats[index]
         const generatedPoints = stats.generatedPoints
-        const payoutRate = company.payout_rate_cents_per_1000_points ?? 55
+        const payoutRate = company.payout_rate_cents_per_1000_points ?? 27
 
         return {
             ...company,
@@ -2834,7 +2834,7 @@ export async function createCompanyAdmin(input: {
             payout_recipient_name: input.payout_recipient_name || null,
             payout_recipient_url: input.payout_recipient_url || null,
             payout_notes: input.payout_notes || null,
-            payout_rate_cents_per_1000_points: input.payout_rate_cents_per_1000_points ?? 55
+            payout_rate_cents_per_1000_points: input.payout_rate_cents_per_1000_points ?? 27
         })
         .select()
         .single()

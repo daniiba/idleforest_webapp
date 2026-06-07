@@ -117,7 +117,7 @@ function formatRoundedNumber(value: number, locale?: string, maximumFractionDigi
 }
 
 function getEstimatedCompanyFundingCents(company: any, totalPoints: number) {
-    const payoutRate = company?.payout_rate_cents_per_1000_points ?? 55
+    const payoutRate = company?.payout_rate_cents_per_1000_points ?? 27
 
     return Math.floor((Math.max(0, totalPoints) / 1000) * payoutRate)
 }

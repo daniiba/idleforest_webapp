@@ -26,7 +26,7 @@ VALUES (
   'Planet Wild',
   'https://planetwild.com/',
   'Send generated company forest funds to Planet Wild for documented rewilding missions.',
-  55
+  27
 )
 ON CONFLICT (slug) DO UPDATE
 SET

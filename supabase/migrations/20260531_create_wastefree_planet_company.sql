@@ -26,7 +26,7 @@ VALUES (
   'Waste Free Planet',
   'https://www.wastefreeplanet.org/',
   'Donate generated company forest funds through 1ClickImpact clean-ocean projects with Plastic Bank in Waste Free Planet''s name.',
-  55
+  27
 )
 ON CONFLICT (slug) DO UPDATE
 SET

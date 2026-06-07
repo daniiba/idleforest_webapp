@@ -28,7 +28,7 @@ VALUES (
   'Mossy Earth',
   'https://www.mossy.earth/',
   'Send generated company forest funds to Mossy Earth for conservation and rewilding projects.',
-  55
+  27
 )
 ON CONFLICT (slug) DO UPDATE
 SET

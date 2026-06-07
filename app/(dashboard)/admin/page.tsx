@@ -283,7 +283,7 @@ export default function AdminPage() {
         payout_recipient_name: '',
         payout_recipient_url: '',
         payout_notes: '',
-        payout_rate_cents_per_1000_points: 55,
+        payout_rate_cents_per_1000_points: 27,
     })
     const [isSavingCompany, setIsSavingCompany] = useState(false)
     const [previewCompany, setPreviewCompany] = useState<CompanyAdmin | null>(null)
@@ -516,7 +516,7 @@ export default function AdminPage() {
             payout_recipient_name: company.payout_recipient_name || '',
             payout_recipient_url: company.payout_recipient_url || '',
             payout_notes: company.payout_notes || '',
-            payout_rate_cents_per_1000_points: company.payout_rate_cents_per_1000_points ?? 55,
+            payout_rate_cents_per_1000_points: company.payout_rate_cents_per_1000_points ?? 27,
         })
         setIsCompanyModalOpen(true)
     }
@@ -538,7 +538,7 @@ export default function AdminPage() {
             payout_recipient_name: '',
             payout_recipient_url: '',
             payout_notes: '',
-            payout_rate_cents_per_1000_points: 55,
+            payout_rate_cents_per_1000_points: 27,
         })
         setIsCompanyModalOpen(true)
     }
@@ -3883,7 +3883,7 @@ export default function AdminPage() {
                                                 onChange={e => setNewCompany({ ...newCompany, payout_rate_cents_per_1000_points: Number(e.target.value) || 0 })}
                                                 className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
                                             />
-                                            <p className="text-xs text-neutral-500">Default 55 cents matches 1 estimated tree per 1,000 points.</p>
+                                            <p className="text-xs text-neutral-500">Default 27 cents is rounded down from the observed request payout rate.</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
