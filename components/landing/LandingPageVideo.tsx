@@ -740,7 +740,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            The revenue per user is small, often just a few cents per month for an average user. The model works at scale, not because any one person contributes a large amount. With 1,000 active users, the total reaches a level where we can fund verified trees every month.
+                                            Active desktop users usually generate around $2-$5 per month, depending on location, how often the app is running, and how much spare capacity is available. One person&apos;s contribution is modest, but across a community it becomes steady funding for verified trees.
                                         </p>
                                         <p>
                                             The more users join, the more idle bandwidth becomes available, and the more trees can be funded.
@@ -886,7 +886,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "How much money does IdleForest make from my bandwidth?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "The revenue per user is small, often just a few cents per month for an average user. That's why the model works at scale, not per individual. With 1,000 active users, the total reaches a level where we can fund verified trees every month."
+                                    "text": "Active desktop users usually generate around $2-$5 per month, depending on location, how often the app is running, and how much spare capacity is available. One person's contribution is modest, but across a community it becomes steady funding for verified trees."
                                 }
                             },
                             {

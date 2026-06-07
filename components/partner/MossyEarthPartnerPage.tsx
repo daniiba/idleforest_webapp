@@ -79,7 +79,7 @@ export default function MossyEarthPartnerPage({
         {
             number: '3.',
             title: 'Share idle bandwidth',
-            body: 'When your computer is idle, the app can use unused internet bandwidth to generate funding. It backs off when your connection or device needs priority.',
+            body: 'When your computer and connection are idle, the app can use a small share of spare bandwidth to generate funding. It backs off when your connection or device needs priority.',
         },
     ]
 
@@ -125,8 +125,8 @@ export default function MossyEarthPartnerPage({
                             Support Mossy Earth <span>for free.</span>
                         </h1>
                         <p>
-                            Install IdleForest and your unused bandwidth quietly generates real funding for Mossy Earth&apos;s rewilding projects. You pay nothing, because you&apos;re not using it
-                            anyway.
+                            Install IdleForest and let spare internet capacity generate real funding for Mossy Earth&apos;s rewilding projects. It only runs when your connection has room, so your
+                            browsing, calls, streaming, and downloads stay first.
                         </p>
                         <div className="mossy-earth-actions">
                             {isValidInvite || isMember ? (
@@ -167,7 +167,14 @@ export default function MossyEarthPartnerPage({
                                 Mossy Earth is a team of biologists running conservation projects in Scotland, Portugal, Ecuador, and Indonesia. They reintroduce lost species, restore degraded
                                 habitats, and work on ecosystems that most conservation funding ignores. They are bootstrapped, take no outside investment, and publish every expense publicly.
                             </p>
-                            <p>Their work is funded by members. This page creates a new way to fund it without spending anything.</p>
+                            <p>
+                                Their core funding comes from members. If you can, becoming a Mossy Earth member is the strongest way to back the work; this page is an extra no-cost way to add funding
+                                in the background.
+                            </p>
+                            <a href={website.url} target="_blank" rel="noreferrer">
+                                Become a Mossy Earth member
+                                <ExternalLink aria-hidden />
+                            </a>
                             <a href={`${website.url}projects`} target="_blank" rel="noreferrer">
                                 See all Mossy Earth projects
                                 <ArrowRight aria-hidden />
@@ -178,8 +185,12 @@ export default function MossyEarthPartnerPage({
                                 <span>The tool</span>
                             </h3>
                             <p>
-                                Your internet connection carries almost nothing most of the time. IdleForest borrows that spare capacity to handle small automated data requests for businesses, uptime
-                                checks, price lookups, nothing personal, nothing tied to you. Companies pay for those tasks. That payment is directed to Mossy Earth.
+                                When your computer has spare bandwidth, IdleForest can use a small share for sessionless automated tasks like uptime checks and price lookups. These tasks carry no
+                                cookies, personal identifiers, or browsing history. Companies pay for the work, and this forest directs that funding to Mossy Earth.
+                            </p>
+                            <p>
+                                For an active desktop user, that usually means around $2-$5 per month for Mossy Earth, depending on where you are located, how often the app is running, and how much spare
+                                capacity is available.
                             </p>
                             <p>Your browsing always takes priority. The app backs off the moment your connection is busy. You will not notice it running.</p>
                             <Link href={`/${params.locale}/how-it-works`}>
@@ -215,7 +226,7 @@ export default function MossyEarthPartnerPage({
                 </section>
 
                 <section className="mossy-earth-final">
-                    <h2>Your laptop is open anyway.</h2>
+                    <h2>Your laptop can help while it rests.</h2>
                     {isValidInvite || isMember ? (
                         <Link href={joinHref} className="mossy-earth-pill mossy-earth-pill-solid">
                             Install IdleForest for free
