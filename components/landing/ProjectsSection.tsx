@@ -35,6 +35,8 @@ const projects: ProjectCard[] = [
     },
 ];
 
+const visibleProjects = projects.slice(0, 3);
+
 const partnerDetails = [
     {
         name: "Trees for the Future",
@@ -84,8 +86,8 @@ export default function ProjectsSection() {
                     </p>
                 </div>
 
-                <div className="mt-12 grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-4">
-                    {projects.map((project) => {
+                <div className="mt-12 grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    {visibleProjects.map((project) => {
                         const projectMeta = plantingsData.projects.find(
                             (item) => item.id === project.projectId
                         );

@@ -200,17 +200,17 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           {params.slug === "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" && (
             <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
-                Want the option that does not require a search switch?
+                Want the sustainable search setup that does not require a switch?
               </h2>
               <p className="mt-3 text-neutral-800">
-                The list above covers several sustainable search products. IdleForest has a dedicated alternatives
-                guide for people who want verified tree planting without replacing Ecosia, Google, Brave, or DuckDuckGo.
+                The list above covers several sustainable search products. IdleForest has a dedicated guide for people
+                who want verified tree planting without replacing Ecosia, Google, Brave, or DuckDuckGo.
               </p>
               <Link
-                href="/ecosia-alternatives"
+                href="/eco-friendly-search-engine"
                 className="mt-5 inline-flex items-center gap-2 bg-brand-navy px-4 py-2 font-bold text-brand-yellow hover:bg-black"
               >
-                the no-switch Ecosia alternative <ArrowRight className="h-4 w-4" />
+                sustainable search engines <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           )}
