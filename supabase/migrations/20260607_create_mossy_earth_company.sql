@@ -1,4 +1,5 @@
 INSERT INTO public.companies (
+  user_id,
   name,
   website,
   slug,
@@ -14,6 +15,7 @@ INSERT INTO public.companies (
   payout_rate_cents_per_1000_points
 )
 VALUES (
+  '2ff71dee-d594-4dae-8c6d-fc8fca6e9e93',
   'Mossy Earth',
   'https://www.mossy.earth/',
   'mossy-earth',
@@ -31,6 +33,7 @@ VALUES (
 ON CONFLICT (slug) DO UPDATE
 SET
   name = EXCLUDED.name,
+  user_id = EXCLUDED.user_id,
   website = EXCLUDED.website,
   description = EXCLUDED.description,
   logo_url = EXCLUDED.logo_url,
