@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
 import { trackOnboardingEvent } from '@/lib/onboarding-events';
-import { getCanonicalSilveiraCompanySlug } from '@/lib/company-partners';
+import { getCanonicalCompanySlug } from '@/lib/company-partners';
 
 interface InviteInfo {
   teamName: string;
@@ -19,7 +19,7 @@ function SignupForm() {
   const searchParams = useSearchParams();
   const urlInviteCode = searchParams.get('invite');
   const companySlugParam = searchParams.get('company');
-  const companySlug = companySlugParam ? getCanonicalSilveiraCompanySlug(companySlugParam) : null;
+  const companySlug = companySlugParam ? getCanonicalCompanySlug(companySlugParam) : null;
 
   // Check cookie for company_invite if no URL param
   const [cookieInviteCode, setCookieInviteCode] = useState<string | null>(null);

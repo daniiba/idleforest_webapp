@@ -9,6 +9,601 @@ body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
+/* Hallmark · page: partner landing · theme: Mossy Earth field notes
+ * pre-emit critique: P4 H4 E4 S4 R4 V4
+ */
+.mossy-earth-page {
+  --me-bg: #f4eee4;
+  --me-bg-soft: #fbf6e8;
+  --me-ink: #0b0c0a;
+  --me-muted: #4e574f;
+  --me-green: #347d67;
+  --me-green-dark: #245943;
+  --me-yellow: #f7d241;
+  --me-line: rgba(11, 12, 10, 0.16);
+  --me-white: #fffdf6;
+  --me-final: #eeebe4;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--me-bg);
+  color: var(--me-ink);
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  letter-spacing: 0;
+}
+
+.mossy-earth-page ::selection {
+  background: var(--me-yellow);
+  color: var(--me-ink);
+}
+
+.mossy-earth-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mossy-earth-nav {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  min-height: 112px;
+  padding: 24px clamp(20px, 5vw, 96px) 38px;
+  background: var(--me-bg);
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 84% 88%, 68% 82%, 50% 88%, 31% 82%, 15% 88%, 0 82%);
+}
+
+.mossy-earth-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 13px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+}
+
+.mossy-earth-wordmark {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.mossy-earth-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--me-green);
+  box-shadow: 0 10px 28px rgba(36, 89, 67, 0.16);
+}
+
+.mossy-earth-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mossy-earth-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.mossy-earth-nav-links a {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mossy-earth-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 0 28px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition: transform 220ms ease, background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+
+.mossy-earth-pill svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  stroke-width: 3;
+}
+
+.mossy-earth-pill:hover {
+  transform: translateY(-2px);
+}
+
+.mossy-earth-pill-solid {
+  justify-self: end;
+  background: var(--me-green);
+  color: var(--me-white);
+}
+
+.mossy-earth-pill-solid:hover {
+  background: var(--me-green-dark);
+}
+
+.mossy-earth-pill-ghost {
+  border: 2px solid rgba(255, 253, 246, 0.72);
+  color: var(--me-white);
+  background: rgba(255, 253, 246, 0.08);
+}
+
+.mossy-earth-pill-ghost:hover {
+  border-color: var(--me-white);
+  background: rgba(255, 253, 246, 0.16);
+}
+
+.mossy-earth-hero {
+  position: relative;
+  min-height: clamp(620px, 72vh, 820px);
+  margin-top: -24px;
+  overflow: hidden;
+  background: var(--me-green-dark);
+}
+
+.mossy-earth-hero-video,
+.mossy-earth-image-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mossy-earth-hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 8, 5, 0.78) 0%, rgba(5, 8, 5, 0.54) 42%, rgba(5, 8, 5, 0.18) 100%),
+    linear-gradient(180deg, rgba(5, 8, 5, 0.08) 0%, rgba(5, 8, 5, 0.42) 100%);
+}
+
+.mossy-earth-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 30px;
+  background: var(--me-yellow);
+  clip-path: polygon(0 42%, 13% 62%, 27% 34%, 42% 56%, 58% 36%, 74% 58%, 89% 38%, 100% 54%, 100% 100%, 0 100%);
+}
+
+.mossy-earth-hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 780px);
+  padding: clamp(92px, 14vh, 180px) clamp(20px, 7vw, 126px) 122px;
+  color: var(--me-white);
+}
+
+.mossy-earth-kicker {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.mossy-earth-hero h1 {
+  margin: 0;
+  max-width: 730px;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(46px, 7vw, 80px);
+  font-weight: 900;
+  line-height: 0.94;
+  letter-spacing: 0;
+}
+
+.mossy-earth-hero h1 span {
+  position: relative;
+  display: inline-block;
+}
+
+.mossy-earth-hero h1 span::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: -5px;
+  bottom: 6px;
+  z-index: -1;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--me-yellow);
+}
+
+.mossy-earth-hero-content > p:not(.mossy-earth-kicker) {
+  max-width: 590px;
+  margin: 28px 0 0;
+  color: rgba(255, 253, 246, 0.86);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.mossy-earth-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.mossy-earth-stat-band {
+  position: relative;
+  background: var(--me-yellow);
+  color: var(--me-ink);
+}
+
+.mossy-earth-stat-band > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 40px clamp(20px, 5vw, 72px) 46px;
+}
+
+.mossy-earth-stat-band article {
+  text-align: center;
+}
+
+.mossy-earth-stat-band p {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mossy-earth-stat-band strong {
+  display: block;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mossy-earth-explainer {
+  background: var(--me-bg);
+  padding: 116px clamp(20px, 7vw, 126px) 130px;
+}
+
+.mossy-earth-section-heading {
+  text-align: center;
+}
+
+.mossy-earth-section-heading h2,
+.mossy-earth-steps h2 {
+  margin: 0;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(34px, 5vw, 58px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.mossy-earth-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(48px, 11vw, 160px);
+  width: min(100%, 1200px);
+  margin: 88px auto 0;
+}
+
+.mossy-earth-two-col h3 {
+  margin: 0 0 24px;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: 35px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mossy-earth-two-col h3 span {
+  background: linear-gradient(transparent 62%, var(--me-yellow) 62%);
+}
+
+.mossy-earth-two-col p {
+  margin: 0;
+  color: var(--me-muted);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.mossy-earth-two-col p + p {
+  margin-top: 30px;
+}
+
+.mossy-earth-two-col a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  margin-top: 28px;
+  color: var(--me-green-dark);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.mossy-earth-two-col a svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 3;
+}
+
+.mossy-earth-field-image {
+  position: relative;
+  height: clamp(360px, 56vw, 620px);
+  overflow: hidden;
+  background: var(--me-green-dark);
+}
+
+.mossy-earth-field-image::before,
+.mossy-earth-field-image::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 34px;
+}
+
+.mossy-earth-field-image::before {
+  top: -1px;
+  background: var(--me-bg);
+  clip-path: polygon(0 0, 100% 0, 100% 38%, 84% 58%, 66% 34%, 46% 55%, 28% 36%, 12% 58%, 0 42%);
+}
+
+.mossy-earth-field-image::after {
+  bottom: -1px;
+  background: var(--me-bg-soft);
+  clip-path: polygon(0 62%, 14% 38%, 30% 58%, 49% 36%, 69% 56%, 86% 38%, 100% 58%, 100% 100%, 0 100%);
+}
+
+.mossy-earth-steps {
+  background: var(--me-bg-soft);
+  padding: 128px clamp(20px, 7vw, 126px) 112px;
+}
+
+.mossy-earth-steps > h2 {
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mossy-earth-steps-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(48px, 9vw, 118px);
+  width: min(100%, 1220px);
+  margin: 76px auto 0;
+}
+
+.mossy-earth-step-list {
+  display: grid;
+  gap: 38px;
+}
+
+.mossy-earth-step-list article {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.mossy-earth-step-list span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--me-yellow);
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mossy-earth-step-list h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.18;
+}
+
+.mossy-earth-step-list p {
+  margin: 10px 0 0;
+  color: var(--me-muted);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.mossy-earth-portrait {
+  position: relative;
+  min-height: 0;
+  aspect-ratio: 511 / 664;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--me-green);
+}
+
+.mossy-earth-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  min-height: 340px;
+  padding: 110px 20px 86px;
+  background: var(--me-final);
+  text-align: center;
+}
+
+.mossy-earth-final h2 {
+  margin: 0;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(42px, 7vw, 66px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@media (max-width: 900px) {
+  .mossy-earth-nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    min-height: 98px;
+    padding: 18px 20px 32px;
+  }
+
+  .mossy-earth-nav-links {
+    display: none;
+  }
+
+  .mossy-earth-brand {
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 4px;
+  }
+
+  .mossy-earth-mark {
+    width: 46px;
+    height: 46px;
+  }
+
+  .mossy-earth-hero {
+    min-height: 680px;
+  }
+
+  .mossy-earth-hero-content {
+    padding: 106px 20px 96px;
+  }
+
+  .mossy-earth-stat-band > div,
+  .mossy-earth-two-col,
+  .mossy-earth-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mossy-earth-stat-band > div {
+    gap: 28px;
+  }
+
+  .mossy-earth-explainer {
+    padding-top: 84px;
+    padding-bottom: 92px;
+  }
+
+  .mossy-earth-two-col {
+    margin-top: 58px;
+  }
+
+  .mossy-earth-steps {
+    padding-top: 86px;
+  }
+
+  .mossy-earth-steps-grid {
+    margin-top: 56px;
+  }
+
+  .mossy-earth-portrait {
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .mossy-earth-page {
+    overflow-x: clip;
+  }
+
+  .mossy-earth-nav {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .mossy-earth-brand {
+    justify-self: center;
+    max-width: 100%;
+    letter-spacing: 3px;
+  }
+
+  .mossy-earth-wordmark {
+    max-width: 82px;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .mossy-earth-nav > .mossy-earth-pill {
+    justify-self: center;
+    min-height: 42px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+
+  .mossy-earth-pill {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 18px;
+    font-size: 15px;
+  }
+
+  .mossy-earth-actions {
+    align-items: stretch;
+  }
+
+  .mossy-earth-hero h1 {
+    font-size: 44px;
+  }
+
+  .mossy-earth-hero-content > p:not(.mossy-earth-kicker),
+  .mossy-earth-two-col p,
+  .mossy-earth-step-list p {
+    font-size: 16px;
+  }
+
+  .mossy-earth-stat-band > div {
+    padding-top: 34px;
+    padding-bottom: 38px;
+  }
+
+  .mossy-earth-section-heading h2,
+  .mossy-earth-steps h2 {
+    font-size: 34px;
+  }
+
+  .mossy-earth-step-list article {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
 /* Heading fonts */
 
 /* Candu font for hero section */

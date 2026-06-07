@@ -4,6 +4,8 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
     getCanonicalCompanySlug,
+    isMossyEarthCompanyIdentity,
+    isMossyEarthCompanySlug,
     isPlanetwildCompanyIdentity,
     isPlanetwildCompanySlug,
     isSilveiraCompanyIdentity,
@@ -162,7 +164,9 @@ export async function POST(request: Request) {
                 isWastefreeCompanySlug(companySlug) ||
                 isWastefreeCompanyIdentity(publicCompany) ||
                 isPlanetwildCompanySlug(companySlug) ||
-                isPlanetwildCompanyIdentity(publicCompany)
+                isPlanetwildCompanyIdentity(publicCompany) ||
+                isMossyEarthCompanySlug(companySlug) ||
+                isMossyEarthCompanyIdentity(publicCompany)
 
             if (publicCompany.is_invite_only && !isPublicPartnerCompany) {
                 return NextResponse.json({ error: 'This company requires an invite code' }, { status: 403 })

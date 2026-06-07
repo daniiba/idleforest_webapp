@@ -5,7 +5,7 @@ import { headers } from 'next/headers';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/Footer";
 import "./globals.css";
-import { Inter, Rethink_Sans } from "next/font/google";
+import { DM_Sans, Inter, Rethink_Sans } from "next/font/google";
 import { TreeStatsProvider } from "@/contexts/TreeStatsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NextIntlClientProvider } from 'next-intl';
@@ -38,6 +38,12 @@ const rethinkSans = Rethink_Sans({
     weight: ["400", "500", "600", "700", "800"],
 });
 
+const dmSans = DM_Sans({
+    subsets: ["latin"],
+    variable: "--font-dm-sans",
+    weight: ["400", "500", "600", "700", "800", "900"],
+});
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
@@ -60,7 +66,7 @@ export default async function RootLayout({
     const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
-    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree') || normalizedPathname.startsWith('/c/planetwild');
+    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree') || normalizedPathname.startsWith('/c/planetwild') || normalizedPathname.startsWith('/c/mossy-earth');
     const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
     const softwareApplicationSchema = {
         "@context": "https://schema.org",
@@ -211,7 +217,7 @@ fbq('track', 'PageView');
 
             </head>
             <body
-                className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} antialiased`}
+                className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} ${dmSans.variable} antialiased`}
             >
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <TreeStatsProvider>

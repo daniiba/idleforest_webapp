@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight, BadgeCheck, Loader2, Lock, ShieldCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import { getCanonicalCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
+import { getCanonicalCompanySlug, isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 type CompanyInfo = {
     name: string
@@ -34,6 +34,7 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     const companySlug = getCanonicalCompanySlug(params.slug)
     const isWastefree = isWastefreeCompanySlug(companySlug)
     const isPlanetwild = isPlanetwildCompanySlug(companySlug)
+    const isMossyEarth = isMossyEarthCompanySlug(companySlug)
 
     const joinPath = `/${params.locale}/join/company/${companySlug}`
     const loginHref = `/auth/user/login?redirect=${encodeURIComponent(joinPath)}`
@@ -105,23 +106,29 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     }, [authLoading, joinCompany, user])
 
     const companyName = company?.name || 'this company'
-    const joinLabel = isWastefree ? 'clean-ocean fund' : isPlanetwild ? 'rewilding fund' : 'company forest'
-    const pageTitle = isWastefree ? 'Join Waste Free Planet for free' : isPlanetwild ? 'Join Planet Wild with IdleForest' : `Join ${companyName}`
+    const joinLabel = isWastefree ? 'clean-ocean fund' : isPlanetwild || isMossyEarth ? 'rewilding fund' : 'company forest'
+    const pageTitle = isWastefree ? 'Join Waste Free Planet for free' : isPlanetwild ? 'Join Planet Wild with IdleForest' : isMossyEarth ? 'Join Mossy Earth with IdleForest' : `Join ${companyName}`
     const joinDescription = isWastefree
         ? 'Connect your IdleForest account to the Waste Free Planet clean-ocean fund. After setup, future activity helps fund ocean-bound plastic recovery through Plastic Bank.'
         : isPlanetwild
           ? 'Connect your IdleForest account to Planet Wild. After setup, future activity helps generate passive funding for documented rewilding missions.'
+          : isMossyEarth
+            ? 'Connect your IdleForest account to Mossy Earth. After setup, future desktop activity helps generate passive funding for conservation and rewilding projects.'
         : `Connect your IdleForest account to ${companyName}. Future activity will count toward this company forest.`
-    const signupLabel = isWastefree ? 'Create account to join Waste Free Planet' : isPlanetwild ? 'Create account to join Planet Wild' : 'Create account to join'
-    const loginLabel = isWastefree ? 'Log in to join Waste Free Planet' : isPlanetwild ? 'Log in to join Planet Wild' : 'Log in to join'
+    const signupLabel = isWastefree ? 'Create account to join Waste Free Planet' : isPlanetwild ? 'Create account to join Planet Wild' : isMossyEarth ? 'Create account to join Mossy Earth' : 'Create account to join'
+    const loginLabel = isWastefree ? 'Log in to join Waste Free Planet' : isPlanetwild ? 'Log in to join Planet Wild' : isMossyEarth ? 'Log in to join Mossy Earth' : 'Log in to join'
     const installedNote = isWastefree
         ? 'Already installed IdleForest? Joining connects future desktop activity to the clean-ocean fund automatically after your app syncs.'
         : isPlanetwild
           ? 'Already installed IdleForest? Joining connects future desktop activity to the Planet Wild rewilding fund automatically after your app syncs.'
+          : isMossyEarth
+            ? 'Already installed IdleForest? Joining connects future desktop activity to the Mossy Earth rewilding fund automatically after your app syncs.'
           : 'Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.'
-    const logoUrl = isWastefree ? '/partner/wastefree/wfp-logo-white.webp' : company?.logo_url
+    const logoUrl = isWastefree ? '/partner/wastefree/wfp-logo-white.webp' : isMossyEarth ? '/partner/mossy-earth/logo-mark.svg' : company?.logo_url
     const logoClassName = isWastefree
         ? 'h-16 w-28 rounded-lg border border-[#e4dccc] bg-black object-contain p-1.5'
+        : isMossyEarth
+          ? 'h-14 w-14 rounded-full border border-[#e4dccc] bg-white object-contain'
         : 'h-12 w-12 rounded-lg border border-[#e4dccc] bg-white object-contain p-2'
     const safetyNotes = [
         { icon: Lock, label: 'No donation or payment method' },

@@ -24,14 +24,18 @@ import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 import WastefreeExplainer from './WastefreeExplainer'
 import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree'
+import MossyEarthPartnerPage from '@/components/partner/MossyEarthPartnerPage'
 import { getTranslations } from 'next-intl/server'
 import { canonicalUrl, routeAlternates } from '@/lib/i18n-routes'
 import {
+    MOSSY_EARTH_COMPANY_SLUG,
     SILVEIRA_COMPANY_SLUG,
     WASTEFREE_COMPANY_SLUG,
     PLANETWILD_COMPANY_SLUG,
     getCanonicalCompanySlug,
     getCompanySlugLookupCandidates,
+    isMossyEarthCompanyIdentity,
+    isMossyEarthCompanySlug,
     isPlanetwildCompanyIdentity,
     isPlanetwildCompanySlug,
     isSilveiraCompanyIdentity,
@@ -56,6 +60,9 @@ const planetwildMetaDescription =
     'Join Planet Wild on IdleForest and turn unused bandwidth into passive funding for rewilding missions. Watch Planet Wild mission videos and install IdleForest for free.'
 const planetwildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/videoseries?list=UU6QFT2c2MJxID-vxHDeX9XQ&rel=0'
 const planetwildMissionsUrl = 'https://planetwild.com/missions'
+const mossyEarthMetaTitle = 'Support Mossy Earth for Free | Mossy Earth x IdleForest'
+const mossyEarthMetaDescription =
+    'Join the Mossy Earth forest on IdleForest and turn unused bandwidth into passive funding for Mossy Earth rewilding projects. Install IdleForest for free and support conservation work quietly.'
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -215,6 +222,27 @@ function getPlanetwildFallbackCompany() {
         payout_recipient_name: 'Planet Wild',
         payout_recipient_url: 'https://planetwild.com/',
         payout_notes: 'Send generated company forest funds to Planet Wild for documented rewilding missions.',
+    }
+}
+
+function getMossyEarthFallbackCompany() {
+    return {
+        id: emptyCompanyId,
+        name: 'Mossy Earth',
+        slug: MOSSY_EARTH_COMPANY_SLUG,
+        website: 'https://www.mossy.earth/',
+        description:
+            'Mossy Earth is a team of biologists running conservation and rewilding projects across degraded ecosystems. IdleForest support from this page turns spare idle bandwidth into project funding.',
+        theme_color: '#347d67',
+        logo_url: '/partner/mossy-earth/logo-mark.svg',
+        video_url: null,
+        is_invite_only: false,
+        invite_code: null,
+        user_id: null,
+        impact_mode: 'partner_payout',
+        payout_recipient_name: 'Mossy Earth',
+        payout_recipient_url: 'https://www.mossy.earth/',
+        payout_notes: 'Send generated company forest funds to Mossy Earth for conservation and rewilding projects.',
     }
 }
 
@@ -1529,6 +1557,46 @@ function SilveiraPartnerPage({
 }
 
 export function generateMetadata({ params }: { params: { slug: string; locale: string } }): Metadata {
+    if (isMossyEarthCompanySlug(params.slug)) {
+        const path = `/c/${MOSSY_EARTH_COMPANY_SLUG}`
+        const url = canonicalUrl(path, params.locale)
+
+        return {
+            title: mossyEarthMetaTitle,
+            description: mossyEarthMetaDescription,
+            keywords: [
+                'Mossy Earth',
+                'Mossy Earth rewilding',
+                'fund conservation for free',
+                'free rewilding support',
+                'IdleForest',
+                'passive environmental impact',
+            ],
+            alternates: routeAlternates(path, params.locale),
+            openGraph: {
+                title: mossyEarthMetaTitle,
+                description: mossyEarthMetaDescription,
+                url,
+                siteName: 'IdleForest',
+                type: 'website',
+                images: [
+                    {
+                        url: '/partner/mossy-earth/wetland-field.png',
+                        width: 1600,
+                        height: 900,
+                        alt: 'Mossy Earth conservation work in a flooded woodland.',
+                    },
+                ],
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: mossyEarthMetaTitle,
+                description: mossyEarthMetaDescription,
+                images: ['/partner/mossy-earth/wetland-field.png'],
+            },
+        }
+    }
+
     if (isPlanetwildCompanySlug(params.slug)) {
         const path = `/c/${PLANETWILD_COMPANY_SLUG}`
         const url = canonicalUrl(path, params.locale)
@@ -1630,9 +1698,11 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
               ? getWastefreePlanetFallbackCompany()
               : isPlanetwildCompanySlug(params.slug)
                 ? getPlanetwildFallbackCompany()
+                : isMossyEarthCompanySlug(params.slug)
+                  ? getMossyEarthFallbackCompany()
                 : null)
 
-    if ((error && !isSilveiraCompanySlug(params.slug) && !isWastefreeCompanySlug(params.slug) && !isPlanetwildCompanySlug(params.slug)) || !company) {
+    if ((error && !isSilveiraCompanySlug(params.slug) && !isWastefreeCompanySlug(params.slug) && !isPlanetwildCompanySlug(params.slug) && !isMossyEarthCompanySlug(params.slug)) || !company) {
         return notFound()
     }
 
@@ -1728,7 +1798,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     const useSilveiraTechPage = isSilveiraCompanyIdentity(company, companyWebsite?.hostname)
     const useWastefreePlanetPage = isWastefreeCompanyIdentity(company, companyWebsite?.hostname)
     const usePlanetwildPage = isPlanetwildCompanyIdentity(company, companyWebsite?.hostname)
-    const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || usePlanetwildPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
+    const useMossyEarthPage = isMossyEarthCompanyIdentity(company, companyWebsite?.hostname)
+    const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || usePlanetwildPage || useMossyEarthPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
 
     if (usePhoneRepairPage) {
         const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`
@@ -1982,6 +2053,22 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     if (usePlanetwildPage) {
         return (
             <PlanetwildPartnerPage
+                company={company}
+                params={params}
+                invite={invite}
+                isMember={isMember}
+                isValidInvite={Boolean(isValidInvite)}
+                isOwner={isOwner}
+                memberCount={memberCount}
+                totalPoints={totalPoints}
+                companyWebsite={companyWebsite}
+            />
+        )
+    }
+
+    if (useMossyEarthPage) {
+        return (
+            <MossyEarthPartnerPage
                 company={company}
                 params={params}
                 invite={invite}
