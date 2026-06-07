@@ -45,6 +45,16 @@ export async function POST() {
             .eq('user_id', user.id)
             .maybeSingle()
 
+        if (profile?.company_id) {
+            return NextResponse.json({
+                eligible: false,
+                awarded: false,
+                trees: 0,
+                companyExcluded: true,
+                message: 'Desktop bonus trees are only available outside company onboarding.'
+            })
+        }
+
         const { data: existingReward } = await admin
             .from('user_rewards')
             .select('id, status, trees_awarded, company_id')
