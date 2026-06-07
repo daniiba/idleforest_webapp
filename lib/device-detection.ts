@@ -5,7 +5,6 @@ export interface DeviceDetection {
     isChrome: boolean;
     isEdge: boolean;
     isSafari: boolean;
-    // isFirefox: boolean;
     isMac: boolean;
     isWindows: boolean;
     isIOS: boolean;
@@ -18,7 +17,6 @@ export const defaultDeviceInfo: DeviceDetection = {
     isChrome: false,
     isEdge: false,
     isSafari: false,
-    // isFirefox: false,
     isMac: false,
     isWindows: false, // Default to false to avoid hydration mismatch if we don't know
     isIOS: false,
@@ -46,7 +44,6 @@ export function getDeviceInfo(userAgent: string): DeviceDetection {
     const isChrome = /Chrome\//.test(ua) && !isEdge && !/OPR\//.test(ua);
     // Safari includes "Safari/" but Chrome also includes "Safari/"
     const isSafari = /Safari\//.test(ua) && !isChrome && !isEdge;
-    // const isFirefox = /Firefox\//.test(ua);
 
     return {
         isMobile,
@@ -54,7 +51,6 @@ export function getDeviceInfo(userAgent: string): DeviceDetection {
         isChrome,
         isEdge,
         isSafari,
-        // isFirefox,
         isMac,
         isWindows,
         isIOS,

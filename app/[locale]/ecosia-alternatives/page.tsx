@@ -29,16 +29,16 @@ const totalTrees = plantingsData.events.reduce((sum, event) => sum + event.trees
 const alternatives = [
   {
     name: "IdleForest",
-    type: "Desktop app + extension",
-    impact: "Idle bandwidth funds verified trees, even when your browser is closed",
+    type: "Extension and desktop app",
+    impact: "Idle bandwidth funds verified trees",
     switchSearch: "No, stacks on any browser",
-    bestFor: "Highest-effortless impact",
-    href: "/downloads",
+    bestFor: "Effortless extra impact",
+    href: "/download/chrome",
   },
   {
     name: "Ecosia",
     type: "Search engine",
-    impact: "Search ad revenue plants trees",
+    impact: "Search ad revenue funds tree planting",
     switchSearch: "Yes",
     bestFor: "Everyday eco searching",
     href: "https://www.ecosia.org/",
@@ -57,6 +57,7 @@ const alternatives = [
     impact: "Google-powered, funds trees",
     switchSearch: "Yes",
     bestFor: "Google-style results plus trees",
+    href: "https://www.searchfortrees.com/",
   },
   {
     name: "Lilo",
@@ -82,14 +83,6 @@ const alternatives = [
     bestFor: "Privacy first",
     href: "https://duckduckgo.com/",
   },
-  {
-    name: "Tab for a Cause",
-    type: "New-tab extension",
-    impact: "New-tab ad revenue funds causes",
-    switchSearch: "No, stacks on top",
-    bestFor: "People who open many tabs",
-    href: "https://tabforacause.org/",
-  },
 ];
 
 const groupedAlternatives = [
@@ -99,21 +92,22 @@ const groupedAlternatives = [
     items: [
       {
         name: "OceanHero",
-        body: "Search that funds ocean-plastic recovery. Best for ocean-focused impact.",
+        body: "A search engine that funds ocean-plastic recovery, about one bottle for every five searches, with partners like Plastic Bank. Best for ocean-focused impact.",
         href: "https://oceanhero.today/",
       },
       {
         name: "Search for Trees",
-        body: "Google-powered search with revenue directed to planting. Best for Google-style results.",
+        body: "A tree-planting search engine powered by Google rather than Bing, directing about 60% of revenue to planting. Best for people who want Google-style results plus reforestation.",
+        href: "https://www.searchfortrees.com/",
       },
       {
         name: "Lilo",
-        body: "Search where you choose the cause. Best for people who want control.",
+        body: "A search engine that lets you direct ad revenue to a cause you choose, from reforestation to clean water. Best for choosing your own cause.",
         href: "https://lilo.org/",
       },
       {
         name: "Ekoru",
-        body: "Search focused on ocean and marine conservation. Best for water causes.",
+        body: "A search engine focused on ocean and marine conservation. Best for ocean and water causes.",
       },
     ],
   },
@@ -123,23 +117,23 @@ const groupedAlternatives = [
     items: [
       {
         name: "DuckDuckGo",
-        body: "Privacy-first search with carbon offsets. Best when tracking is your main concern.",
+        body: "Not an eco search engine as such, but it does not track you and offsets its carbon footprint. Best for privacy with a lighter footprint.",
         href: "https://duckduckgo.com/",
       },
     ],
   },
   {
-    eyebrow: "No-switch tools that stack on top",
+    eyebrow: "No-switch tools that stack on top (like IdleForest)",
     icon: <ShoppingBag className="h-6 w-6" />,
     items: [
       {
         name: "TreeClicks",
-        body: "Shopping affiliate fees fund trees at partner stores. Best for frequent shoppers.",
+        body: "A browser extension and app that funds tree planting from affiliate fees when you shop at 50,000+ partner stores, at no extra cost. Best for frequent online shoppers.",
         href: "https://www.treeclicks.com/",
       },
       {
         name: "Tab for a Cause",
-        body: "New-tab ads fund causes, including trees. Best if you open many tabs.",
+        body: "A new-tab extension that sends ad revenue to causes including tree planting. Best for people who open a lot of tabs.",
         href: "https://tabforacause.org/",
       },
     ],
@@ -147,10 +141,10 @@ const groupedAlternatives = [
 ];
 
 const productIcons: Record<string, string> = {
-  IdleForest: "/logo.png",
-  Ecosia: "/game/ecosia_icon.png",
+  IdleForest: "/android-chrome-512x512.png",
+  Ecosia: "https://www.google.com/s2/favicons?domain=ecosia.org&sz=128",
   OceanHero: "https://www.google.com/s2/favicons?domain=oceanhero.today&sz=128",
-  "Search for Trees": "https://www.google.com/s2/favicons?domain=searchfortrees.org&sz=128",
+  "Search for Trees": "https://www.searchfortrees.com/favicon.ico",
   Lilo: "https://www.google.com/s2/favicons?domain=lilo.org&sz=128",
   Ekoru: "https://www.google.com/s2/favicons?domain=ekoru.org&sz=128",
   TreeClicks: "https://www.google.com/s2/favicons?domain=treeclicks.com&sz=128",
@@ -187,7 +181,7 @@ const faqs = [
   {
     question: "Do Ecosia alternatives really plant trees?",
     answer:
-      "The credible ones publish records. IdleForest names its partners and shows a live counter on its transparency page, so the trees are traceable rather than a marketing claim.",
+      "The credible ones publish records. IdleForest names its partners (Trees for the Future, Tree-Nation, 1ClickImpact) and shows a live counter on its transparency page, so the trees are traceable rather than a marketing claim.",
   },
   {
     question: "Can I use an Ecosia alternative and Ecosia together?",
@@ -336,7 +330,6 @@ function ChromeStorePanel() {
             { label: "Windows", icon: <MonitorDown className="h-5 w-5" /> },
             { label: "Mac", icon: <Apple className="h-5 w-5" /> },
             { label: "Chrome", icon: <Image src="/chrome.png" alt="" width={20} height={20} /> },
-            { label: "Firefox", icon: <Image src="/firefox.webp" alt="" width={20} height={20} /> },
             { label: "Edge", icon: <Image src="/edge.png" alt="" width={20} height={20} /> },
           ].map((platform) => (
             <span key={platform.label} className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-black">
@@ -401,7 +394,7 @@ function ProductIcon({ name, featured = false }: { name: string; featured?: bool
     <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${featured ? "bg-brand-navy" : "bg-white"}`}>
       {src.startsWith("http") ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={iconAlt} width={34} height={34} className={iconClassName} loading="lazy" />
+        <img src={src} alt={iconAlt} width={34} height={34} className={iconClassName} />
       ) : (
         <Image src={src} alt={iconAlt} width={34} height={34} className={iconClassName} />
       )}
@@ -419,44 +412,26 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-const reasons = [
-  {
-    title: "No default switch",
-    body: "Ecosia works when you make search the habit. IdleForest stacks on top.",
-    mark: "01",
-  },
-  {
-    title: "Keep your results",
-    body: "Stay with Google, Brave, DuckDuckGo, Ecosia, or whatever already fits.",
-    mark: "02",
-  },
-  {
-    title: "AI-free setup",
-    body: "Skip another AI search layer and add verified tree planting in the background.",
-    mark: "03",
-  },
-];
-
 const idleForestFeatures = [
   {
     icon: <MonitorDown className="h-6 w-6" />,
-    title: "Runs after Chrome closes",
-    body: "Desktop keeps planting while your computer is on.",
+    title: "Keeps running on desktop",
+    body: "The desktop app can keep working while your computer is on.",
   },
   {
     icon: <Apple className="h-6 w-6" />,
     title: "Mac + Windows",
-    body: "Built for the users who create the most idle impact.",
+    body: "Useful if you spend a lot of time on your laptop or desktop.",
   },
   {
     icon: <Wifi className="h-6 w-6" />,
     title: "No search switch",
-    body: "Keep your browser.",
+    body: "Keep the search engine and browser you already use.",
   },
   {
     icon: <Trees className="h-6 w-6" />,
     title: "Verified trees",
-    body: `${totalTrees.toLocaleString()} public records.`,
+    body: `${totalTrees.toLocaleString()} trees in public planting records.`,
   },
 ];
 
@@ -481,39 +456,30 @@ export default function EcosiaAlternativesPage() {
                 ecosia alternatives
               </p>
               <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
-                Best Ecosia Alternatives Without the Search Switch
+                The Best Ecosia Alternatives, Starting With the One You Don&apos;t Have to Switch To
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
-                Keep your browser. Install the desktop app for the biggest background impact, or add the
-                extension if you want the fastest start. Then compare the other green search engines only if
-                you actually want to switch.
+                Most Ecosia alternatives ask you to change your default search engine. This guide ranks the
+                genuine options, and starts with the simplest: keep the browser you already use and add
+                IdleForest, a free extension that funds verified tree planting in the background.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none">
-                  <Link href="/downloads" className="inline-flex items-center gap-2">
-                    <MonitorDown className="h-5 w-5" />
-                    Get the desktop app
+                  <Link href="/download/chrome" className="inline-flex items-center gap-2">
+                    <Image src="/chrome.png" alt="" width={22} height={22} />
+                    Add IdleForest to Chrome, It&apos;s Free
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow">
-                  <Link href="/download/chrome" className="inline-flex items-center gap-2">
-                    <Image src="/chrome.png" alt="" width={22} height={22} />
-                    Add to Chrome
-                  </Link>
+                  <a href="#comparison" className="inline-flex items-center gap-2">
+                    Compare all alternatives <ArrowRight className="h-5 w-5" />
+                  </a>
                 </Button>
               </div>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <StarRating />
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                  1,000+ users
-                </span>
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                  Mac + Windows
-                </span>
-                <Link href="/transparency" className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-navy hover:text-brand-yellow">
-                  {totalTrees.toLocaleString()} trees verified
-                </Link>
-              </div>
+              <p className="mt-5 max-w-2xl rounded-2xl border-2 border-black bg-white px-4 py-3 text-sm font-bold leading-6 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                Rated 4.8 across 33 Chrome Web Store reviews. Used by 1,000+ people. Verified planting
+                partners with a live tree counter.
+              </p>
             </div>
 
             <ChromeStorePanel />
@@ -529,26 +495,31 @@ export default function EcosiaAlternativesPage() {
               <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
                 Why look beyond Ecosia?
               </h2>
-              <p className="mt-4 max-w-xl text-lg leading-8 text-neutral-700">
-                <a href="https://www.ecosia.org/" target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">Ecosia</a>
-                {" "}is real and worth respecting. The question is whether you want your impact tied to a
-                search-engine switch.
-              </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {reasons.map((reason) => (
-                <article key={reason.title} className="rounded-[28px] border-2 border-black bg-white p-5 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]">
-                  <MiniMark>{reason.mark}</MiniMark>
-                  <h3 className="mt-5 font-rethink-sans text-2xl font-extrabold leading-tight">{reason.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-neutral-700">{reason.body}</p>
-                </article>
-              ))}
-              <div className="flex flex-wrap gap-3 md:col-span-3">
+            <div className="rounded-[28px] border-2 border-black bg-white p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]">
+              <div className="space-y-5 text-lg leading-8 text-neutral-700">
+                <p>
+                  <a href="https://www.ecosia.org/" target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">Ecosia</a>
+                  {" "}is a genuine pioneer: it has funded over 160 million trees since 2009 and publishes its
+                  finances. The friction is that it only works when you make Ecosia your default search engine
+                  and change a daily habit.
+                </p>
+                <p>
+                  Its results are powered by Bing, so people who prefer Google-style results often look
+                  elsewhere.
+                </p>
+                <p>
+                  More recently, Ecosia&apos;s move into an AI chat experience pushed some users to search for an
+                  Ecosia alternative without AI. Different people leave for different reasons: results quality,
+                  privacy, a different cause, or simply not wanting to switch search engines at all.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/ecosia" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-white">
-                  Use IdleForest with Ecosia <ArrowRight className="h-4 w-4" />
+                  use IdleForest with Ecosia <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-brand-yellow">
-                  Companies like Ecosia
+                  blog comparison
                 </Link>
               </div>
             </div>
@@ -559,26 +530,35 @@ export default function EcosiaAlternativesPage() {
           <div className="container mx-auto grid gap-10 px-6 py-16 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
               <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
-                #1 no-switch alternative
+                No-switch alternative
               </p>
               <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
-                IdleForest is for people who do not want another search engine.
+                The no-switch alternative: IdleForest
               </h2>
-              <p className="mt-5 text-lg leading-8 text-brand-yellow/85">
-                The desktop app plants in the background even when your browser is closed. The extension is
-                still the fastest install path, but desktop is where IdleForest becomes a quiet always-on layer.
-              </p>
+              <div className="mt-5 space-y-5 text-lg leading-8 text-brand-yellow/85">
+                <p>
+                  IdleForest is not another search engine, so there is nothing to switch. It is a free Chrome,
+                  Firefox, and Edge extension (plus a desktop app) that you add on top of whatever you already
+                  use, including Ecosia, Google, Brave, or DuckDuckGo.
+                </p>
+                <p>
+                  It funds verified tree planting with the internet bandwidth you are not using, through small
+                  sessionless background tasks. No signup, no donation, no change to how you browse.
+                </p>
+                <p>
+                  The trees are traceable: named partners (Trees for the Future, Tree-Nation, 1ClickImpact),
+                  published records, and a live counter on the transparency page.
+                </p>
+                <p>
+                  If you want a single tool that replaces Ecosia, IdleForest is not it. If you want more impact
+                  without giving anything up, it is the easiest choice on this page.
+                </p>
+              </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild className="h-auto rounded-full border-2 border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black shadow-[5px_5px_0px_0px_rgba(224,241,70,0.28)] hover:bg-white">
-                  <Link href="/downloads" className="inline-flex items-center gap-2">
-                    <MonitorDown className="h-5 w-5" />
-                    Get the desktop app <ArrowRight className="h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-auto rounded-full border-2 border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black">
                   <Link href="/download/chrome" className="inline-flex items-center gap-2">
                     <Image src="/chrome.png" alt="" width={22} height={22} />
-                    Add to Chrome
+                    Add IdleForest to Chrome <ArrowRight className="h-5 w-5" />
                   </Link>
                 </Button>
               </div>
@@ -600,6 +580,9 @@ export default function EcosiaAlternativesPage() {
                 </Link>
                 <Link href="/transparency" className="underline decoration-2 underline-offset-4 hover:text-white">
                   verified planting records
+                </Link>
+                <Link href="/tree-planting-extension" className="underline decoration-2 underline-offset-4 hover:text-white">
+                  tree-planting Chrome extension
                 </Link>
               </div>
             </div>
@@ -637,7 +620,7 @@ export default function EcosiaAlternativesPage() {
                       </div>
                       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                         <span className="rounded-full border-2 border-black bg-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em]">
-                          {groupIndex === 2 ? "no-switch" : "switches search"}
+                          {groupIndex === 2 ? "keeps search" : "changes search"}
                         </span>
                         <ExternalAlternativeLink href={item.href}>Visit</ExternalAlternativeLink>
                       </div>
@@ -656,7 +639,8 @@ export default function EcosiaAlternativesPage() {
                 Ecosia alternatives compared
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
-                Fast scan: what it is, whether you need to switch search, and who it fits.
+                The search engines do real good, but each asks you to switch. IdleForest and TreeClicks are the
+                two that add impact without a switch, and IdleForest is the one that runs with zero effort.
               </p>
             </div>
             <div className="mt-10 overflow-x-auto rounded-[28px] border-2 border-black bg-brand-gray shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
@@ -699,8 +683,8 @@ export default function EcosiaAlternativesPage() {
                       <td className="px-5 py-4 text-neutral-700">{alternative.type}</td>
                       <td className="px-5 py-4 text-neutral-700">{alternative.impact}</td>
                       <td className="px-5 py-4">
-                        <span className={`inline-flex rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}>
-                          {noSwitch ? "No" : "Yes"}
+                        <span className={`inline-flex rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}>
+                          {alternative.switchSearch}
                         </span>
                       </td>
                       <td className="px-5 py-4 text-neutral-700">{alternative.bestFor}</td>
@@ -723,7 +707,8 @@ export default function EcosiaAlternativesPage() {
                 Why people trust IdleForest
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
-                A good Ecosia alternative should make the impact trail easy to inspect, not just easy to market.
+                4.8 stars across 33 Chrome Web Store reviews, Featured status, 1,000+ users, named planting
+                partners with a live counter, a public team in Lisbon, and open-source code on GitHub.
               </p>
             </div>
             <div className="grid gap-5 md:grid-cols-2">
@@ -754,9 +739,9 @@ export default function EcosiaAlternativesPage() {
                 <StarRating />
               </article>
               {[
-                ["1,000+", "users", "People adding passive climate impact."],
+                ["1,000+", "users", "People using IdleForest."],
                 ["Partners", "named", "Trees for the Future, Tree-Nation, and 1ClickImpact."],
-                ["Open", "code", "Public team in Lisbon and open-source code on GitHub."],
+                ["Open", "code", "Public team in Lisbon and code on GitHub."],
               ].map(([metric, label, body]) => (
                 <article key={metric} className="rounded-[28px] border-2 border-black bg-white p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]">
                   <p className="font-candu text-5xl leading-none text-brand-navy">{metric}</p>
@@ -810,28 +795,24 @@ export default function EcosiaAlternativesPage() {
         <section className="bg-brand-navy py-16 text-brand-yellow md:py-20">
           <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
-                Desktop-first alternative
-              </p>
               <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
-                The best Ecosia alternative runs beyond the browser.
+                The easiest Ecosia alternative takes one click
               </h2>
               <p className="mt-4 max-w-2xl text-lg leading-8 text-brand-yellow/80">
-                Keep the search engine you like. Install IdleForest on Mac or Windows and fund verified trees
-                with bandwidth you were not using anyway.
+                Keep the search engine you like. Add IdleForest and fund verified trees with bandwidth you were
+                not using anyway. Free, background, and yours to remove any time.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button asChild className="h-auto rounded-full border-2 border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white">
-                <Link href="/downloads" className="inline-flex items-center gap-2">
-                  <MonitorDown className="h-5 w-5" />
-                  Get the desktop app <ArrowRight className="h-5 w-5" />
+                <Link href="/download/chrome" className="inline-flex items-center gap-2">
+                  <Image src="/chrome.png" alt="" width={22} height={22} />
+                  Add IdleForest to Chrome <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild variant="outline" className="h-auto rounded-full border-2 border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black">
-                <Link href="/download/chrome" className="inline-flex items-center gap-2">
-                  <Image src="/chrome.png" alt="" width={22} height={22} />
-                  Add to Chrome
+                <Link href="/how-it-works" className="inline-flex items-center gap-2">
+                  See how it works
                 </Link>
               </Button>
             </div>

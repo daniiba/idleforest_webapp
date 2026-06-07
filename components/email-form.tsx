@@ -20,14 +20,14 @@ export function EmailForm({
     const [email, setEmail] = useState("");
     const [emailSubmitted, setEmailSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection();
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows } = useDeviceDetection();
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (email) {
             setIsSubmitting(true);
             try {
-                const deviceInfo = { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows };
+                const deviceInfo = { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows };
                 const result = await submitEmail(email, deviceInfo);
 
                 if (result.success) {

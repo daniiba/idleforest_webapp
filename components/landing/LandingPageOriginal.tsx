@@ -29,7 +29,7 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
         treesPlanted: 0,
     });
 
-    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows } = useDeviceDetection(deviceInfo);
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
     useEffect(() => {
@@ -335,7 +335,7 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                 icon={<Chrome className="h-6 w-6" />}
                                 title="BROWSER EXTENSION"
                                 status={{ label: "COMPLETED", variant: "success" }}
-                                description="Launched our flagship browser extensions for Chrome, Firefox, and Edge. This key milestone allows users to seamlessly contribute to reforestation during their daily browsing, making eco‑friendly actions more accessible."
+                                description="Launched our flagship browser extensions for Chrome and Edge. This key milestone allows users to seamlessly contribute to reforestation during their daily browsing, making eco-friendly actions more accessible."
                             />
 
                             <RoadmapItem
@@ -551,7 +551,7 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                 "name": "How do I get started with IdleForest?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome, Edge, or Firefox. It runs in the background and starts planting trees automatically using your idle bandwidth."
+                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome or Edge. It runs in the background and starts planting trees automatically using your idle bandwidth."
                                 }
                             },
                             {

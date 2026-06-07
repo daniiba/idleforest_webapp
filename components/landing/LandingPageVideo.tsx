@@ -80,7 +80,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
         treesPlanted: 0,
     });
 
-    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows } = useDeviceDetection(deviceInfo);
     const t = useTranslations('Landing');
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
@@ -665,7 +665,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            Yes. IdleForest does not change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, Chrome, Edge, and other browsers.
+                                            Yes. IdleForest does not change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, Edge, and other browsers.
                                         </p>
                                         <p>
                                             You can stack the impact from IdleForest with other environmentally focused tools.
@@ -854,7 +854,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Can I use IdleForest with Ecosia or another browser?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Firefox, and any other browser. You can stack the impact."
+                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, Edge, and other browsers. You can stack the impact."
                                 }
                             },
                             {

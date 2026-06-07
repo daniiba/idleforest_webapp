@@ -38,7 +38,7 @@ const faqItems = [
   {
     question: "Can I use it with Ecosia or another search engine?",
     answer:
-      "Yes. IdleForest does not change your search engine, your browser, or any setting. It runs alongside whatever you already use, including Ecosia, Brave, and Firefox. You can stack the impact.",
+      "Yes. IdleForest does not change your search engine, your browser, or any setting. It runs alongside whatever you already use, including Ecosia, Brave, Chrome, and Edge. You can stack the impact.",
     link: {
       href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
       text: "Can I use it with Ecosia",

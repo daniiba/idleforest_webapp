@@ -28,7 +28,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
         treesPlanted: 0,
     });
 
-    const { isMobile, isDesktop, isChrome, isEdge, isSafari, /* isFirefox, */ isMac, isWindows } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows } = useDeviceDetection(deviceInfo);
     const t = useTranslations('Landing');
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
     const [currentScreenshot, setCurrentScreenshot] = useState(0);
@@ -580,7 +580,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                 "name": "How do I get started with IdleForest?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome, Edge, or Firefox. It runs in the background and starts planting trees automatically using your idle bandwidth."
+                                    "text": "Download the IdleForest desktop app for Windows or Mac, or install the browser extension for Chrome or Edge. It runs in the background and starts planting trees automatically using your idle bandwidth."
                                 }
                             },
                             {

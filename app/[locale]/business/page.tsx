@@ -81,8 +81,6 @@ export default function BusinessPage() {
 
       if (userAgent.indexOf('edg') !== -1) {
         return 'edge'
-        /* } else if (userAgent.indexOf('firefox') !== -1) {
-          return 'firefox' */
       } else if (userAgent.indexOf('chrome') !== -1) {
         return 'chrome'
       } else {
@@ -91,7 +89,6 @@ export default function BusinessPage() {
     }
     // href="https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb"
     // href="https://chromewebstore.google.com/detail/idleforest/ofdclafhpmccdddnmfalihgkahgiomjk"
-    // href="https://addons.mozilla.org/en-US/firefox/addon/idleforest/"
 
     setCurrentBrowser(detectBrowser())
   }, [])

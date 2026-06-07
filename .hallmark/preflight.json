@@ -1,0 +1,10 @@
+{
+  "date": "2026-05-31",
+  "font_stack": "Geist + Geist Mono via next/font/local, Candu via next/font/local, Rethink Sans + Inter via next/font/google",
+  "palette": "shadcn HSL variables in app/globals.css plus Tailwind brand yellow/gray/navy",
+  "motion": "framer-motion installed; Waste Free Planet page uses motion-cut CSS microinteractions only",
+  "spacing": "Tailwind default scale plus Hallmark 4-point wfp tokens",
+  "framework": "Next.js 14 app router",
+  "preserve": ["route ownership", "company data logic", "existing font assets", "Waste Free Planet named-donation copy intent"],
+  "introduce": ["Narrative Workflow macrostructure", "scoped Waste Free Planet tokens", "Hallmark slop-test gates"]
+}

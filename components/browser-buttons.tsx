@@ -87,33 +87,6 @@ export const EdgeStoreButton = () => (
   </a>
 );
 
-// FirefoxStoreButton component
-/* export const FirefoxStoreButton = () => (
-  <a
-    href="https://addons.mozilla.org/en-US/firefox/addon/idleforest/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-3 bg-brand-yellow hover:bg-brand-yellow text-gray-900 text-lg h-14 px-8 rounded-md transition-all"
-  >
-    <img src="/firefox.webp" className="h-8 w-8" alt="Firefox logo" />
-    <div className="flex flex-col items-start leading-tight text-left">
-      <span className="text-xs opacity-90">Available for</span>
-      <span className="text-sm font-semibold">Firefox</span>
-    </div>
-    <div className="flex items-center gap-1 ml-2 bg-black/10 px-2 py-1 rounded">
-      <span className="text-sm">5</span>
-      <div className="flex">
-        {[...Array(5)].map((_, i) => (
-          <svg key={i} className="w-3 h-3 fill-current" viewBox="0 0 24 24">
-            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-          </svg>
-        ))}
-      </div>
-    </div>
-  </a>
-); */
-
-
 // --- Desktop Download Buttons ---
 
 // MacDownloadButton component
@@ -205,8 +178,6 @@ const BrowserButtons = () => {
 
       if (userAgent.indexOf('edg') !== -1 || userAgent.indexOf('edge') !== -1) {
         return 'edge';
-        /* } else if (userAgent.indexOf('firefox') !== -1) {
-          return 'firefox'; */
       } else if (userAgent.indexOf('chrome') !== -1 && userAgent.indexOf('edg') === -1) {
         return 'chrome';
       } else {

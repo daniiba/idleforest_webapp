@@ -73,12 +73,12 @@ const faqs = [
   {
     question: "Which browsers does it work on?",
     answer:
-      "Chrome, Firefox, and Edge as an extension, plus desktop apps for Windows and Mac. Mobile is on the roadmap.",
+      "Chrome and Edge as an extension, plus desktop apps for Windows and Mac. Mobile is on the roadmap.",
   },
   {
     question: "Can I use it with Ecosia or another search engine?",
     answer:
-      "Yes. It does not change your search engine or your browsing, so it stacks on top of Ecosia, Brave, Firefox, Chrome, and Edge. You keep your habits and add a passive layer.",
+      "Yes. It does not change your search engine or your browsing, so it stacks on top of Ecosia, Brave, Chrome, and Edge. You keep your habits and add a passive layer.",
   },
   {
     question: "How is this different from the Forest extension?",
@@ -118,7 +118,7 @@ const schemas = [
     "@type": "SoftwareApplication",
     name: "IdleForest",
     applicationCategory: "BrowserApplication",
-    operatingSystem: "Chrome, Firefox, Edge, Windows, macOS",
+    operatingSystem: "Chrome, Edge, Windows, macOS",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     description:
       "Free Chrome extension that funds verified tree planting with your idle internet bandwidth. No signup, no donations, no search-engine switch.",

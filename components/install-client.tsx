@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/card';
 
 const STORE_URLS = {
   chrome: 'https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk',
-  // firefox: 'https://addons.mozilla.org/en-GB/firefox/addon/idleforest/',
   edge: 'https://microsoftedge.microsoft.com/addons/detail/idle-forest-plant-trees/cccklibfpcangcakgpllhcohldgcginb',
 } as const;
 
@@ -23,9 +22,7 @@ export default function InstallClient() {
     const userAgent = window.navigator.userAgent.toLowerCase();
     if (userAgent.includes('edg/')) {
       setBrowser('edge');
-    } /* else if (userAgent.includes('firefox/')) {
-      setBrowser('firefox');
-    } */
+    }
 
     // Store referral code in localStorage
     if (ref) {
@@ -77,4 +74,3 @@ export default function InstallClient() {
     </Card>
   );
 }
-

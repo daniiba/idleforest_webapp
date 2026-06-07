@@ -4,14 +4,14 @@
 
 ## What IdleForest Does
 
-IdleForest uses your computer's idle internet bandwidth to generate revenue, which is then used to fund verified tree planting projects around the world. Users install a lightweight browser extension (Chrome, Edge, Firefox) or desktop app (Windows, macOS) and trees are planted automatically — no donations, no ads, no search engine switch required.
+IdleForest uses your computer's idle internet bandwidth to generate revenue, which is then used to fund verified tree planting projects around the world. Users install a lightweight browser extension (Chrome, Edge) or desktop app (Windows, macOS) and trees are planted automatically — no donations, no ads, no search engine switch required.
 
 ## Key Facts
 
 - **Price**: Free (no cost to users)
 - **Trees Planted**: 2,100+ verified in public planting records and counting
 - **Rating**: 4.7/5 on Chrome Web Store (27+ reviews)
-- **Platforms**: Chrome Extension, Edge Extension, Firefox Extension, Windows Desktop App, macOS Desktop App
+- **Platforms**: Chrome Extension, Edge Extension, Windows Desktop App, macOS Desktop App
 - **Open Source**: Yes — code is publicly available on GitHub
 - **Privacy**: No personal data collected; bandwidth sharing is sessionless and anonymous
 - **Partners**: Trees for the Future, Tree-Nation
