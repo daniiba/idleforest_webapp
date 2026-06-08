@@ -125,8 +125,8 @@ export default function MossyEarthPartnerPage({
                             Support Mossy Earth <span>for free.</span>
                         </h1>
                         <p>
-                            Install IdleForest and let spare internet capacity generate real funding for Mossy Earth&apos;s rewilding projects. It only runs when your connection has room, so your
-                            browsing, calls, streaming, and downloads stay first.
+                            Install IdleForest in under 30 seconds, then it runs automatically in the background to generate funding for Mossy Earth&apos;s rewilding projects. Your browsing, calls,
+                            streaming, and downloads always stay first.
                         </p>
                         <div className="mossy-earth-actions">
                             {isValidInvite || isMember ? (
@@ -168,8 +168,8 @@ export default function MossyEarthPartnerPage({
                                 habitats, and work on ecosystems that most conservation funding ignores. They are bootstrapped, take no outside investment, and publish every expense publicly.
                             </p>
                             <p>
-                                Their core funding comes from members. If you can, becoming a Mossy Earth member is the strongest way to back the work; this page is an extra no-cost way to add funding
-                                in the background.
+                                Their core funding comes from paid memberships. Installing IdleForest is a great additional way to support Mossy Earth, and a helpful option for people who want to
+                                contribute but cannot become paid members right now.
                             </p>
                             <a href={website.url} target="_blank" rel="noreferrer">
                                 Become a Mossy Earth member
@@ -185,12 +185,13 @@ export default function MossyEarthPartnerPage({
                                 <span>The tool</span>
                             </h3>
                             <p>
-                                When your computer has spare bandwidth, IdleForest can use a small share for sessionless automated tasks like uptime checks and price lookups. These tasks carry no
-                                cookies, personal identifiers, or browsing history. Companies pay for the work, and this forest directs that funding to Mossy Earth.
+                                IdleForest runs in the background and routes small, paid data tasks through spare internet on your connection, like checking whether public websites are online or
+                                comparing public prices in different regions. These requests are separate from your own browsing: they do not use your accounts, cookies, browser tabs, files, messages,
+                                or history. Companies pay for the work, and this forest directs that funding to Mossy Earth.
                             </p>
                             <p>
-                                For an active desktop user, that usually means around $2-$5 per month for Mossy Earth, depending on where you are located, how often the app is running, and how much spare
-                                capacity is available.
+                                When the desktop app is installed and your computer is running, it usually contributes around $2-$5 per month for Mossy Earth, depending on where you are located, how
+                                often the app is online, and how much spare internet is available.
                             </p>
                             <p>Your browsing always takes priority. The app backs off the moment your connection is busy. You will not notice it running.</p>
                             <Link href={`/${params.locale}/how-it-works`}>
