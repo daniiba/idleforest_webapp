@@ -164,8 +164,9 @@ export default function MossyEarthPartnerPage({
                                 <span>The cause</span>
                             </h3>
                             <p>
-                                Mossy Earth is a team of biologists running conservation projects in Scotland, Portugal, Ecuador, and Indonesia. They reintroduce lost species, restore degraded
-                                habitats, and work on ecosystems that most conservation funding ignores. They are bootstrapped, take no outside investment, and publish every expense publicly.
+                                Mossy Earth is a team of outdoor enthusiasts and conservation biologists running nature restoration projects in Scotland, Portugal, Ecuador, and Indonesia. They
+                                reintroduce lost species, control invasive species, restore degraded habitats, and work on ecosystems that most conservation funding ignores. They are bootstrapped, take
+                                no outside investment, and publish every expense publicly.
                             </p>
                             <p>
                                 Their core funding comes from paid memberships. Installing IdleForest is a great additional way to support Mossy Earth, and a helpful option for people who want to
