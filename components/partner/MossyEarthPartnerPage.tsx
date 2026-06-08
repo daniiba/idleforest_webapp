@@ -185,13 +185,14 @@ export default function MossyEarthPartnerPage({
                                 <span>The tool</span>
                             </h3>
                             <p>
-                                IdleForest runs in the background and routes small, paid data tasks through spare internet on your connection, like checking whether public websites are online or
-                                comparing public prices in different regions. These requests are separate from your own browsing: they do not use your accounts, cookies, browser tabs, files, messages,
-                                or history. Companies pay for the work, and this forest directs that funding to Mossy Earth.
+                                IdleForest puts your unused internet bandwidth to work. The app routes small public data tasks, like checking whether websites are online or comparing public
+                                information across regions. These tasks are sessionless: they do not carry personal data, cookies, accounts, browser tabs, files, messages, or browsing
+                                history.
                             </p>
                             <p>
-                                When the desktop app is installed and your computer is running, it usually contributes around $2-$5 per month for Mossy Earth, depending on where you are located, how
-                                often the app is online, and how much spare internet is available.
+                                Companies and researchers pay for access to this public data. IdleForest directs the revenue from this forest to Mossy Earth, so your computer can help fund rewilding
+                                while it runs. Most active desktop installs contribute around $2-$5 per month, depending on where you are located, how often the app is online, and how much spare
+                                internet is available.
                             </p>
                             <p>Your browsing always takes priority. The app backs off the moment your connection is busy. You will not notice it running.</p>
                             <Link href={`/${params.locale}/how-it-works`}>
