@@ -86,7 +86,7 @@ export default async function CompanyWidgetPage({
                             <div className="flex flex-col items-center px-4 w-1/2">
                                 <TreePine className="h-5 w-5 text-green-600 mb-1" />
                                 <span className="font-extrabold text-xl text-black leading-none mb-1">{totalPoints.toLocaleString()}</span>
-                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Points</span>
+                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Tasks</span>
                             </div>
                         </div>
                     )}

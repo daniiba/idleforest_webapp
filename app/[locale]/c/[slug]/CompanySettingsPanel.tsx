@@ -103,7 +103,7 @@ export default function CompanySettingsPanel({
                         </div>
                         <div className="w-0.5 h-12 bg-neutral-200"></div>
                         <div className="text-center">
-                            <p className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Points Generated</p>
+                            <p className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Tasks Handled</p>
                             <p className="text-3xl font-extrabold font-candu text-brand-leaf">{totalPoints.toLocaleString()}</p>
                         </div>
                     </div>

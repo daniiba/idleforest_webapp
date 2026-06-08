@@ -57,12 +57,12 @@ const wastefreePlanetMetaDescription =
     'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the Chrome extension or Mac/Windows app; Plastic Bank handles cleanup through 1ClickImpact.'
 const planetwildMetaTitle = 'Fund Rewilding for Free | Planet Wild x IdleForest'
 const planetwildMetaDescription =
-    'Join Planet Wild on IdleForest and turn unused bandwidth into passive funding for rewilding missions. Watch Planet Wild mission videos and install IdleForest for free.'
+    'Join Planet Wild on IdleForest, install once, and let the app generate passive funding for rewilding missions in the background.'
 const planetwildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/videoseries?list=UU6QFT2c2MJxID-vxHDeX9XQ&rel=0'
 const planetwildMissionsUrl = 'https://planetwild.com/missions'
 const mossyEarthMetaTitle = 'Support Mossy Earth for Free | Mossy Earth x IdleForest'
 const mossyEarthMetaDescription =
-    'Join the Mossy Earth forest on IdleForest and turn unused bandwidth into passive funding for Mossy Earth rewilding projects. Install IdleForest for free and support conservation work quietly.'
+    'Join the Mossy Earth forest on IdleForest, install once, and let the app generate passive funding for Mossy Earth rewilding projects in the background.'
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -232,7 +232,7 @@ function getMossyEarthFallbackCompany() {
         slug: MOSSY_EARTH_COMPANY_SLUG,
         website: 'https://www.mossy.earth/',
         description:
-            'Mossy Earth is a team of biologists running conservation and rewilding projects across degraded ecosystems. IdleForest support from this page turns spare idle bandwidth into project funding.',
+            'Mossy Earth is a team of biologists running conservation and rewilding projects across degraded ecosystems. IdleForest support from this page turns background app activity into project funding.',
         theme_color: '#347d67',
         logo_url: '/partner/mossy-earth/logo-mark.svg',
         video_url: null,
@@ -330,8 +330,8 @@ function PlanetwildPartnerPage({
             icon: Leaf,
         },
         {
-            title: 'Let idle bandwidth work',
-            body: 'Eligible background activity becomes points for this company forest.',
+            title: 'Let IdleForest run',
+            body: 'Background tasks handled by the app generate funding for this company forest.',
             icon: ZapOff,
         },
         {
@@ -406,7 +406,7 @@ function PlanetwildPartnerPage({
                             </h1>
                             <span className="mt-3 block h-3 w-full max-w-[28rem] bg-brand-yellow" aria-hidden="true" />
                             <p className="mt-7 max-w-xl text-lg font-semibold leading-8 text-neutral-700">
-                                Join the Planet Wild forest, install IdleForest, and your unused bandwidth becomes passive funding for rewilding missions.
+                                Join the Planet Wild forest, install IdleForest once, and the app can generate passive funding for rewilding missions in the background.
                             </p>
                             <p className="mt-4 max-w-xl text-base font-black uppercase leading-6 text-black">
                                 Free to join. No donation. No new habit.
@@ -827,7 +827,7 @@ function WastefreePlanetPage({
             title: 'IdleForest',
             tagline: 'Turns idle bandwidth into funding',
             body:
-                'The free Chrome extension or Mac/Windows app turns idle bandwidth into points for the clean-ocean fund.',
+                'The free Chrome extension or Mac/Windows app turns background tasks into funding for the clean-ocean fund.',
         },
         {
             number: '03',
@@ -842,7 +842,7 @@ function WastefreePlanetPage({
         {
             number: '01',
             title: 'Join Waste Free Planet',
-            body: 'Create or connect your IdleForest account so future points go to the clean-ocean fund.',
+            body: 'Create or connect your IdleForest account so future app activity supports the clean-ocean fund.',
             visual: 'join',
         },
         {
@@ -860,7 +860,7 @@ function WastefreePlanetPage({
         {
             number: '04',
             title: 'Fund cleanup',
-            body: 'Points become funding routed via 1ClickImpact to Plastic Bank collectors on the ground.',
+            body: 'Handled tasks become funding routed via 1ClickImpact to Plastic Bank collectors on the ground.',
             visual: 'cleanup',
         },
     ]
@@ -1016,8 +1016,7 @@ function WastefreePlanetPage({
                         <p className="wfp-kicker">How it works</p>
                         <h2 className="wfp-section-title">Four steps. No payment. No extra work.</h2>
                         <p className="wfp-section-copy">
-                            Join the clean-ocean fund, install IdleForest once, then let it run quietly in the background. Points generated by your setup help fund Plastic Bank cleanup through
-                            1ClickImpact.
+                            Join the clean-ocean fund, install IdleForest once, then let it run quietly in the background. Tasks handled by your setup help fund Plastic Bank cleanup through 1ClickImpact.
                         </p>
                     </div>
                     <WastefreeExplainer steps={installSteps} />
@@ -1152,7 +1151,7 @@ function SilveiraPartnerPage({
     ]
     const proofMetrics = [
         { label: 'Members', value: formatNumber(memberCount, params.locale), kicker: 'Company forest' },
-        { label: 'Points generated', value: formatNumber(totalPoints, params.locale), kicker: 'Since joining' },
+        { label: 'Tasks handled', value: formatNumber(totalPoints, params.locale), kicker: 'Since joining' },
         { label: 'Project funding', value: fundingRaised, kicker: 'Reserved lane' },
     ]
     const fundedProjects = [
@@ -1193,8 +1192,8 @@ function SilveiraPartnerPage({
         },
         {
             step: '03',
-            title: 'Share idle bandwidth',
-            body: 'When your computer is idle, the app can use unused internet bandwidth to generate funding. It backs off when your connection or device needs priority.',
+            title: 'Let IdleForest run',
+            body: 'When the desktop app is installed and your computer is running, eligible background tasks can generate funding. It backs off when your connection or device needs priority.',
         },
     ]
 
@@ -1264,8 +1263,8 @@ function SilveiraPartnerPage({
                                 Support Silveira Tech for free.
                             </h1>
                             <p className="silveira-reveal silveira-delay-3 mt-6 max-w-[650px] text-lg font-medium leading-8 text-white/80 sm:text-xl sm:leading-9">
-                                Silveira Tech is rebuilding mountain villages in Serra da Lousa and regenerating 230 hectares of land. Join their company forest, install the IdleForest desktop app,
-                                and your unused bandwidth can help fund their regeneration projects.
+                                Silveira Tech is rebuilding mountain villages in Serra da Lousa and regenerating 230 hectares of land. Join their company forest, install the IdleForest desktop app, and
+                                background tasks can help fund their regeneration projects.
                             </p>
                             <div className="silveira-reveal silveira-delay-4 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                                 {isMember ? (
@@ -1422,7 +1421,7 @@ function SilveiraPartnerPage({
                             <div className="silveira-scroll">
                                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Where support goes</p>
                                 <h2 className="mt-4 text-[2.75rem] font-black leading-[0.98] text-white sm:text-[4.4rem]">
-                                    Your shared idle bandwidth supports Silveira directly.
+                                    Background activity supports Silveira directly.
                                 </h2>
                                 <p className="mt-5 text-base font-medium leading-8 text-white/72">
                                     Funds raised through this company forest come from eligible desktop app activity and go to Silveira Tech's own regeneration work, not IdleForest's general planting portfolio.
@@ -1432,7 +1431,7 @@ function SilveiraPartnerPage({
                                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Dedicated lane</p>
                                 <h3 className="mt-4 text-xl font-black leading-tight text-white">Reserved for Silveira Tech projects</h3>
                                 <p className="mt-2 text-sm font-medium leading-6 text-white/68">
-                                    Impact from this page is reserved for Silveira Tech projects. The total above tracks members and points earned after supporters join; project updates can be followed through Silveira Tech's
+                                    Impact from this page is reserved for Silveira Tech projects. The total above tracks members and tasks handled after supporters join; project updates can be followed through Silveira Tech's
                                     transparency and project channels.
                                 </p>
                             </div>
@@ -1478,8 +1477,8 @@ function SilveiraPartnerPage({
                                     Install once. Let it run quietly.
                                 </h2>
                                 <p className="mt-5 max-w-[620px] text-base font-medium leading-8 text-white/78">
-                                    The desktop app can share unused bandwidth while your computer is idle, pauses when your connection is needed, and turns eligible activity into funding for Silveira
-                                    Tech's local regeneration work.
+                                    The desktop app runs quietly while your computer is idle, pauses when your connection is needed, and turns eligible background activity into funding for Silveira Tech's
+                                    local regeneration work.
                                 </p>
                             </div>
                         </div>
@@ -1514,7 +1513,7 @@ function SilveiraPartnerPage({
                                 Recharging humanity can start on your desktop.
                             </h2>
                             <p className="mt-5 max-w-[680px] text-base font-medium leading-8 text-[#4f5848]">
-                                Join {company.name} on IdleForest, install the desktop app, and let eligible idle bandwidth contribute to Silveira Tech's regeneration impact.
+                                Join {company.name} on IdleForest, install the desktop app, and let eligible background activity contribute to Silveira Tech's regeneration impact.
                             </p>
                         </div>
                         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
@@ -2177,7 +2176,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                         <p className="mt-3 text-sm leading-6 text-white/70">
                                             {recordedCompanyTrees > 0
                                                 ? 'Pulled from company donation history and awarded install bonuses.'
-                                                : 'Estimated from team points until company donation records are available.'}
+                                                : 'Estimated from company activity until donation records are available.'}
                                         </p>
                                     </div>
                                     <div className="grid bg-brand-navy">
@@ -2191,7 +2190,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                         <div className="p-6">
                                             <div className="flex items-center gap-3">
                                                 <Leaf className="h-5 w-5 text-brand-yellow" />
-                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Points generated</p>
+                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Tasks handled</p>
                                             </div>
                                             <p className="mt-2 text-3xl font-extrabold">{formatNumber(totalPoints)}</p>
                                         </div>

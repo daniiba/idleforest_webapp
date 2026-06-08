@@ -62,7 +62,7 @@ export default function MossyEarthPartnerPage({
     const website = companyWebsite ?? mossyEarthWebsite
     const impactStats = [
         { label: 'Community Members', value: formatNumber(memberCount, params.locale) },
-        { label: 'Points Generated', value: formatNumber(totalPoints, params.locale) },
+        { label: 'Tasks Handled', value: formatNumber(totalPoints, params.locale) },
         { label: 'Raised for Mossy Earth', value: formatFunding(company, totalPoints, params.locale) },
     ]
     const steps = [

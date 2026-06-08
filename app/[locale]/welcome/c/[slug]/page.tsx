@@ -171,7 +171,7 @@ export default function CompanyWelcomePage() {
                     </h1>
                     <p className="text-neutral-600 mb-6">
                         You have the IdleForest desktop app connected. You&apos;re now part of{' '}
-                        <span className="font-bold text-black">{company.name}</span> and earning points for the company!
+                        <span className="font-bold text-black">{company.name}</span> and helping handle tasks for the company!
                     </p>
                     <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
                         Desktop connected. Your idle activity now counts toward {company.name}.
@@ -233,7 +233,7 @@ export default function CompanyWelcomePage() {
                                     <Users className="w-4 h-4" /> {memberCount} joined
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <TreePine className="w-4 h-4 text-green-600" /> {totalPoints.toLocaleString()} points
+                                    <TreePine className="w-4 h-4 text-green-600" /> {totalPoints.toLocaleString()} tasks
                                 </span>
                             </div>
                         </div>
@@ -243,10 +243,10 @@ export default function CompanyWelcomePage() {
                     <div className="bg-orange-100 border-2 border-orange-400 p-4">
                         <p className="font-bold text-orange-800 flex items-center gap-2">
                             <TreePine className="w-5 h-5" />
-                            Your contribution: 0 points
+                            Your contribution: 0 tasks handled
                         </p>
                         <p className="text-sm text-orange-700 mt-1">
-                            Install IdleForest to start earning points and help your company plant more trees!
+                            Install IdleForest to start handling tasks and help your company fund more impact!
                         </p>
                     </div>
                 </div>
