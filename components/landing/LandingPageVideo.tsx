@@ -79,9 +79,9 @@ const mossyEarthStats = [
 ];
 
 const mossyEarthSteps = [
-    "Install IdleForest once",
-    "Join the Mossy Earth forest",
-    "Idle bandwidth helps fund rewilding",
+    { label: "Now live", body: "Mossy Earth forest" },
+    { label: "Free to join", body: "Install once" },
+    { label: "Adds funding", body: "For rewilding work" },
 ];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
@@ -218,23 +218,30 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 <div className="inline-flex items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3">
                                     <Image src="/partner/mossy-earth/logo-mark.svg" alt="" width={34} height={34} />
                                     <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-700">
-                                        IdleForest x Mossy Earth
+                                        Partnership announcement
                                     </span>
                                 </div>
                                 <div>
                                     <h2 className="font-rethink-sans text-[30px] sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-                                        Support Mossy Earth&apos;s rewilding work for free
+                                        IdleForest is partnering with Mossy Earth.
                                     </h2>
                                     <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-800 md:mt-5 md:text-lg md:leading-8">
-                                        Join the dedicated Mossy Earth forest and let IdleForest turn unused internet bandwidth into passive support for habitat restoration, species recovery, and conservation field work.
+                                        The Mossy Earth forest is now live on IdleForest. Join it for free, install IdleForest once, and future background activity can help generate passive funding for Mossy Earth&apos;s conservation and rewilding work.
                                     </p>
                                 </div>
 
                                 <div className="grid gap-2 sm:grid-cols-3">
                                     {mossyEarthSteps.map((step) => (
-                                        <div key={step} className="flex min-h-20 items-start gap-3 border-2 border-black bg-brand-yellow p-3 text-sm font-extrabold leading-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                        <div key={step.label} className="flex min-h-[96px] min-w-0 items-start gap-3 border-2 border-black bg-brand-yellow p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                                             <Check className="mt-0.5 h-4 w-4 flex-none" strokeWidth={3} />
-                                            <span>{step}</span>
+                                            <span className="min-w-0">
+                                                <span className="block text-[11px] font-extrabold uppercase leading-none tracking-[0.16em] text-black/65">
+                                                    {step.label}
+                                                </span>
+                                                <span className="mt-2 block text-lg font-extrabold leading-tight text-black">
+                                                    {step.body}
+                                                </span>
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
