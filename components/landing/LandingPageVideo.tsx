@@ -27,33 +27,33 @@ const screenshots = [
 ];
 
 const comparisonCriteria = [
-    "Cost",
-    "Effort",
-    "How trees are funded",
-    "Works with your browser",
+    "Best at",
+    "Funding route",
+    "User action",
+    "Pairs well with",
 ];
 
 const comparisonProducts = [
     {
         name: "IdleForest",
-        summary: "Passive impact beside the browser you already use.",
-        values: ["Free, no signup", "Install once, forget", "Idle bandwidth", "Yes, all browsers"],
+        summary: "A passive layer that runs beside the browser and computer you already use.",
+        values: ["Background impact", "Idle bandwidth revenue", "Install once; keep browsing", "Ecosia, memberships, donations"],
         featured: true,
     },
     {
         name: "Ecosia",
-        summary: "Tree planting funded by changing search behavior.",
-        values: ["Free search", "Switch your search engine", "Search ads", "Browser-specific"],
+        summary: "A search engine that turns everyday searches into funding for tree planting.",
+        values: ["Search-led planting", "Search ad revenue", "Use Ecosia for search", "People who search often"],
     },
     {
         name: "Mossy Earth",
-        summary: "Membership model for active conservation supporters.",
-        values: ["$10-25/month", "Active subscription", "Subscription fees", "N/A"],
+        summary: "A field-led rewilding membership with biologists, project updates, and deep conservation work.",
+        values: ["Hands-on rewilding", "Member funding", "Join, follow, or support projects", "People who want direct conservation"],
     },
     {
-        name: "Donation apps",
-        summary: "Traditional giving with repeated manual action.",
-        values: ["Recurring donation", "Manual payments", "Your money", "N/A"],
+        name: "Direct donations",
+        summary: "Straightforward support for charities or local projects you already trust.",
+        values: ["Immediate giving", "Your chosen donation", "Give when you want", "Specific causes and campaigns"],
     },
 ];
 
@@ -76,6 +76,12 @@ const mossyEarthStats = [
     { value: "700K+", label: "YouTube subscribers" },
     { value: "£408K", label: "to rewilding in Q1 2026" },
     { value: "30+", label: "partnership projects" },
+];
+
+const mossyEarthSteps = [
+    "Install IdleForest once",
+    "Join the Mossy Earth forest",
+    "Idle bandwidth helps fund rewilding",
 ];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
@@ -204,11 +210,9 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
-                <ProjectsSection />
-
                 {/* MOSSY EARTH PARTNERSHIP */}
                 <section id="mossy-earth" className="relative overflow-hidden bg-brand-gray text-black scroll-mt-24">
-                    <div className="container mx-auto px-6 py-12 md:py-24">
+                    <div className="container mx-auto px-6 py-12 md:py-16">
                         <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
                             <div className="space-y-5 md:space-y-6">
                                 <div className="inline-flex items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3">
@@ -222,8 +226,17 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         Support Mossy Earth&apos;s rewilding work for free
                                     </h2>
                                     <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-800 md:mt-5 md:text-lg md:leading-8">
-                                        Mossy Earth&apos;s biologists restore degraded habitats, reintroduce lost species, and document field work across forests, wetlands, reefs, and overlooked ecosystems. IdleForest now has a dedicated Mossy Earth forest, so your future activity can help direct funding toward their conservation work.
+                                        Join the dedicated Mossy Earth forest and let IdleForest turn unused internet bandwidth into passive support for habitat restoration, species recovery, and conservation field work.
                                     </p>
+                                </div>
+
+                                <div className="grid gap-2 sm:grid-cols-3">
+                                    {mossyEarthSteps.map((step) => (
+                                        <div key={step} className="flex min-h-20 items-start gap-3 border-2 border-black bg-brand-yellow p-3 text-sm font-extrabold leading-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                            <Check className="mt-0.5 h-4 w-4 flex-none" strokeWidth={3} />
+                                            <span>{step}</span>
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="grid grid-cols-3 gap-2 md:gap-3">
@@ -291,6 +304,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         </div>
                     </div>
                 </section>
+
+                <ProjectsSection />
 
                 {/* HOW IT WORKS */}
                 <section id="how-it-works" className="relative bg-brand-yellow text-black scroll-mt-24">
@@ -390,10 +405,10 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     <div className="container mx-auto px-6 py-20 md:py-24">
                         <div className="mx-auto max-w-3xl text-center">
                             <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                                Why IdleForest Is Different From Other Tree Planting Apps
+                                Different Ways To Support Nature
                             </h2>
                             <p className="mt-4 text-base md:text-lg text-neutral-800">
-                                Most tree planting apps ask you to change a habit, switch your search engine, pay a monthly fee, or remember to donate. IdleForest does not. You install it, then forget it.
+                                Ecosia, Mossy Earth, direct donations, and IdleForest all help in different ways. IdleForest is the extra passive layer: install it once, keep your habits, and let it add funding in the background.
                             </p>
                         </div>
 
@@ -409,7 +424,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 >
                                     {product.featured ? (
                                         <div className="absolute right-4 top-4 border-2 border-brand-yellow bg-brand-yellow px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-black">
-                                            Best fit
+                                            Passive layer
                                         </div>
                                     ) : null}
                                     <div className={product.featured ? "pr-24" : ""}>
@@ -441,15 +456,15 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
                         <div className="mt-6 grid gap-4 md:grid-cols-2">
                             <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/70">No habit tax</p>
+                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/70">Stack your impact</p>
                                 <p className="mt-2 text-sm font-semibold leading-6">
-                                    IdleForest is designed around behavior you already have: leaving your browser or computer connected.
+                                    You can use Ecosia, support Mossy Earth, donate directly, and still add IdleForest in the background.
                                 </p>
                             </div>
                             <div className="border-2 border-black bg-white p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-500">Works alongside others</p>
+                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-500">Different strengths</p>
                                 <p className="mt-2 text-sm font-semibold leading-6">
-                                    You can still use Ecosia, donate, or support subscriptions. IdleForest adds a passive layer on top.
+                                    Search tools are great for daily habits. Rewilding memberships fund expert field teams. IdleForest adds passive funding without replacing either.
                                 </p>
                             </div>
                         </div>
