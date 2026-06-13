@@ -125,6 +125,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-4 lg:gap-6 col-start-2 justify-self-center items-center whitespace-nowrap">
           <NavLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} />
+          <NavLink href="/partners" label="Partners" active={isActive('/partners')} />
           <NavDropdown label="Download" active={hasActiveChild(downloadLinks)} items={downloadLinks} />
           <NavLink href="/transparency" label="Transparency" active={isActive('/transparency')} />
           <NavDropdown label="More" active={hasActiveChild(moreLinks)} items={moreLinks} />
@@ -198,6 +199,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         <nav className="md:hidden bg-brand-gray/95 backdrop-blur-xl border-t border-black/10 absolute w-full left-0 top-full shadow-xl">
           <div className="container mx-auto px-4 py-6 flex max-h-[calc(100vh-6rem)] flex-col gap-3 overflow-y-auto">
             <MobileLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} onClick={() => setIsMenuOpen(false)} />
+            <MobileLink href="/partners" label="Partners" active={isActive('/partners')} onClick={() => setIsMenuOpen(false)} />
 
             <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
               <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">Download</p>

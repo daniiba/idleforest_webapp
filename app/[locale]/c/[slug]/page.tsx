@@ -1125,7 +1125,7 @@ function SilveiraPartnerPage({
     companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
 }) {
     const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
-    const primaryCta = isMember ? 'Open portal' : 'Join the forest'
+    const primaryCta = isMember ? 'Go to your forest' : 'Join the forest'
     const fundingRaised = formatCurrencyCents(getEstimatedCompanyFundingCents(company, totalPoints), params.locale)
     const stats = [
         { value: '230', label: 'hectares in regeneration', detail: 'Mountain land in central Portugal' },
@@ -1152,7 +1152,7 @@ function SilveiraPartnerPage({
     const proofMetrics = [
         { label: 'Members', value: formatNumber(memberCount, params.locale), kicker: 'Company forest' },
         { label: 'Tasks handled', value: formatNumber(totalPoints, params.locale), kicker: 'Since joining' },
-        { label: 'Project funding', value: fundingRaised, kicker: 'Reserved lane' },
+        { label: 'Project funding', value: fundingRaised, kicker: 'Silveira support' },
     ]
     const fundedProjects = [
         {
@@ -1272,7 +1272,7 @@ function SilveiraPartnerPage({
                                         href={joinHref}
                                         className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#f0c75a] px-6 py-3 text-sm font-black text-[#172116] shadow-[0_18px_50px_rgba(240,199,90,0.24)] transition hover:-translate-y-0.5 hover:bg-white"
                                     >
-                                        Open your portal
+                                        Go to your Silveira forest
                                         <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </Link>
                                 ) : isValidInvite ? (
@@ -1428,11 +1428,10 @@ function SilveiraPartnerPage({
                                 </p>
                             </div>
                             <div className="silveira-scroll-card rounded-lg border border-white/12 bg-white/[0.06] p-5">
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Dedicated lane</p>
+                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Silveira support</p>
                                 <h3 className="mt-4 text-xl font-black leading-tight text-white">Reserved for Silveira Tech projects</h3>
                                 <p className="mt-2 text-sm font-medium leading-6 text-white/68">
-                                    Impact from this page is reserved for Silveira Tech projects. The total above tracks members and tasks handled after supporters join; project updates can be followed through Silveira Tech's
-                                    transparency and project channels.
+                                    Support from this page goes toward Silveira Tech projects. The totals above show people who joined this forest and eligible tasks handled after they joined. Project updates can be followed through Silveira Tech's own channels.
                                 </p>
                             </div>
                         </div>
@@ -1522,7 +1521,7 @@ function SilveiraPartnerPage({
                                     href={joinHref}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172116] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#4d6f45]"
                                 >
-                                    Open portal
+                                    Go to your Silveira forest
                                     <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                 </Link>
                             ) : isValidInvite ? (

@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { ArrowRight, BadgeCheck, Chrome, Download, Leaf, ShieldCheck, Sprout, Trees, Wifi } from "lucide-react";
+import { ArrowRight, BadgeCheck, Leaf, ShieldCheck, Sprout, Trees, Wifi } from "lucide-react";
 import Navigation from "@/components/navigation";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
-import { getDeviceInfo } from "@/lib/device-detection";
-
-const chromeWebStoreUrl =
-  "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk";
+import { getDeviceInfo, type DeviceDetection } from "@/lib/device-detection";
+import { SmartCTA } from "@/components/smart-cta";
 
 const pageTitle = "How IdleForest Works: Plant Trees With Idle Bandwidth";
 const pageDescription =
@@ -113,12 +110,6 @@ export default function HowItWorksPage() {
   const headersList = headers();
   const userAgent = headersList.get("user-agent") || "";
   const deviceInfo = getDeviceInfo(userAgent);
-  const desktopDownloadHref = deviceInfo.isMac ? "/download/mac" : deviceInfo.isWindows ? "/download/windows" : "/downloads#desktop-apps";
-  const desktopDownloadLabel = deviceInfo.isMac
-    ? "Download for Mac"
-    : deviceInfo.isWindows
-      ? "Download for Windows"
-      : "Download for Mac / Windows";
 
   return (
     <>
@@ -141,7 +132,7 @@ export default function HowItWorksPage() {
                   tree-planting partners. You pay nothing, and you never change how you browse. Install it once, and it
                   plants trees while you go about your day.
                 </p>
-                <CtaGroup desktopDownloadHref={desktopDownloadHref} desktopDownloadLabel={desktopDownloadLabel} />
+                <CtaGroup deviceInfo={deviceInfo} />
               </div>
 
               <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
@@ -290,7 +281,7 @@ export default function HowItWorksPage() {
                 Install it once, change nothing, and let it run. Your spare bandwidth does the rest.
               </p>
               <div className="mt-8 flex justify-center">
-                <CtaGroup desktopDownloadHref={desktopDownloadHref} desktopDownloadLabel={desktopDownloadLabel} centered />
+                <CtaGroup deviceInfo={deviceInfo} centered />
               </div>
             </div>
           </div>
@@ -301,32 +292,19 @@ export default function HowItWorksPage() {
 }
 
 function CtaGroup({
-  desktopDownloadHref,
-  desktopDownloadLabel,
+  deviceInfo,
   centered = false,
 }: {
-  desktopDownloadHref: string;
-  desktopDownloadLabel: string;
+  deviceInfo: DeviceDetection;
   centered?: boolean;
 }) {
   return (
-    <div className={`mt-8 flex flex-col gap-3 sm:flex-row ${centered ? "sm:justify-center" : ""}`}>
-      <Button asChild className="h-auto rounded-full bg-black px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-navy">
-        <a href={chromeWebStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
-          <Chrome className="h-5 w-5" />
-          Add to Chrome — It’s Free
-        </a>
-      </Button>
-      <Button
-        asChild
-        variant="outline"
-        className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold text-black hover:bg-brand-gray"
-      >
-        <a href={desktopDownloadHref} className="inline-flex items-center gap-2">
-          <Download className="h-5 w-5" />
-          {desktopDownloadLabel}
-        </a>
-      </Button>
+    <div className={`mt-8 flex ${centered ? "justify-center" : ""}`}>
+      <SmartCTA
+        deviceInfo={deviceInfo}
+        buttonVariant="inverse"
+        className={centered ? "items-center" : undefined}
+      />
     </div>
   );
 }
