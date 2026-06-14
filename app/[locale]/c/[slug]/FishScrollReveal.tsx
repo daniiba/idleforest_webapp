@@ -27,8 +27,10 @@ export default function FishScrollReveal() {
         const update = () => {
             const hero = reveal.closest('.wfp-hero')
             const rect = hero?.getBoundingClientRect() || reveal.getBoundingClientRect()
-            const scrollableDistance = Math.max(1, rect.height * 0.35)
-            const progress = clamp(-rect.top / scrollableDistance)
+            const isMobile = window.matchMedia('(max-width: 59.99rem)').matches
+            const revealDelay = isMobile ? rect.height * 0.22 : 0
+            const scrollableDistance = Math.max(1, rect.height * (isMobile ? 0.58 : 0.35))
+            const progress = clamp((-rect.top - revealDelay) / scrollableDistance)
             reveal.style.setProperty('--fish-reveal', `${progress * 100}%`)
         }
 

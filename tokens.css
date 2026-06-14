@@ -2332,6 +2332,11 @@ body {
     width: min(100% - 1.25rem, 80rem);
   }
 
+  .wfp-section.wfp-how {
+    width: 100%;
+    max-width: none;
+  }
+
   .wfp-wordmark__logo--idle {
     width: 4.3rem;
   }
