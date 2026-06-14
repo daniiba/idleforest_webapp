@@ -822,7 +822,8 @@ function WastefreePlanetPage({
             number: '01',
             label: 'Community',
             title: 'Waste Free Planet',
-            tagline: 'Brings the community',
+            verb: 'gathers.',
+            meta: 'Global community',
             body:
                 'Waste Free Planet brings people who care about everyday waste reduction into one shared cleanup effort.',
         },
@@ -830,7 +831,8 @@ function WastefreePlanetPage({
             number: '02',
             label: 'Funding mechanism',
             title: 'IdleForest',
-            tagline: 'Turns idle bandwidth into funding',
+            verb: 'funds.',
+            meta: 'Chrome · Mac · Windows',
             body:
                 'The free Chrome extension or Mac/Windows app turns background tasks into funding for the clean-ocean fund.',
         },
@@ -838,7 +840,8 @@ function WastefreePlanetPage({
             number: '03',
             label: 'Cleanup partner',
             title: 'Plastic Bank',
-            tagline: 'Recovers ocean-bound plastic',
+            verb: 'collects.',
+            meta: 'Indonesia · Philippines · Brazil · Egypt',
             body:
                 'Funds flow through 1ClickImpact to Plastic Bank collection members in Indonesia, the Philippines, Brazil and Egypt, intercepting plastic before it reaches the sea.',
         },
@@ -979,15 +982,29 @@ function WastefreePlanetPage({
                             <h2 className="wfp-section-title">
                                 One cleanup fund. <em>Three clear roles.</em>
                             </h2>
+                            <p className="wfp-section-copy">
+                                A chain of three: a community that cares, a mechanism that funds it, and collectors on the coast who do the work.
+                            </p>
+                            <span className="wfp-section-wave" aria-hidden="true" />
                         </div>
                         <div className="wfp-role-grid">
-                            {partnershipCards.map((card) => (
+                            {partnershipCards.map((card, index) => (
                                 <article key={card.number} className="wfp-role-card">
-                                    <span>{card.number}</span>
-                                    <p>{card.label}</p>
-                                    <h3>{card.title}</h3>
-                                    <strong>{card.tagline}</strong>
-                                    <small>{card.body}</small>
+                                    <div className="wfp-role-card__mark" aria-hidden="true">
+                                        <span>{card.number}</span>
+                                        {index < partnershipCards.length - 1 ? <small>↓</small> : null}
+                                    </div>
+                                    <div className="wfp-role-card__content">
+                                        <p className="wfp-role-card__label">{card.label}</p>
+                                        <h3>
+                                            {card.title} <em>{card.verb}</em>
+                                        </h3>
+                                        <p className="wfp-role-card__body">{card.body}</p>
+                                        <p className="wfp-role-card__meta">
+                                            <span aria-hidden="true" />
+                                            {card.meta}
+                                        </p>
+                                    </div>
                                 </article>
                             ))}
                         </div>
