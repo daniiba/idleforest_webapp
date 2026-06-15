@@ -12,6 +12,8 @@ function clamp(value: number) {
 
 export default function FishScrollReveal() {
     const revealRef = useRef<HTMLDivElement>(null)
+    const startScrollYRef = useRef<number | null>(null)
+    const maxProgressRef = useRef(0)
 
     useEffect(() => {
         const reveal = revealRef.current
@@ -25,13 +27,24 @@ export default function FishScrollReveal() {
 
         let interval = 0
         const update = () => {
-            const hero = reveal.closest('.wfp-hero')
-            const rect = hero?.getBoundingClientRect() || reveal.getBoundingClientRect()
+            const rect = reveal.getBoundingClientRect()
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+            const isFullyVisible = rect.top >= 0 && rect.bottom <= viewportHeight
+
+            if (startScrollYRef.current === null) {
+                if (!isFullyVisible) {
+                    reveal.style.setProperty('--fish-reveal', `${maxProgressRef.current * 100}%`)
+                    return
+                }
+
+                startScrollYRef.current = window.scrollY
+            }
+
             const isMobile = window.matchMedia('(max-width: 59.99rem)').matches
-            const revealDelay = isMobile ? rect.height * 0.22 : 0
-            const scrollableDistance = Math.max(1, rect.height * (isMobile ? 0.58 : 0.35))
-            const progress = clamp((-rect.top - revealDelay) / scrollableDistance)
-            reveal.style.setProperty('--fish-reveal', `${progress * 100}%`)
+            const scrollableDistance = Math.max(1, viewportHeight * (isMobile ? 0.22 : 0.28))
+            const progress = clamp((window.scrollY - startScrollYRef.current) / scrollableDistance)
+            maxProgressRef.current = Math.max(maxProgressRef.current, progress)
+            reveal.style.setProperty('--fish-reveal', `${maxProgressRef.current * 100}%`)
         }
 
         update()
