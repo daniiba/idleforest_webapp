@@ -260,7 +260,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         href="/c/mossy-earth"
                                         className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
                                     >
-                                        Join Mossy Earth&apos;s Forest <ArrowRight className="h-4 w-4" />
+                                        Support Mossy Earth for Free <ArrowRight className="h-4 w-4" />
                                     </Link>
                                     <a
                                         href="https://www.mossy.earth/"

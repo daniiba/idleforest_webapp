@@ -453,6 +453,54 @@ body {
   background: var(--me-green);
 }
 
+.mossy-earth-faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+  gap: clamp(44px, 7vw, 98px);
+  padding: 104px clamp(20px, 7vw, 126px);
+  background: #ffffff;
+}
+
+.mossy-earth-faq > div {
+  min-width: 0;
+}
+
+.mossy-earth-faq h2 {
+  max-width: 620px;
+  margin: 18px 0 0;
+  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(38px, 5.6vw, 66px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.mossy-earth-faq-list {
+  display: grid;
+  gap: 18px;
+}
+
+.mossy-earth-faq-list article {
+  border-top: 1px solid rgba(27, 44, 35, 0.18);
+  padding-top: 22px;
+}
+
+.mossy-earth-faq-list h3 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.mossy-earth-faq-list p {
+  margin: 12px 0 0;
+  color: var(--me-muted);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
 .mossy-earth-final {
   display: flex;
   flex-direction: column;
@@ -506,7 +554,8 @@ body {
 
   .mossy-earth-stat-band > div,
   .mossy-earth-two-col,
-  .mossy-earth-steps-grid {
+  .mossy-earth-steps-grid,
+  .mossy-earth-faq {
     grid-template-columns: 1fr;
   }
 
@@ -529,6 +578,11 @@ body {
 
   .mossy-earth-steps-grid {
     margin-top: 56px;
+  }
+
+  .mossy-earth-faq {
+    padding-top: 82px;
+    padding-bottom: 86px;
   }
 
   .mossy-earth-portrait {
@@ -594,7 +648,8 @@ body {
   }
 
   .mossy-earth-section-heading h2,
-  .mossy-earth-steps h2 {
+  .mossy-earth-steps h2,
+  .mossy-earth-faq h2 {
     font-size: 34px;
   }
 

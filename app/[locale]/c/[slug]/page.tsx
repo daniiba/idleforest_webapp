@@ -63,7 +63,7 @@ const planetwildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/v
 const planetwildMissionsUrl = 'https://planetwild.com/missions'
 const mossyEarthMetaTitle = 'Support Mossy Earth for Free | Mossy Earth x IdleForest'
 const mossyEarthMetaDescription =
-    'Join the Mossy Earth forest on IdleForest, install once, and let the app generate passive funding for Mossy Earth rewilding projects in the background.'
+    'Support Mossy Earth for free with IdleForest. Join the Mossy Earth forest, install once, and let the app generate passive funding for rewilding projects in the background.'
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -1553,6 +1553,7 @@ export function generateMetadata({ params }: { params: { slug: string; locale: s
             description: mossyEarthMetaDescription,
             keywords: [
                 'Mossy Earth',
+                'support Mossy Earth for free',
                 'Mossy Earth rewilding',
                 'fund conservation for free',
                 'free rewilding support',
