@@ -23,29 +23,34 @@ export default function FishScrollReveal() {
             return undefined
         }
 
-        let interval = 0
         const update = () => {
             const rect = reveal.getBoundingClientRect()
             const viewportHeight = window.innerHeight || document.documentElement.clientHeight
-            const scrollY = window.scrollY || window.pageYOffset
             const isMobile = window.matchMedia('(max-width: 59.99rem)').matches
-            const firstFullyVisibleScrollY = scrollY + rect.bottom - viewportHeight
             const holdDistance = isMobile ? 80 : 52
-            const startScrollY = Math.max(0, firstFullyVisibleScrollY + holdDistance)
+            const startTop = viewportHeight - rect.height - holdDistance
             const scrollableDistance = Math.max(1, viewportHeight * (isMobile ? 0.2 : 0.24))
-            const progress = clamp((scrollY - startScrollY) / scrollableDistance)
+            const progress = clamp((startTop - rect.top) / scrollableDistance)
             reveal.style.setProperty('--fish-reveal', `${progress * 100}%`)
         }
 
+        let frame = 0
+        const scheduleUpdate = () => {
+            if (frame) return
+            frame = window.requestAnimationFrame(() => {
+                frame = 0
+                update()
+            })
+        }
+
         update()
-        interval = window.setInterval(update, 80)
-        window.addEventListener('scroll', update, { passive: true })
-        window.addEventListener('resize', update)
+        window.addEventListener('scroll', scheduleUpdate, { passive: true })
+        window.addEventListener('resize', scheduleUpdate)
 
         return () => {
-            if (interval) window.clearInterval(interval)
-            window.removeEventListener('scroll', update)
-            window.removeEventListener('resize', update)
+            if (frame) window.cancelAnimationFrame(frame)
+            window.removeEventListener('scroll', scheduleUpdate)
+            window.removeEventListener('resize', scheduleUpdate)
         }
     }, [])
 
