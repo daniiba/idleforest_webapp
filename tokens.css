@@ -35,6 +35,55 @@
   --dur-wfp-fast: 160ms;
   --dur-wfp: 260ms;
   --ease-wfp: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --color-silveira-paper: oklch(96.5% 0.018 92);
+  --color-silveira-paper-2: oklch(91.5% 0.025 115);
+  --color-silveira-ink: oklch(18% 0.026 125);
+  --color-silveira-ink-2: oklch(35% 0.028 125);
+  --color-silveira-muted: oklch(48% 0.022 118);
+  --color-silveira-rule: oklch(80% 0.025 105);
+  --color-silveira-rule-dark: oklch(34% 0.03 125);
+  --color-silveira-accent: oklch(64% 0.13 76);
+  --color-silveira-accent-2: oklch(56% 0.09 44);
+  --color-silveira-accent-ink: oklch(18% 0.026 125);
+  --color-silveira-stroke: color-mix(in oklch, var(--color-silveira-accent) 54%, var(--color-silveira-paper));
+  --color-silveira-stroke-dark: color-mix(in oklch, var(--color-silveira-accent) 64%, var(--color-silveira-dark));
+  --color-silveira-dark: oklch(18% 0.026 125);
+  --color-silveira-dark-2: oklch(24% 0.035 128);
+  --color-silveira-light: oklch(96.5% 0.018 92);
+  --color-silveira-focus: oklch(64% 0.16 78);
+
+  --font-silveira-display: var(--font-rethink-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-silveira-body: var(--font-rethink-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-silveira-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --space-silveira-2xs: 0.25rem;
+  --space-silveira-xs: 0.5rem;
+  --space-silveira-sm: 0.75rem;
+  --space-silveira-md: 1rem;
+  --space-silveira-lg: 1.5rem;
+  --space-silveira-xl: 2.5rem;
+  --space-silveira-2xl: 4rem;
+  --space-silveira-3xl: 6rem;
+  --space-silveira-4xl: 9rem;
+
+  --text-silveira-xs: 0.75rem;
+  --text-silveira-sm: 0.875rem;
+  --text-silveira-base: 1rem;
+  --text-silveira-md: 1.25rem;
+  --text-silveira-lg: 1.5625rem;
+  --text-silveira-xl: 1.953rem;
+  --text-silveira-2xl: 2.441rem;
+  --text-silveira-display: clamp(2.45rem, 3.8vw + 0.75rem, 4.45rem);
+  --text-silveira-display-sm: clamp(2rem, 2.7vw + 0.6rem, 3.45rem);
+
+  --radius-silveira-button: 0.25rem;
+  --radius-silveira-image: 0.5rem;
+  --rule-silveira: 1px;
+  --dur-silveira-fast: 150ms;
+  --dur-silveira: 260ms;
+  --dur-silveira-stroke: 900ms;
+  --ease-silveira-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html,

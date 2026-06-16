@@ -24,6 +24,7 @@ import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 import WastefreeExplainer from './WastefreeExplainer'
 import FishScrollReveal from './FishScrollReveal'
+import SilveiraPaintStrokes from './SilveiraPaintStrokes'
 import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree'
 import MossyEarthPartnerPage from '@/components/partner/MossyEarthPartnerPage'
 import { getTranslations } from 'next-intl/server'
@@ -1187,7 +1188,8 @@ function SilveiraPartnerPage({
     ]
 
     return (
-        <div className="min-h-screen overflow-x-hidden bg-[#f7f4ec] text-[#172116] selection:bg-[#f0c75a] selection:text-[#172116]">
+        <div className="silveira-page">
+            <SilveiraPaintStrokes />
             {isValidInvite && invite && (
                 <script
                     dangerouslySetInnerHTML={{
@@ -1196,41 +1198,46 @@ function SilveiraPartnerPage({
                 />
             )}
 
-            <header className="fixed inset-x-0 top-0 z-40 px-3 py-3 sm:px-6">
-                <div className="silveira-reveal mx-auto flex max-w-[1180px] items-center justify-between gap-3 rounded-lg border border-white/55 bg-[#172116]/72 px-3 py-3 text-white shadow-[0_22px_80px_rgba(23,33,22,0.22)] backdrop-blur-xl sm:px-4">
-                    <a href="#top" className="flex min-w-0 items-center gap-3">
-                        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white">
-                            <Image src={silveiraImages.logo} alt="" fill sizes="40px" className="object-contain p-1.5" />
+            <header className="silveira-masthead" aria-label="Silveira Tech page navigation">
+                <p className="silveira-issue">IdleForest edition / Serra da Lousa / 230 hectares</p>
+                <div className="silveira-masthead__brand">
+                    <a href="#top" className="silveira-wordmark" aria-label={`${company.name} page top`}>
+                        <span className="silveira-logo" aria-hidden>
+                            <Image src={silveiraImages.logo} alt="" fill sizes="56px" className="object-contain" />
                         </span>
-                        <span className="truncate text-sm font-black">{company.name}</span>
+                        <span>{company.name}</span>
                     </a>
-                    <nav className="hidden items-center gap-5 text-sm font-bold text-white/72 md:flex">
-                        <a href="#silveira-story" className="transition hover:text-white">
+                </div>
+                <div className="silveira-masthead__lower">
+                    <nav className="silveira-nav-links" aria-label="Page sections">
+                        <a href="#silveira-story">
                             Story
                         </a>
-                        <a href="#silveira-impact" className="transition hover:text-white">
+                        <a href="#silveira-impact">
                             Impact
                         </a>
-                        <a href="#silveira-join" className="transition hover:text-white">
+                        <a href="#silveira-join">
                             Join
                         </a>
                     </nav>
                     {isValidInvite || isMember ? (
                         <Link
                             href={joinHref}
-                            className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-[#f0c75a] px-4 py-2 text-sm font-black text-[#172116] transition hover:bg-white"
+                            className="silveira-text-link silveira-text-link--strong"
                         >
                             {primaryCta}
                             <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                         </Link>
-                    ) : null}
+                    ) : (
+                        <span className="silveira-nav-note">Public forest open by invite</span>
+                    )}
                 </div>
             </header>
 
             <main id="top">
-                <section className="relative overflow-hidden bg-[#172116] text-white">
+                <section className="silveira-photo-fold silveira-hero-fold">
                     <video
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="silveira-photo-fold__media"
                         autoPlay
                         muted
                         loop
@@ -1240,115 +1247,76 @@ function SilveiraPartnerPage({
                     >
                         <source src={silveiraImages.heroVideo} type="video/mp4" />
                     </video>
-                    <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(23,33,22,0.93)_0%,rgba(23,33,22,0.78)_42%,rgba(23,33,22,0.32)_100%)]" />
-                    <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,rgba(247,244,236,0)_0%,#f7f4ec_100%)]" />
+                    <div className="silveira-photo-fold__shade" />
+                    <div className="silveira-hero-caption">
+                        <p>Serra da Lousa, Portugal.</p>
+                        <h1>Support Silveira Tech for free.</h1>
+                    </div>
+                </section>
 
-                    <div className="relative z-10 mx-auto grid min-h-[86vh] max-w-[1180px] items-end gap-8 px-4 pb-12 pt-24 sm:px-6 sm:pt-28 lg:grid-cols-[1.18fr_0.72fr] lg:pb-12 lg:pt-28">
-                        <div className="max-w-[760px]">
-                            <div className="silveira-reveal silveira-delay-1 inline-flex rounded-full border border-white/22 bg-white/12 px-3 py-2 text-xs font-black text-white/82 backdrop-blur">
-                                IdleForest x Silveira Tech
-                            </div>
-                            <h1 className="silveira-reveal silveira-delay-2 mt-6 text-[3.2rem] font-black leading-[0.92] text-white sm:text-[4.8rem] lg:text-[4.85rem]">
-                                Support Silveira Tech for free.
-                            </h1>
-                            <p className="silveira-reveal silveira-delay-3 mt-6 max-w-[650px] text-lg font-medium leading-8 text-white/80 sm:text-xl sm:leading-9">
-                                Silveira Tech is rebuilding mountain villages in Serra da Lousa and regenerating 230 hectares of land. Join their company forest, install the IdleForest desktop app, and
-                                background tasks can help fund their regeneration projects.
+                <section id="silveira-story" className="silveira-text-fold">
+                    <div className="silveira-container silveira-intro-grid">
+                        <div className="silveira-lede">
+                            <p>
+                                Silveira Tech is rebuilding mountain villages in Serra da Lousa and regenerating 230 hectares of land. Join their company forest, install the IdleForest desktop app, and background tasks can help fund the work.
                             </p>
-                            <div className="silveira-reveal silveira-delay-4 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                            <div className="silveira-action-row">
                                 {isMember ? (
-                                    <Link
-                                        href={joinHref}
-                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#f0c75a] px-6 py-3 text-sm font-black text-[#172116] shadow-[0_18px_50px_rgba(240,199,90,0.24)] transition hover:-translate-y-0.5 hover:bg-white"
-                                    >
+                                    <Link href={joinHref} className="silveira-button">
                                         Go to your Silveira forest
                                         <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </Link>
                                 ) : isValidInvite ? (
-                                    <Link
-                                        href={joinHref}
-                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#f0c75a] px-6 py-3 text-sm font-black text-[#172116] shadow-[0_18px_50px_rgba(240,199,90,0.24)] transition hover:-translate-y-0.5 hover:bg-white"
-                                    >
+                                    <Link href={joinHref} className="silveira-button">
                                         Join Silveira forest
                                         <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </Link>
                                 ) : (
-                                    <span className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/25 bg-white/12 px-5 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-white backdrop-blur">
-                                        Join the forest
-                                    </span>
+                                    <span className="silveira-invite-note">Join link opens when an invite is active.</span>
                                 )}
                                 {companyWebsite ? (
-                                    <a
-                                        href={companyWebsite.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/28 px-6 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
-                                    >
+                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="silveira-text-link">
                                         Visit Silveira Tech
                                         <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
                                     </a>
                                 ) : null}
                             </div>
                         </div>
-
-                        <div className="silveira-card silveira-delay-3 rounded-lg border border-white/20 bg-white/12 p-3 shadow-[0_30px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
-                            <div className="silveira-media relative aspect-[4/5] min-h-[420px] overflow-hidden rounded-lg bg-[#4d6f45]">
-                                <Image src={silveiraImages.hero} alt="Silveira Tech mountain village" fill priority sizes="(min-width: 1024px) 420px, 100vw" className="object-cover" />
-                                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,33,22,0)_35%,rgba(23,33,22,0.82)_100%)]" />
-                                <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-3 rounded-lg border border-white/20 bg-[#172116]/58 px-4 py-3 backdrop-blur">
-                                    <span className="text-sm font-black">Live company forest</span>
-                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#d7e7df] px-3 py-1 text-xs font-black text-[#172116]">
-                                        <span className="h-2 w-2 rounded-full bg-[#4d6f45]" />
-                                        Active
-                                    </span>
+                        <dl className="silveira-stat-rail" aria-label="Silveira project facts">
+                            {stats.map((stat) => (
+                                <div key={stat.label}>
+                                    <dt>{stat.label}</dt>
+                                    <dd>{stat.value}</dd>
+                                    <p>{stat.detail}</p>
                                 </div>
-                                <div className="absolute inset-x-4 bottom-4 grid gap-2">
-                                    {stats.map((stat, index) => (
-                                        <div key={stat.label} className={`silveira-card silveira-delay-${index + 3} rounded-lg border border-white/16 bg-white/14 p-4 backdrop-blur`}>
-                                            <p className="text-4xl font-black leading-none text-[#f0c75a]">{stat.value}</p>
-                                            <p className="mt-1 text-sm font-black text-white">{stat.label}</p>
-                                            <p className="mt-1 text-xs font-medium leading-5 text-white/68">{stat.detail}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                            ))}
+                        </dl>
                     </div>
                 </section>
 
-                <section id="silveira-story" className="bg-[#f7f4ec] py-14 sm:py-20">
-                    <div className="mx-auto grid max-w-[1180px] gap-8 px-4 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-                        <div className="silveira-media silveira-scroll-card relative min-h-[560px] overflow-hidden rounded-lg bg-[#4d6f45] shadow-[0_28px_80px_rgba(23,33,22,0.16)]">
-                            <Image src={silveiraImages.future} alt="Silveira Tech forest and village terrain" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
-                            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,33,22,0)_42%,rgba(23,33,22,0.74)_100%)]" />
-                            <div className="absolute bottom-5 left-5 right-5 rounded-lg border border-white/18 bg-[#172116]/74 p-5 text-white backdrop-blur">
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">From Silveira to the world</p>
-                                <p className="mt-3 text-base font-semibold leading-7 text-white/84">
-                                    A living blueprint where regeneration, community, and practical technology grow in the same place.
-                                </p>
-                            </div>
-                        </div>
+                <section className="silveira-photo-band">
+                    <Image src={silveiraImages.future} alt="Silveira Tech forest and village terrain" fill sizes="100vw" className="silveira-photo-band__image" priority />
+                    <div className="silveira-photo-band__caption">
+                        <p>From Silveira to the world</p>
+                        <h2>A working village for people, land, and practical technology.</h2>
+                    </div>
+                </section>
 
-                        <div className="silveira-scroll grid gap-5">
-                            <div>
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#b86f3e]">The bridge between innovation and regeneration</p>
-                                <h2 className="mt-4 max-w-[820px] text-[2.8rem] font-black leading-[0.96] text-[#172116] sm:text-[4.4rem]">
-                                    Not a retreat from the modern world. A reimagining of it.
-                                </h2>
-                                <p className="mt-5 max-w-[720px] text-base font-medium leading-8 text-[#4f5848] sm:text-lg">
-                                    Their work brings together scientists, artists, coders, farmers, builders, and dreamers around one practical question: what if technology helped communities and
-                                    nature thrive together?
-                                </p>
-                            </div>
-                            <div className="grid gap-4 md:grid-cols-3">
-                                {pillars.map((pillar, index) => (
-                                    <article key={pillar.label} className={`silveira-scroll-card silveira-hover-lift silveira-delay-${index + 1} rounded-lg border border-[#e5ddcd] bg-white p-5 shadow-sm`}>
-                                        <div className="mb-5 flex items-center justify-between border-b border-[#ece4d4] pb-4">
-                                            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#4d6f45]">{pillar.number}</span>
-                                            <span className="silveira-scroll-line h-2 w-12 rounded-full bg-[#d7e7df]" />
-                                        </div>
-                                        <h3 className="text-lg font-black leading-tight text-[#172116]">{pillar.label}</h3>
-                                        <p className="mt-3 text-sm font-medium leading-6 text-[#606858]">{pillar.body}</p>
+                <section className="silveira-text-fold silveira-text-fold--tight">
+                    <div className="silveira-container silveira-split">
+                        <div>
+                            <h2 className="silveira-paint-title">Not a retreat from the modern world. A <span className="silveira-paint-mark">reworking</span> of it.</h2>
+                        </div>
+                        <div className="silveira-prose">
+                            <p>
+                                Their work brings together scientists, artists, coders, farmers, builders, and dreamers around one practical question: what if technology helped communities and nature thrive together?
+                            </p>
+                            <div className="silveira-pillars">
+                                {pillars.map((pillar) => (
+                                    <article key={pillar.label}>
+                                        <span>{pillar.number}</span>
+                                        <h3>{pillar.label}</h3>
+                                        <p>{pillar.body}</p>
                                     </article>
                                 ))}
                             </div>
@@ -1356,85 +1324,61 @@ function SilveiraPartnerPage({
                     </div>
                 </section>
 
-                <section className="bg-white py-14 sm:py-16">
-                    <div className="mx-auto grid max-w-[1180px] gap-4 px-4 sm:px-6 lg:grid-cols-4">
-                        <div className="silveira-scroll-card rounded-lg bg-[#172116] p-6 text-white lg:col-span-1">
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Company forest</p>
-                            <h2 className="mt-4 text-3xl font-black leading-tight">Real support, visible as a team.</h2>
-                            <p className="mt-4 text-sm font-medium leading-6 text-white/70">
-                                This page routes Silveira support through one shared company forest, so the collective contribution is easy to understand.
-                            </p>
-                        </div>
-                        {proofMetrics.map((metric, index) => (
-                            <article key={metric.label} className={`silveira-scroll-card silveira-hover-lift silveira-delay-${index + 1} rounded-lg border border-[#e7e0d2] bg-[#f7f4ec] p-6`}>
-                                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#b86f3e]">{metric.kicker}</p>
-                                <p className="mt-8 text-sm font-black text-[#606858]">{metric.label}</p>
-                                <p className="mt-2 text-4xl font-black leading-none text-[#172116]">{metric.value}</p>
-                            </article>
-                        ))}
+                <section className="silveira-metrics" id="silveira-impact" aria-label="IdleForest support metrics">
+                    <div className="silveira-container">
+                        <h2 className="silveira-paint-title">Real support, <span className="silveira-paint-mark">visible as a team</span>.</h2>
+                        <dl>
+                            {proofMetrics.map((metric) => (
+                                <div key={metric.label}>
+                                    <dt>{metric.kicker}</dt>
+                                    <dd>{metric.value}</dd>
+                                    <p>{metric.label}</p>
+                                </div>
+                            ))}
+                        </dl>
                     </div>
                 </section>
 
-                <section className="bg-[#eef3eb] py-14 sm:py-20">
-                    <div className="mx-auto max-w-[1180px] px-4 sm:px-6">
-                        <div className="silveira-scroll mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                            <div>
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#b86f3e]">Past to present</p>
-                                <h2 className="mt-4 max-w-[760px] text-[2.7rem] font-black leading-[0.98] text-[#172116] sm:text-[4.2rem]">
-                                    Building the village, step by step.
-                                </h2>
-                            </div>
-                            <p className="max-w-[520px] text-base font-medium leading-7 text-[#4f5848]">
-                                The Silveira story moves from land and ruins to masterplanning, basecamp, and a regenerative village in progress.
-                            </p>
+                <section className="silveira-archive" aria-labelledby="silveira-archive-title">
+                    <div className="silveira-container">
+                        <div className="silveira-section-head silveira-section-head--archive">
+                            <h2 id="silveira-archive-title" className="silveira-paint-title">Building the village, <span className="silveira-paint-mark">step by step</span>.</h2>
+                            <p>The Silveira story moves from land and ruins to masterplanning, basecamp, and a regenerative village in progress.</p>
                         </div>
-                        <div className="grid gap-4 lg:grid-cols-3">
+                        <div className="silveira-archive-grid">
                             {journey.map(([label, body, image], index) => (
-                                <article key={label} className={`silveira-scroll-card silveira-hover-lift silveira-delay-${index + 1} overflow-hidden rounded-lg border border-[#dce5d8] bg-white shadow-sm`}>
-                                    <div className="silveira-media relative aspect-[16/11] overflow-hidden bg-[#4d6f45]">
-                                        <Image src={image} alt={label} fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover" />
+                                <article key={label} className={index === 1 ? 'silveira-archive-item silveira-archive-item--tall' : 'silveira-archive-item'}>
+                                    <div className="silveira-archive-image">
+                                        <Image src={image} alt={label} fill sizes="(min-width: 960px) 33vw, 100vw" className="object-cover" />
                                     </div>
-                                    <div className="p-5">
-                                        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#b86f3e]">{label}</p>
-                                        <p className="mt-3 text-sm font-medium leading-6 text-[#606858]">{body}</p>
+                                    <div>
+                                        <h3>{label}</h3>
+                                        <p>{body}</p>
                                     </div>
                                 </article>
                             ))}
                         </div>
                     </div>
                 </section>
-
-                <section id="silveira-impact" className="bg-[#172116] py-14 text-white sm:py-20">
-                    <div className="mx-auto max-w-[1180px] px-4 sm:px-6">
-                        <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end">
-                            <div className="silveira-scroll">
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Where support goes</p>
-                                <h2 className="mt-4 text-[2.75rem] font-black leading-[0.98] text-white sm:text-[4.4rem]">
-                                    Background activity supports Silveira directly.
-                                </h2>
-                                <p className="mt-5 text-base font-medium leading-8 text-white/72">
-                                    Funds raised through this company forest come from eligible desktop app activity and go to Silveira Tech's own regeneration work, not IdleForest's general planting portfolio.
-                                </p>
-                            </div>
-                            <div className="silveira-scroll-card rounded-lg border border-white/12 bg-white/[0.06] p-5">
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Silveira support</p>
-                                <h3 className="mt-4 text-xl font-black leading-tight text-white">Reserved for Silveira Tech projects</h3>
-                                <p className="mt-2 text-sm font-medium leading-6 text-white/68">
-                                    Support from this page goes toward Silveira Tech projects. The totals above show people who joined this forest and eligible tasks handled after they joined. Project updates can be followed through Silveira Tech's own channels.
-                                </p>
-                            </div>
+                <section className="silveira-dark-section">
+                    <div className="silveira-container">
+                        <div className="silveira-section-head">
+                            <h2>Background activity supports Silveira directly.</h2>
+                            <p>
+                                Funds raised through this company forest come from eligible desktop app activity and go to Silveira Tech's own regeneration work, not IdleForest's general planting portfolio.
+                            </p>
                         </div>
 
-                        <div className="mt-10 grid gap-4 lg:grid-cols-3">
+                        <div className="silveira-project-list">
                             {fundedProjects.map((project, index) => (
-                                <article key={project.title} className={`silveira-scroll-card silveira-hover-lift silveira-delay-${index + 1} overflow-hidden rounded-lg bg-white text-[#172116]`}>
-                                    <div className="silveira-media relative aspect-[4/3] overflow-hidden bg-[#4d6f45]">
-                                        <Image src={project.image} alt={project.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+                                <article key={project.title}>
+                                    <div className="silveira-project-image">
+                                        <Image src={project.image} alt={project.title} fill sizes="(min-width: 960px) 38vw, 100vw" className="object-cover" />
                                     </div>
-                                    <div className="p-5">
-                                        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#b86f3e]">{project.label}</p>
-                                        <h3 className="mt-3 text-xl font-black leading-tight">{project.title}</h3>
-                                        <p className="mt-3 text-sm font-medium leading-6 text-[#606858]">{project.body}</p>
+                                    <div>
+                                        <p>{project.label}</p>
+                                        <h3>{project.title}</h3>
+                                        <span>{project.body}</span>
                                     </div>
                                 </article>
                             ))}
@@ -1445,7 +1389,7 @@ function SilveiraPartnerPage({
                                 href={companyWebsite.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="silveira-scroll mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-black text-[#172116] transition hover:-translate-y-0.5 hover:bg-[#f0c75a]"
+                                className="silveira-text-link silveira-text-link--light"
                             >
                                 Visit Silveira Tech
                                 <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
@@ -1454,35 +1398,23 @@ function SilveiraPartnerPage({
                     </div>
                 </section>
 
-                <section className="bg-[#f7f4ec] py-14 sm:py-20">
-                    <div className="mx-auto grid max-w-[1180px] gap-4 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr]">
-                        <div className="silveira-media silveira-scroll-card relative min-h-[520px] overflow-hidden rounded-lg bg-[#172116] text-white">
-                            <Image src={silveiraImages.journeyThree} alt="" fill sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover opacity-82" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#172116] via-[#172116]/46 to-transparent" />
-                            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f0c75a]">Quiet by design</p>
-                                <h2 className="mt-5 max-w-[760px] text-[2.75rem] font-black leading-[0.98] sm:text-[4.2rem]">
-                                    Install once. Let it run quietly.
-                                </h2>
-                                <p className="mt-5 max-w-[620px] text-base font-medium leading-8 text-white/78">
-                                    The desktop app runs quietly while your computer is idle, pauses when your connection is needed, and turns eligible background activity into funding for Silveira Tech's
-                                    local regeneration work.
-                                </p>
-                            </div>
+                <section className="silveira-install">
+                    <div className="silveira-container silveira-install-grid">
+                        <div className="silveira-install-photo">
+                            <Image src={silveiraImages.journeyThree} alt="Silveira Tech regenerative masterplan site" fill sizes="(min-width: 960px) 45vw, 100vw" className="object-cover" />
                         </div>
-
-                        <div className="silveira-scroll-card rounded-lg border border-[#e4dccc] bg-white p-5 shadow-sm sm:p-7 lg:p-8">
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#4d6f45]">The workday loop</p>
-                            <h3 className="mt-3 max-w-[640px] text-3xl font-black leading-tight text-[#172116] sm:text-4xl">
+                        <div className="silveira-install-copy">
+                            <h2>Install once. Let it run quietly.</h2>
+                            <p>
                                 Unused bandwidth becomes visible local impact, without asking supporters to change rhythm.
-                            </h3>
-                            <div className="mt-7 grid gap-3">
-                                {workdaySteps.map((item, index) => (
-                                    <article key={item.step} className={`silveira-scroll-card silveira-hover-lift silveira-delay-${index + 1} grid gap-4 rounded-lg border border-[#ece4d4] bg-[#f7f4ec] p-5 sm:grid-cols-[3rem_1fr] sm:items-start`}>
-                                        <div className="text-sm font-black text-[#4d6f45]">{item.step}</div>
+                            </p>
+                            <div className="silveira-step-list">
+                                {workdaySteps.map((item) => (
+                                    <article key={item.step}>
+                                        <div>{item.step}</div>
                                         <div>
-                                            <h4 className="text-xl font-black text-[#172116]">{item.title}</h4>
-                                            <p className="mt-2 max-w-[650px] text-sm font-medium leading-6 text-[#606858]">{item.body}</p>
+                                            <h3>{item.title}</h3>
+                                            <p>{item.body}</p>
                                         </div>
                                     </article>
                                 ))}
@@ -1491,24 +1423,20 @@ function SilveiraPartnerPage({
                     </div>
                 </section>
 
-                <section id="silveira-join" className="relative overflow-hidden bg-[#e7efe2] py-16 text-[#172116] sm:py-24">
-                    <Image src={silveiraImages.footer} alt="" fill sizes="100vw" className="object-cover opacity-18 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(231,239,226,0.96)_0%,rgba(231,239,226,0.88)_54%,rgba(231,239,226,0.72)_100%)]" />
-                    <div className="relative z-10 mx-auto grid max-w-[1180px] gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-center">
-                        <div className="silveira-scroll">
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#4d6f45]">Let's build the company forest</p>
-                            <h2 className="mt-4 max-w-[900px] text-[2.85rem] font-black leading-[0.98] text-[#172116] sm:text-[5rem]">
-                                Recharging humanity can start on your desktop.
-                            </h2>
-                            <p className="mt-5 max-w-[680px] text-base font-medium leading-8 text-[#4f5848]">
+                <section id="silveira-join" className="silveira-close">
+                    <Image src={silveiraImages.footer} alt="" fill sizes="100vw" className="silveira-close__image" />
+                    <div className="silveira-container silveira-close__content">
+                        <div>
+                            <h2>Recharging humanity can start on your desktop.</h2>
+                            <p>
                                 Join {company.name} on IdleForest, install the desktop app, and let eligible background activity contribute to Silveira Tech's regeneration impact.
                             </p>
                         </div>
-                        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                        <div className="silveira-close__actions">
                             {isMember ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172116] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#4d6f45]"
+                                    className="silveira-button"
                                 >
                                     Go to your Silveira forest
                                     <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
@@ -1516,7 +1444,7 @@ function SilveiraPartnerPage({
                             ) : isValidInvite ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172116] px-6 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-[#4d6f45]"
+                                    className="silveira-button"
                                 >
                                     Support Silveira
                                     <ArrowRight aria-hidden className="h-4 w-4" strokeWidth={3} />
@@ -1527,7 +1455,7 @@ function SilveiraPartnerPage({
                                     href={companyWebsite.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#172116]/18 bg-white/50 px-6 py-3 text-sm font-black text-[#172116] transition hover:-translate-y-0.5 hover:border-[#172116]/34 hover:bg-white"
+                                    className="silveira-text-link"
                                 >
                                     SilveiraTech.pt
                                     <ExternalLink aria-hidden className="h-4 w-4" strokeWidth={3} />
