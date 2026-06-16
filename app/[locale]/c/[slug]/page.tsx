@@ -80,6 +80,7 @@ const silveiraImages = {
     journeyOne: '/partner/silveira/journey-1.jpg',
     journeyThree: '/partner/silveira/journey-3.jpg',
     journeyFive: '/partner/silveira/journey-5.jpg',
+    installOnce: '/partner/silveira/install-once.png',
     grid: '/partner/silveira/grid-1.jpg',
     footer: '/partner/silveira/footer-bg.jpg',
 }
@@ -1401,7 +1402,7 @@ function SilveiraPartnerPage({
                 <section className="silveira-install">
                     <div className="silveira-container silveira-install-grid">
                         <div className="silveira-install-photo">
-                            <Image src={silveiraImages.journeyThree} alt="Silveira Tech regenerative masterplan site" fill sizes="(min-width: 960px) 45vw, 100vw" className="object-cover" />
+                            <Image src={silveiraImages.installOnce} alt="IdleForest app dashboard showing forest impact and activity" fill sizes="(min-width: 960px) 45vw, 100vw" className="object-contain" />
                         </div>
                         <div className="silveira-install-copy">
                             <h2>Install once. Let it run quietly.</h2>
