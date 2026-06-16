@@ -921,7 +921,7 @@ function WastefreePlanetPage({
                     </a>
                     {isValidInvite || isMember ? (
                         <Link href={joinHref} className="wfp-button wfp-button--small">
-                            {isMember ? 'Open portal' : 'Join free'}
+                            {isMember ? 'Open portal' : 'Join for free'}
                         </Link>
                     ) : null}
                 </div>
