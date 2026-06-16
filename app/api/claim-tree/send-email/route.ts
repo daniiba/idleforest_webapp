@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/resend';
 import { randomUUID } from 'crypto';
+import { attributePendingTreeClaim, resolveSignupReferrer } from '@/lib/referral-attribution';
 
 export async function POST(request: Request) {
   try {
@@ -12,15 +13,36 @@ export async function POST(request: Request) {
     }
 
     const supabase = createAdminClient();
+    let referredBy: string | null = null;
+
+    try {
+      const { data: authUser, error: authUserError } = await supabase.auth.admin.getUserById(userId);
+
+      if (authUserError) {
+        console.error('Error fetching auth user for referral attribution', authUserError);
+      } else {
+        referredBy = await resolveSignupReferrer(
+          supabase,
+          userId,
+          authUser.user?.user_metadata || {}
+        );
+      }
+    } catch (referralError) {
+      console.error('Error resolving signup referrer', referralError);
+    }
 
     // Check if user already has a pending or completed claim?
     // For now, assume one per user.
     const { data: existing } = await supabase.from('pending_tree_claims')
-      .select('id')
+      .select('id, referred_by')
       .eq('user_id', userId)
       .single();
 
     if (existing) {
+      if (!existing.referred_by) {
+        await attributePendingTreeClaim(supabase, userId, referredBy);
+      }
+
       return NextResponse.json({ message: 'Claim already exists' }, { status: 200 }); // Idempotency
     }
 
@@ -34,7 +56,8 @@ export async function POST(request: Request) {
       email: email,
       user_name: userName,
       claim_token: token,
-      referral_code: referralCode
+      referral_code: referralCode,
+      referred_by: referredBy
     });
 
     if (insertError) {

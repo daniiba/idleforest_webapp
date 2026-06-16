@@ -35,6 +35,8 @@ const candu = localFont({
 const rethinkSans = Rethink_Sans({
     subsets: ["latin"],
     variable: "--font-rethink-sans",
+    display: "swap",
+    adjustFontFallback: false,
     weight: ["400", "500", "600", "700", "800"],
 });
 
@@ -66,7 +68,11 @@ export default async function RootLayout({
     const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
-    const shouldHideGlobalFooter = normalizedPathname.startsWith('/c/wastefree') || normalizedPathname.startsWith('/c/planetwild') || normalizedPathname.startsWith('/c/mossy-earth');
+    const shouldHideGlobalFooter =
+        normalizedPathname.startsWith('/c/wastefree') ||
+        normalizedPathname.startsWith('/c/planetwild') ||
+        normalizedPathname.startsWith('/c/mossy-earth') ||
+        normalizedPathname.startsWith('/c/silveira');
     const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
     const softwareApplicationSchema = {
         "@context": "https://schema.org",

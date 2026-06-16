@@ -79,16 +79,50 @@ const comparisonLinks = [
     },
 ];
 
-const mossyEarthStats = [
-    { value: "700K+", label: "YouTube subscribers" },
-    { value: "£408K", label: "to rewilding in Q1 2026" },
-    { value: "30+", label: "partnership projects" },
-];
-
-const mossyEarthSteps = [
-    { label: "Now live", body: "Mossy Earth forest" },
-    { label: "Free to join", body: "Install once" },
-    { label: "Adds funding", body: "For rewilding work" },
+const partnerAnnouncements = [
+    {
+        id: "mossy-earth",
+        eyebrow: "Partnership announcement",
+        logoSrc: "/partner/mossy-earth/logo-mark.svg",
+        logoAlt: "Mossy Earth logo mark",
+        title: "Mossy Earth is live on IdleForest.",
+        description:
+            "Join the Mossy Earth forest for free, install IdleForest once, and future background activity can help generate passive funding for conservation and rewilding work.",
+        href: "/c/mossy-earth",
+        cta: "Support Mossy Earth",
+        externalHref: "https://www.mossy.earth/",
+        externalCta: "Visit Mossy Earth",
+        stats: [
+            { value: "700K+", label: "YouTube subscribers" },
+            { value: "£408K", label: "to rewilding in Q1 2026" },
+        ],
+        tags: ["Rewilding", "Conservation", "Free to join"],
+        videoSrc: "/partner/mossy-earth/hero-video.mp4",
+        imageSrc: "/partner/mossy-earth/wetland-field.png",
+        imageAlt: "A conservation worker walking through flooded woodland",
+        accentClassName: "bg-brand-yellow",
+    },
+    {
+        id: "wastefree-planet",
+        eyebrow: "New cleanup partner",
+        logoSrc: "/partner/wastefree/wfp-logo-white.webp",
+        logoAlt: "Waste Free Planet logo",
+        title: "Waste Free Planet joins IdleForest.",
+        description:
+            "The Waste Free Planet cleanup fund is now live. Join for free and let future background activity help fund ocean-bound plastic recovery through 1ClickImpact and Plastic Bank.",
+        href: "/c/wastefree-planet",
+        cta: "Join for free",
+        externalHref: "https://www.wastefreeplanet.org/",
+        externalCta: "Visit Waste Free Planet",
+        stats: [
+            { value: "100%", label: "profits to plastic removal" },
+            { value: "0¢", label: "cost to participate" },
+        ],
+        tags: ["Plastic removal", "Ocean cleanup", "Free to join"],
+        imageSrc: "/partner/wastefree/hero-coast.jpg",
+        imageAlt: "A coastline connected to Waste Free Planet cleanup work",
+        accentClassName: "bg-cyan-200",
+    },
 ];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
@@ -229,104 +263,110 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
-                {/* MOSSY EARTH PARTNERSHIP */}
-                <section id="mossy-earth" className="relative overflow-hidden bg-brand-gray text-black scroll-mt-24">
-                    <div className="container mx-auto px-6 py-12 md:py-16">
-                        <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-                            <div className="space-y-5 md:space-y-6">
-                                <div className="inline-flex items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3">
-                                    <Image src="/partner/mossy-earth/logo-mark.svg" alt="" width={34} height={34} />
-                                    <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-700">
-                                        Partnership announcement
-                                    </span>
-                                </div>
-                                <div>
-                                    <h2 className="font-rethink-sans text-[30px] sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-                                        IdleForest is partnering with Mossy Earth.
-                                    </h2>
-                                    <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-800 md:mt-5 md:text-lg md:leading-8">
-                                        The Mossy Earth forest is now live on IdleForest. Join it for free, install IdleForest once, and future background activity can help generate passive funding for Mossy Earth&apos;s conservation and rewilding work.
-                                    </p>
-                                </div>
+                {/* PARTNERSHIP ANNOUNCEMENTS */}
+                <section id="partner-announcements" className="relative overflow-hidden bg-brand-gray text-black scroll-mt-24">
+                    <div className="container mx-auto px-6 py-14 md:py-20">
+                        <div className="mx-auto max-w-3xl text-center">
+                            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-700">
+                                Partner projects
+                            </p>
+                            <h2 className="mt-3 font-rethink-sans text-[34px] font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+                                Meet the projects you can support with IdleForest.
+                            </h2>
+                            <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg md:leading-8">
+                                Choose a partner page, join for free, and future background activity can support that project&apos;s impact stream.
+                            </p>
+                        </div>
 
-                                <div className="grid gap-2 sm:grid-cols-3">
-                                    {mossyEarthSteps.map((step) => (
-                                        <div key={step.label} className="flex min-h-[96px] min-w-0 items-start gap-3 border-2 border-black bg-brand-yellow p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                            <Check className="mt-0.5 h-4 w-4 flex-none" strokeWidth={3} />
-                                            <span className="min-w-0">
-                                                <span className="block text-[11px] font-extrabold uppercase leading-none tracking-[0.16em] text-black/65">
-                                                    {step.label}
-                                                </span>
-                                                <span className="mt-2 block text-lg font-extrabold leading-tight text-black">
-                                                    {step.body}
-                                                </span>
+                        {/* Hallmark · component: partner-announcement-cards · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
+                        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+                            {partnerAnnouncements.map((partner) => (
+                                <article
+                                    key={partner.id}
+                                    id={partner.id}
+                                    className="flex min-w-0 flex-col overflow-hidden rounded-lg border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                                >
+                                    <div className="relative aspect-[16/10] overflow-hidden border-b-2 border-black bg-brand-navy">
+                                        {partner.videoSrc ? (
+                                            <video
+                                                className="h-full w-full object-cover"
+                                                autoPlay
+                                                muted
+                                                loop
+                                                playsInline
+                                                preload="metadata"
+                                                aria-label={`${partner.title} footage`}
+                                            >
+                                                <source src={partner.videoSrc} type="video/mp4" />
+                                            </video>
+                                        ) : (
+                                            <Image
+                                                src={partner.imageSrc}
+                                                alt={partner.imageAlt}
+                                                fill
+                                                sizes="(min-width: 1024px) 50vw, 100vw"
+                                                className="object-cover"
+                                            />
+                                        )}
+                                        <div className="absolute left-4 top-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                            <span className="flex h-9 w-9 flex-none items-center justify-center overflow-hidden rounded-sm bg-brand-navy p-1">
+                                                <Image src={partner.logoSrc} alt={partner.logoAlt} width={36} height={36} className="h-full w-full object-contain" />
+                                            </span>
+                                            <span className="min-w-0 text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-neutral-700 sm:text-xs">
+                                                {partner.eyebrow}
                                             </span>
                                         </div>
-                                    ))}
-                                </div>
+                                    </div>
 
-                                <div className="grid grid-cols-3 gap-2 md:gap-3">
-                                    {mossyEarthStats.map((stat) => (
-                                        <div key={stat.label} className="border-2 border-black bg-white p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] md:p-4 md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                            <p className="font-candu text-2xl leading-none text-black md:text-3xl">{stat.value}</p>
-                                            <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.1em] text-neutral-600 md:text-xs md:tracking-[0.14em]">{stat.label}</p>
+                                    <div className="flex flex-1 flex-col p-5 sm:p-6">
+                                        <div className="flex flex-wrap gap-2">
+                                            {partner.tags.map((tag) => (
+                                                <span
+                                                    key={tag}
+                                                    className={`border-2 border-black px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-black ${partner.accentClassName}`}
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
 
-                                <div className="flex flex-col gap-3 sm:flex-row">
-                                    <Link
-                                        href="/c/mossy-earth"
-                                        className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
-                                    >
-                                        Support Mossy Earth for Free <ArrowRight className="h-4 w-4" />
-                                    </Link>
-                                    <a
-                                        href="https://www.mossy.earth/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-brand-yellow hover:shadow-none"
-                                    >
-                                        Visit Mossy Earth <ArrowRight className="h-4 w-4" />
-                                    </a>
-                                </div>
-                            </div>
+                                        <h3 className="mt-5 font-rethink-sans text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+                                            {partner.title}
+                                        </h3>
+                                        <p className="mt-4 text-sm leading-7 text-neutral-800 sm:text-base">
+                                            {partner.description}
+                                        </p>
 
-                            <div className="hidden gap-4 md:grid">
-                                <div className="relative aspect-[4/3] overflow-hidden border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                                    <video
-                                        className="h-full w-full object-cover"
-                                        autoPlay
-                                        muted
-                                        loop
-                                        playsInline
-                                        preload="metadata"
-                                        aria-label="Mossy Earth conservation field footage"
-                                    >
-                                        <source src="/partner/mossy-earth/hero-video.mp4" type="video/mp4" />
-                                    </video>
-                                </div>
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="relative aspect-[16/11] overflow-hidden border-2 border-black bg-white">
-                                        <Image
-                                            src="/partner/mossy-earth/wetland-field.png"
-                                            alt="A conservation worker walking through flooded woodland"
-                                            fill
-                                            sizes="(min-width: 1024px) 300px, 50vw"
-                                            className="object-cover"
-                                        />
+                                        <div className="mt-6 grid grid-cols-2 gap-3">
+                                            {partner.stats.map((stat) => (
+                                                <div key={stat.label} className="min-h-[94px] border-2 border-black bg-brand-gray p-4">
+                                                    <p className="font-candu text-3xl leading-none text-black">{stat.value}</p>
+                                                    <p className="mt-2 text-[10px] font-bold uppercase leading-snug tracking-[0.12em] text-neutral-700">
+                                                        {stat.label}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="mt-auto flex flex-col gap-3 pt-6 sm:flex-row">
+                                            <Link
+                                                href={partner.href}
+                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
+                                            >
+                                                {partner.cta} <ArrowRight className="h-4 w-4 flex-none" />
+                                            </Link>
+                                            <a
+                                                href={partner.externalHref}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-sm font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-brand-yellow hover:shadow-none"
+                                            >
+                                                {partner.externalCta} <ArrowRight className="h-4 w-4 flex-none" />
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div className="relative aspect-[16/11] overflow-hidden border-2 border-black bg-white">
-                                        <Image
-                                            src="/partner/mossy-earth/planting-portrait.png"
-                                            alt="A restoration worker planting a young seedling"
-                                            fill
-                                            sizes="(min-width: 1024px) 300px, 50vw"
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                                </article>
+                            ))}
                         </div>
                     </div>
                 </section>

@@ -14,6 +14,7 @@ import {
     isWastefreeCompanySlug,
 } from '@/lib/company-partners'
 import { createCompanyMembershipForUser, finalizeActiveCompanyMembershipForUser } from '@/lib/company-node-points'
+import { attributePendingTreeClaim } from '@/lib/referral-attribution'
 
 // Helper to create Supabase client for route handlers
 async function createSupabaseClient() {
@@ -181,6 +182,7 @@ export async function POST(request: Request) {
             .select(`
                 id,
                 team_id,
+                created_by,
                 uses_remaining,
                 expires_at,
                 teams (
@@ -296,6 +298,16 @@ export async function POST(request: Request) {
         } catch (logError) {
             // Don't fail the join if logging fails
             console.error('Failed to log invite usage:', logError)
+        }
+
+        if (isNewSignup) {
+            try {
+                const adminSupabase = createAdminClient()
+                await attributePendingTreeClaim(adminSupabase, user.id, invite.created_by)
+            } catch (referralError) {
+                // Referral attribution should never block a successful team join.
+                console.error('Failed to attribute team invite referral:', referralError)
+            }
         }
 
         return NextResponse.json({

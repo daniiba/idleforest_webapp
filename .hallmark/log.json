@@ -1,5 +1,14 @@
 [
   {
+    "date": "2026-06-15",
+    "macrostructure": "Photographic",
+    "theme": "Garden",
+    "enrichment": "supplied Silveira imagery",
+    "nav": "N9 Edge-aligned minimal",
+    "footer": "Ft1 Mast-headed",
+    "brief": "Redesign Silveira page with better fonts, fewer boxes, aligned spacing, and no glass"
+  },
+  {
     "date": "2026-06-13",
     "macrostructure": "Stat-Led Reference",
     "theme": "Ivory Ocean",

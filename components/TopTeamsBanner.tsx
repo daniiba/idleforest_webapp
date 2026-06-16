@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { Link } from "@/navigation"
 import { Flame, Users } from "lucide-react"
+import { isHiddenTopTeamSlug } from "@/lib/team-visibility"
 
 interface PeriodTeamStat {
     team_id: string
@@ -33,7 +34,7 @@ export default function TopTeamsBanner() {
                 .select('team_id, points_gained_that_day, member_count')
                 .eq('date', today)
                 .order('points_gained_that_day', { ascending: false })
-                .limit(3)
+                .limit(10)
 
             if (dailyTeams && dailyTeams.length > 0) {
                 const teamIds = dailyTeams.map(t => t.team_id)
@@ -44,14 +45,17 @@ export default function TopTeamsBanner() {
 
                 const teamMap = new Map(teamInfo?.map(t => [t.id, { name: t.name, image: t.image_url, slug: t.slug }]) || [])
 
-                const enriched = dailyTeams.map(t => ({
-                    team_id: t.team_id,
-                    team_slug: teamMap.get(t.team_id)?.slug || '',
-                    points_gained: t.points_gained_that_day,
-                    member_count: t.member_count,
-                    team_name: teamMap.get(t.team_id)?.name || 'Unknown',
-                    team_image: teamMap.get(t.team_id)?.image || null,
-                }))
+                const enriched = dailyTeams
+                    .map(t => ({
+                        team_id: t.team_id,
+                        team_slug: teamMap.get(t.team_id)?.slug || '',
+                        points_gained: t.points_gained_that_day,
+                        member_count: t.member_count,
+                        team_name: teamMap.get(t.team_id)?.name || 'Unknown',
+                        team_image: teamMap.get(t.team_id)?.image || null,
+                    }))
+                    .filter(team => team.team_slug && !isHiddenTopTeamSlug(team.team_slug))
+                    .slice(0, 3)
                 setTopDailyTeams(enriched)
             } else {
                 setTopDailyTeams([])

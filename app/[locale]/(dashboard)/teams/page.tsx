@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Link } from "@/navigation";
 import { Trophy, Search, Users, Award, TrendingUp, Flame, Zap, Calendar, MessageSquare, Plus, ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { isHiddenTopTeamSlug } from "@/lib/team-visibility"
 
 interface Team {
 	id: string
@@ -102,7 +103,7 @@ export default function TeamsPage() {
 			.order('total_points', { ascending: false })
 
 		if (teamsData) {
-			setTeams(teamsData)
+			setTeams(teamsData.filter(team => !isHiddenTopTeamSlug(team.slug)))
 		}
 
 		// Fetch all-time user rankings
@@ -198,7 +199,7 @@ export default function TeamsPage() {
 				.select('team_id, points_gained_that_day, member_count')
 				.eq('date', endDate)
 				.order('points_gained_that_day', { ascending: false })
-				.limit(20)
+				.limit(40)
 
 			if (periodTeams && periodTeams.length > 0) {
 				await enrichTeamData(periodTeams.map(t => ({
@@ -216,7 +217,7 @@ export default function TeamsPage() {
 				.rpc('get_top_teams_by_period', {
 					start_date: startDate,
 					end_date: endDate,
-					limit_count: 20
+					limit_count: 40
 				})
 
 			console.log('RPC get_top_teams_by_period:', { startDate, endDate, periodTeams, error })
@@ -313,6 +314,8 @@ export default function TeamsPage() {
 				member_growth: t.member_count - yesterdayCount
 			}
 		})
+			.filter(team => team.team_slug && !isHiddenTopTeamSlug(team.team_slug))
+			.slice(0, 20)
 
 		setPeriodTopTeams(enrichedTeams)
 
@@ -338,6 +341,8 @@ export default function TeamsPage() {
 			team_name: teamMap.get(t.team_id)?.name || 'Unknown',
 			team_image: teamMap.get(t.team_id)?.image || null,
 		}))
+			.filter(team => team.team_slug && !isHiddenTopTeamSlug(team.team_slug))
+			.slice(0, 20)
 
 		setPeriodTopTeams(enrichedTeams)
 
