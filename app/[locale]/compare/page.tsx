@@ -346,7 +346,7 @@ export default function CompareHubPage() {
                 Compare Tree-Planting and Eco-Impact Tools
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
-                There are several ways to turn everyday browsing into real
+                This tree planting app comparison shows several ways to turn everyday browsing into real
                 trees, including{" "}
                 <Link href="/eco-friendly-search-engine" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
                   eco-friendly search engines

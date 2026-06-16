@@ -546,11 +546,10 @@ export default function EcosiaAlternativesPage() {
               </h2>
               <div className="mt-5 space-y-5 text-lg leading-8 text-brand-yellow/85">
                 <p>
-                  IdleForest is not another search engine, so there is nothing to switch. It is a free{" "}
+                  IdleForest is not another search engine, so there is nothing to switch. It is available as a free{" "}
                   <Link href="/tree-planting-extension" className="font-bold underline decoration-2 underline-offset-4 hover:text-white">
                     tree-planting Chrome extension
-                  </Link>
-                  , Firefox, and Edge extension (plus a desktop app) that you add on top of whatever you already
+                  </Link>, an Edge extension, and a desktop app that you add on top of whatever you already
                   use, including Ecosia, Google, Brave, or DuckDuckGo.
                 </p>
                 <p>

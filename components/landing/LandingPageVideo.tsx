@@ -26,34 +26,41 @@ const screenshots = [
     "/landing/screenshot-3.png",
 ];
 
+const STATIC_IMPACT_STATS = {
+    treesPlanted: "5,364",
+    earnings: "$2,796",
+    totalRequests: "10.1M",
+    totalUsers: "1,000+",
+};
+
 const comparisonCriteria = [
-    "Best at",
-    "Funding route",
-    "User action",
-    "Pairs well with",
+    "Cost",
+    "Effort",
+    "How trees are funded",
+    "Works with your browser",
 ];
 
 const comparisonProducts = [
     {
         name: "IdleForest",
         summary: "A passive layer that runs beside the browser and computer you already use.",
-        values: ["Background impact", "Idle bandwidth revenue", "Install once; keep browsing", "Ecosia, memberships, donations"],
+        values: ["Free", "Install once; keep browsing", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, and Windows"],
         featured: true,
     },
     {
         name: "Ecosia",
         summary: "A search engine that turns everyday searches into funding for tree planting.",
-        values: ["Search-led planting", "Search ad revenue", "Use Ecosia for search", "People who search often"],
+        values: ["Free", "Switch your default search engine", "Search ad revenue funds climate projects", "Yes, if you choose Ecosia as your search engine"],
     },
     {
         name: "Mossy Earth",
         summary: "A field-led rewilding membership with biologists, project updates, and deep conservation work.",
-        values: ["Hands-on rewilding", "Member funding", "Join, follow, or support projects", "People who want direct conservation"],
+        values: ["Paid membership", "Subscribe and follow projects", "Member fees fund rewilding work", "Yes, but it is not a browser tool"],
     },
     {
         name: "Direct donations",
         summary: "Straightforward support for charities or local projects you already trust.",
-        values: ["Immediate giving", "Your chosen donation", "Give when you want", "Specific causes and campaigns"],
+        values: ["You choose the donation", "Give manually", "Your donation funds the project directly", "Yes, but it is separate from browsing"],
     },
 ];
 
@@ -86,10 +93,10 @@ const mossyEarthSteps = [
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const [stats, setStats] = useState({
-        totalUsers: 0,
-        totalRequests: 0,
-        earnings: "$0",
-        treesPlanted: 0,
+        totalUsers: STATIC_IMPACT_STATS.totalUsers,
+        totalRequests: STATIC_IMPACT_STATS.totalRequests,
+        earnings: STATIC_IMPACT_STATS.earnings,
+        treesPlanted: STATIC_IMPACT_STATS.treesPlanted,
     });
 
     const { isMobile, isDesktop, isChrome, isEdge, isSafari, isMac, isWindows } = useDeviceDetection(deviceInfo);
@@ -127,17 +134,26 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 // Calculate trees planted (legacy formula from previous version)
                 const earningsNum = parseFloat(String(statsData.earnings).replace("$", "")) + 25;
                 const treesPlanted = Math.floor((earningsNum - 205) / 0.55) + 652;
-                const formattedEarnings = `$${earningsNum.toFixed(2)}`;
+                const formattedEarnings = Number.isFinite(earningsNum)
+                    ? `$${Math.round(earningsNum).toLocaleString()}`
+                    : STATIC_IMPACT_STATS.earnings;
 
                 setStats((prev) => ({
                     ...prev,
-                    totalRequests: statsData.requestsTotal ?? 0,
+                    totalRequests: statsData.requestsTotal
+                        ? Number(statsData.requestsTotal).toLocaleString()
+                        : STATIC_IMPACT_STATS.totalRequests,
                     earnings: formattedEarnings,
-                    treesPlanted: Number.isFinite(treesPlanted) ? Math.max(0, treesPlanted) : 0,
-                    totalUsers: nodesData.active_node_count ?? 0,
+                    treesPlanted: Number.isFinite(treesPlanted) && treesPlanted > 0
+                        ? Math.max(0, treesPlanted).toLocaleString()
+                        : STATIC_IMPACT_STATS.treesPlanted,
+                    totalUsers: nodesData.active_node_count
+                        ? Number(nodesData.active_node_count).toLocaleString()
+                        : STATIC_IMPACT_STATS.totalUsers,
                 }));
             } catch (error) {
                 console.error("Error fetching stats:", error);
+                setStats(STATIC_IMPACT_STATS);
             }
         };
 
@@ -190,6 +206,9 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         See how it works <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 </div>
+                                <p className="text-sm font-bold text-black">
+                                    Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 5,364 verified trees planted
+                                </p>
                                 <HeroTrustSignals />
                             </div>
                             {/* HERO ART PLACEHOLDER */}
@@ -321,7 +340,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         <div className="w-full flex justify-center">
                             <div className="text-brand-yellow inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium shadow">
                                 <Leaf className="h-4 w-4" />
-                                <span>{t('how_it_works.trees_planted_badge', { count: stats.treesPlanted.toLocaleString() })}</span>
+                                <span>{t('how_it_works.trees_planted_badge', { count: stats.treesPlanted })}</span>
                             </div>
                         </div>
 
@@ -416,7 +435,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     <div className="container mx-auto px-6 py-20 md:py-24">
                         <div className="mx-auto max-w-3xl text-center">
                             <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                                Different Ways To Support Nature
+                                Why IdleForest Is Different From Other Tree Planting Apps
                             </h2>
                             <p className="mt-4 text-base md:text-lg text-neutral-800">
                                 Ecosia, Mossy Earth, direct donations, and IdleForest all help in different ways. IdleForest is the extra passive layer: install it once, keep your habits, and let it add funding in the background.
@@ -622,10 +641,18 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         </div>
                         {/* 2x2 grid, no gaps so borders align perfectly */}
                         <div className="grid gap-2 sm:grid-cols-2">
-                            <ImpactCard icon={<TreePine className="h-6 w-6 text-brand-yellow" />} value={stats.treesPlanted.toLocaleString()} label={t('impact.trees_label')} />
-                            <ImpactCard icon={<Globe className="h-6 w-6 text-brand-yellow" />} value={stats.totalRequests.toLocaleString()} label={t('impact.requests_label')} />
-                            <ImpactCard icon={<Users className="h-6 w-6 text-brand-yellow" />} value={stats.totalUsers.toLocaleString()} label={t('impact.users_label')} />
+                            <ImpactCard icon={<TreePine className="h-6 w-6 text-brand-yellow" />} value={stats.treesPlanted} label={t('impact.trees_label')} />
+                            <ImpactCard icon={<Globe className="h-6 w-6 text-brand-yellow" />} value={stats.totalRequests} label={t('impact.requests_label')} />
+                            <ImpactCard icon={<Users className="h-6 w-6 text-brand-yellow" />} value={stats.totalUsers} label={t('impact.users_label')} />
                             <ImpactCard icon={<DollarSign className="h-6 w-6 text-brand-yellow" />} value={stats.earnings} label={t('impact.contributions_label')} />
+                        </div>
+                        <div className="mt-10 text-center">
+                            <Link
+                                href="/transparency"
+                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
+                            >
+                                Read our full transparency report →
+                            </Link>
                         </div>
                     </div>
                 </section>
@@ -788,7 +815,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            Yes. IdleForest does not change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, Edge, and other browsers.
+                                            Yes. IdleForest does not change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, and Edge.
                                         </p>
                                         <p>
                                             You can stack the impact from IdleForest with other environmentally focused tools.
@@ -843,7 +870,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            IdleForest has funded {stats.treesPlanted.toLocaleString()} trees through our partners, based on the current live counter.
+                                            IdleForest has funded 5,364 trees through our partners. We update the monthly total on the transparency report as new partner records are added.
                                         </p>
                                         <p>
                                             See the{" "}
@@ -977,7 +1004,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Can I use IdleForest with Ecosia or another browser?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, Edge, and other browsers. You can stack the impact."
+                                    "text": "Yes. IdleForest doesn't change how you browse or what search engine you use. It works alongside Ecosia, Brave, Chrome, and Edge. You can stack the impact."
                                 }
                             },
                             {
@@ -1001,7 +1028,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "How many trees has IdleForest planted?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": `IdleForest has funded ${stats.treesPlanted.toLocaleString()} trees through our partners, based on the current live counter.`
+                                    "text": "IdleForest has funded 5,364 trees through our partners. We update the monthly total on the transparency report as new partner records are added."
                                 }
                             },
                             {

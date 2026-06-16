@@ -9,6 +9,12 @@ const pageDescription =
   "IdleForest is a free tree planting app for Windows. Install it once and it plants verified trees with your idle bandwidth, even when your browser is closed.";
 const canonicalUrl = "https://www.idleforest.com/download/windows";
 const windowsInstallerHref = "/download/windows/installer";
+const impactStats = [
+  ["5,364", "trees planted"],
+  ["$2,796", "contributed"],
+  ["10.1M", "requests powered"],
+  ["1,000+", "users"],
+];
 
 const faqs = [
   {
@@ -180,6 +186,14 @@ export default function WindowsDownloadPage() {
                 </Link>
                 .
               </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {impactStats.map(([value, label]) => (
+                  <div key={label} className="border-2 border-black bg-brand-yellow p-4">
+                    <p className="font-candu text-4xl leading-none text-brand-navy">{value}</p>
+                    <p className="mt-2 text-xs font-extrabold uppercase tracking-[0.14em] text-black/70">{label}</p>
+                  </div>
+                ))}
+              </div>
               <Link href="/transparency" className="inline-flex items-center gap-2 text-lg font-bold underline underline-offset-4 hover:text-brand-navy">
                 Read our full transparency report <ArrowRight className="h-5 w-5" />
               </Link>
@@ -288,9 +302,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article id={id} className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
+    <article className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
       <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
+      <h3 id={id} className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
       <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
     </article>
   );

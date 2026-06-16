@@ -187,8 +187,11 @@ export default function HowItWorksPage() {
               </StepCard>
               <StepCard id="step-4" number="4." title="The Money Funds Verified Tree Planting">
                 IdleForest passes that money to its reforestation partners, Trees for the Future, Tree-Nation, and
-                1ClickImpact, who plant the trees and verify them on the ground. You can watch the totals climb on the
-                impact page.
+                1ClickImpact, who plant the trees and verify them on the ground. You can watch the totals climb on the{" "}
+                <Link href="/transparency" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+                  transparency page
+                </Link>
+                .
               </StepCard>
             </div>
 
@@ -349,9 +352,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article id={id} className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
+    <article className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
       <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
+      <h3 id={id} className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
       <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
     </article>
   );

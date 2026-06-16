@@ -244,126 +244,13 @@ export default function TransparencyPage() {
           </div>
         </section>
 
-        {/* Environmental Impact Section */}
-        <section className="relative bg-brand-navy text-brand-yellow py-16 md:py-20">
-          <div className="container mx-auto px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  {t('env_title')}
-                </h2>
-                <p className="text-lg max-w-3xl mx-auto">
-                  {t('env_desc')}
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {/* Traditional Server Farms */}
-                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
-                  <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4">
-                      <span className="text-3xl">🏭</span>
-                    </div>
-                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
-                      {t('dc_title')}
-                    </h3>
-                  </div>
-                  <ul className="space-y-3 text-neutral-800">
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold text-red-600">✗</span>
-                      <span>{t('dc_energy')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold text-red-600">✗</span>
-                      <span>{t('dc_cooling')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold text-red-600">✗</span>
-                      <span>{t('dc_infra')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold text-red-600">✗</span>
-                      <span>{t('dc_water')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold text-red-600">✗</span>
-                      <span>{t('dc_waste')}</span>
-                    </li>
-                  </ul>
-                </Card>
-
-                {/* Distributed Networks */}
-                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
-                  <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4 p-2">
-                      <Image src="/logo.png" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
-                    </div>
-                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
-                      {t('dn_title')}
-                    </h3>
-                  </div>
-                  <ul className="space-y-3 text-neutral-800">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>{t('dn_infra')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>{t('dn_cooling')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>{t('dn_idle')}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>{t('dn_water')}</span>
-                    </li>
-
-                  </ul>
-                </Card>
-              </div>
-
-              {/* Impact Statistics */}
-              <div className="bg-brand-yellow border-2 border-brand-yellow p-8 md:p-10">
-                <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold text-center mb-8 text-black">
-                  {t('savings_title')}
-                </h3>
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                  <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('energy_pct')}</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('energy_label')}</div>
-                    <p className="text-xs text-neutral-600 mt-2">{t('energy_desc')}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('water_pct')}</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('water_label')}</div>
-                    <p className="text-xs text-neutral-600 mt-2">{t('water_desc')}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('carbon_pct')}</div>
-                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('carbon_label')}</div>
-                    <p className="text-xs text-neutral-600 mt-2">{t('carbon_desc')}</p>
-                  </div>
-                </div>
-                <div className="bg-brand-gray border-2 border-black p-6 text-center">
-                  <p className="text-neutral-800 leading-relaxed">
-                    <strong className="text-black">{t('bottom_line')}</strong> {t('bottom_line_desc')}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
         {/* Our Approved Client Section */}
         <section className="relative bg-brand-gray py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  {t('client_title')}
+                  Where the money comes from: your idle bandwidth
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
                   {t('client_desc')}
@@ -610,7 +497,7 @@ export default function TransparencyPage() {
                 </Card>
 
                 <Card className="bg-brand-yellow border-2 border-black p-8">
-                  <h3 className="font-rethink-sans text-2xl font-extrabold mb-5">How to check this yourself</h3>
+                  <h2 className="font-rethink-sans text-2xl font-extrabold mb-5">How to check this yourself</h2>
                   <ul className="space-y-4 text-neutral-800">
                     {[
                       "Open the partner project pages above; the tree counts and project details are published on the partners' own sites, not just here.",
@@ -626,6 +513,115 @@ export default function TransparencyPage() {
                   </ul>
                 </Card>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Environmental Impact Section */}
+        <section className="relative bg-brand-navy text-brand-yellow py-16 md:py-20">
+          <div className="container mx-auto px-6">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                  {t('env_title')}
+                </h2>
+                <p className="text-lg max-w-3xl mx-auto">
+                  {t('env_desc')}
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4">
+                      <span className="text-3xl">🏭</span>
+                    </div>
+                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                      {t('dc_title')}
+                    </h3>
+                  </div>
+                  <ul className="space-y-3 text-neutral-800">
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-red-600">✗</span>
+                      <span>{t('dc_energy')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-red-600">✗</span>
+                      <span>{t('dc_cooling')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-red-600">✗</span>
+                      <span>{t('dc_infra')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-red-600">✗</span>
+                      <span>{t('dc_water')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-red-600">✗</span>
+                      <span>{t('dc_waste')}</span>
+                    </li>
+                  </ul>
+                </Card>
+
+                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4 p-2">
+                      <Image src="/logo.png" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                      {t('dn_title')}
+                    </h3>
+                  </div>
+                  <ul className="space-y-3 text-neutral-800">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>{t('dn_infra')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>{t('dn_cooling')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>{t('dn_idle')}</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>{t('dn_water')}</span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+
+              <div className="bg-brand-yellow border-2 border-brand-yellow p-8 md:p-10">
+                <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold text-center mb-8 text-black">
+                  {t('savings_title')}
+                </h3>
+                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('energy_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('energy_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('energy_desc')}</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('water_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('water_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('water_desc')}</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-extrabold text-brand-navy mb-2">{t('carbon_pct')}</div>
+                    <div className="text-sm md:text-base text-neutral-800 font-bold">{t('carbon_label')}</div>
+                    <p className="text-xs text-neutral-600 mt-2">{t('carbon_desc')}</p>
+                  </div>
+                </div>
+                <div className="bg-brand-gray border-2 border-black p-6 text-center">
+                  <p className="text-neutral-800 leading-relaxed">
+                    <strong className="text-black">{t('bottom_line')}</strong> {t('bottom_line_desc')}
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -968,7 +964,7 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-10">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Keep checking the evidence
+                  Next steps
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
                   This page answers whether the planting is real. These related pages cover user proof, comparison
@@ -984,13 +980,13 @@ export default function TransparencyPage() {
                     body: "Read independent user feedback and social proof.",
                   },
                   {
-                    href: "/compare",
-                    title: "compare tree-planting tools",
-                    body: "Compare models when you are choosing between climate apps.",
+                    href: "/ecosia-alternatives",
+                    title: "comparing tree-planting tools",
+                    body: "Compare tree-planting tools and Ecosia alternatives.",
                   },
                   {
                     href: "/ecosia",
-                    title: "Use IdleForest alongside Ecosia",
+                    title: "use IdleForest alongside Ecosia",
                     body: "See how search-based and idle-bandwidth funding can complement each other.",
                   },
                 ].map((item) => (

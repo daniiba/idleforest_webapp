@@ -118,7 +118,7 @@ const schemas = [
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "IdleForest",
-    applicationCategory: "BrowserApplication",
+    applicationCategory: "BrowserExtension",
     operatingSystem: "Chrome, Edge, Windows, macOS",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     description:
@@ -378,7 +378,19 @@ export default function TreePlantingExtensionPage() {
                   Verified trees, named partners, public receipts
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-neutral-800">
-                  IdleForest funds reforestation through Trees for the Future, Tree-Nation, and 1ClickImpact. These are
+                  IdleForest funds reforestation through{" "}
+                  <a href="https://trees.org" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+                    Trees for the Future
+                  </a>
+                  ,{" "}
+                  <a href="https://tree-nation.com" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+                    Tree-Nation
+                  </a>
+                  , and{" "}
+                  <a href="https://1clickimpact.com" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+                    1ClickImpact
+                  </a>
+                  . These are
                   established organizations with published planting records, so the trees are traceable rather than a
                   marketing figure.
                 </p>

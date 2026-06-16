@@ -28,7 +28,7 @@ const useCaseFaqs = [
   {
     question: "Can I use IdleForest with Ecosia?",
     answer:
-      "Yes. IdleForest works alongside Ecosia, so you can keep using Ecosia for searches while IdleForest adds a passive tree-funding layer from opt-in idle bandwidth.",
+      "Yes. IdleForest works alongside Ecosia, so you can keep using Ecosia for searches while IdleForest adds a passive tree-funding layer from opt-in idle bandwidth. It works with Chrome, Edge, and the desktop apps.",
   },
   {
     question: "Do I have to stop using Ecosia?",
@@ -48,7 +48,7 @@ const useCaseFaqs = [
   {
     question: "Is Ecosia's AI bad for the environment?",
     answer:
-      "AI features can require more energy than traditional search results, so it is fair for users to ask about the environmental cost. The useful question is whether impact claims stay transparent as search products add heavier features.",
+      "Ecosia says its AI adds about 5% to its emissions and that it offsets this with renewable energy. Adding IdleForest gives you verified planting that does not depend on that question.",
   },
   {
     question: "Is IdleForest free like Ecosia?",
@@ -158,8 +158,8 @@ const Index = () => {
       {
         "@type": "SoftwareApplication",
         name: "IdleForest",
-        applicationCategory: "BrowserApplication",
-        operatingSystem: "Chrome, Chromium browsers, macOS, Windows",
+        applicationCategory: "BrowserExtension",
+        operatingSystem: "Chrome, Edge, macOS, Windows",
         url: "https://www.idleforest.com/ecosia",
         downloadUrl: "https://www.idleforest.com/download/chrome",
         description: pageDescription,
@@ -326,6 +326,10 @@ const Index = () => {
                 <Link href="/how-it-works" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
                   how idle bandwidth funds trees
                 </Link>
+                , or compare options{" "}
+                <Link href="/ecosia-alternatives" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                  if you want to leave Ecosia
+                </Link>
                 .
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -371,10 +375,13 @@ const Index = () => {
         <section className="container mx-auto px-4 py-16">
           <div className="mx-auto mb-10 max-w-4xl text-center">
             <h2 className="font-rethink-sans text-3xl font-extrabold sm:text-4xl">
-              How Ecosia plants trees, and where it stops
+              How Ecosia plants trees (and where it stops)
             </h2>
             <p className="mt-4 text-lg text-neutral-700">
-              Ecosia is an{" "}
+              <a href="https://www.ecosia.org/" target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                Ecosia
+              </a>
+              {" "}is an{" "}
               <Link href="/eco-friendly-search-engine" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
                 eco-friendly search engine
               </Link>
@@ -445,7 +452,7 @@ const Index = () => {
         <section className="border-y-2 border-black bg-white py-16">
           <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <h2 className="font-rethink-sans text-3xl font-extrabold">FAQ</h2>
+              <h2 className="font-rethink-sans text-3xl font-extrabold">Using IdleForest with Ecosia: common questions</h2>
               <p className="mt-3 text-neutral-700">
                 The practical questions Ecosia users usually ask before adding IdleForest.
               </p>
