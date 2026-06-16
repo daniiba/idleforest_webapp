@@ -18,6 +18,7 @@ import { plantingsData } from "@/lib/plantings";
 import Script from "next/script";
 import EcosiaClient from "./EcosiaClient";
 import { Link } from "@/navigation";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 const pageTitle = "Use IdleForest With Ecosia: Plant More Trees, No Switch";
 const pageDescription =
@@ -61,33 +62,33 @@ const useCaseFaqs = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: pageTitle,
-  description: pageDescription,
-  keywords: [
-    "use idleforest with ecosia",
-    "IdleForest Ecosia",
-    "plant more trees with Ecosia",
-    "Ecosia browser extension",
-    "verified tree planting",
-    "tree planting extension",
-    "environmentally friendly search engine",
-  ],
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  return {
     title: pageTitle,
     description: pageDescription,
-    type: "website",
-    url: "https://www.idleforest.com/ecosia",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
-  },
-  alternates: {
-    canonical: "https://www.idleforest.com/ecosia",
-  },
-};
+    keywords: [
+      "use idleforest with ecosia",
+      "IdleForest Ecosia",
+      "plant more trees with Ecosia",
+      "Ecosia browser extension",
+      "verified tree planting",
+      "tree planting extension",
+      "environmentally friendly search engine",
+    ],
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      type: "website",
+      url: "https://www.idleforest.com/ecosia",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: pageDescription,
+    },
+    alternates: routeAlternates("/ecosia", params.locale),
+  };
+}
 
 const Highlight = ({
   icon,
@@ -304,6 +305,13 @@ const Index = () => {
               details, and open-source code.
             </Highlight>
           </div>
+          <p className="mx-auto mt-8 max-w-3xl text-center text-lg text-neutral-700">
+            Want to{" "}
+            <Link href="/compare" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+              see how IdleForest compares with Ecosia and other tools
+            </Link>
+            ?
+          </p>
         </section>
 
         <section className="border-y-2 border-black bg-white py-16">
@@ -314,7 +322,11 @@ const Index = () => {
               </h2>
               <p className="mt-4 text-neutral-700">
                 IdleForest is useful if you like Ecosia's idea but want an extra climate tool that does not
-                depend on making every search through one provider.
+                depend on making every search through one provider. See{" "}
+                <Link href="/how-it-works" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                  how idle bandwidth funds trees
+                </Link>
+                .
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/how-it-works" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-black hover:text-brand-yellow hover:shadow-none">
@@ -327,12 +339,18 @@ const Index = () => {
             </div>
             <div className="grid gap-5">
               {[
-                "A passive layer that runs alongside Ecosia rather than asking you to switch away.",
+                <>
+                  A passive{" "}
+                  <Link href="/tree-planting-extension" className="font-bold underline decoration-2 underline-offset-4">
+                    tree-planting extension
+                  </Link>{" "}
+                  that runs alongside Ecosia rather than asking you to switch away.
+                </>,
                 "A different funding model, based on opt-in idle bandwidth instead of search advertising.",
                 "A direct transparency trail for IdleForest planting, including public records and receipts.",
               ].map((item, index) => (
                 <div
-                  key={item}
+                  key={`ecosia-addition-${index}`}
                   className={`flex gap-5 rounded-[28px] border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-transform duration-200 hover:-translate-y-1 ${index === 0
                     ? "bg-brand-navy text-brand-yellow"
                     : index === 1
@@ -356,7 +374,11 @@ const Index = () => {
               How Ecosia plants trees, and where it stops
             </h2>
             <p className="mt-4 text-lg text-neutral-700">
-              Ecosia's model is search-based: revenue from searches can be allocated to climate projects and
+              Ecosia is an{" "}
+              <Link href="/eco-friendly-search-engine" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                eco-friendly search engine
+              </Link>
+              {" "}with a search-based model: revenue from searches can be allocated to climate projects and
               tree planting. The dashboard below keeps the financial and historical data visible so you can
               inspect how Ecosia reports income, expenses, tree funding, and project activity.
             </p>

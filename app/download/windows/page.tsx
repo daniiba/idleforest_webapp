@@ -125,7 +125,7 @@ export default function WindowsDownloadPage() {
             use your computer the way you always have, and trees get funded in the background.
           </p>
           <Link href="/how-it-works" className="inline-flex items-center gap-2 text-lg font-bold underline underline-offset-4 hover:text-brand-navy">
-            See exactly how it works <ArrowRight className="h-5 w-5" />
+            See exactly how it works →
           </Link>
         </ContentBand>
 

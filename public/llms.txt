@@ -37,7 +37,7 @@ IdleForest can be used with Ecosia. Ecosia funds climate action through search a
 - Blog: https://idleforest.com/blog
 - Transparency: https://idleforest.com/transparency
 - Eco-friendly search engines hub: https://idleforest.com/eco-friendly-search-engine
-- Use IdleForest with Ecosia: https://idleforest.com/use-idleforest-with-ecosia
+- Use IdleForest with Ecosia: https://idleforest.com/ecosia
 - Ecosia comparison: https://idleforest.com/compare/idleforest-vs-ecosia-vs-treeclicks
 - Contact: https://idleforest.com/contact
 - GitHub: https://github.com/daniiba/idleforest

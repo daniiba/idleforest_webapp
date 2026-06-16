@@ -3,36 +3,37 @@ import { ArrowRight, CheckCircle2, ExternalLink, Leaf, Search, ShieldCheck, Tree
 import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 const title = "Is Ecosia Legit and Safe? Privacy, Tree Planting, and Proof";
 const description = "A practical review of whether Ecosia is legit and safe, including privacy tradeoffs, financial reports, tree-planting proof, search partners, and how to use IdleForest with Ecosia.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  keywords: [
-    "is ecosia legit",
-    "is ecosia safe",
-    "does ecosia actually plant trees",
-    "ecosia privacy",
-    "ecosia financial reports",
-    "ecosia tree planting proof",
-  ],
-  alternates: {
-    canonical: "https://www.idleforest.com/is-ecosia-legit-safe",
-  },
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  return {
     title,
     description,
-    type: "article",
-    url: "https://www.idleforest.com/is-ecosia-legit-safe",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-  },
-};
+    keywords: [
+      "is ecosia legit",
+      "is ecosia safe",
+      "does ecosia actually plant trees",
+      "ecosia privacy",
+      "ecosia financial reports",
+      "ecosia tree planting proof",
+    ],
+    alternates: routeAlternates("/is-ecosia-legit-safe", params.locale),
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: "https://www.idleforest.com/is-ecosia-legit-safe",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 const proofRows = [
   {
@@ -160,7 +161,7 @@ export default function IsEcosiaLegitSafePage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild className="border-2 border-black bg-black px-6 py-6 font-bold text-brand-yellow hover:bg-white hover:text-black">
-                <Link href="/use-idleforest-with-ecosia">
+                <Link href="/ecosia">
                   Use IdleForest with Ecosia <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -266,7 +267,7 @@ export default function IsEcosiaLegitSafePage() {
               <li><strong>IdleForest:</strong> verified tree funding from opt-in idle bandwidth.</li>
               <li><strong>Together:</strong> one setup for searches and the browsing time between searches.</li>
             </ul>
-            <Link href="/use-idleforest-with-ecosia" className="mt-5 inline-flex items-center gap-2 font-bold underline">
+            <Link href="/ecosia" className="mt-5 inline-flex items-center gap-2 font-bold underline">
               Learn how they work together <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

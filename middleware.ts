@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const profileMatch = pathname.match(/^\/profile\/([^/]+)$/);
+  const profileMatch = pathname.match(/^\/(?:(?:en|es|de|pt|fr)\/)?profile\/([^/]+)$/);
   if (profileMatch) {
     const exists = await entityExists('profiles', 'display_name', 'ilike', decodeURIComponent(profileMatch[1]));
     if (exists === false) {

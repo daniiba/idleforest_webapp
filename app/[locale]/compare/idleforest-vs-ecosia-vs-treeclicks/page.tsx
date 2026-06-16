@@ -54,7 +54,7 @@ const qaAnchors = [
 
 const relatedLinks = [
   {
-    href: "/use-idleforest-with-ecosia",
+    href: "/ecosia",
     title: "Use IdleForest with Ecosia",
     body: "Already using Ecosia? Add passive tree funding without changing your search settings.",
   },
@@ -160,7 +160,7 @@ export default function ComparisonPage() {
               <p>
                 IdleForest provides passive tree funding while you browse, unlike Ecosia which funds trees only when you search. Use both: set Ecosia as your search engine and let IdleForest run in the background.
               </p>
-              <Link href="/use-idleforest-with-ecosia" className="mt-4 inline-block underline text-brand-yellow">
+              <Link href="/ecosia" className="mt-4 inline-block underline text-brand-yellow">
                 Use IdleForest with Ecosia
               </Link>
             </CardContent>
@@ -212,7 +212,7 @@ export default function ComparisonPage() {
               </ul>
               <div className="mt-6 flex gap-3">
                 <Button asChild className="bg-brand-yellow text-navy">
-                  <Link href="/use-idleforest-with-ecosia">Use IdleForest with Ecosia</Link>
+                  <Link href="/ecosia">Use IdleForest with Ecosia</Link>
                 </Button>
                 <a href="#is-idleforest-secure" className="underline text-brand-yellow">Is IdleForest secure?</a>
               </div>

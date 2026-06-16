@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/navigation";
 import { groupByProject, plantingsData } from "@/lib/plantings";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 const title = "Plant a Tree Chrome Extension: Free & Verified | IdleForest";
 const description =
@@ -177,34 +178,34 @@ const schemas = [
   },
 ];
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: {
-    canonical,
-  },
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  return {
     title,
     description,
-    url: canonical,
-    siteName: "IdleForest",
-    type: "website",
-    images: [
-      {
-        url: "/preview.png",
-        width: 1280,
-        height: 800,
-        alt: "Plant a tree Chrome extension with IdleForest",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: ["/preview.png"],
-  },
-};
+    alternates: routeAlternates("/tree-planting-extension", params.locale),
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "IdleForest",
+      type: "website",
+      images: [
+        {
+          url: "/preview.png",
+          width: 1280,
+          height: 800,
+          alt: "Plant a tree Chrome extension with IdleForest",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/preview.png"],
+    },
+  };
+}
 
 export default function TreePlantingExtensionPage() {
   return (
@@ -296,9 +297,13 @@ export default function TreePlantingExtensionPage() {
                 transparency page.
               </StepCard>
             </div>
-            <Link href="/how-it-works" className="mt-8 inline-flex items-center gap-2 font-bold text-brand-navy underline underline-offset-4 hover:text-black">
-              Read the full technical explanation on how idle bandwidth funds trees <ArrowRight className="h-4 w-4" />
-            </Link>
+            <p className="mt-8 text-base text-neutral-800">
+              For a deeper dive,{" "}
+              <Link href="/how-it-works" className="font-bold text-brand-navy underline underline-offset-4 hover:text-black">
+                read the full technical explanation
+              </Link>
+              .
+            </p>
           </div>
         </section>
 
@@ -316,7 +321,12 @@ export default function TreePlantingExtensionPage() {
                 <p className="mt-5 text-lg leading-8 text-brand-yellow/85">
                   Most plant a tree extensions ask for something back. IdleForest asks for nothing you would notice.
                   Forest is an excellent focus tool and TreeClicks is a real charity-shopping tool, but neither is built
-                  for passive, verifiable reforestation as its main job.
+                  for passive, verifiable reforestation as its main job. If you are comparing Ecosia or other
+                  search-based alternatives, start with the{" "}
+                  <Link href="/eco-friendly-search-engine" className="font-bold underline underline-offset-4 hover:text-white">
+                    eco-friendly search engine
+                  </Link>{" "}
+                  route.
                 </p>
               </div>
               <div className="overflow-x-auto border-2 border-brand-yellow bg-brand-gray text-black">
@@ -343,6 +353,11 @@ export default function TreePlantingExtensionPage() {
               </div>
             </div>
             <p className="mt-6 flex flex-wrap gap-x-3 gap-y-2 text-base font-bold">
+              <span>Looking for a broader breakdown?</span>
+              <Link href="/compare" className="underline underline-offset-4 hover:text-white">
+                See all tree-planting apps compared →
+              </Link>
+              <span>·</span>
               <span>Comparing the search-engine route?</span>
               <Link href="/ecosia-alternatives" className="underline underline-offset-4 hover:text-white">
                 alternatives to Ecosia

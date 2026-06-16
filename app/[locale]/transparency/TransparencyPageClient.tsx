@@ -94,7 +94,15 @@ const breadcrumbSchema = {
 const fundingSteps = [
   {
     title: "Your idle bandwidth does small public tasks.",
-    body: "While your device sits idle, IdleForest routes sessionless requests to public web pages for one vetted client. No personal data, cookies, or browsing history is involved.",
+    body: (
+      <>
+        While your device sits idle, IdleForest routes sessionless requests to public web pages for one vetted client. See{" "}
+        <Link href="/how-it-works" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+          how idle bandwidth funds trees
+        </Link>
+        . No personal data, cookies, or browsing history is involved.
+      </>
+    ),
   },
   {
     title: "Those tasks generate revenue.",
@@ -976,8 +984,8 @@ export default function TransparencyPage() {
                     body: "Read independent user feedback and social proof.",
                   },
                   {
-                    href: "/ecosia-alternatives",
-                    title: "Comparing tree-planting tools",
+                    href: "/compare",
+                    title: "compare tree-planting tools",
                     body: "Compare models when you are choosing between climate apps.",
                   },
                   {

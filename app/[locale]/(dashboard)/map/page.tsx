@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PlantingsMap from "@/components/PlantingsMap";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Map' });
@@ -16,7 +17,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       ],
       type: "website",
     },
-    alternates: { canonical: "/map" },
+    alternates: routeAlternates("/map", locale),
   };
 }
 

@@ -371,7 +371,11 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     {t('how_it_works.step1_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
-                                    {t('how_it_works.step1_desc')}
+                                    {t('how_it_works.step1_desc')} Learn more about the{" "}
+                                    <Link href="/tree-planting-extension" className="font-bold underline hover:text-black">
+                                        Chrome extension
+                                    </Link>
+                                    .
                                 </p>
                             </div>
                             <div id="step-2">
@@ -401,7 +405,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 href="/how-it-works"
                                 className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-black hover:shadow-none"
                             >
-                                See how it works in detail <ArrowRight className="h-4 w-4" />
+                                See how it works in detail →
                             </Link>
                         </div>
                     </div>
@@ -483,6 +487,11 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     {item.label}
                                 </Link>
                             ))}
+                        </div>
+                        <div className="mt-6 text-center">
+                            <Link href="/compare" className="inline-flex items-center gap-2 font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                                Browse the full comparison hub →
+                            </Link>
                         </div>
                     </div>
                 </section>

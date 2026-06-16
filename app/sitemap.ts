@@ -142,7 +142,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/tree-planting-extension', changeFrequency: 'weekly', priority: 0.9, lastModified: SEO_CLUSTER_LAST_MODIFIED },
     { path: '/ecosia', changeFrequency: 'weekly', priority: 0.9, lastModified: SEO_CLUSTER_LAST_MODIFIED },
     { path: '/is-ecosia-legit-safe', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
-    { path: '/use-idleforest-with-ecosia', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
     { path: '/compare', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED, translated: false },
     { path: '/how-it-works', changeFrequency: 'monthly', priority: 0.85, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/download/chrome', changeFrequency: 'monthly', priority: 0.9, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },

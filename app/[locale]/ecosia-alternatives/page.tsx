@@ -18,6 +18,7 @@ import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { plantingsData } from "@/lib/plantings";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 const title = "Best Ecosia Alternatives: No Search Switch | IdleForest";
 const description =
@@ -232,42 +233,42 @@ const schemas = [
   },
 ];
 
-export const metadata: Metadata = {
-  title,
-  description,
-  keywords: [
-    "ecosia alternatives",
-    "ecosia alternative",
-    "browsers like ecosia",
-    "apps like ecosia",
-    "sites like ecosia",
-    "search engines like ecosia",
-  ],
-  alternates: {
-    canonical,
-  },
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  return {
     title,
     description,
-    url: canonical,
-    siteName: "IdleForest",
-    type: "website",
-    images: [
-      {
-        url: "/preview.png",
-        width: 1280,
-        height: 800,
-        alt: "Best Ecosia alternatives",
-      },
+    keywords: [
+      "ecosia alternatives",
+      "ecosia alternative",
+      "browsers like ecosia",
+      "apps like ecosia",
+      "sites like ecosia",
+      "search engines like ecosia",
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: ["/preview.png"],
-  },
-};
+    alternates: routeAlternates("/ecosia-alternatives", params.locale),
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "IdleForest",
+      type: "website",
+      images: [
+        {
+          url: "/preview.png",
+          width: 1280,
+          height: 800,
+          alt: "Best Ecosia alternatives",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/preview.png"],
+    },
+  };
+}
 
 function ExternalAlternativeLink({ href, children }: { href?: string; children: ReactNode }) {
   if (!href) {
@@ -460,8 +461,16 @@ export default function EcosiaAlternativesPage() {
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
                 Most Ecosia alternatives ask you to change your default search engine. This guide ranks the
-                genuine options, and starts with the simplest: keep the browser you already use and add
-                IdleForest, a free extension that funds verified tree planting in the background.
+                genuine options, including{" "}
+                <Link href="/eco-friendly-search-engine" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                  eco-friendly search engines
+                </Link>
+                , and starts with the simplest: keep the browser you already use and add
+                IdleForest, a free extension that funds verified tree planting in the background, or{" "}
+                <Link href="/compare" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                  compare all alternatives side by side
+                </Link>{" "}
+                for a full breakdown.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none">
@@ -537,8 +546,11 @@ export default function EcosiaAlternativesPage() {
               </h2>
               <div className="mt-5 space-y-5 text-lg leading-8 text-brand-yellow/85">
                 <p>
-                  IdleForest is not another search engine, so there is nothing to switch. It is a free Chrome,
-                  Firefox, and Edge extension (plus a desktop app) that you add on top of whatever you already
+                  IdleForest is not another search engine, so there is nothing to switch. It is a free{" "}
+                  <Link href="/tree-planting-extension" className="font-bold underline decoration-2 underline-offset-4 hover:text-white">
+                    tree-planting Chrome extension
+                  </Link>
+                  , Firefox, and Edge extension (plus a desktop app) that you add on top of whatever you already
                   use, including Ecosia, Google, Brave, or DuckDuckGo.
                 </p>
                 <p>

@@ -4,30 +4,31 @@ import Navigation from "@/components/navigation";
 import { ReviewsSection } from "@/components/reviews-section";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/navigation";
+import { routeAlternates } from "@/lib/i18n-routes";
 
 const title = "IdleForest Reviews and User Proof";
 const description =
   "Read IdleForest user reviews, Chrome Web Store proof, and links to the transparency page that verifies how idle bandwidth funds trees.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: {
-    canonical: "https://www.idleforest.com/reviews",
-  },
-  openGraph: {
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  return {
     title,
     description,
-    url: "https://www.idleforest.com/reviews",
-    siteName: "IdleForest",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-  },
-};
+    alternates: routeAlternates("/reviews", params.locale),
+    openGraph: {
+      title,
+      description,
+      url: "https://www.idleforest.com/reviews",
+      siteName: "IdleForest",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 export default function ReviewsPage() {
   return (

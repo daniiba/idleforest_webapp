@@ -49,6 +49,30 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/use-idleforest-with-ecosia',
+        destination: '/ecosia',
+        statusCode: 301,
+      },
+      {
+        source: '/use-idleforest-with-ecosia/',
+        destination: '/ecosia',
+        statusCode: 301,
+      },
+      {
+        source: '/:locale(de|fr|es|pt)/use-idleforest-with-ecosia',
+        destination: '/:locale/ecosia',
+        statusCode: 301,
+      },
+      {
+        source: '/:locale(de|fr|es|pt)/use-idleforest-with-ecosia/',
+        destination: '/:locale/ecosia',
+        statusCode: 301,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

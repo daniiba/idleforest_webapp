@@ -8,7 +8,6 @@ export const TRANSLATED_ROUTES: Record<string, SupportedLocale[]> = {
     "/business": ["en", "fr", "de", "es", "pt"],
     "/terms": ["en", "fr", "de", "es", "pt"],
     "/discord-bot": ["en", "fr", "de", "es", "pt"],
-    "/use-idleforest-with-ecosia": ["en", "fr", "de", "es", "pt"],
     "/ecosia-alternatives": ["en", "fr", "de", "es", "pt"],
     "/tree-planting-extension": ["en", "fr", "de", "es", "pt"],
     "/is-ecosia-legit-safe": ["en", "fr", "de", "es", "pt"],

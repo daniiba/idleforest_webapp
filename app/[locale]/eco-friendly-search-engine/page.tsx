@@ -207,11 +207,11 @@ const hubLinks = [
   },
   {
     href: "/tree-planting-extension",
-    title: "Tree-planting Chrome extension",
+    title: "tree-planting Chrome extension",
     body: "See how the Chrome extension helps fund verified tree planting.",
   },
   {
-    href: "/use-idleforest-with-ecosia",
+    href: "/ecosia",
     title: "Use IdleForest with Ecosia",
     body: "Keep Ecosia for searches and add IdleForest beside it.",
   },
@@ -594,7 +594,7 @@ export default function EcoFriendlySearchEnginePage() {
                   className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
                 >
                   <Link
-                    href="/use-idleforest-with-ecosia"
+                    href="/ecosia"
                     className="inline-flex items-center gap-2"
                   >
                     Use IdleForest with Ecosia{" "}

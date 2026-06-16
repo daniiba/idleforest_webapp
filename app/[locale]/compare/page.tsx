@@ -347,7 +347,11 @@ export default function CompareHubPage() {
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
                 There are several ways to turn everyday browsing into real
-                trees, and they work very differently. This page groups the main
+                trees, including{" "}
+                <Link href="/eco-friendly-search-engine" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                  eco-friendly search engines
+                </Link>
+                , and they work very differently. This page groups the main
                 options by how they actually fund planting, so you can find the
                 right fit and go deeper on any head-to-head.
               </p>
@@ -524,7 +528,18 @@ export default function CompareHubPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-neutral-700">{tool.type}</td>
+                    <td className="px-5 py-4 text-neutral-700">
+                      {tool.name === "IdleForest" ? (
+                        <>
+                          <Link href="/tree-planting-extension" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                            tree-planting extension
+                          </Link>
+                          {" "}and desktop app
+                        </>
+                      ) : (
+                        tool.type
+                      )}
+                    </td>
                     <td className="px-5 py-4 text-neutral-700">
                       {tool.funding}
                     </td>
