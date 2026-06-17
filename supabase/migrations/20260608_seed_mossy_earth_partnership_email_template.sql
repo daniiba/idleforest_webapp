@@ -20,7 +20,7 @@ DECLARE
         </div>
 
         <div style="background-color: #ffffff; border: 2px solid #000000;">
-            <img src="https://idleforest.com/partner/mossy-earth/wetland-field.png" alt="Mossy Earth field restoration work"
+            <img src="https://idleforest.com/partner/mossy-earth/planting-portrait.png" alt="A restoration worker planting a seedling"
                 style="display: block; width: 100%; height: auto; border-bottom: 2px solid #000000;">
 
             <div style="padding: 32px;">

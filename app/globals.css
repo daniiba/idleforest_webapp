@@ -9,25 +9,25 @@ body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-/* Hallmark · page: partner landing · theme: Mossy Earth field notes
+/* Hallmark · page: support landing · theme: IdleForest brand blocks
  * pre-emit critique: P4 H4 E4 S4 R4 V4
  */
 .mossy-earth-page {
-  --me-bg: #f4eee4;
-  --me-bg-soft: #fbf6e8;
-  --me-ink: #0b0c0a;
-  --me-muted: #4e574f;
-  --me-green: #347d67;
-  --me-green-dark: #245943;
-  --me-yellow: #f7d241;
-  --me-line: rgba(11, 12, 10, 0.16);
-  --me-white: #fffdf6;
-  --me-final: #eeebe4;
+  --me-bg: #d9d9d9;
+  --me-bg-soft: #ffffff;
+  --me-ink: #0b101f;
+  --me-muted: #3f4758;
+  --me-green: #0b101f;
+  --me-green-dark: #05070d;
+  --me-yellow: #e0f146;
+  --me-line: rgba(11, 16, 31, 0.18);
+  --me-white: #ffffff;
+  --me-final: #d9d9d9;
   min-height: 100vh;
   overflow-x: clip;
   background: var(--me-bg);
   color: var(--me-ink);
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  font-family: var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   letter-spacing: 0;
 }
 
@@ -48,10 +48,10 @@ body {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 24px;
-  min-height: 112px;
-  padding: 24px clamp(20px, 5vw, 96px) 38px;
+  min-height: 88px;
+  padding: 18px clamp(20px, 5vw, 96px);
+  border-bottom: 2px solid var(--me-ink);
   background: var(--me-bg);
-  clip-path: polygon(0 0, 100% 0, 100% 82%, 84% 88%, 68% 82%, 50% 88%, 31% 82%, 15% 88%, 0 82%);
 }
 
 .mossy-earth-brand {
@@ -62,7 +62,7 @@ body {
   min-width: 0;
   font-size: 13px;
   font-weight: 900;
-  letter-spacing: 7px;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -75,13 +75,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 58px;
+  width: 132px;
+  height: 36px;
   flex: 0 0 auto;
-  border-radius: 50%;
   background: transparent;
   color: var(--me-green);
-  box-shadow: 0 10px 28px rgba(36, 89, 67, 0.16);
 }
 
 .mossy-earth-mark img {
@@ -114,6 +112,7 @@ body {
   min-height: 48px;
   width: fit-content;
   max-width: 100%;
+  border: 2px solid var(--me-ink);
   border-radius: 999px;
   padding: 0 28px;
   font-size: 16px;
@@ -136,29 +135,37 @@ body {
 
 .mossy-earth-pill-solid {
   justify-self: end;
-  background: var(--me-green);
-  color: var(--me-white);
+  background: var(--me-yellow);
+  color: var(--me-ink);
+  box-shadow: 4px 4px 0 var(--me-ink);
+}
+
+.mossy-earth-nav .mossy-earth-pill-solid,
+.mossy-earth-actions .mossy-earth-pill-solid,
+.mossy-earth-final .mossy-earth-pill-solid {
+  background: var(--me-yellow);
+  color: var(--me-ink);
 }
 
 .mossy-earth-pill-solid:hover {
-  background: var(--me-green-dark);
+  background: var(--me-white);
+  color: var(--me-ink);
 }
 
 .mossy-earth-pill-ghost {
-  border: 2px solid rgba(255, 253, 246, 0.72);
+  border: 2px solid rgba(255, 255, 255, 0.72);
   color: var(--me-white);
-  background: rgba(255, 253, 246, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .mossy-earth-pill-ghost:hover {
   border-color: var(--me-white);
-  background: rgba(255, 253, 246, 0.16);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .mossy-earth-hero {
   position: relative;
   min-height: clamp(620px, 72vh, 820px);
-  margin-top: -24px;
   overflow: hidden;
   background: var(--me-green-dark);
 }
@@ -176,19 +183,12 @@ body {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(5, 8, 5, 0.78) 0%, rgba(5, 8, 5, 0.54) 42%, rgba(5, 8, 5, 0.18) 100%),
-    linear-gradient(180deg, rgba(5, 8, 5, 0.08) 0%, rgba(5, 8, 5, 0.42) 100%);
+    linear-gradient(90deg, rgba(11, 16, 31, 0.88) 0%, rgba(11, 16, 31, 0.72) 44%, rgba(11, 16, 31, 0.26) 100%),
+    linear-gradient(180deg, rgba(11, 16, 31, 0.12) 0%, rgba(11, 16, 31, 0.5) 100%);
 }
 
 .mossy-earth-hero::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 30px;
-  background: var(--me-yellow);
-  clip-path: polygon(0 42%, 13% 62%, 27% 34%, 42% 56%, 58% 36%, 74% 58%, 89% 38%, 100% 54%, 100% 100%, 0 100%);
+  display: none;
 }
 
 .mossy-earth-hero-content {
@@ -209,10 +209,10 @@ body {
 .mossy-earth-hero h1 {
   margin: 0;
   max-width: 730px;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
-  font-size: clamp(46px, 7vw, 80px);
-  font-weight: 900;
-  line-height: 0.94;
+  font-family: var(--font-candu), var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-size: clamp(44px, 6vw, 66px);
+  font-weight: 400;
+  line-height: 0.98;
   letter-spacing: 0;
 }
 
@@ -229,17 +229,40 @@ body {
   bottom: 6px;
   z-index: -1;
   height: 12px;
-  border-radius: 999px;
   background: var(--me-yellow);
 }
 
-.mossy-earth-hero-content > p:not(.mossy-earth-kicker) {
+.mossy-earth-hero-content > p:not(.mossy-earth-kicker):not(.mossy-earth-disclaimer) {
   max-width: 590px;
   margin: 28px 0 0;
-  color: rgba(255, 253, 246, 0.86);
+  color: rgba(255, 255, 255, 0.86);
   font-size: 19px;
   font-weight: 600;
   line-height: 1.55;
+}
+
+.mossy-earth-hero-content > .mossy-earth-disclaimer {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 640px;
+  margin-top: 20px;
+  border: 2px solid rgba(224, 241, 70, 0.7);
+  border-radius: 8px;
+  background: rgba(11, 16, 31, 0.72);
+  padding: 14px 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.mossy-earth-disclaimer svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  stroke-width: 3;
 }
 
 .mossy-earth-actions {
@@ -254,6 +277,7 @@ body {
   position: relative;
   background: var(--me-yellow);
   color: var(--me-ink);
+  border-bottom: 2px solid var(--me-ink);
 }
 
 .mossy-earth-stat-band > div {
@@ -277,7 +301,7 @@ body {
 
 .mossy-earth-stat-band strong {
   display: block;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-family: var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 900;
   line-height: 1;
@@ -296,9 +320,9 @@ body {
 .mossy-earth-section-heading h2,
 .mossy-earth-steps h2 {
   margin: 0;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-family: var(--font-candu), var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-weight: 400;
   font-size: clamp(34px, 5vw, 58px);
-  font-weight: 900;
   line-height: 1.02;
   letter-spacing: 0;
 }
@@ -313,7 +337,7 @@ body {
 
 .mossy-earth-two-col h3 {
   margin: 0 0 24px;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-family: var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
   font-size: 35px;
   font-weight: 900;
   line-height: 1;
@@ -342,7 +366,7 @@ body {
   gap: 8px;
   min-height: 36px;
   margin-top: 28px;
-  color: var(--me-green-dark);
+  color: var(--me-ink);
   font-size: 16px;
   font-weight: 800;
 }
@@ -351,35 +375,6 @@ body {
   width: 18px;
   height: 18px;
   stroke-width: 3;
-}
-
-.mossy-earth-field-image {
-  position: relative;
-  height: clamp(360px, 56vw, 620px);
-  overflow: hidden;
-  background: var(--me-green-dark);
-}
-
-.mossy-earth-field-image::before,
-.mossy-earth-field-image::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  height: 34px;
-}
-
-.mossy-earth-field-image::before {
-  top: -1px;
-  background: var(--me-bg);
-  clip-path: polygon(0 0, 100% 0, 100% 38%, 84% 58%, 66% 34%, 46% 55%, 28% 36%, 12% 58%, 0 42%);
-}
-
-.mossy-earth-field-image::after {
-  bottom: -1px;
-  background: var(--me-bg-soft);
-  clip-path: polygon(0 62%, 14% 38%, 30% 58%, 49% 36%, 69% 56%, 86% 38%, 100% 58%, 100% 100%, 0 100%);
 }
 
 .mossy-earth-steps {
@@ -422,7 +417,8 @@ body {
   margin-top: 2px;
   border-radius: 50%;
   background: var(--me-yellow);
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  border: 2px solid var(--me-ink);
+  font-family: var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
   font-size: 24px;
   font-weight: 900;
   line-height: 1;
@@ -450,7 +446,8 @@ body {
   aspect-ratio: 511 / 664;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--me-green);
+  border: 2px solid var(--me-ink);
+  background: var(--me-ink);
 }
 
 .mossy-earth-faq {
@@ -458,6 +455,8 @@ body {
   grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
   gap: clamp(44px, 7vw, 98px);
   padding: 104px clamp(20px, 7vw, 126px);
+  border-top: 2px solid var(--me-ink);
+  border-bottom: 2px solid var(--me-ink);
   background: #ffffff;
 }
 
@@ -468,9 +467,9 @@ body {
 .mossy-earth-faq h2 {
   max-width: 620px;
   margin: 18px 0 0;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-family: var(--font-candu), var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-weight: 400;
   font-size: clamp(38px, 5.6vw, 66px);
-  font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
 }
@@ -481,7 +480,7 @@ body {
 }
 
 .mossy-earth-faq-list article {
-  border-top: 1px solid rgba(27, 44, 35, 0.18);
+  border-top: 2px solid var(--me-line);
   padding-top: 22px;
 }
 
@@ -514,9 +513,9 @@ body {
 
 .mossy-earth-final h2 {
   margin: 0;
-  font-family: var(--font-dm-sans), var(--font-inter), ui-sans-serif, system-ui;
+  font-family: var(--font-candu), var(--font-rethink-sans), var(--font-inter), ui-sans-serif, system-ui;
   font-size: clamp(42px, 7vw, 66px);
-  font-weight: 900;
+  font-weight: 400;
   line-height: 1;
   letter-spacing: 0;
 }
@@ -536,12 +535,11 @@ body {
   .mossy-earth-brand {
     gap: 8px;
     font-size: 11px;
-    letter-spacing: 4px;
   }
 
   .mossy-earth-mark {
-    width: 46px;
-    height: 46px;
+    width: 118px;
+    height: 32px;
   }
 
   .mossy-earth-hero {
@@ -605,13 +603,10 @@ body {
   .mossy-earth-brand {
     justify-self: center;
     max-width: 100%;
-    letter-spacing: 3px;
   }
 
   .mossy-earth-wordmark {
-    max-width: 82px;
-    overflow: hidden;
-    text-overflow: clip;
+    max-width: none;
   }
 
   .mossy-earth-nav > .mossy-earth-pill {
@@ -636,7 +631,7 @@ body {
     font-size: 44px;
   }
 
-  .mossy-earth-hero-content > p:not(.mossy-earth-kicker),
+  .mossy-earth-hero-content > p:not(.mossy-earth-kicker):not(.mossy-earth-disclaimer),
   .mossy-earth-two-col p,
   .mossy-earth-step-list p {
     font-size: 16px;

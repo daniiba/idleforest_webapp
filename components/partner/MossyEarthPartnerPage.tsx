@@ -1,12 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ExternalLink, Leaf } from 'lucide-react'
+import { ArrowRight, ExternalLink, Info, Leaf } from 'lucide-react'
 import CompanySettingsPanel from '@/app/[locale]/c/[slug]/CompanySettingsPanel'
 
 const mossyEarthAssets = {
-    logoMark: '/partner/mossy-earth/logo-mark.svg',
+    idleForestLogo: '/logo.png',
     heroVideo: '/partner/mossy-earth/hero-video.mp4',
-    wetland: '/partner/mossy-earth/wetland-field.png',
     portrait: '/partner/mossy-earth/planting-portrait.png',
 }
 
@@ -17,19 +16,19 @@ const mossyEarthWebsite = {
 
 const mossyEarthFaqs = [
     {
-        question: 'Can I support Mossy Earth for free?',
+        question: 'Who runs this page?',
         answer:
-            'Yes. Join the Mossy Earth forest on IdleForest, install the free desktop app, and let spare bandwidth generate passive funding for Mossy Earth rewilding projects in the background.',
+            "IdleForest runs this page and the free app. Mossy Earth runs its own website and membership.",
     },
     {
         question: 'Does this replace a Mossy Earth membership?',
         answer:
-            'No. Mossy Earth memberships are still the main way to fund their work directly. IdleForest is an additional free support option for people who want to help but cannot become paid members right now.',
+            'No. A Mossy Earth membership is their own paid supporter offering. IdleForest is a separate free app for people who want to add passive support alongside that.',
     },
     {
-        question: 'How does IdleForest generate funding for Mossy Earth?',
+        question: 'How does IdleForest generate conservation funding?',
         answer:
-            'IdleForest runs small sessionless public data tasks through spare bandwidth. Companies and researchers pay for those tasks, and revenue from this forest is directed to Mossy Earth.',
+            'IdleForest runs small sessionless public data tasks through spare bandwidth. Companies and researchers pay for those tasks, and IdleForest can direct revenue from this support page toward conservation and rewilding work.',
     },
 ]
 
@@ -83,13 +82,14 @@ export default function MossyEarthPartnerPage({
         {
             '@context': 'https://schema.org',
             '@type': 'WebPage',
-            name: 'Support Mossy Earth for Free',
+            name: 'Support Mossy Earth for Free with IdleForest',
             url: canonicalUrl,
-            description: 'Join the Mossy Earth forest on IdleForest and generate passive funding for Mossy Earth rewilding projects for free.',
+            description:
+                "Support Mossy Earth for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Mossy Earth's own website and membership.",
             about: {
                 '@type': 'Organization',
-                name: 'Mossy Earth',
-                url: website.url,
+                name: 'IdleForest',
+                url: 'https://www.idleforest.com/',
             },
             provider: {
                 '@type': 'Organization',
@@ -122,7 +122,7 @@ export default function MossyEarthPartnerPage({
                 {
                     '@type': 'ListItem',
                     position: 2,
-                    name: 'Support Mossy Earth for Free',
+                    name: 'Support Mossy Earth for Free with IdleForest',
                     item: canonicalUrl,
                 },
             ],
@@ -131,13 +131,13 @@ export default function MossyEarthPartnerPage({
     const impactStats = [
         { label: 'Community Members', value: formatNumber(memberCount, params.locale) },
         { label: 'Tasks Handled', value: formatNumber(totalPoints, params.locale) },
-        { label: 'Raised for Mossy Earth', value: formatFunding(company, totalPoints, params.locale) },
+        { label: 'Estimated Mossy Earth Support', value: formatFunding(company, totalPoints, params.locale) },
     ]
     const steps = [
         {
             number: '1.',
-            title: 'Join through this page',
-            body: 'Supporters connect their IdleForest account to the Mossy Earth forest. No invite or donation is required.',
+            title: 'Join through IdleForest',
+            body: 'Supporters connect their IdleForest account to this support page. No invite or donation is required.',
         },
         {
             number: '2.',
@@ -163,13 +163,12 @@ export default function MossyEarthPartnerPage({
 
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-            <header className="mossy-earth-nav" aria-label="Mossy Earth navigation">
-                <a href="#mossy-earth-top" className="mossy-earth-brand" aria-label="Mossy Earth page top">
-                    <span className="mossy-earth-wordmark">Mossy</span>
+            <header className="mossy-earth-nav" aria-label="IdleForest support page navigation">
+                <a href="#mossy-earth-top" className="mossy-earth-brand" aria-label="IdleForest support page top">
                     <span className="mossy-earth-mark" aria-hidden>
-                        <Image src={mossyEarthAssets.logoMark} alt="" width={58} height={58} priority />
+                        <Image src={mossyEarthAssets.idleForestLogo} alt="" width={132} height={36} priority />
                     </span>
-                    <span className="mossy-earth-wordmark">Earth</span>
+                    <span className="mossy-earth-wordmark">Support Forest</span>
                 </a>
                 <nav className="mossy-earth-nav-links" aria-label="Page sections">
                     <a href="#mossy-earth-story">Story</a>
@@ -177,7 +176,7 @@ export default function MossyEarthPartnerPage({
                 </nav>
                 {isValidInvite || isMember ? (
                     <Link href={joinHref} className="mossy-earth-pill mossy-earth-pill-solid">
-                        Join the forest
+                        Join IdleForest
                         <Leaf aria-hidden />
                     </Link>
                 ) : null}
@@ -190,13 +189,17 @@ export default function MossyEarthPartnerPage({
                     </video>
                     <div className="mossy-earth-hero-shade" />
                     <div className="mossy-earth-hero-content">
-                        <p className="mossy-earth-kicker">IdleForest x Mossy Earth</p>
+                        <p className="mossy-earth-kicker">IdleForest support page</p>
                         <h1>
                             Support Mossy Earth <span>for free.</span>
                         </h1>
                         <p>
-                            Install IdleForest in under 30 seconds, then it runs automatically in the background to generate free support for Mossy Earth&apos;s rewilding projects. Your browsing,
-                            calls, streaming, and downloads always stay first.
+                            Install IdleForest in under 30 seconds, then it runs automatically in the background to generate passive conservation funding. This page and app are run by IdleForest,
+                            separate from Mossy Earth&apos;s own website and membership.
+                        </p>
+                        <p className="mossy-earth-disclaimer">
+                            <Info aria-hidden />
+                            IdleForest runs this free app and support page. Mossy Earth runs its own website and membership.
                         </p>
                         <div className="mossy-earth-actions">
                             {isValidInvite || isMember ? (
@@ -213,7 +216,7 @@ export default function MossyEarthPartnerPage({
                     </div>
                 </section>
 
-                <section className="mossy-earth-stat-band" id="mossy-earth-impact" aria-label="Mossy Earth impact metrics">
+                <section className="mossy-earth-stat-band" id="mossy-earth-impact" aria-label="IdleForest support impact metrics">
                     <div>
                         {impactStats.map((stat) => (
                             <article key={stat.label}>
@@ -231,16 +234,15 @@ export default function MossyEarthPartnerPage({
                     <div className="mossy-earth-two-col">
                         <article>
                             <h3>
-                                <span>The cause</span>
+                                <span>The conservation work</span>
                             </h3>
                             <p>
-                                Mossy Earth is a team of outdoor enthusiasts and conservation biologists running nature restoration projects in Scotland, Portugal, Ecuador, and Indonesia. They
+                                Mossy Earth is a team of outdoor enthusiasts and conservation biologists running nature restoration projects in Scotland, Portugal, Ecuador, and Indonesia. Their teams
                                 reintroduce lost species, control invasive species, restore degraded habitats, and work on ecosystems that most conservation funding ignores. They are bootstrapped, take
                                 no outside investment, and publish every expense publicly.
                             </p>
                             <p>
-                                Their core funding comes from paid memberships. Installing IdleForest is a free way to support Mossy Earth alongside membership, and a helpful option for people who
-                                want to contribute but cannot become paid members right now.
+                                Their core funding comes from paid memberships. This page simply lets IdleForest users direct background app revenue toward conservation work through IdleForest.
                             </p>
                             <a href={website.url} target="_blank" rel="noreferrer">
                                 Become a Mossy Earth member
@@ -262,7 +264,7 @@ export default function MossyEarthPartnerPage({
                             </p>
                             <p>
                                 Companies and researchers pay for access to this public data. IdleForest directs the revenue from this forest to Mossy Earth, so your computer can help fund rewilding
-                                while it runs. Most active desktop installs contribute around $2-$5 per month, depending on where you are located, how often the app is online, and how much spare
+                                while it runs. This support routing is managed by IdleForest. Most active desktop installs contribute around $2-$5 per month, depending on where you are located, how often the app is online, and how much spare
                                 internet is available.
                             </p>
                             <p>Your browsing always takes priority. The app backs off the moment your connection is busy. You will not notice it running.</p>
@@ -272,10 +274,6 @@ export default function MossyEarthPartnerPage({
                             </Link>
                         </article>
                     </div>
-                </section>
-
-                <section className="mossy-earth-field-image" aria-label="Mossy Earth field work">
-                    <Image src={mossyEarthAssets.wetland} alt="A conservation worker walking through flooded woodland" fill sizes="100vw" className="mossy-earth-image-cover" />
                 </section>
 
                 <section className="mossy-earth-steps">
@@ -300,8 +298,8 @@ export default function MossyEarthPartnerPage({
 
                 <section className="mossy-earth-faq" aria-labelledby="mossy-earth-faq-heading">
                     <div>
-                        <p className="mossy-earth-kicker">Support Mossy Earth for free</p>
-                        <h2 id="mossy-earth-faq-heading">A free extra layer for rewilding support.</h2>
+                        <p className="mossy-earth-kicker">IdleForest support page</p>
+                        <h2 id="mossy-earth-faq-heading">Support the work, through IdleForest.</h2>
                     </div>
                     <div className="mossy-earth-faq-list">
                         {mossyEarthFaqs.map((faq) => (

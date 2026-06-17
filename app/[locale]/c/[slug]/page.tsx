@@ -62,9 +62,9 @@ const planetwildMetaDescription =
     'Join Planet Wild on IdleForest, install once, and let the app generate passive funding for rewilding missions in the background.'
 const planetwildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/videoseries?list=UU6QFT2c2MJxID-vxHDeX9XQ&rel=0'
 const planetwildMissionsUrl = 'https://planetwild.com/missions'
-const mossyEarthMetaTitle = 'Support Mossy Earth for Free | Mossy Earth x IdleForest'
+const mossyEarthMetaTitle = 'Support Mossy Earth for Free | IdleForest'
 const mossyEarthMetaDescription =
-    'Support Mossy Earth for free with IdleForest. Join the Mossy Earth forest, install once, and let the app generate passive funding for rewilding projects in the background.'
+    "Support Mossy Earth for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Mossy Earth's own website and membership."
 
 const phoneRepairProjectNameKeys: Record<string, string> = {
     'tn-plant-to-stop-poverty': 'plantToStopPoverty',
@@ -235,13 +235,13 @@ function getPlanetwildFallbackCompany() {
 function getMossyEarthFallbackCompany() {
     return {
         id: emptyCompanyId,
-        name: 'Mossy Earth',
+        name: 'IdleForest Rewilding Support',
         slug: MOSSY_EARTH_COMPANY_SLUG,
         website: 'https://www.mossy.earth/',
         description:
-            'Mossy Earth is a team of biologists running conservation and rewilding projects across degraded ecosystems. IdleForest support from this page turns background app activity into project funding.',
-        theme_color: '#347d67',
-        logo_url: '/partner/mossy-earth/logo-mark.svg',
+            'An IdleForest support page for people who want background app activity to help fund conservation and rewilding work.',
+        theme_color: '#E0F146',
+        logo_url: '/logo.png',
         video_url: null,
         is_invite_only: false,
         invite_code: null,
@@ -1483,7 +1483,8 @@ export function generateMetadata({ params }: { params: { slug: string; locale: s
             keywords: [
                 'Mossy Earth',
                 'support Mossy Earth for free',
-                'Mossy Earth rewilding',
+                'IdleForest support page',
+                'free conservation support',
                 'fund conservation for free',
                 'free rewilding support',
                 'IdleForest',
@@ -1498,10 +1499,10 @@ export function generateMetadata({ params }: { params: { slug: string; locale: s
                 type: 'website',
                 images: [
                     {
-                        url: '/partner/mossy-earth/wetland-field.png',
+                        url: '/partner/mossy-earth/planting-portrait.png',
                         width: 1600,
                         height: 900,
-                        alt: 'Mossy Earth conservation work in a flooded woodland.',
+                        alt: 'Conservation work in a flooded woodland.',
                     },
                 ],
             },
@@ -1509,7 +1510,7 @@ export function generateMetadata({ params }: { params: { slug: string; locale: s
                 card: 'summary_large_image',
                 title: mossyEarthMetaTitle,
                 description: mossyEarthMetaDescription,
-                images: ['/partner/mossy-earth/wetland-field.png'],
+                images: ['/partner/mossy-earth/planting-portrait.png'],
             },
         }
     }

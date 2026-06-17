@@ -82,14 +82,14 @@ const comparisonLinks = [
 const partnerAnnouncements = [
     {
         id: "mossy-earth",
-        eyebrow: "Partnership announcement",
-        logoSrc: "/partner/mossy-earth/logo-mark.svg",
-        logoAlt: "Mossy Earth logo mark",
-        title: "Mossy Earth is live on IdleForest.",
+        eyebrow: "Support page",
+        logoSrc: "/game/idleforest_icon.png",
+        logoAlt: "IdleForest logo",
+        title: "Support Mossy Earth for free with IdleForest.",
         description:
-            "Join the Mossy Earth forest for free, install IdleForest once, and future background activity can help generate passive funding for conservation and rewilding work.",
+            "Open the IdleForest support page, install once, and future background activity can help generate passive conservation funding for Mossy Earth.",
         href: "/c/mossy-earth",
-        cta: "Support Mossy Earth",
+        cta: "Support for free",
         externalHref: "https://www.mossy.earth/",
         externalCta: "Visit Mossy Earth",
         stats: [
@@ -98,8 +98,8 @@ const partnerAnnouncements = [
         ],
         tags: ["Rewilding", "Conservation", "Free to join"],
         videoSrc: "/partner/mossy-earth/hero-video.mp4",
-        imageSrc: "/partner/mossy-earth/wetland-field.png",
-        imageAlt: "A conservation worker walking through flooded woodland",
+        imageSrc: "/partner/mossy-earth/planting-portrait.png",
+        imageAlt: "A restoration worker planting a young seedling",
         accentClassName: "bg-brand-yellow",
     },
     {
