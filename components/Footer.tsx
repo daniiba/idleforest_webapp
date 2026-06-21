@@ -38,6 +38,7 @@ const Footer = () => {
       title: 'Resources',
       links: [
         { href: '/blog', label: 'Blog' },
+        { href: '/values', label: 'Values' },
         { href: '/eco-friendly-search-engine', label: 'Eco Search' },
         { href: '/privacy', label: 'Privacy' },
         { href: '/terms', label: 'Terms of Service' },

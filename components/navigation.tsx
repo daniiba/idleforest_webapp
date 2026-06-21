@@ -22,6 +22,7 @@ const downloadLinks = [
 
 const moreLinks = [
   { href: '/blog', label: 'Blog' },
+  { href: '/values', label: 'Values' },
   { href: '/teams', label: 'Rankings' },
   { href: '/map', label: 'Map' },
   { href: '/report', label: 'Report' },
