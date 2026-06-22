@@ -5,7 +5,7 @@ import { headers } from 'next/headers';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/Footer";
 import "./globals.css";
-import { DM_Sans, Inter, Rethink_Sans } from "next/font/google";
+import { DM_Sans, Inter, Rethink_Sans, Roboto } from "next/font/google";
 import { TreeStatsProvider } from "@/contexts/TreeStatsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NextIntlClientProvider } from 'next-intl';
@@ -44,6 +44,12 @@ const dmSans = DM_Sans({
     subsets: ["latin"],
     variable: "--font-dm-sans",
     weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+const roboto = Roboto({
+    subsets: ["latin"],
+    variable: "--font-roboto",
+    weight: ["400", "700", "900"],
 });
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -223,7 +229,7 @@ fbq('track', 'PageView');
 
             </head>
             <body
-                className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} ${dmSans.variable} antialiased`}
+                className={`${inter.variable} ${candu.variable} ${geistSans.variable} ${geistMono.variable} ${rethinkSans.variable} ${dmSans.variable} ${roboto.variable} antialiased`}
             >
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <TreeStatsProvider>

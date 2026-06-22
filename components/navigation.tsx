@@ -124,7 +124,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-4 lg:gap-6 col-start-2 justify-self-center items-center whitespace-nowrap">
+        <nav className="hidden lg:flex gap-4 lg:gap-6 col-start-2 justify-self-center items-center whitespace-nowrap">
           <NavLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} />
           <NavLink href="/partners" label="Partners" active={isActive('/partners')} />
           <NavDropdown label="Download" active={hasActiveChild(downloadLinks)} items={downloadLinks} />
@@ -140,7 +140,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             rel="noopener noreferrer"
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick('add_to_chrome_header_mobile')}
-            className="md:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
+            className="lg:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
           >
             <Chrome className="h-4 w-4 shrink-0" />
             Add to Chrome — It’s Free
@@ -148,7 +148,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         )}
 
         {/* Desktop CTA / User */}
-        <div className="hidden md:flex justify-self-end col-start-3 items-center gap-3">
+        <div className="hidden lg:flex justify-self-end col-start-3 items-center gap-3">
           <LanguageSelector />
           {user ? (
             <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         <button
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
-          className="md:hidden justify-self-end col-start-3 p-2 rounded-md hover:bg-black/10 transition-colors"
+          className="lg:hidden justify-self-end col-start-3 p-2 rounded-md hover:bg-black/10 transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X className="text-black" size={28} /> : <Menu className="text-black" size={28} />}
@@ -197,7 +197,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <nav className="md:hidden bg-brand-gray/95 backdrop-blur-xl border-t border-black/10 absolute w-full left-0 top-full shadow-xl">
+        <nav className="lg:hidden bg-brand-gray/95 backdrop-blur-xl border-t border-black/10 absolute w-full left-0 top-full shadow-xl">
           <div className="container mx-auto px-4 py-6 flex max-h-[calc(100vh-6rem)] flex-col gap-3 overflow-y-auto">
             <MobileLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} onClick={() => setIsMenuOpen(false)} />
             <MobileLink href="/partners" label="Partners" active={isActive('/partners')} onClick={() => setIsMenuOpen(false)} />

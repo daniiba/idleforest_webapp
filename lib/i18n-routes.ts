@@ -4,6 +4,7 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const TRANSLATED_ROUTES: Record<string, SupportedLocale[]> = {
     "/": ["en", "fr", "de", "es", "pt"],
+    "/values": ["en"],
     "/transparency": ["en", "fr", "de", "es", "pt"],
     "/business": ["en", "fr", "de", "es", "pt"],
     "/terms": ["en", "fr", "de", "es", "pt"],
