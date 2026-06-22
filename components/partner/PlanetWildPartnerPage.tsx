@@ -21,11 +21,11 @@ const planetWildMissionVideoEmbedUrl = 'https://www.youtube-nocookie.com/embed/v
 const planetWildFaqs = [
     {
         question: 'Who runs this page?',
-        answer: 'IdleForest runs this free support page and app. Planet Wild runs its own website, membership, mission reports, and community.',
+        answer: 'IdleForest runs this free support page and app. Planet Wild runs its own website, membership, mission reports, and community. This is a separate IdleForest product.',
     },
     {
         question: 'Does joining here replace a Planet Wild membership?',
-        answer: 'No. Planet Wild memberships are paid direct support. IdleForest is a separate free way to route background app revenue toward the Planet Wild fund.',
+        answer: 'No. Planet Wild memberships are their own paid supporter offering. IdleForest is a separate free app for people who want to add passive support alongside that.',
     },
     {
         question: 'What does IdleForest share?',
@@ -143,7 +143,8 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
             '@type': 'WebPage',
             name: 'Fund Planet Wild for Free with IdleForest',
             url: canonicalUrl,
-            description: 'Join Planet Wild on IdleForest, install once, and let the app generate passive funding for documented rewilding missions in the background.',
+            description:
+                'Support Planet Wild for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Planet Wild’s own website and membership.',
             about: {
                 '@type': 'Organization',
                 name: 'Planet Wild',
@@ -209,7 +210,11 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
                             <Image src={planetWildAssets.partnerLabel} alt="Planet Wild rewilding partner" width={1116} height={444} priority sizes="(min-width: 960px) 27rem, 18rem" />
                         </div>
                         <h1>Fund Planet Wild for free.</h1>
-                        <p>Join the Planet Wild forest, install IdleForest once, and the app can generate passive funding for rewilding missions while your computer is already online.</p>
+                        <p>
+                            Join the Planet Wild forest, install IdleForest once, and the app can generate passive funding for rewilding missions while your computer is already online. This
+                            IdleForest-run support page and free app are separate from Planet Wild&apos;s own website and membership.
+                        </p>
+                        <p className="pw-product-note">IdleForest is the free background app. Planet Wild is the rewilding organisation running its own membership, mission reports, and community.</p>
                         <div className="pw-hero__actions">
                             {isValidInvite || isMember ? (
                                 <Link href={joinHref} className="pw-chip pw-chip--solid">
@@ -254,8 +259,8 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
                     <div className="pw-split__copy">
                         <h2>Monthly missions, visible work.</h2>
                         <p>
-                            Planet Wild publishes mission reports for its rewilding work. IdleForest adds a separate funding layer for supporters who want a free way to help alongside direct
-                            membership.
+                            Planet Wild publishes mission reports for its rewilding work. IdleForest adds a separate free support layer for people who want to help alongside Planet Wild&apos;s own
+                            paid membership.
                         </p>
                         <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer" className="pw-inline-link">
                             View all Planet Wild missions
@@ -337,7 +342,10 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
             </main>
 
             <footer className="pw-footer">
-                <p>IdleForest runs this page and the free app. Planet Wild runs its own website, membership, missions, transparency reports, and community. © 2026 IdleForest x Planet Wild.</p>
+                <p>
+                    IdleForest runs this page and the free app as a separate product. Planet Wild runs its own website, membership, missions, transparency reports, and community. © 2026 IdleForest x
+                    Planet Wild.
+                </p>
                 <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer">
                     Mission reports
                     <ArrowUpRight aria-hidden />

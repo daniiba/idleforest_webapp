@@ -60,7 +60,7 @@ const wastefreePlanetMetaDescription =
     'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the Chrome extension or Mac/Windows app; Plastic Bank handles cleanup through 1ClickImpact.'
 const planetwildMetaTitle = 'Fund Rewilding for Free | Planet Wild x IdleForest'
 const planetwildMetaDescription =
-    'Join Planet Wild on IdleForest, install once, and let the app generate passive funding for rewilding missions in the background.'
+    "Support Planet Wild for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Planet Wild's own website and membership."
 const mossyEarthMetaTitle = 'Support Mossy Earth for Free | IdleForest'
 const mossyEarthMetaDescription =
     "Support Mossy Earth for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Mossy Earth's own website and membership."

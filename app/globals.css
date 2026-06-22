@@ -3922,6 +3922,17 @@ body {
   line-height: 1.55;
 }
 
+.pw-hero__copy > .pw-product-note {
+  max-width: 48rem;
+  margin-block-start: var(--space-pw-md);
+  border-inline-start: var(--rule-pw-heavy) solid var(--color-pw-accent);
+  padding-inline-start: var(--space-pw-md);
+  color: color-mix(in oklch, var(--color-pw-white) 76%, transparent);
+  font-size: var(--text-pw-sm);
+  font-weight: 750;
+  line-height: 1.55;
+}
+
 .pw-hero__actions,
 .pw-final__actions {
   display: flex;

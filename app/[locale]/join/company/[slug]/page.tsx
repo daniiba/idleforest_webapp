@@ -111,7 +111,7 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     const joinDescription = isWastefree
         ? 'Connect your IdleForest account to the Waste Free Planet clean-ocean fund. After setup, future activity helps fund ocean-bound plastic recovery through Plastic Bank.'
         : isPlanetwild
-          ? 'Connect your IdleForest account to Planet Wild. After setup, future activity helps generate passive funding for documented rewilding missions.'
+          ? "Connect your IdleForest account to the Planet Wild support forest. IdleForest is a separate free app from Planet Wild's own website and membership."
           : isMossyEarth
             ? 'Connect your IdleForest account to Mossy Earth. After setup, future desktop activity helps generate passive funding for conservation and rewilding projects.'
         : `Connect your IdleForest account to ${companyName}. Future activity will count toward this company forest.`
@@ -120,7 +120,7 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     const installedNote = isWastefree
         ? 'Already installed IdleForest? Joining connects future desktop activity to the clean-ocean fund automatically after your app syncs.'
         : isPlanetwild
-          ? 'Already installed IdleForest? Joining connects future desktop activity to the Planet Wild rewilding fund automatically after your app syncs.'
+          ? "Already installed IdleForest? Joining connects future desktop activity to this IdleForest-run support forest automatically after your app syncs. It does not replace Planet Wild's membership."
           : isMossyEarth
             ? 'Already installed IdleForest? Joining connects future desktop activity to the Mossy Earth rewilding fund automatically after your app syncs.'
           : 'Already installed IdleForest? Joining connects future desktop activity to this company forest automatically after your app syncs.'
