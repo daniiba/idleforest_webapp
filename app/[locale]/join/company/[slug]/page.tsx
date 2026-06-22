@@ -136,6 +136,88 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
         { icon: BadgeCheck, label: 'You can pause or uninstall anytime' },
     ]
 
+    if (isPlanetwild) {
+        const planetWildLogoUrl = company?.logo_url || '/partner/planetwild/pw-logo-black.png'
+
+        return (
+            <main className="pw-page pw-join-page">
+                <section className="pw-join-shell" aria-labelledby="planetwild-join-heading">
+                    <div className="pw-join-copy">
+                        <Link href={`/${params.locale}/c/planetwild`} className="pw-join-brand" aria-label="Back to Planet Wild landing page">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={planetWildLogoUrl} alt="" />
+                            <span>Planet Wild</span>
+                        </Link>
+                        <p className="pw-kicker">IdleForest company forest</p>
+                        <h1 id="planetwild-join-heading">{pageTitle}</h1>
+                        <p>{joinDescription}</p>
+                        <div className="pw-join-notes">
+                            {safetyNotes.map((note) => {
+                                const Icon = note.icon
+
+                                return (
+                                    <article key={note.label}>
+                                        <Icon aria-hidden className="pw-join-note-icon" strokeWidth={2.6} />
+                                        <span>{note.label}</span>
+                                    </article>
+                                )
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="pw-join-panel">
+                        <p className="pw-kicker">Free support setup</p>
+
+                        {authLoading || loadingCompany ? (
+                            <div className="pw-join-status" role="status">
+                                <Loader2 aria-hidden className="pw-join-spinner" />
+                                <span>Checking your account...</span>
+                            </div>
+                        ) : user ? (
+                            switchWarning ? (
+                                <div className="pw-join-switch">
+                                    <h2>Switch company forest?</h2>
+                                    <p>
+                                        You are currently part of {switchWarning.currentCompany?.name || 'another company forest'}. Joining {companyName} will switch your account to this rewilding
+                                        fund.
+                                    </p>
+                                    <div className="pw-join-actions">
+                                        <button type="button" disabled={joining} onClick={() => joinCompany(true)} className="pw-chip pw-chip--solid">
+                                            {joining ? 'Switching...' : 'Switch company'}
+                                            <ArrowRight aria-hidden />
+                                        </button>
+                                        <button type="button" onClick={() => setSwitchWarning(null)} className="pw-chip pw-chip--outline">
+                                            Keep current
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="pw-join-status" role="status">
+                                    <Loader2 aria-hidden className="pw-join-spinner" />
+                                    <span>Joining {companyName}...</span>
+                                </div>
+                            )
+                        ) : (
+                            <div className="pw-join-actions">
+                                <Link href={signupHref} className="pw-chip pw-chip--solid">
+                                    Create account
+                                    <ArrowRight aria-hidden />
+                                </Link>
+                                <Link href={loginHref} className="pw-chip pw-chip--outline">
+                                    Log in
+                                </Link>
+                            </div>
+                        )}
+
+                        {error ? <div className="pw-join-error">{error}</div> : null}
+
+                        <p className="pw-join-installed">{installedNote}</p>
+                    </div>
+                </section>
+            </main>
+        )
+    }
+
     return (
         <main className="min-h-screen bg-[#f7f4ec] px-4 py-12 text-[#172116] sm:px-6">
             <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-2xl items-center justify-center">

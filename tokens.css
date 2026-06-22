@@ -84,6 +84,56 @@
   --dur-silveira: 260ms;
   --dur-silveira-stroke: 900ms;
   --ease-silveira-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --color-pw-paper: oklch(93% 0.012 110);
+  --color-pw-paper-soft: oklch(97% 0.01 110);
+  --color-pw-paper-warm: oklch(89% 0.025 94);
+  --color-pw-paper-cool: oklch(90% 0.018 153);
+  --color-pw-paper-white: oklch(98.5% 0.006 110);
+  --color-pw-ink: oklch(16% 0.018 124);
+  --color-pw-muted: oklch(41% 0.018 124);
+  --color-pw-dim: oklch(55% 0.016 124);
+  --color-pw-dark: oklch(15% 0.025 145);
+  --color-pw-rule: oklch(77% 0.016 112);
+  --color-pw-accent: oklch(90% 0.18 121);
+  --color-pw-accent-ink: oklch(15% 0.025 145);
+  --color-pw-focus: oklch(68% 0.18 145);
+  --color-pw-danger: oklch(48% 0.18 28);
+  --color-pw-danger-soft: oklch(95% 0.04 28);
+  --color-pw-white: oklch(98% 0.008 110);
+  --color-pw-overlay: color-mix(in oklch, var(--color-pw-dark) 82%, transparent);
+  --color-pw-overlay-soft: color-mix(in oklch, var(--color-pw-dark) 42%, transparent);
+
+  --font-pw-display: var(--font-candu), var(--font-rethink-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-pw-body: var(--font-rethink-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-pw-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --space-pw-2xs: 0.25rem;
+  --space-pw-xs: 0.5rem;
+  --space-pw-sm: 0.75rem;
+  --space-pw-md: 1rem;
+  --space-pw-lg: 1.5rem;
+  --space-pw-xl: 2.5rem;
+  --space-pw-2xl: 4rem;
+  --space-pw-3xl: 6rem;
+  --space-pw-4xl: 9rem;
+
+  --text-pw-xs: 0.75rem;
+  --text-pw-sm: 0.875rem;
+  --text-pw-base: 1rem;
+  --text-pw-md: 1.25rem;
+  --text-pw-lg: 1.5625rem;
+  --text-pw-xl: 1.953rem;
+  --text-pw-display: 3.2rem;
+  --text-pw-display-sm: 2.35rem;
+
+  --radius-pw: 0.5rem;
+  --radius-pw-pill: 999px;
+  --rule-pw: 1px;
+  --rule-pw-heavy: 2px;
+  --dur-pw-fast: 150ms;
+  --dur-pw: 260ms;
+  --ease-pw-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html,
