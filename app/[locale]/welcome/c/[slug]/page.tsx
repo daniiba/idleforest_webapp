@@ -18,6 +18,13 @@ import {
     RefreshCw
 } from 'lucide-react'
 import { trackOnboardingEvent } from '@/lib/onboarding-events'
+import CompanyMemberPanel from '@/components/partner/CompanyMemberPanel'
+import Navigation from '@/components/navigation'
+import {
+    isMossyEarthCompanySlug,
+    isPlanetwildCompanySlug,
+    isWastefreeCompanySlug,
+} from '@/lib/company-partners'
 
 interface CompanyData {
     id: string
@@ -25,6 +32,8 @@ interface CompanyData {
     description: string | null
     logo_url: string | null
     slug: string
+    impact_mode: 'idleforest_planting' | 'company_named_donation' | 'partner_payout'
+    payout_recipient_name: string | null
 }
 
 interface NodeStatus {
@@ -36,6 +45,42 @@ interface NodeStatus {
 }
 
 const supabase = createClient()
+
+function getCompanyImpactLabel(company: CompanyData) {
+    if (isWastefreeCompanySlug(company.slug)) return 'Clean-ocean fund'
+    if (isPlanetwildCompanySlug(company.slug) || isMossyEarthCompanySlug(company.slug)) return 'Rewilding fund'
+    if (company.impact_mode === 'partner_payout') return 'Partner payout'
+    if (company.impact_mode === 'company_named_donation') return 'Named fund'
+
+    return 'Company forest'
+}
+
+function getCompanyImpactDescription(company: CompanyData) {
+    if (isWastefreeCompanySlug(company.slug)) {
+        return 'Your future IdleForest activity supports the Waste Free Planet cleanup fund through 1ClickImpact and Plastic Bank.'
+    }
+
+    if (isPlanetwildCompanySlug(company.slug)) {
+        return "Your future IdleForest activity supports this Planet Wild rewilding fund. It does not replace Planet Wild's own membership."
+    }
+
+    if (isMossyEarthCompanySlug(company.slug)) {
+        return "Your future IdleForest activity supports this Mossy Earth rewilding fund. It does not replace Mossy Earth's own membership."
+    }
+
+    if (company.impact_mode === 'partner_payout' && company.payout_recipient_name) {
+        return `Your future IdleForest activity is routed toward ${company.payout_recipient_name}.`
+    }
+
+    return `Your future IdleForest activity counts toward ${company.name}.`
+}
+
+function getCompanyLogoUrl(company: CompanyData) {
+    if (company.logo_url) return company.logo_url
+    if (isWastefreeCompanySlug(company.slug)) return '/partner/wastefree/wfp-logo-white.webp'
+
+    return null
+}
 
 export default function CompanyWelcomePage() {
     const [company, setCompany] = useState<CompanyData | null>(null)
@@ -96,7 +141,7 @@ export default function CompanyWelcomePage() {
             // Fetch company data
             const { data: companyData, error: companyError } = await supabase
                 .from('companies')
-                .select('id, name, description, logo_url, slug')
+                .select('id, name, description, logo_url, slug, impact_mode, payout_recipient_name')
                 .eq('slug', params.slug)
                 .single()
 
@@ -145,12 +190,15 @@ export default function CompanyWelcomePage() {
 
     if (loading) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
-                    <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
-                </div>
-            </main>
+            <>
+                <Navigation />
+                <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
+                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
+                        <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
+                    </div>
+                </main>
+            </>
         )
     }
 
@@ -161,44 +209,59 @@ export default function CompanyWelcomePage() {
     // If user already has the desktop app connected, show completion state.
     if (nodeStatus?.hasDesktopNode) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 border-2 border-black mb-4">
-                        <CheckCircle2 className="w-8 h-8 text-white" />
+            <>
+                <Navigation />
+                <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
+                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 border-2 border-black mb-4">
+                            <CheckCircle2 className="w-8 h-8 text-white" />
+                        </div>
+                        <h1 className="text-3xl font-extrabold font-candu uppercase mb-2">
+                            You&apos;re All Set!
+                        </h1>
+                        <p className="text-neutral-600 mb-6">
+                            You have the IdleForest desktop app connected. Your future activity is linked to{' '}
+                            <span className="font-bold text-black">{company.name}</span>.
+                        </p>
+                        <CompanyMemberPanel
+                            companyName={company.name}
+                            portalHref={`/portal/c/${company.slug}`}
+                            logoUrl={getCompanyLogoUrl(company)}
+                            impactLabel={getCompanyImpactLabel(company)}
+                            portalLabel="Open member portal"
+                            description={getCompanyImpactDescription(company)}
+                            leaveRedirectHref="/welcome"
+                            className="mb-6 text-left"
+                        />
+                        <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
+                            Desktop connected. Your idle activity now counts toward {company.name}.
+                        </div>
+                        <Link
+                            href={`/portal/c/${company.slug}`}
+                            className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        >
+                            View Member Portal <ArrowRight className="w-5 h-5" />
+                        </Link>
                     </div>
-                    <h1 className="text-3xl font-extrabold font-candu uppercase mb-2">
-                        You&apos;re All Set!
-                    </h1>
-                    <p className="text-neutral-600 mb-6">
-                        You have the IdleForest desktop app connected. You&apos;re now part of{' '}
-                        <span className="font-bold text-black">{company.name}</span> and helping handle tasks for the company!
-                    </p>
-                    <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
-                        Desktop connected. Your idle activity now counts toward {company.name}.
-                    </div>
-                    <Link
-                        href={`/c/${company.slug}`}
-                        className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
-                    >
-                        View Company Portal <ArrowRight className="w-5 h-5" />
-                    </Link>
-                </div>
-            </main>
+                </main>
+            </>
         )
     }
 
     return (
-        <main className="min-h-screen bg-brand-gray p-4 py-16 font-rethink-sans">
-            {/* Yellow background shape */}
-            <Image
-                src="/yellow-shape.svg"
-                alt=""
-                fill
-                sizes="150vw"
-                className="absolute -bottom-20 -left-10 object-cover pointer-events-none select-none opacity-100"
-            />
+        <>
+            <Navigation />
+            <main className="min-h-screen bg-brand-gray p-4 py-16 font-rethink-sans">
+                {/* Yellow background shape */}
+                <Image
+                    src="/yellow-shape.svg"
+                    alt=""
+                    fill
+                    sizes="150vw"
+                    className="absolute -bottom-20 -left-10 object-cover pointer-events-none select-none opacity-100"
+                />
 
-            <div className="w-full max-w-2xl mx-auto relative z-10 space-y-6">
+                <div className="w-full max-w-2xl mx-auto relative z-10 space-y-6">
                 {/* Welcome Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-4">
@@ -208,9 +271,19 @@ export default function CompanyWelcomePage() {
                         Welcome to {company.name}!
                     </h1>
                     <p className="text-neutral-600 text-lg">
-                        You&apos;re now part of the company. Let&apos;s start planting trees together!
+                        You&apos;re connected to this IdleForest impact route. Install the desktop app to start contributing.
                     </p>
                 </div>
+
+                <CompanyMemberPanel
+                    companyName={company.name}
+                    portalHref={`/portal/c/${company.slug}`}
+                    logoUrl={getCompanyLogoUrl(company)}
+                    impactLabel={getCompanyImpactLabel(company)}
+                    portalLabel="Open member portal"
+                    description={getCompanyImpactDescription(company)}
+                    leaveRedirectHref="/welcome"
+                />
 
                 {/* Company Stats Card */}
                 <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
@@ -356,13 +429,14 @@ export default function CompanyWelcomePage() {
                 {/* Skip Link */}
                 <div className="text-center">
                     <Link
-                        href={`/c/${company.slug}`}
+                        href={`/portal/c/${company.slug}`}
                         className="text-sm font-bold text-neutral-500 underline decoration-1 hover:text-black hover:decoration-brand-yellow hover:decoration-2 transition-all"
                     >
-                        Skip for now → Go to company portal
+                        Skip for now → Go to member portal
                     </Link>
                 </div>
-            </div>
-        </main>
+                </div>
+            </main>
+        </>
     )
 }

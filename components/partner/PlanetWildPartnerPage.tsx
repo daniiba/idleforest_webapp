@@ -125,7 +125,7 @@ type PlanetWildPartnerPageProps = {
 }
 
 export default function PlanetWildPartnerPage({ company, params, invite, isMember, isValidInvite, isOwner, memberCount, totalPoints, companyWebsite }: PlanetWildPartnerPageProps) {
-    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const joinHref = isMember ? `/${params.locale}/portal/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
     const website = companyWebsite ?? planetWildWebsite
     const primaryCta = isMember ? 'Open portal' : 'Install IdleForest'
     const canonicalUrl = `https://www.idleforest.com${params.locale === 'en' ? '' : `/${params.locale}`}/c/planetwild`

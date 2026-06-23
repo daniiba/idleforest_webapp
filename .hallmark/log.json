@@ -1,5 +1,14 @@
 [
   {
+    "date": "2026-06-23",
+    "macrostructure": "Workbench",
+    "theme": "IdleForest app",
+    "enrichment": "none",
+    "nav": "existing dashboard",
+    "footer": "none",
+    "brief": "Redesign Waste Free Planet member portal for easier comprehension"
+  },
+  {
     "date": "2026-06-22",
     "macrostructure": "Split Studio",
     "theme": "Planet Wild field-note",

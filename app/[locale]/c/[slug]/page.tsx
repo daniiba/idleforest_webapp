@@ -9,7 +9,6 @@ import {
     ArrowRight,
     ArrowUpRight,
     BadgeCheck,
-    CheckCircle,
     ExternalLink,
     Heart,
     Leaf,
@@ -451,7 +450,7 @@ function WastefreePlanetPage({
     totalPoints: number
     companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
 }) {
-    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const joinHref = isMember ? `/${params.locale}/portal/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
     const fundingCents = getEstimatedCompanyFundingCents(company, totalPoints)
     const fundingRaised = formatCurrencyCents(fundingCents, params.locale)
     const estimatedPlasticCleanup = getEstimatedPlasticCleanup(fundingCents)
@@ -757,7 +756,7 @@ function SilveiraPartnerPage({
     totalPoints: number
     companyWebsite: ReturnType<typeof getCompanyWebsiteLink>
 }) {
-    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const joinHref = isMember ? `/${params.locale}/portal/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
     const primaryCta = isMember ? 'Go to your forest' : 'Join the forest'
     const fundingRaised = formatCurrencyCents(getEstimatedCompanyFundingCents(company, totalPoints), params.locale)
     const stats = [
@@ -1362,7 +1361,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
     const isValidInvite = useSilveiraTechPage || useWastefreePlanetPage || usePlanetwildPage || useMossyEarthPage || !company.is_invite_only || Boolean(invite && invite === company.invite_code) || isMember
 
     if (usePhoneRepairPage) {
-        const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`
+        const joinHref = isMember ? `/${params.locale}/portal/c/${company.slug}` : `/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`
         const projectRows = featuredProjects.map((planting) => {
             const countryName = planting.country?.name ?? planting.project.countryCode
             const partnerName = planting.partner?.name ?? planting.project.partnerId
@@ -1694,7 +1693,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                                 {isMember ? (
                                     <Link
-                                        href={`/${params.locale}/welcome/c/${company.slug}`}
+                                        href={`/${params.locale}/portal/c/${company.slug}`}
                                         className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
                                         style={{ backgroundColor: themeColor }}
                                     >
@@ -1716,12 +1715,6 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     </div>
                                 )}
 
-                                {isMember && (
-                                    <p className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                                        <CheckCircle className="h-4 w-4" />
-                                        You are already a member
-                                    </p>
-                                )}
                             </div>
                         </div>
 

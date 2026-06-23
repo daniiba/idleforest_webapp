@@ -74,7 +74,7 @@ export default function MossyEarthPartnerPage({
     totalPoints,
     companyWebsite,
 }: MossyEarthPartnerPageProps) {
-    const joinHref = isMember ? `/${params.locale}/welcome/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
+    const joinHref = isMember ? `/${params.locale}/portal/c/${company.slug}` : `/${params.locale}/join/company/${company.slug}`
     const primaryCta = isMember ? 'Open your forest' : 'Install IdleForest'
     const website = companyWebsite ?? mossyEarthWebsite
     const canonicalUrl = `https://www.idleforest.com${params.locale === 'en' ? '' : `/${params.locale}`}/c/mossy-earth`

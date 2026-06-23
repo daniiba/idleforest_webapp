@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { useParams } from 'next/navigation'
-import { Trophy, Users, Gift, Loader2, Plus, Upload, X, Apple, Chrome, Share2 } from 'lucide-react'
+import { Building2, Gift, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Share2, Trophy, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
 import { PointsHistoryChart } from "@/components/PointsHistoryChart"
+import { isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 interface Profile {
     id: string
@@ -16,6 +17,9 @@ interface Profile {
     username: string
     created_at: string
     total_points: number
+    company_id: string | null
+    company_joined_at: string | null
+    company_points_baseline: number | null
 }
 
 interface ReferralStats {
@@ -41,8 +45,50 @@ interface UserTeam {
     slug: string
 }
 
+interface CompanyForest {
+    id: string
+    name: string
+    slug: string
+    website: string | null
+    logo_url: string | null
+    impact_mode: 'idleforest_planting' | 'company_named_donation' | 'partner_payout'
+    payout_recipient_name: string | null
+    payout_recipient_url: string | null
+}
+
 // Create client once outside component
 const supabase = createClient()
+
+function getCompanyImpactDescription(company: CompanyForest) {
+    if (isWastefreeCompanySlug(company.slug)) {
+        return 'Future IdleForest activity is routed to Waste Free Planet cleanup funding through 1ClickImpact and Plastic Bank.'
+    }
+
+    if (isPlanetwildCompanySlug(company.slug)) {
+        return "Future IdleForest activity supports Planet Wild's rewilding work through this IdleForest-run fund."
+    }
+
+    if (isMossyEarthCompanySlug(company.slug)) {
+        return "Future IdleForest activity supports Mossy Earth's conservation and rewilding projects."
+    }
+
+    if (company.impact_mode === 'partner_payout' && company.payout_recipient_name) {
+        return `Future IdleForest activity is routed toward ${company.payout_recipient_name}.`
+    }
+
+    if (company.impact_mode === 'company_named_donation') {
+        return `Future IdleForest activity is grouped under ${company.name}.`
+    }
+
+    return `Future IdleForest activity counts toward ${company.name}'s company forest.`
+}
+
+function getCompanyLogoUrl(company: CompanyForest) {
+    if (company.logo_url) return company.logo_url
+    if (isWastefreeCompanySlug(company.slug)) return '/partner/wastefree/wfp-logo-white.webp'
+
+    return null
+}
 
 export default function PublicProfilePage() {
     const [profile, setProfile] = useState<Profile | null>(null)
@@ -56,11 +102,14 @@ export default function PublicProfilePage() {
     })
     const [treesPlanted, setTreesPlanted] = useState<number>(0)
     const [userTeam, setUserTeam] = useState<UserTeam | null>(null)
+    const [companyForest, setCompanyForest] = useState<CompanyForest | null>(null)
     const [platforms, setPlatforms] = useState<string[]>([])
     const [loading, setLoading] = useState(true)
     const [isOwnProfile, setIsOwnProfile] = useState(false)
     const [showCreateTeamModal, setShowCreateTeamModal] = useState(false)
+    const [showLeaveCompanyModal, setShowLeaveCompanyModal] = useState(false)
     const [creatingTeam, setCreatingTeam] = useState(false)
+    const [leavingCompany, setLeavingCompany] = useState(false)
     const [teamName, setTeamName] = useState('')
     const [teamDescription, setTeamDescription] = useState('')
     const [teamImageUrl, setTeamImageUrl] = useState('')
@@ -68,6 +117,7 @@ export default function PublicProfilePage() {
     const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [uploadingImage, setUploadingImage] = useState(false)
     const [createError, setCreateError] = useState('')
+    const [leaveCompanyError, setLeaveCompanyError] = useState('')
     const [historicalData, setHistoricalData] = useState<any[]>([])
     const params = useParams()
     const router = useRouter()
@@ -79,6 +129,11 @@ export default function PublicProfilePage() {
     const fetchProfile = async () => {
         try {
             setLoading(true)
+            setCompanyForest(null)
+            setUserTeam(null)
+            setPlatforms([])
+            setIsOwnProfile(false)
+            setLeaveCompanyError('')
             const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('*')
@@ -99,6 +154,18 @@ export default function PublicProfilePage() {
                     setReferralStats({
                         ...referralStats
                     })
+                }
+
+                if (profile.company_id) {
+                    const { data: company } = await supabase
+                        .from('companies')
+                        .select('id, name, slug, website, logo_url, impact_mode, payout_recipient_name, payout_recipient_url')
+                        .eq('id', profile.company_id)
+                        .single()
+
+                    if (company) {
+                        setCompanyForest(company as CompanyForest)
+                    }
                 }
 
                 // Fetch Tree badge progress for "Trees Planted" stat
@@ -257,6 +324,42 @@ export default function PublicProfilePage() {
         }
     }
 
+    const handleLeaveCompany = async () => {
+        setLeavingCompany(true)
+        setLeaveCompanyError('')
+
+        try {
+            const response = await fetch('/api/companies/leave', {
+                method: 'POST',
+            })
+            const data = await response.json()
+
+            if (!response.ok) {
+                setLeaveCompanyError(data.error || 'Failed to return to IdleForest')
+                return
+            }
+
+            setCompanyForest(null)
+            setShowLeaveCompanyModal(false)
+            setProfile(currentProfile =>
+                currentProfile
+                    ? {
+                          ...currentProfile,
+                          company_id: null,
+                          company_joined_at: null,
+                          company_points_baseline: 0,
+                      }
+                    : currentProfile,
+            )
+            router.refresh()
+        } catch (error) {
+            console.error('Error leaving company:', error)
+            setLeaveCompanyError('Failed to return to IdleForest')
+        } finally {
+            setLeavingCompany(false)
+        }
+    }
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
@@ -314,7 +417,52 @@ export default function PublicProfilePage() {
         <main className="min-h-screen bg-brand-gray p-4 py-32 font-rethink-sans">
             <div className="w-full max-w-6xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="relative bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 sm:pr-72">
+                    {companyForest ? (
+                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[250px]">
+                            <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-2" title={getCompanyImpactDescription(companyForest)}>
+                                <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
+                                    {getCompanyLogoUrl(companyForest) ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={getCompanyLogoUrl(companyForest)!}
+                                            alt=""
+                                            className="h-full w-full object-contain p-1"
+                                        />
+                                    ) : (
+                                        <Building2 className="h-4 w-4 text-brand-yellow" />
+                                    )}
+                                </span>
+                                <span className="min-w-0">
+                                    <span className="block text-[0.58rem] font-black uppercase leading-none tracking-wider text-neutral-500">Contributing</span>
+                                    <span className="mt-0.5 block truncate text-xs font-black leading-tight text-black">{companyForest.name}</span>
+                                </span>
+                            </Link>
+                            {isOwnProfile && (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowLeaveCompanyModal(true)}
+                                    className="flex h-8 w-8 shrink-0 items-center justify-center border border-black bg-black text-white transition-colors hover:bg-neutral-800"
+                                    title="Return to IdleForest"
+                                    aria-label="Return to IdleForest"
+                                >
+                                    <LogOut className="h-3.5 w-3.5" />
+                                </button>
+                            )}
+                        </div>
+                    ) : isOwnProfile ? (
+                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[230px]">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src="/logo.png" alt="" className="h-full w-full object-contain p-1" />
+                            </span>
+                            <span className="min-w-0">
+                                <span className="block text-[0.58rem] font-black uppercase leading-none tracking-wider text-neutral-500">Contributing</span>
+                                <span className="mt-0.5 block truncate text-xs font-black leading-tight text-black">IdleForest</span>
+                            </span>
+                        </div>
+                    ) : null}
+
                     <div className="flex items-center gap-4 mb-2">
                         <h1 className="text-4xl font-extrabold font-candu uppercase">
                             {profile.display_name}
@@ -465,6 +613,46 @@ export default function PublicProfilePage() {
                                     ) : (
                                         'Create Team'
                                     )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {showLeaveCompanyModal && companyForest && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="w-full max-w-md border-2 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                            <h2 className="mb-4 text-2xl font-extrabold font-candu uppercase">Return to IdleForest?</h2>
+                            <p className="mb-4 text-sm font-semibold leading-6 text-neutral-700">
+                                This will stop routing your future activity to {companyForest.name} and move you back to IdleForest&apos;s general reforestation impact.
+                            </p>
+                            <p className="mb-6 text-sm font-semibold leading-6 text-neutral-700">
+                                Your existing contribution history for {companyForest.name} will stay recorded.
+                            </p>
+
+                            {leaveCompanyError && (
+                                <p className="mb-4 text-sm font-bold text-red-600">{leaveCompanyError}</p>
+                            )}
+
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowLeaveCompanyModal(false)
+                                        setLeaveCompanyError('')
+                                    }}
+                                    disabled={leavingCompany}
+                                    className="flex-1 border-2 border-black bg-gray-100 py-3 font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+                                >
+                                    Keep Fund
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleLeaveCompany}
+                                    disabled={leavingCompany}
+                                    className="flex-1 border-2 border-black bg-brand-yellow py-3 font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+                                >
+                                    {leavingCompany ? 'Returning...' : 'Return'}
                                 </button>
                             </div>
                         </div>
