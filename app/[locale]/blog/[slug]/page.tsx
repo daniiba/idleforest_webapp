@@ -11,6 +11,10 @@ import { getHashnodePost } from '@/lib/hashnode-blog'
 
 export const revalidate = 60 // invalidate every hour
 
+function normalizeBlogHtml(html: string) {
+  return html.replace(/\\[()](?=\d)/g, () => '$')
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { post } = await getHashnodePost(params.slug)
 
@@ -22,7 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   // Strip HTML tags from content for meta description
-  const contentText = post.content.html.replace(/<[^>]*>/g, '')
+  const contentText = normalizeBlogHtml(post.content.html).replace(/<[^>]*>/g, '')
   const description = contentText.length > 200 ? contentText.substring(0, 197) + '...' : contentText
 
   return {
@@ -59,6 +63,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     )
   }
 
+  const contentHtml = normalizeBlogHtml(post.content.html)
   const blogPostUrl = `https://www.idleforest.com/blog/${params.slug}`;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -134,13 +139,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             prose-code:text-brand-yellow prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
             prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4
             prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl
-            prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-[3px_3px_0_0_#000] prose-a:box-decoration-clone hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline
+            prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-[3px_3px_0_0_#000] prose-a:box-decoration-clone visited:prose-a:bg-brand-navy visited:prose-a:text-brand-yellow hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline
             prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-1
             prose-ul:my-6 prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
             prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4
             prose-hr:border-gray-200
             prose-img:rounded-lg prose-img:shadow-lg">
-            <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
+            <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
           </div>
 
           {params.slug === "does-ecosia-actually-plant-trees" && (
