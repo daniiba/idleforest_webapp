@@ -454,7 +454,7 @@ export default function PublicProfilePage() {
                         <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[230px]">
                             <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/logo.png" alt="" className="h-full w-full object-contain p-1" />
+                                <img src="/logo_bg.png" alt="" className="h-full w-full object-cover" />
                             </span>
                             <span className="min-w-0">
                                 <span className="block text-[0.58rem] font-black uppercase leading-none tracking-wider text-neutral-500">Contributing</span>
