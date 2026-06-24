@@ -135,6 +135,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <div className="prose prose-lg max-w-none text-gray-800
             prose-p:text-gray-800 prose-p:leading-relaxed
             prose-strong:text-gray-900 
+            [&_a_strong]:text-inherit
             prose-pre:bg-gray-100 prose-pre:text-gray-800 prose-pre:p-4 prose-pre:rounded-lg
             prose-code:text-brand-yellow prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
             prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4
