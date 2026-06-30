@@ -15,9 +15,9 @@ import { useDeviceDetection } from "@/hooks/useDeviceDetection"
 const chromeWebStoreUrl = "https://chromewebstore.google.com/detail/idle-forest-plant-trees-f/ofdclafhpmccdddnmfalihgkahgiomjk"
 
 const downloadLinks = [
-  { href: '/download/chrome', label: 'Chrome Extension' },
-  { href: '/download/windows', label: 'Windows App' },
-  { href: '/download/mac', label: 'Mac App' },
+  { href: '/download/chrome', actionHref: chromeWebStoreUrl, label: 'Chrome Extension', trackingId: 'add_to_chrome_menu' },
+  { href: '/download/windows', actionHref: '/download/windows/installer', label: 'Windows App', trackingId: 'download_windows_menu' },
+  { href: '/download/mac', actionHref: '/download/mac/installer', label: 'Mac App', trackingId: 'download_mac_menu' },
 ]
 
 const moreLinks = [
@@ -109,7 +109,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const hasActiveChild = (items: Array<{ href: string }>) => items.some(({ href }) => isActive(href))
   const pathSuggestsMac = pathname.startsWith('/download/mac')
   const headerCtaIsMac = isMac || pathSuggestsMac
-  const desktopDownloadHref = headerCtaIsMac ? '/download/mac' : '/download/windows'
+  const desktopDownloadActionHref = headerCtaIsMac ? '/download/mac/installer' : '/download/windows/installer'
   const desktopDownloadLabel = headerCtaIsMac
     ? 'Download for Mac — It’s Free'
     : 'Download for Windows — It’s Free'
@@ -127,7 +127,12 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         <nav className="hidden lg:flex gap-4 lg:gap-6 col-start-2 justify-self-center items-center whitespace-nowrap">
           <NavLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} />
           <NavLink href="/partners" label="Partners" active={isActive('/partners')} />
-          <NavDropdown label="Download" active={hasActiveChild(downloadLinks)} items={downloadLinks} />
+          <NavDropdown
+            label="Download"
+            active={hasActiveChild(downloadLinks)}
+            items={downloadLinks}
+            onItemClick={trackHeaderInstallClick}
+          />
           <NavLink href="/transparency" label="Transparency" active={isActive('/transparency')} />
           <NavDropdown label="More" active={hasActiveChild(moreLinks)} items={moreLinks} />
         </nav>
@@ -173,15 +178,15 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
               </Button>
             </Link>
           )}
-          <Link
-            href={desktopDownloadHref}
+          <a
+            href={desktopDownloadActionHref}
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick(headerCtaIsMac ? 'download_mac_header' : 'download_windows_header')}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
           >
             <DesktopDownloadIcon className="h-5 w-5 shrink-0" />
             <span>{desktopDownloadLabel}</span>
-          </Link>
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -205,8 +210,19 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
               <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">Download</p>
               <div className="flex flex-col gap-2">
-                {downloadLinks.map(({ href, label }) => (
-                  <MobileLink key={href} href={href} label={label} active={isActive(href)} onClick={() => setIsMenuOpen(false)} compact />
+                {downloadLinks.map(({ href, actionHref, label, trackingId }) => (
+                  <MobileLink
+                    key={href}
+                    href={actionHref}
+                    label={label}
+                    active={isActive(href)}
+                    onClick={() => {
+                      trackHeaderInstallClick(trackingId)
+                      setIsMenuOpen(false)
+                    }}
+                    compact
+                    useAnchor={actionHref.startsWith('http') || actionHref.endsWith('/installer')}
+                  />
                 ))}
               </div>
             </div>
@@ -268,10 +284,12 @@ function NavDropdown({
   label,
   active,
   items,
+  onItemClick,
 }: {
   label: string
   active: boolean
-  items: Array<{ href: string; label: string }>
+  items: Array<{ href: string; actionHref?: string; label: string; trackingId?: string }>
+  onItemClick?: (itemId: string) => void
 }) {
   return (
     <div className="group relative">
@@ -284,15 +302,36 @@ function NavDropdown({
         <ChevronDown className="h-4 w-4" />
       </button>
       <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-lg border-2 border-black bg-white p-2 opacity-0 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-        {items.map(({ href, label: itemLabel }) => (
-          <Link
-            key={href}
-            href={href}
-            className="block rounded-md px-4 py-3 text-sm font-bold text-black hover:bg-brand-yellow"
-          >
-            {itemLabel}
-          </Link>
-        ))}
+        {items.map(({ href, actionHref, label: itemLabel, trackingId }) => {
+          if (actionHref) {
+            return (
+              <a
+                key={href}
+                href={actionHref}
+                target={actionHref.startsWith('http') ? '_blank' : undefined}
+                rel={actionHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                onClick={() => {
+                  if (trackingId) {
+                    onItemClick?.(trackingId)
+                  }
+                }}
+                className="block rounded-md px-4 py-3 text-sm font-bold text-black hover:bg-brand-yellow"
+              >
+                {itemLabel}
+              </a>
+            )
+          }
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              className="block rounded-md px-4 py-3 text-sm font-bold text-black hover:bg-brand-yellow"
+            >
+              {itemLabel}
+            </Link>
+          )
+        })}
       </div>
     </div>
   )
@@ -304,13 +343,31 @@ function MobileLink({
   active,
   onClick,
   compact = false,
+  useAnchor = false,
 }: {
   href: string
   label: string
   active: boolean
   onClick: () => void
   compact?: boolean
+  useAnchor?: boolean
 }) {
+  if (useAnchor) {
+    const isExternal = href.startsWith('http')
+
+    return (
+      <a
+        href={href}
+        onClick={onClick}
+        target={isExternal ? '_blank' : undefined}
+        rel={isExternal ? 'noopener noreferrer' : undefined}
+        className={`${compact ? 'py-2 text-lg' : 'py-2 text-2xl'} text-center font-bold transition-colors ${active ? 'text-brand-yellow' : 'text-black hover:text-brand-yellow'}`}
+      >
+        {label}
+      </a>
+    )
+  }
+
   return (
     <Link
       href={href}
