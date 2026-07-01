@@ -216,7 +216,7 @@ export default async function CompanyMemberPortalPage({
             .from('company_fund_ledger')
             .select('id, type, status, points, amount_cents, period_start, period_end, notes, receipt_url, created_at')
             .eq('company_id', typedCompany.id)
-            .eq('user_id', user.id)
+            .or(`user_id.eq.${user.id},user_id.is.null`)
             .order('created_at', { ascending: false })
             .limit(20),
         admin
