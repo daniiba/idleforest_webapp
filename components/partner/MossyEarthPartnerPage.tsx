@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ExternalLink, Info, Leaf } from 'lucide-react'
+import { ArrowRight, ExternalLink, FileText, Info, Leaf } from 'lucide-react'
 import CompanySettingsPanel from '@/app/[locale]/c/[slug]/CompanySettingsPanel'
 
 const mossyEarthAssets = {
@@ -29,6 +29,25 @@ const mossyEarthFaqs = [
         question: 'How does IdleForest generate conservation funding?',
         answer:
             'IdleForest runs small sessionless public data tasks through spare bandwidth. Companies and researchers pay for those tasks, and IdleForest can direct revenue from this support page toward conservation and rewilding work.',
+    },
+]
+
+const mossyEarthReceipts = [
+    {
+        id: 'mossy-earth-2026-07-01',
+        title: 'Mossy Earth receipt #1914-4600',
+        amount: 'EUR 24.36',
+        date: 'Jul 1, 2026',
+        description: 'Mossy Earth Extra support payment.',
+        href: '/receits/mossy-earth-2026-07-01-receipt-1914-4600.pdf',
+    },
+    {
+        id: 'mossy-earth-2026-06-05',
+        title: 'Mossy Earth receipt #2075-3645',
+        amount: 'EUR 12.00',
+        date: 'Jun 5, 2026',
+        description: 'Mossy Earth membership support payment.',
+        href: '/receits/mossy-earth-2026-06-05-receipt-2075-3645.pdf',
     },
 ]
 
@@ -173,6 +192,7 @@ export default function MossyEarthPartnerPage({
                 <nav className="mossy-earth-nav-links" aria-label="Page sections">
                     <a href="#mossy-earth-story">Story</a>
                     <a href="#mossy-earth-impact">Impact</a>
+                    <a href="#mossy-earth-receipts">Receipts</a>
                 </nav>
                 {isValidInvite || isMember ? (
                     <Link href={joinHref} className="mossy-earth-pill mossy-earth-pill-solid">
@@ -223,6 +243,34 @@ export default function MossyEarthPartnerPage({
                                 <p>{stat.label}</p>
                                 <strong>{stat.value}</strong>
                             </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="mossy-earth-receipts" id="mossy-earth-receipts" aria-labelledby="mossy-earth-receipts-heading">
+                    <div className="mossy-earth-receipts-heading">
+                        <p className="mossy-earth-kicker">Public proof</p>
+                        <h2 id="mossy-earth-receipts-heading">Mossy Earth receipts you can open.</h2>
+                        <p>
+                            These receipts show IdleForest support payments made to Mossy Earth. They are separate from Mossy Earth&apos;s own membership platform and are published here so the funding trail is visible.
+                        </p>
+                    </div>
+                    <div className="mossy-earth-receipt-list">
+                        {mossyEarthReceipts.map((receipt) => (
+                            <a key={receipt.id} href={receipt.href} target="_blank" rel="noreferrer" className="mossy-earth-receipt-row">
+                                <span className="mossy-earth-receipt-icon" aria-hidden>
+                                    <FileText />
+                                </span>
+                                <span className="mossy-earth-receipt-main">
+                                    <strong>{receipt.title}</strong>
+                                    <span>{receipt.description}</span>
+                                </span>
+                                <span className="mossy-earth-receipt-meta">
+                                    <strong>{receipt.amount}</strong>
+                                    <span>{receipt.date}</span>
+                                </span>
+                                <ExternalLink aria-hidden />
+                            </a>
                         ))}
                     </div>
                 </section>
