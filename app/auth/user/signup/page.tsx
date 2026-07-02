@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense, useCallback } from 'react';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
@@ -8,6 +8,7 @@ import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
 import { trackOnboardingEvent } from '@/lib/onboarding-events';
 import { getCanonicalCompanySlug } from '@/lib/company-partners';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface InviteInfo {
   teamName: string;
@@ -17,6 +18,7 @@ interface InviteInfo {
 function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const turnstileRef = useRef<TurnstileInstance>();
   const urlInviteCode = searchParams.get('invite');
   const companySlugParam = searchParams.get('company');
   const companySlug = companySlugParam ? getCanonicalCompanySlug(companySlugParam) : null;
@@ -43,6 +45,12 @@ function SignupForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null);
   const [companyInfo, setCompanyInfo] = useState<{ name: string; slug: string } | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const resetTurnstile = () => {
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
+  };
 
   const fetchInviteInfo = useCallback(async () => {
     try {
@@ -108,14 +116,21 @@ function SignupForm() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setMessage(null);
+
+    if (!turnstileToken) {
+      setError('Please complete the verification challenge.');
+      return;
+    }
+
+    setLoading(true);
 
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        captchaToken: turnstileToken,
         data: {
           display_name: displayName,
           // Only set referral_code for non-invite signups (team invites tracked separately via invite_code)
@@ -128,6 +143,7 @@ function SignupForm() {
 
     if (signUpError) {
       setError(signUpError.message);
+      resetTurnstile();
       setLoading(false);
       return;
     }
@@ -185,8 +201,10 @@ function SignupForm() {
       // User created but no session - email confirmation might be required
       // or there was an issue establishing the session
       setError('Account created but login failed. Please try logging in manually.');
+      resetTurnstile();
     } else {
       setError('Signup failed. Please try again or contact support.');
+      resetTurnstile();
     }
 
     setLoading(false);
@@ -290,10 +308,22 @@ function SignupForm() {
         {error && <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold text-sm text-center">{error}</div>}
         {message && <div className="p-3 bg-green-100 border-2 border-green-500 text-green-700 font-bold text-sm text-center">{message}</div>}
 
+        <div className="flex justify-center pt-2">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+            onSuccess={setTurnstileToken}
+            onExpire={() => setTurnstileToken(null)}
+            onError={() => setTurnstileToken(null)}
+            onTimeout={() => setTurnstileToken(null)}
+            options={{ action: 'user_signup' }}
+          />
+        </div>
+
         <div className="pt-2">
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !turnstileToken}
             className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 export default function BusinessSignupPage() {
-  const router = useRouter();
+  const turnstileRef = useRef<TurnstileInstance>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -15,30 +15,45 @@ export default function BusinessSignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const resetTurnstile = () => {
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
+  };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setMessage(null);
+
+    if (!turnstileToken) {
+      setError('Please complete the verification challenge.');
+      return;
+    }
+
+    setLoading(true);
 
     // 1. Sign up the user
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        captchaToken: turnstileToken,
         // emailRedirectTo: `${window.location.origin}/auth/callback`, // Or your specific callback URL
       },
     });
 
     if (signUpError) {
       setError(signUpError.message);
+      resetTurnstile();
       setLoading(false);
       return;
     }
 
     if (!signUpData.user) {
       setError('Signup successful, but no user data returned. Please try logging in.');
+      resetTurnstile();
       setLoading(false);
       return;
     }
@@ -66,6 +81,7 @@ export default function BusinessSignupPage() {
         // For now, we'll just show an error.
         // await supabase.auth.admin.deleteUser(signUpData.user.id) // Example, DO NOT use directly on client
         setError(result.error || 'Failed to create company profile after signup. Please contact support.');
+        resetTurnstile();
       } else {
         trackPinterestEvent({
           eventName: 'signup',
@@ -79,6 +95,7 @@ export default function BusinessSignupPage() {
       }
     } catch (apiError: any) {
       setError(`An error occurred while creating your company profile: ${apiError.message}`);
+      resetTurnstile();
     }
 
     setLoading(false);
@@ -114,8 +131,20 @@ export default function BusinessSignupPage() {
           {error && <p className="text-sm text-center text-red-600">{error}</p>}
           {message && <p className="text-sm text-center text-green-600">{message}</p>}
 
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+              onSuccess={setTurnstileToken}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
+              onTimeout={() => setTurnstileToken(null)}
+              options={{ action: 'business_signup' }}
+            />
+          </div>
+
           <div>
-            <button type="submit" disabled={loading}
+            <button type="submit" disabled={loading || !turnstileToken}
               className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
               {loading ? 'Signing up...' : 'Sign Up'}
             </button>
