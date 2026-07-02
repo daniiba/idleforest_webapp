@@ -1,18 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 export default function BusinessLoginPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const turnstileRef = useRef<TurnstileInstance>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const resetTurnstile = () => {
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
+  };
 
   // Redirect if already logged in
   useEffect(() => {
@@ -23,16 +31,26 @@ export default function BusinessLoginPage() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (!turnstileToken) {
+      setError('Please complete the verification challenge.');
+      return;
+    }
+
+    setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
+      options: {
+        captchaToken: turnstileToken,
+      },
     });
 
     if (error) {
       setError(error.message);
+      resetTurnstile();
     } else {
       router.push('/business/dashboard'); // Or router.refresh() and let useEffect handle redirect
     }
@@ -80,10 +98,22 @@ export default function BusinessLoginPage() {
             <p className="text-sm text-center text-red-600">{error}</p>
           )}
 
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+              onSuccess={setTurnstileToken}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
+              onTimeout={() => setTurnstileToken(null)}
+              options={{ action: 'business_login' }}
+            />
+          </div>
+
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !turnstileToken}
               className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
               {loading ? 'Logging in...' : 'Log in'}

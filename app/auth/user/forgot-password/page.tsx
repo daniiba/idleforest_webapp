@@ -1,28 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { Loader2, ArrowLeft } from 'lucide-react';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 export default function ForgotPasswordPage() {
     const supabase = createClient();
+    const turnstileRef = useRef<TurnstileInstance>();
     const [email, setEmail] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+    const resetTurnstile = () => {
+        setTurnstileToken(null);
+        turnstileRef.current?.reset();
+    };
 
     const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setLoading(true);
         setError(null);
+
+        if (!turnstileToken) {
+            setError('Please complete the verification challenge.');
+            return;
+        }
+
+        setLoading(true);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: 'https://idleforest.com/auth/confirm?type=recovery',
+            captchaToken: turnstileToken,
         });
 
         if (error) {
             setError(error.message);
+            resetTurnstile();
         } else {
             setSuccess(true);
         }
@@ -87,10 +103,22 @@ export default function ForgotPasswordPage() {
                             </div>
                         )}
 
+                        <div className="flex justify-center">
+                            <Turnstile
+                                ref={turnstileRef}
+                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+                                onSuccess={setTurnstileToken}
+                                onExpire={() => setTurnstileToken(null)}
+                                onError={() => setTurnstileToken(null)}
+                                onTimeout={() => setTurnstileToken(null)}
+                                options={{ action: 'password_reset' }}
+                            />
+                        </div>
+
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={loading || !turnstileToken}
                                 className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                             >
                                 {loading ? (
