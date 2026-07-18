@@ -13,6 +13,10 @@ export interface PartnerCommunity {
     handle: string
     followers: number | null
     url: string
+    count_quality?: 'verified' | 'estimated' | 'unavailable'
+    count_source_url?: string
+    count_note?: string
+    checked_at?: string
 }
 
 export interface PartnerContact {
