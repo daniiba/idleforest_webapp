@@ -9,6 +9,8 @@ const ADMIN_SESSION_COOKIE = 'admin_session'
 const MAX_URLS = 12
 
 const nullableInteger = { type: ['integer', 'null'] }
+const nullableNumber = { type: ['number', 'null'] }
+const nullableString = { type: ['string', 'null'] }
 
 const partnerSchema = {
     type: 'object',
@@ -22,11 +24,20 @@ const partnerSchema = {
         category: { type: 'array', items: { type: 'string' } },
         summary: { type: 'string' },
         structure: { type: 'string' },
+        organization_type: { type: 'string', enum: ['ngo', 'company', 'foundation', 'university', 'government', 'individual', 'network', 'other'] },
         location: { type: 'string' },
+        country_code: { type: 'string' },
         team_model: { type: 'string' },
+        team_type: { type: 'string', enum: ['paid_staff', 'volunteer_led', 'hybrid', 'unknown'] },
         operator_type: { type: 'string' },
+        delivery_model: { type: 'string', enum: ['direct_operator', 'land_owner_manager', 'project_network', 'grantmaker_funder', 'research_education', 'advocacy', 'mixed', 'unknown'] },
         financial_model: { type: 'array', items: { type: 'string' } },
         financial_situation: { type: 'string' },
+        annual_revenue_amount: nullableNumber,
+        annual_revenue_currency: nullableString,
+        annual_revenue_year: nullableInteger,
+        revenue_band: { type: 'string', enum: ['under_100k', '100k_1m', '1m_10m', '10m_plus', 'unknown'] },
+        funding_status: { type: 'string', enum: ['stable', 'growing', 'fundraising', 'constrained', 'unknown'] },
         sponsors: { type: 'array', items: { type: 'string' } },
         communities: {
             type: 'array',
@@ -49,6 +60,8 @@ const partnerSchema = {
                 ],
             },
         },
+        community_max: nullableInteger,
+        community_band: { type: 'string', enum: ['under_4k', '4k_25k', '25k_100k', '100k_500k', 'over_500k', 'unknown'] },
         contacts: {
             type: 'array',
             items: {
@@ -77,6 +90,7 @@ const partnerSchema = {
         },
         activity_summary: { type: 'string' },
         last_activity: { type: 'string' },
+        activity_status: { type: 'string', enum: ['active', 'irregular', 'inactive', 'unknown'] },
         fit_reasons: { type: 'array', items: { type: 'string' } },
         risks: { type: 'array', items: { type: 'string' } },
         outreach_angle: { type: 'string' },
@@ -98,9 +112,12 @@ const partnerSchema = {
     },
     required: [
         'url', 'name', 'logo_url', 'score', 'recommendation', 'category', 'summary',
-        'structure', 'location', 'team_model', 'operator_type', 'financial_model',
-        'financial_situation', 'sponsors', 'communities', 'contacts', 'socials',
-        'activity_summary', 'last_activity', 'fit_reasons', 'risks', 'outreach_angle',
+        'structure', 'organization_type', 'location', 'country_code', 'team_model',
+        'team_type', 'operator_type', 'delivery_model', 'financial_model',
+        'financial_situation', 'annual_revenue_amount', 'annual_revenue_currency',
+        'annual_revenue_year', 'revenue_band', 'funding_status', 'sponsors',
+        'communities', 'community_max', 'community_band', 'contacts', 'socials',
+        'activity_summary', 'last_activity', 'activity_status', 'fit_reasons', 'risks', 'outreach_angle',
         'outreach_subject', 'outreach_message', 'sources', 'confidence',
     ],
 }
@@ -147,6 +164,31 @@ function uniqueByUrl<T extends { url: string }>(items: T[]) {
     })
 }
 
+function compactText(value: string, maxLength: number) {
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    if (normalized.length <= maxLength) return normalized
+    const clipped = normalized.slice(0, maxLength)
+    const lastSpace = clipped.lastIndexOf(' ')
+    return `${clipped.slice(0, lastSpace > maxLength * 0.65 ? lastSpace : maxLength).trim()}…`
+}
+
+function getCommunityBand(maxFollowers: number | null): PartnerAnalysis['community_band'] {
+    if (maxFollowers === null) return 'unknown'
+    if (maxFollowers < 4_000) return 'under_4k'
+    if (maxFollowers < 25_000) return '4k_25k'
+    if (maxFollowers < 100_000) return '25k_100k'
+    if (maxFollowers <= 500_000) return '100k_500k'
+    return 'over_500k'
+}
+
+function getRevenueBand(amount: number | null): PartnerAnalysis['revenue_band'] {
+    if (amount === null) return 'unknown'
+    if (amount < 100_000) return 'under_100k'
+    if (amount < 1_000_000) return '100k_1m'
+    if (amount < 10_000_000) return '1m_10m'
+    return '10m_plus'
+}
+
 function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): PartnerAnalysis {
     const urlMatches = (() => {
         try {
@@ -156,6 +198,14 @@ function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): Partner
         }
     })()
     const canonicalUrl = urlMatches ? analysis.url : submittedUrl
+    const communities = analysis.communities.filter(item => item.url && item.platform)
+    const communityCounts = communities
+        .map(item => item.followers)
+        .filter((count): count is number => count !== null && Number.isFinite(count))
+    const communityMax = communityCounts.length ? Math.max(...communityCounts) : null
+    const annualRevenue = analysis.annual_revenue_amount !== null && Number.isFinite(analysis.annual_revenue_amount)
+        ? Math.max(0, analysis.annual_revenue_amount)
+        : null
 
     return {
         ...analysis,
@@ -163,9 +213,24 @@ function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): Partner
         name: analysis.name.trim() || new URL(submittedUrl).hostname,
         logo_url: analysis.logo_url || null,
         score: Math.max(0, Math.min(100, Math.round(analysis.score))),
-        communities: analysis.communities.filter(item => item.url && item.platform),
+        summary: compactText(analysis.summary, 180),
+        structure: compactText(analysis.structure, 60),
+        location: compactText(analysis.location, 70),
+        country_code: /^[A-Za-z]{2}$/.test(analysis.country_code) ? analysis.country_code.toUpperCase() : 'XX',
+        team_model: compactText(analysis.team_model, 70),
+        operator_type: compactText(analysis.operator_type, 60),
+        financial_situation: compactText(analysis.financial_situation, 140),
+        annual_revenue_amount: annualRevenue,
+        annual_revenue_currency: analysis.annual_revenue_currency?.toUpperCase().slice(0, 3) || null,
+        revenue_band: getRevenueBand(annualRevenue),
+        communities,
+        community_max: communityMax,
+        community_band: getCommunityBand(communityMax),
         contacts: analysis.contacts.filter(item => item.value && item.type),
         socials: analysis.socials.filter(item => item.value),
+        activity_summary: compactText(analysis.activity_summary, 150),
+        fit_reasons: analysis.fit_reasons.slice(0, 3).map(reason => compactText(reason, 100)),
+        risks: analysis.risks.slice(0, 3).map(risk => compactText(risk, 100)),
         sources: uniqueByUrl(analysis.sources).slice(0, 12),
         confidence: Math.max(0, Math.min(1, analysis.confidence)),
     }
@@ -210,10 +275,19 @@ Qualification criteria:
 
 Scoring rubric (100 points): mission/category 25, one qualifying community 20, recency/regularity 15, direct conservation delivery 15, financial/funding fit 10, public contactability 5, credibility/transparency/partnerships 10. A strong_fit normally scores 75+ and must satisfy both mission and community requirements. Use potential_fit for credible but incomplete evidence. Use not_a_fit when a mandatory requirement clearly fails.
 
+Normalized fields:
+- organization_type must be the single best enum value.
+- delivery_model: direct_operator does field conservation; land_owner_manager acquires/manages conservation land; project_network coordinates implementers; grantmaker_funder finances projects; research_education produces research/training; advocacy campaigns; mixed only when two or more are material.
+- team_type: paid_staff, volunteer_led, hybrid, or unknown.
+- activity_status: active for credible public activity within 90 days and a regular pattern; irregular for sporadic recent activity; inactive for no meaningful activity in 12 months; otherwise unknown.
+- annual_revenue_amount/currency/year must come from the latest public filing or annual report. Return null rather than estimating. Revenue and community bands must match the numeric values.
+- funding_status: stable, growing, fundraising, constrained, or unknown, based only on explicit current evidence.
+
 Rules:
 - Today is ${today}. Prefer recent primary sources, official profiles, current reports, registries, and reputable reporting.
 - Do not guess unsupported organizational or financial facts. Use "Unknown — not publicly verified" and add the gap to risks.
-- Keep scan-level fields extremely concise: location must be only "City/Region, Country" (no street address, programme footprint, or operating explanation); structure and operator_type must be short labels; team_model must be one short phrase; summary must be at most two short sentences. Put supporting nuance in evidence_summary or sources instead.
+- This is a metrics extraction and scoring task, not a report. Summary must be one plain-language sentence of at most 160 characters. Location must be only "City/Region, Country"; country_code must be ISO alpha-2; structure, operator_type, team_model, financial_situation, activity_summary, fit reasons, and risks must each be terse labels or short facts, never paragraphs.
+- Return at most three fit reasons and three risks, each under 100 characters. Evidence belongs in sources, not narrative fields.
 - Research Instagram, YouTube, and Facebook audience sizes explicitly for every organization that has those profiles. Run focused searches for each platform and inspect the official profile plus current indexed results.
 - Record each platform separately. Never combine audiences. Convert displayed values such as 4.2K or 18.7K to integers such as 4200 or 18700.
 - Set count_quality to verified when the count comes from the official platform/profile or an official organization statement. Set it to estimated when a recent search result, reputable social analytics listing, or other public source provides an approximate count; still return the rounded integer and the evidence URL. Use unavailable/null only after focused searches fail to produce a defensible current number.

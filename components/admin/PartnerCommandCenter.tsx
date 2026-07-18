@@ -29,8 +29,11 @@ import {
 import {
     PARTNER_RECOMMENDATION_LABELS,
     PARTNER_STATUS_LABELS,
+    type PartnerCommunityBand,
+    type PartnerDeliveryModel,
     type PartnerLead,
     type PartnerLeadStatus,
+    type PartnerRevenueBand,
 } from '@/lib/partner-leads'
 import { getPartnerLeads, updatePartnerLead } from '@/app/(dashboard)/admin/partners/actions'
 
@@ -51,6 +54,34 @@ const recommendationStyles = {
     not_a_fit: 'bg-red-100 text-red-900 border-red-700',
 }
 
+const deliveryLabels: Record<PartnerDeliveryModel, string> = {
+    direct_operator: 'Direct operator',
+    land_owner_manager: 'Land owner/manager',
+    project_network: 'Project network',
+    grantmaker_funder: 'Funder',
+    research_education: 'Research/education',
+    advocacy: 'Advocacy',
+    mixed: 'Mixed',
+    unknown: 'Unknown',
+}
+
+const communityBandLabels: Record<PartnerCommunityBand, string> = {
+    under_4k: 'Under 4K',
+    '4k_25k': '4K–25K',
+    '25k_100k': '25K–100K',
+    '100k_500k': '100K–500K',
+    over_500k: 'Over 500K',
+    unknown: 'Unknown audience',
+}
+
+const revenueBandLabels: Record<PartnerRevenueBand, string> = {
+    under_100k: 'Under 100K',
+    '100k_1m': '100K–1M',
+    '1m_10m': '1M–10M',
+    '10m_plus': '10M+',
+    unknown: 'Unknown revenue',
+}
+
 function formatFollowerCount(value: number | null, quality?: 'verified' | 'estimated' | 'unavailable') {
     if (value === null) return 'No count found'
     const formatted = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
@@ -60,6 +91,23 @@ function formatFollowerCount(value: number | null, quality?: 'verified' | 'estim
 function formatDate(value: string | null) {
     if (!value) return 'Not set'
     return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value))
+}
+
+function formatRevenue(lead: PartnerLead) {
+    if (lead.annual_revenue_amount === null || lead.annual_revenue_amount === undefined) return 'Unknown'
+    const amount = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(lead.annual_revenue_amount)
+    return `${lead.annual_revenue_currency || ''} ${amount}`.trim()
+}
+
+function humanize(value: string | null | undefined) {
+    if (!value) return 'Unknown'
+    return value.replace(/_/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase())
+}
+
+function getCommunityMax(lead: PartnerLead) {
+    if (lead.community_max !== null && lead.community_max !== undefined) return lead.community_max
+    const counts = lead.communities.map(community => community.followers).filter((value): value is number => value !== null)
+    return counts.length ? Math.max(...counts) : null
 }
 
 function getEmail(lead: PartnerLead) {
@@ -106,6 +154,9 @@ export default function PartnerCommandCenter() {
     const [urlInput, setUrlInput] = useState('')
     const [search, setSearch] = useState('')
     const [statusFilter, setStatusFilter] = useState<'all' | PartnerLeadStatus>('all')
+    const [deliveryFilter, setDeliveryFilter] = useState<'all' | PartnerDeliveryModel>('all')
+    const [communityFilter, setCommunityFilter] = useState<'all' | PartnerCommunityBand>('all')
+    const [revenueFilter, setRevenueFilter] = useState<'all' | PartnerRevenueBand>('all')
     const [isLoading, setIsLoading] = useState(true)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [updatingId, setUpdatingId] = useState<string | null>(null)
@@ -142,13 +193,16 @@ export default function PartnerCommandCenter() {
         const query = search.trim().toLowerCase()
         return leads.filter(lead => {
             const statusMatches = statusFilter === 'all' || lead.status === statusFilter
-            const searchMatches = !query || [lead.name, lead.url, lead.location, ...lead.category]
+            const deliveryMatches = deliveryFilter === 'all' || (lead.delivery_model || 'unknown') === deliveryFilter
+            const communityMatches = communityFilter === 'all' || (lead.community_band || 'unknown') === communityFilter
+            const revenueMatches = revenueFilter === 'all' || (lead.revenue_band || 'unknown') === revenueFilter
+            const searchMatches = !query || [lead.name, lead.url, lead.location, lead.country_code, lead.organization_type, ...lead.category]
                 .join(' ')
                 .toLowerCase()
                 .includes(query)
-            return statusMatches && searchMatches
+            return statusMatches && deliveryMatches && communityMatches && revenueMatches && searchMatches
         })
-    }, [leads, search, statusFilter])
+    }, [leads, search, statusFilter, deliveryFilter, communityFilter, revenueFilter])
 
     const stats = useMemo(() => ({
         pipeline: leads.filter(lead => !['rejected', 'partner'].includes(lead.status)).length,
@@ -323,19 +377,31 @@ export default function PartnerCommandCenter() {
                                 className="w-full border-2 border-black bg-white py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                             <select
                                 value={statusFilter}
                                 onChange={event => setStatusFilter(event.target.value as 'all' | PartnerLeadStatus)}
-                                className="min-w-0 flex-1 border-2 border-black bg-white px-2 py-2 text-xs font-bold"
+                                className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold"
                             >
                                 <option value="all">All statuses</option>
                                 {statusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
-                            <button type="button" onClick={loadLeads} className="border-2 border-black bg-white p-2 hover:bg-brand-yellow" aria-label="Refresh leads">
-                                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                            </button>
+                            <select value={deliveryFilter} onChange={event => setDeliveryFilter(event.target.value as 'all' | PartnerDeliveryModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All delivery models</option>
+                                {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                            <select value={communityFilter} onChange={event => setCommunityFilter(event.target.value as 'all' | PartnerCommunityBand)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All audience sizes</option>
+                                {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                            <select value={revenueFilter} onChange={event => setRevenueFilter(event.target.value as 'all' | PartnerRevenueBand)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All revenue bands</option>
+                                {Object.entries(revenueBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
                         </div>
+                        <button type="button" onClick={loadLeads} className="flex w-full items-center justify-center gap-2 border-2 border-black bg-white p-2 text-xs font-black uppercase hover:bg-brand-yellow" aria-label="Refresh leads">
+                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> Refresh data
+                        </button>
                     </div>
 
                     <div className="max-h-[620px] overflow-y-auto lg:max-h-[780px]">
@@ -424,7 +490,7 @@ export default function PartnerCommandCenter() {
                                     </div>
                                 </div>
                                 <p className="mt-5 max-w-4xl text-sm leading-relaxed text-neutral-700">
-                                    {isSelectedExpanded ? selected.summary : compactText(selected.summary, 220)}
+                                    {compactText(selected.summary, 180)}
                                 </p>
                                 <button
                                     type="button"
@@ -439,10 +505,10 @@ export default function PartnerCommandCenter() {
 
                             {isSelectedExpanded && <div className="grid border-b-2 border-black sm:grid-cols-2 xl:grid-cols-4">
                                 {[
-                                    { label: 'Structure', value: selected.structure, icon: Users },
+                                    { label: 'Organization', value: humanize(selected.organization_type) || selected.structure, icon: Users },
                                     { label: 'Location', value: selected.location, icon: MapPin },
-                                    { label: 'Delivery model', value: selected.operator_type, icon: Target },
-                                    { label: 'Team', value: selected.team_model, icon: Users },
+                                    { label: 'Delivery model', value: deliveryLabels[selected.delivery_model || 'unknown'], icon: Target },
+                                    { label: 'Team', value: humanize(selected.team_type), icon: Users },
                                 ].map((field, index) => (
                                     <div key={field.label} className={`p-4 ${index < 3 ? 'xl:border-r-2 xl:border-black' : ''} ${index % 2 === 0 ? 'sm:border-r-2 sm:border-black xl:border-r-2' : ''} ${index < 2 ? 'border-b-2 border-black xl:border-b-0' : ''}`}>
                                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-neutral-500"><field.icon className="h-3.5 w-3.5" />{field.label}</div>
@@ -461,32 +527,33 @@ export default function PartnerCommandCenter() {
                                 <div className="space-y-6 p-5 md:p-6 xl:border-r-2 xl:border-black">
                                     <section>
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h4 className="font-candu text-lg font-extrabold uppercase">Qualification</h4>
+                                            <h4 className="font-candu text-lg font-extrabold uppercase">Partner metrics</h4>
                                             <div className="flex h-12 w-12 items-center justify-center border-2 border-black bg-brand-navy font-candu text-lg font-extrabold text-brand-yellow">{selected.score}</div>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {selected.category.map(category => <span key={category} className="border-2 border-black bg-green-100 px-2 py-1 text-xs font-bold">{category}</span>)}
                                         </div>
-                                        <div className="mt-4 grid gap-3 md:grid-cols-2">
-                                            <div className="border-2 border-black bg-green-50 p-4">
-                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><CheckCircle2 className="h-4 w-4 text-green-700" /> Why it fits</p>
-                                                <ul className="mt-3 space-y-2 text-sm">
-                                                    {selected.fit_reasons.slice(0, isSelectedExpanded ? undefined : 2).map(reason => <li key={reason} className="flex gap-2"><span className="font-black text-green-700">+</span><span>{isSelectedExpanded ? reason : compactText(reason, 140)}</span></li>)}
-                                                    {!isSelectedExpanded && selected.fit_reasons.length > 2 && <li className="text-xs font-bold text-neutral-500">+{selected.fit_reasons.length - 2} more in full profile</li>}
-                                                </ul>
-                                            </div>
-                                            <div className="border-2 border-black bg-amber-50 p-4">
-                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps & risks</p>
-                                                <ul className="mt-3 space-y-2 text-sm">
-                                                    {selected.risks.slice(0, isSelectedExpanded ? undefined : 2).map(risk => <li key={risk} className="flex gap-2"><span className="font-black text-amber-700">!</span><span>{isSelectedExpanded ? risk : compactText(risk, 140)}</span></li>)}
-                                                    {!isSelectedExpanded && selected.risks.length > 2 && <li className="text-xs font-bold text-neutral-500">+{selected.risks.length - 2} more in full profile</li>}
-                                                </ul>
-                                            </div>
+                                        <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+                                            {[
+                                                ['Organization', humanize(selected.organization_type)],
+                                                ['Delivery', deliveryLabels[selected.delivery_model || 'unknown']],
+                                                ['Team', humanize(selected.team_type)],
+                                                ['Country', selected.country_code && selected.country_code !== 'XX' ? selected.country_code : compactText(selected.location, 30)],
+                                                ['Largest audience', formatFollowerCount(getCommunityMax(selected))],
+                                                ['Revenue', formatRevenue(selected)],
+                                                ['Funding', humanize(selected.funding_status)],
+                                                ['Activity', humanize(selected.activity_status)],
+                                            ].map(([label, value]) => (
+                                                <div key={label} className="border-2 border-black bg-neutral-50 p-3">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{label}</p>
+                                                    <p className="mt-1 text-sm font-black leading-tight">{value}</p>
+                                                </div>
+                                            ))}
                                         </div>
                                     </section>
 
                                     <section className="border-t-2 border-black pt-5">
-                                        <h4 className="font-candu text-lg font-extrabold uppercase">Community & activity</h4>
+                                        <h4 className="font-candu text-lg font-extrabold uppercase">Platform audiences</h4>
                                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                             {selected.communities.length ? selected.communities.map(community => {
                                                 const qualifies = community.followers !== null && community.followers >= 4000 && community.followers <= 500000
@@ -512,7 +579,7 @@ export default function PartnerCommandCenter() {
                                                                 {quality === 'verified' ? 'Verified' : quality === 'estimated' ? 'Sourced estimate' : 'Unavailable'}
                                                             </span>
                                                         </div>
-                                                        {community.count_note && <p className="mt-2 text-[11px] leading-snug text-neutral-500">{community.count_note}</p>}
+                                                        {isSelectedExpanded && community.count_note && <p className="mt-2 text-[11px] leading-snug text-neutral-500">{community.count_note}</p>}
                                                         {community.count_source_url && (
                                                             <a href={community.count_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:underline">Audience source <ExternalLink className="h-3 w-3" /></a>
                                                         )}
@@ -520,20 +587,38 @@ export default function PartnerCommandCenter() {
                                                 )
                                             }) : <p className="text-sm text-neutral-500">No independently verified community figures found.</p>}
                                         </div>
-                                        <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
+                                        {isSelectedExpanded && <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
                                             <div className="flex items-center gap-2 text-xs font-black uppercase"><Clock3 className="h-4 w-4" /> Latest activity: {selected.last_activity}</div>
-                                            <p className="mt-2 text-sm text-neutral-700">{isSelectedExpanded ? selected.activity_summary : compactText(selected.activity_summary, 160)}</p>
-                                        </div>
+                                            <p className="mt-2 text-sm text-neutral-700">{selected.activity_summary}</p>
+                                        </div>}
                                     </section>
 
                                     {isSelectedExpanded && <>
+                                    <section className="border-t-2 border-black pt-5">
+                                        <h4 className="font-candu text-lg font-extrabold uppercase">Scoring evidence</h4>
+                                        <div className="mt-3 grid gap-3 md:grid-cols-2">
+                                            <div className="border-2 border-black bg-green-50 p-4">
+                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><CheckCircle2 className="h-4 w-4 text-green-700" /> Fit signals</p>
+                                                <ul className="mt-3 space-y-2 text-sm">{selected.fit_reasons.map(reason => <li key={reason}>+ {reason}</li>)}</ul>
+                                            </div>
+                                            <div className="border-2 border-black bg-amber-50 p-4">
+                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps</p>
+                                                <ul className="mt-3 space-y-2 text-sm">{selected.risks.map(risk => <li key={risk}>! {risk}</li>)}</ul>
+                                            </div>
+                                        </div>
+                                    </section>
                                     <section className="border-t-2 border-black pt-5">
                                         <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><CircleDollarSign className="h-5 w-5" /> Funding & credibility</h4>
                                         <div className="mt-3 grid gap-3 md:grid-cols-2">
                                             <div className="border-2 border-black p-4">
                                                 <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Financial model</p>
                                                 <p className="mt-2 text-sm font-bold">{selected.financial_model.join(' · ') || 'Unknown — not publicly verified'}</p>
-                                                <p className="mt-3 text-sm text-neutral-700">{selected.financial_situation}</p>
+                                                <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                                                    <div><dt className="font-black uppercase text-neutral-500">Revenue</dt><dd className="mt-1 font-bold">{formatRevenue(selected)}</dd></div>
+                                                    <div><dt className="font-black uppercase text-neutral-500">Year</dt><dd className="mt-1 font-bold">{selected.annual_revenue_year || 'Unknown'}</dd></div>
+                                                    <div><dt className="font-black uppercase text-neutral-500">Band</dt><dd className="mt-1 font-bold">{revenueBandLabels[selected.revenue_band || 'unknown']}</dd></div>
+                                                    <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
+                                                </dl>
                                             </div>
                                             <div className="border-2 border-black p-4">
                                                 <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Official partners & sponsors</p>

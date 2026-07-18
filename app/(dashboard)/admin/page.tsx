@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
+import React, { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { plantingsData } from '@/lib/plantings'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -13,18 +12,59 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, XAxis, YAxis, ComposedChart, Legend } from 'recharts'
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from '@/components/ui/chart'
 import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdminSession, getPowerUsers, getSegmentCounts, syncSegmentToResend, syncAllUsersToResend, getEmailTemplates, createEmailTemplate, updateEmailTemplate, deleteEmailTemplate, sendUserEmail, getResendAudiences, getAudienceContacts, getUserEmailHistory, sendBroadcastToAudience, fetchUrlMetadata, getMarketingEntries, createMarketingEntry, updateMarketingEntry, deleteMarketingEntry, getMarketingEntriesForReport, addSerpKeyword, removeSerpKeyword, getCompaniesAdmin, createCompanyAdmin, updateCompanyAdmin, deleteCompanyAdmin, getTeamAdoptionRewardRequestsAdmin, approveTeamAdoptionRewardAdmin, rejectTeamAdoptionRewardAdmin, fulfillTeamAdoptionRewardAdmin, getNodeTransferRequestsAdmin, approveNodeTransferAdmin, rejectNodeTransferAdmin, type CompanyAdmin, type TeamAdoptionRewardRequestAdmin, type NodeTransferRequestAdmin, type PowerUser, type SegmentStats, type UserSegment, type EmailTemplate, type ResendContact, type EmailLog, type UrlMetadata, type MarketingEntry, type SerpKeyword } from './actions'
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor, PawPrint, ExternalLink } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import PartnerCommandCenter from '@/components/admin/PartnerCommandCenter'
+
+const LazyPartnerCommandCenter = dynamic(() => import('@/components/admin/PartnerCommandCenter'), {
+    ssr: false,
+    loading: () => <AdminSectionLoader label="Loading partner command center" />,
+})
+
+const LazyAdminCharts = {
+    ChromeWau: dynamic(() => import('@/components/admin/AdminCharts').then(module => module.ChromeWauChart), { ssr: false, loading: ChartLoader }),
+    Acquisition: dynamic(() => import('@/components/admin/AdminCharts').then(module => module.AcquisitionChart), { ssr: false, loading: ChartLoader }),
+    DesktopWau: dynamic(() => import('@/components/admin/AdminCharts').then(module => module.DesktopWauChart), { ssr: false, loading: ChartLoader }),
+    Revenue: dynamic(() => import('@/components/admin/AdminCharts').then(module => module.RevenueChart), { ssr: false, loading: ChartLoader }),
+    Projection: dynamic(() => import('@/components/admin/AdminCharts').then(module => module.ProjectionChart), { ssr: false, loading: ChartLoader }),
+}
+
+function AdminSectionLoader({ label }: { label: string }) {
+    return <div className="flex min-h-64 items-center justify-center border-2 border-black bg-white p-8 text-sm font-black uppercase"><Loader2 className="mr-2 h-5 w-5 animate-spin" />{label}</div>
+}
+
+function ChartLoader() {
+    return <div className="flex h-[200px] w-full animate-pulse items-center justify-center bg-neutral-100 text-xs font-bold uppercase text-neutral-400">Loading chart…</div>
+}
+
+type AdminStats = Awaited<ReturnType<typeof getAdminStats>>
+
+const EMPTY_ADMIN_STATS: AdminStats = {
+    profilesCount: 0,
+    newProfilesCount: 0,
+    nodesCount: 0,
+    anonymousNodesCount: 0,
+    monthlyRevenue: 0,
+    totalRevenue: 0,
+    totalUsersCount: 0,
+    newTotalUsersCount: 0,
+    activeUsersCount: 0,
+    activeLast30DaysUsersCount: 0,
+    churnRate: 0,
+    chromeWau: 0,
+    chromeWauCurrent: 0,
+    desktopWau: 0,
+    extensionNodeCount: 0,
+    desktopNodeCount: 0,
+    extensionRevenueShare: 0,
+    desktopRevenueShare: 0,
+    extensionRevenue: 0,
+    desktopRevenue: 0,
+    extensionArpu: 0,
+    desktopArpu: 0,
+    desktopOptOutRate: 0,
+}
 
 // Email Preview Component with proper scaling
 const EmailPreview = ({ html, subject, className = "" }: { html: string; subject?: string; className?: string }) => {
@@ -64,45 +104,6 @@ const FINANCIAL_DATA = {
     costBreakdown: COST_BREAKDOWN,
 }
 
-// Chart Configs
-const wauChartConfig = {
-    wauAvg: { label: "Weekly Active Users", color: "hsl(var(--chart-1))" },
-} satisfies ChartConfig
-
-const desktopChartConfig = {
-    wauAvg: { label: "Desktop WAU", color: "hsl(217, 91%, 60%)" },
-} satisfies ChartConfig
-
-const growthChartConfig = {
-    installs: { label: "Installs", color: "hsl(142, 76%, 45%)" },
-    uninstalls: { label: "Uninstalls", color: "hsl(0, 72%, 51%)" },
-    netGrowth: { label: "Net Growth", color: "hsl(var(--chart-3))" },
-} satisfies ChartConfig
-
-const revenueChartConfig = {
-    revenue: { label: "Revenue", color: "hsl(var(--chart-4))" },
-    arpu: { label: "ARPU (€)", color: "hsl(var(--chart-2))" },
-} satisfies ChartConfig
-
-
-
-const projectionChartConfig = {
-    organicWau: { label: "Organic WAU", color: "hsl(142, 76%, 45%)" },
-    paidWau: { label: "+ Paid Users", color: "hsl(217, 91%, 60%)" },
-    breakEvenWau: { label: "Break-Even WAU", color: "hsl(0, 72%, 51%)" },
-    revenue: { label: "Projected Revenue", color: "hsl(var(--chart-4))" },
-    costs: { label: "Monthly Costs", color: "hsl(0, 72%, 51%)" },
-} satisfies ChartConfig
-
-const paidGrowthChartConfig = {
-    aggressive: { label: "Aggressive", color: "hsl(0, 72%, 51%)" },
-    moderate: { label: "Moderate", color: "hsl(45, 93%, 47%)" },
-    conservative: { label: "Conservative", color: "hsl(142, 76%, 45%)" },
-} satisfies ChartConfig
-
-const churnChartConfig = {
-    uninstallRate: { label: "Uninstall Rate", color: "hsl(0, 72%, 51%)" },
-} satisfies ChartConfig
 
 const compactId = (value: string | null | undefined, chars = 8) => {
     if (!value) return '—'
@@ -161,32 +162,9 @@ export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [password, setPassword] = useState('')
     const [passwordError, setPasswordError] = useState('')
-    const [stats, setStats] = useState<{
-        profilesCount: number,
-        newProfilesCount: number,
-        nodesCount: number,
-        anonymousNodesCount: number,
-        monthlyRevenue: number,
-        totalRevenue: number,
-        totalUsersCount: number,
-        newTotalUsersCount: number,
-        activeUsersCount: number,
-        activeLast30DaysUsersCount: number,
-        churnRate: number,
-        // Platform breakdown
-        chromeWau: number,
-        chromeWauCurrent: number,
-        desktopWau: number,
-        extensionNodeCount: number,
-        desktopNodeCount: number,
-        extensionRevenueShare: number,
-        desktopRevenueShare: number,
-        extensionRevenue: number,
-        desktopRevenue: number,
-        extensionArpu: number,
-        desktopArpu: number,
-        desktopOptOutRate: number
-    } | null>(null)
+    const [stats, setStats] = useState<AdminStats>(EMPTY_ADMIN_STATS)
+    const [isOverviewLoaded, setIsOverviewLoaded] = useState(false)
+    const [isOverviewLoading, setIsOverviewLoading] = useState(false)
     const [revenueHistory, setRevenueHistory] = useState<{ month: string; earnings: number; revenue: number }[]>([])
     const [showDetails, setShowDetails] = useState(false)
 
@@ -211,7 +189,9 @@ export default function AdminPage() {
     const [newTemplate, setNewTemplate] = useState({ name: '', subject: '', content: '', from_email: '' })
     const [emailCompose, setEmailCompose] = useState({ userId: '', userEmail: '', userName: '', subject: '', content: '', from_email: '', loading: false })
     const [emailResult, setEmailResult] = useState<{ success: boolean; message: string } | null>(null)
-    const [activeTab, setActiveTab] = useState('real-data')
+    const [activeTab, setActiveTab] = useState('partners')
+    const loadedTabs = useRef(new Set<string>(['partners']))
+    const overviewRequest = useRef<Promise<void> | null>(null)
 
     // Audiences State
     const [audiences, setAudiences] = useState<{ id: string; name: string }[]>([])
@@ -741,17 +721,28 @@ export default function AdminPage() {
 
     // Generate structured Monthly Report PDF
     const generateMonthlyReport = async () => {
-        if (isGeneratingPdf || !stats) return
+        if (isGeneratingPdf || !isOverviewLoaded) return
 
         const previousTab = activeTab
         setIsGeneratingPdf(true)
 
         try {
+            const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+                import('html2canvas'),
+                import('jspdf'),
+            ])
+
             // 1. Ensure we are on the data tab so charts are rendered
             if (activeTab !== 'real-data') {
                 setActiveTab('real-data')
-                // Small delay to allow charts to render
-                await new Promise(resolve => setTimeout(resolve, 1000))
+            }
+
+            // Lazy chart chunks can take a moment on a cold connection. Wait for
+            // the actual SVGs so PDF exports never capture loading placeholders.
+            for (let attempt = 0; attempt < 25; attempt++) {
+                const chartIds = ['wau-chart', 'desktop-chart', 'acquisition-chart', 'revenue-chart']
+                if (chartIds.every(id => document.getElementById(id)?.querySelector('svg'))) break
+                await new Promise(resolve => setTimeout(resolve, 200))
             }
 
             // 2. Capture charts
@@ -1050,16 +1041,25 @@ export default function AdminPage() {
         }
     }
 
-    useEffect(() => {
-        if (!isAuthenticated) return
-        getAdminStats().then((data) => {
-            setStats(data)
-        }).catch(err => console.error('Error fetching stats:', err))
+    const fetchOverviewData = () => {
+        if (!isAuthenticated || isOverviewLoaded || overviewRequest.current) return overviewRequest.current
 
-        getMonthlyRevenueHistory().then((data) => {
-            setRevenueHistory(data)
-        }).catch(err => console.error('Error fetching revenue history:', err))
-    }, [isAuthenticated])
+        setIsOverviewLoading(true)
+        const request = Promise.all([getAdminStats(), getMonthlyRevenueHistory()])
+            .then(([adminStats, history]) => {
+                setStats(adminStats)
+                setRevenueHistory(history)
+                setIsOverviewLoaded(true)
+            })
+            .catch(err => console.error('Error fetching admin overview:', err))
+            .finally(() => {
+                setIsOverviewLoading(false)
+                overviewRequest.current = null
+            })
+
+        overviewRequest.current = request
+        return request
+    }
 
     // Fetch power users data 
     const fetchPowerUsersData = async () => {
@@ -1126,12 +1126,6 @@ export default function AdminPage() {
             fetchContacts(broadcastAudienceId)
         }
     }, [broadcastAudienceId])
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            fetchTemplates()
-        }
-    }, [isAuthenticated])
 
     // Template Handlers
     const handleCreateTemplate = async (e: React.FormEvent) => {
@@ -1444,8 +1438,6 @@ export default function AdminPage() {
         )
     }
 
-    if (!stats) return <div className="p-8">Loading stats...</div>
-
     // Metrics Calculations
     const arpu = stats.activeUsersCount > 0 ? (stats.monthlyRevenue / stats.activeUsersCount) : 0
     const activeLast30DaysArpu = stats.activeLast30DaysUsersCount > 0 ? (stats.monthlyRevenue / stats.activeLast30DaysUsersCount) : 0
@@ -1645,6 +1637,7 @@ export default function AdminPage() {
                             <p className="text-sm text-neutral-600 mt-1">Business metrics & analytics</p>
                         </div>
                         <div className="flex items-center gap-6">
+                            {isOverviewLoaded ? <>
                             <div className="text-right">
                                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Revenue</div>
                                 <div className="text-2xl font-extrabold font-candu text-green-600">€{stats.totalRevenue.toFixed(2)}</div>
@@ -1664,6 +1657,11 @@ export default function AdminPage() {
                                     <><Download className="h-4 w-4" /> Report</>
                                 )}
                             </button>
+                            </> : (
+                                <div className="border-2 border-black bg-neutral-50 px-4 py-2 text-xs font-bold text-neutral-500">
+                                    Analytics load only when opened
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -1672,6 +1670,11 @@ export default function AdminPage() {
                     value={activeTab}
                     onValueChange={(value) => {
                         setActiveTab(value)
+                        if (['real-data', 'projections', 'report'].includes(value)) {
+                            void fetchOverviewData()
+                        }
+                        if (loadedTabs.current.has(value)) return
+                        loadedTabs.current.add(value)
                         if (value === 'power-users') {
                             fetchPowerUsersData()
                             fetchAudiences()
@@ -1696,7 +1699,7 @@ export default function AdminPage() {
                             fetchNodeTransferRequests()
                         }
                     }}
-                    className="w-full" defaultValue={'real-data'}                 >
+                    className="w-full" defaultValue={'partners'}                 >
                     <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-11 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
@@ -1711,7 +1714,11 @@ export default function AdminPage() {
                         <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="real-data" className="space-y-6 mt-6">
+                    {isOverviewLoading && ['real-data', 'projections', 'report'].includes(activeTab) && (
+                        <div className="mt-6"><AdminSectionLoader label="Loading analytics" /></div>
+                    )}
+
+                    <TabsContent value="real-data" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
                         {/* Key Metrics - Primary Focus */}
                         <section>
                             <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
@@ -1889,21 +1896,7 @@ export default function AdminPage() {
                                             Adjusted from {chromeStoreData.wauAdjustment.anomalyStartDate}; reported peak {chromeStoreData.totals.reportedPeakWau} on {chromeStoreData.totals.reportedPeakWauDate}
                                         </p>
                                     )}
-                                    <ChartContainer config={wauChartConfig} className="h-[200px] w-full">
-                                        <AreaChart data={chromeStoreData.monthlyData} margin={{ left: 0, right: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="month" tickFormatter={(v) => v.replace(' 2025', '').slice(0, 3)} fontSize={11} />
-                                            <YAxis fontSize={11} />
-                                            <ChartTooltip content={<ChartTooltipContent />} />
-                                            <Area
-                                                type="monotone"
-                                                dataKey="wauAvg"
-                                                stroke="var(--color-wauAvg)"
-                                                fill="var(--color-wauAvg)"
-                                                fillOpacity={0.3}
-                                            />
-                                        </AreaChart>
-                                    </ChartContainer>
+                                    <LazyAdminCharts.ChromeWau data={chromeStoreData.monthlyData} />
                                 </div>
 
                                 <div id="acquisition-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
@@ -1911,18 +1904,7 @@ export default function AdminPage() {
                                     <p className="text-xs text-neutral-600 mb-4">
                                         {chromeStoreData.totals.totalInstalls} installs, {chromeStoreData.totals.totalUninstalls} uninstalls ({chromeStoreData.totals.netUsers} net)
                                     </p>
-                                    <ChartContainer config={growthChartConfig} className="h-[200px] w-full">
-                                        <ComposedChart data={chromeStoreData.monthlyData} margin={{ left: 0, right: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="month" tickFormatter={(v) => v.replace(' 2025', '').slice(0, 3)} fontSize={11} />
-                                            <YAxis fontSize={11} />
-                                            <ChartTooltip content={<ChartTooltipContent />} />
-                                            <Legend wrapperStyle={{ fontSize: 11 }} />
-                                            <Bar dataKey="installs" fill="var(--color-installs)" radius={2} />
-                                            <Bar dataKey="uninstalls" fill="var(--color-uninstalls)" radius={2} />
-                                            <Line type="monotone" dataKey="netGrowth" stroke="var(--color-netGrowth)" strokeWidth={2} />
-                                        </ComposedChart>
-                                    </ChartContainer>
+                                    <LazyAdminCharts.Acquisition data={chromeStoreData.monthlyData} />
                                 </div>
 
                                 <div id="desktop-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
@@ -1930,15 +1912,7 @@ export default function AdminPage() {
                                     <p className="text-xs text-neutral-600 mb-4">
                                         Active users on desktop app
                                     </p>
-                                    <ChartContainer config={desktopChartConfig} className="h-[200px] w-full">
-                                        <BarChart data={chromeStoreData.desktopData} margin={{ left: 0, right: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="month" tickFormatter={(v) => v.replace(' 2026', '').slice(0, 3)} fontSize={11} />
-                                            <YAxis fontSize={11} />
-                                            <ChartTooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="wauAvg" fill="var(--color-wauAvg)" radius={4} />
-                                        </BarChart>
-                                    </ChartContainer>
+                                    <LazyAdminCharts.DesktopWau data={chromeStoreData.desktopData} />
                                 </div>
                             </div>
                         </section>
@@ -1947,18 +1921,7 @@ export default function AdminPage() {
                         <div id="revenue-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                             <h3 className="text-base font-bold text-black mb-1">Revenue & ARPU Trend</h3>
                             <p className="text-xs text-neutral-600 mb-4">ARPU uses adjusted Chrome WAU plus desktop WAU where available (Jan 2026+)</p>
-                            <ChartContainer config={revenueChartConfig} className="h-[200px] w-full">
-                                <ComposedChart data={monthlyMetricsData} margin={{ left: 0, right: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="month" tickFormatter={(v) => v.replace(' 2025', '').slice(0, 3)} fontSize={11} />
-                                    <YAxis yAxisId="left" orientation="left" fontSize={11} />
-                                    <YAxis yAxisId="right" orientation="right" fontSize={11} />
-                                    <ChartTooltip content={<ChartTooltipContent />} />
-                                    <Legend wrapperStyle={{ fontSize: 11 }} />
-                                    <Bar yAxisId="left" dataKey="revenue" name="Revenue (€)" fill="var(--color-revenue)" radius={2} />
-                                    <Line yAxisId="right" type="monotone" dataKey="arpu" name="ARPU (€)" stroke="var(--color-arpu)" strokeWidth={2} dot={{ r: 3 }} />
-                                </ComposedChart>
-                            </ChartContainer>
+                            <LazyAdminCharts.Revenue data={monthlyMetricsData} />
                         </div>
 
                     </TabsContent>
@@ -2371,11 +2334,11 @@ export default function AdminPage() {
                     </TabsContent>
 
                     <TabsContent value="partners" className="mt-6">
-                        <PartnerCommandCenter />
+                        <LazyPartnerCommandCenter />
                     </TabsContent>
 
                     {/* REPORT TAB - Summary and PDF Generation */}
-                    <TabsContent value="report" className="space-y-6 mt-6">
+                    <TabsContent value="report" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
                         <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
                             <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
                                 <FileText className="h-5 w-5 text-brand-navy" />
@@ -2430,7 +2393,7 @@ export default function AdminPage() {
                         </section>
                     </TabsContent>
 
-                    <TabsContent value="projections" className="space-y-6 mt-6">
+                    <TabsContent value="projections" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
                         {/* 2026 PROJECTIONS SECTION */}
                         <section className="space-y-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -2484,18 +2447,7 @@ export default function AdminPage() {
                                 <p className="text-xs text-neutral-600 mb-4">
                                     Green = Projected organic WAU | Red line = WAU needed for break-even | Blue = Paid users needed to fill gap
                                 </p>
-                                <ChartContainer config={projectionChartConfig} className="h-[280px] w-full">
-                                    <ComposedChart data={paidGrowthChartData} margin={{ left: 0, right: 0 }}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="month" fontSize={11} />
-                                        <YAxis fontSize={11} />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <Legend wrapperStyle={{ fontSize: 11 }} />
-                                        <Bar dataKey="organicWau" name="Organic WAU" stackId="wau" fill="var(--color-organicWau)" radius={[0, 0, 2, 2]} />
-                                        <Bar dataKey="paidNeeded" name="Paid Users Needed" stackId="wau" fill="var(--color-paidWau)" radius={[2, 2, 0, 0]} />
-                                        <Line type="monotone" dataKey="breakEvenWau" name="Break-Even WAU" stroke="var(--color-breakEvenWau)" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-                                    </ComposedChart>
-                                </ChartContainer>
+                                <LazyAdminCharts.Projection data={paidGrowthChartData} />
                             </div>
 
                             {/* Paid Acquisition Scenarios Table */}
