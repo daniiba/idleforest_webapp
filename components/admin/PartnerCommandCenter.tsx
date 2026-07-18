@@ -11,12 +11,14 @@ import {
     ChevronRight,
     CircleDollarSign,
     Clock3,
+    Compass,
     Copy,
     ExternalLink,
     Globe2,
     Loader2,
     Mail,
     MapPin,
+    Plus,
     RefreshCw,
     Search,
     Send,
@@ -30,6 +32,7 @@ import {
     PARTNER_RECOMMENDATION_LABELS,
     PARTNER_STATUS_LABELS,
     type PartnerCommunityBand,
+    type PartnerDiscoveryCandidate,
     type PartnerDeliveryModel,
     type PartnerLead,
     type PartnerLeadStatus,
@@ -151,7 +154,10 @@ function compactText(value: string, maxLength = 96) {
 export default function PartnerCommandCenter() {
     const [leads, setLeads] = useState<PartnerLead[]>([])
     const [selectedId, setSelectedId] = useState<string | null>(null)
+    const [inputMode, setInputMode] = useState<'discover' | 'urls'>('discover')
     const [urlInput, setUrlInput] = useState('')
+    const [discoveryFocus, setDiscoveryFocus] = useState('')
+    const [discoveryCandidates, setDiscoveryCandidates] = useState<PartnerDiscoveryCandidate[]>([])
     const [search, setSearch] = useState('')
     const [statusFilter, setStatusFilter] = useState<'all' | PartnerLeadStatus>('all')
     const [deliveryFilter, setDeliveryFilter] = useState<'all' | PartnerDeliveryModel>('all')
@@ -159,6 +165,8 @@ export default function PartnerCommandCenter() {
     const [revenueFilter, setRevenueFilter] = useState<'all' | PartnerRevenueBand>('all')
     const [isLoading, setIsLoading] = useState(true)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
+    const [isDiscovering, setIsDiscovering] = useState(false)
+    const [researchingCandidateUrl, setResearchingCandidateUrl] = useState<string | null>(null)
     const [updatingId, setUpdatingId] = useState<string | null>(null)
     const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null)
     const [error, setError] = useState('')
@@ -235,12 +243,12 @@ export default function PartnerCommandCenter() {
     const researchUrls = async (urls: string[], clearInput = false) => {
         if (!urls.length) {
             setError('Add at least one organization URL.')
-            return
+            return false
         }
 
         if (urls.length > 12) {
             setError('Research up to 12 URLs at a time.')
-            return
+            return false
         }
 
         setIsAnalyzing(true)
@@ -262,8 +270,10 @@ export default function PartnerCommandCenter() {
             setSelectedId(result.partners[0]?.id || null)
             if (clearInput) setUrlInput('')
             setNotice(`${result.partners.length} partner${result.partners.length === 1 ? '' : 's'} researched and saved.`)
+            return true
         } catch (analysisError) {
             setError(friendlyError(analysisError, 'Partner research failed.'))
+            return false
         } finally {
             setIsAnalyzing(false)
         }
@@ -275,6 +285,57 @@ export default function PartnerCommandCenter() {
             .map(value => value.trim())
             .filter(Boolean)
         void researchUrls(urls, true)
+    }
+
+    const discoverPartners = async () => {
+        setIsDiscovering(true)
+        setError('')
+        setNotice('')
+        try {
+            const response = await fetch('/api/admin/partners/discover', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ focus: discoveryFocus, count: 6 }),
+            })
+            const result = await response.json() as { candidates?: PartnerDiscoveryCandidate[]; error?: string }
+            if (!response.ok || !result.candidates) throw new Error(result.error || 'Partner discovery failed.')
+
+            setDiscoveryCandidates(result.candidates)
+            setNotice(result.candidates.length
+                ? `${result.candidates.length} new potential partners found. Research only the ones worth adding.`
+                : 'No new partners met the discovery threshold. Try a more specific region or category.')
+        } catch (discoveryError) {
+            setError(friendlyError(discoveryError, 'Partner discovery failed.'))
+        } finally {
+            setIsDiscovering(false)
+        }
+    }
+
+    const researchCandidate = async (candidate: PartnerDiscoveryCandidate) => {
+        setResearchingCandidateUrl(candidate.url)
+        try {
+            const saved = await researchUrls([candidate.url])
+            if (saved) {
+                setDiscoveryCandidates(current => current.filter(item => item.url !== candidate.url))
+            }
+        } finally {
+            setResearchingCandidateUrl(null)
+        }
+    }
+
+    const researchTopCandidates = async () => {
+        const urls = discoveryCandidates.slice(0, 3).map(candidate => candidate.url)
+        if (!urls.length) return
+        setResearchingCandidateUrl('batch')
+        try {
+            const saved = await researchUrls(urls)
+            if (saved) {
+                const researched = new Set(urls)
+                setDiscoveryCandidates(current => current.filter(item => !researched.has(item.url)))
+            }
+        } finally {
+            setResearchingCandidateUrl(null)
+        }
     }
 
     const reachOut = (lead: PartnerLead) => {
@@ -315,27 +376,74 @@ export default function PartnerCommandCenter() {
                         <p className="mt-3 max-w-xl text-sm text-white/70">Qualify conservation organizations, capture the evidence, and move each relationship from research to follow-up.</p>
                     </div>
                     <div className="bg-white text-black border-2 border-black p-3 shadow-[4px_4px_0px_0px_rgba(224,241,70,1)]">
-                        <label htmlFor="partner-urls" className="block text-[11px] font-black uppercase tracking-wider mb-2">Organization URLs · one per line</label>
-                        <textarea
-                            id="partner-urls"
-                            value={urlInput}
-                            onChange={event => setUrlInput(event.target.value)}
-                            placeholder={'mossy.earth\nrewilding-europe.com'}
-                            rows={3}
-                            className="w-full resize-none border-2 border-black bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
-                        />
-                        <div className="mt-3 flex items-center justify-between gap-3">
-                            <span className="text-[11px] text-neutral-500">Up to 12 sites per research run</span>
+                        <div className="mb-3 grid grid-cols-2 border-2 border-black bg-neutral-100 p-0.5">
                             <button
                                 type="button"
-                                onClick={analyzeUrls}
-                                disabled={isAnalyzing}
-                                className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
+                                onClick={() => setInputMode('discover')}
+                                aria-pressed={inputMode === 'discover'}
+                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-black uppercase ${inputMode === 'discover' ? 'bg-brand-yellow' : 'bg-transparent hover:bg-white'}`}
                             >
-                                {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                                {isAnalyzing ? 'Researching…' : 'Analyze'}
+                                <Compass className="h-4 w-4" /> Find for me
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setInputMode('urls')}
+                                aria-pressed={inputMode === 'urls'}
+                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-black uppercase ${inputMode === 'urls' ? 'bg-white' : 'bg-transparent hover:bg-white'}`}
+                            >
+                                <Plus className="h-4 w-4" /> Add URLs
                             </button>
                         </div>
+
+                        {inputMode === 'discover' ? (
+                            <div>
+                                <label htmlFor="partner-discovery-focus" className="mb-2 block text-[11px] font-black uppercase tracking-wider">Optional search focus</label>
+                                <input
+                                    id="partner-discovery-focus"
+                                    value={discoveryFocus}
+                                    onChange={event => setDiscoveryFocus(event.target.value)}
+                                    onKeyDown={event => { if (event.key === 'Enter' && !isDiscovering && !isAnalyzing) void discoverPartners() }}
+                                    placeholder="e.g. Iberia · animal rewilding · direct operators"
+                                    className="w-full border-2 border-black bg-neutral-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                />
+                                <div className="mt-3 flex items-center justify-between gap-3">
+                                    <span className="text-[11px] leading-tight text-neutral-500">Finds 6 new candidates. Deep research happens only after approval.</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => void discoverPartners()}
+                                        disabled={isDiscovering || isAnalyzing}
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
+                                    >
+                                        {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
+                                        {isDiscovering ? 'Searching…' : 'Find partners'}
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <label htmlFor="partner-urls" className="mb-2 block text-[11px] font-black uppercase tracking-wider">Organization URLs · one per line</label>
+                                <textarea
+                                    id="partner-urls"
+                                    value={urlInput}
+                                    onChange={event => setUrlInput(event.target.value)}
+                                    placeholder={'mossy.earth\nrewilding-europe.com'}
+                                    rows={3}
+                                    className="w-full resize-none border-2 border-black bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                />
+                                <div className="mt-3 flex items-center justify-between gap-3">
+                                    <span className="text-[11px] text-neutral-500">Up to 12 sites per research run</span>
+                                    <button
+                                        type="button"
+                                        onClick={analyzeUrls}
+                                        disabled={isAnalyzing || isDiscovering}
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
+                                    >
+                                        {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                                        {isAnalyzing ? 'Researching…' : 'Analyze'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -346,6 +454,104 @@ export default function PartnerCommandCenter() {
                     <span>{error || notice}</span>
                     <button type="button" onClick={() => { setError(''); setNotice('') }} className="ml-auto" aria-label="Dismiss"><X className="h-4 w-4" /></button>
                 </div>
+            )}
+
+            {discoveryCandidates.length > 0 && (
+                <section className="border-2 border-black bg-[#f5f7ec] p-4 shadow-[4px_4px_0_#000] md:p-5">
+                    <div className="flex flex-col gap-3 border-b-2 border-black pb-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
+                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential partners</h3>
+                            <p className="mt-1 text-xs text-neutral-600">Preliminary signals only. Full metrics are fetched when you add a candidate.</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setDiscoveryCandidates([])}
+                                className="border-2 border-black bg-white px-3 py-2 text-xs font-black uppercase hover:bg-neutral-100"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => void researchTopCandidates()}
+                                disabled={isAnalyzing || researchingCandidateUrl !== null}
+                                className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase shadow-[2px_2px_0_#000] disabled:opacity-50"
+                            >
+                                {researchingCandidateUrl === 'batch' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                                Research top {Math.min(3, discoveryCandidates.length)}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                        {discoveryCandidates.map(candidate => (
+                            <article key={candidate.url} className="flex min-w-0 flex-col border-2 border-black bg-white p-4">
+                                <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <p className="truncate font-black">{candidate.name}</p>
+                                        <p className="mt-0.5 truncate text-xs text-neutral-500">{candidate.location}</p>
+                                    </div>
+                                    <span className="flex-none border-2 border-black bg-green-100 px-2 py-1 text-xs font-black">{candidate.discovery_score}/100</span>
+                                </div>
+
+                                <p className="mt-3 text-sm leading-snug text-neutral-700">{compactText(candidate.summary, 150)}</p>
+
+                                <div className="mt-3 grid grid-cols-2 border-2 border-black bg-neutral-50">
+                                    <div className="border-r-2 border-black p-2.5">
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Audience signal</p>
+                                        <p className="mt-1 text-xs font-black">
+                                            {candidate.community_size !== null ? `${formatFollowerCount(candidate.community_size, 'estimated')} · ${candidate.community_platform}` : 'Needs verification'}
+                                        </p>
+                                    </div>
+                                    <div className="p-2.5">
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Activity</p>
+                                        <p className="mt-1 text-xs font-black">{humanize(candidate.activity_status)}</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3 flex flex-wrap gap-1.5">
+                                    {candidate.category.slice(0, 2).map(category => <span key={category} className="bg-neutral-100 px-2 py-1 text-[10px] font-bold">{category}</span>)}
+                                    <span className="bg-neutral-100 px-2 py-1 text-[10px] font-bold">{deliveryLabels[candidate.delivery_model]}</span>
+                                </div>
+
+                                {candidate.verification_gaps.length > 0 && (
+                                    <p className="mt-3 truncate text-[11px] text-amber-800" title={candidate.verification_gaps.join(' · ')}>
+                                        <span className="font-black">Verify:</span> {candidate.verification_gaps.join(' · ')}
+                                    </p>
+                                )}
+
+                                <details className="mt-3 border-t border-neutral-200 pt-2 text-xs text-neutral-600">
+                                    <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Why it surfaced</summary>
+                                    <p className="mt-2 leading-relaxed">{candidate.why_fit}</p>
+                                    <p className="mt-1 leading-relaxed"><span className="font-black">Activity:</span> {candidate.activity_signal}</p>
+                                    {candidate.sources.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                                            {candidate.sources.slice(0, 3).map(source => (
+                                                <a key={source.url} href={source.url} target="_blank" rel="noreferrer" className="font-bold text-blue-700 hover:underline">{compactText(source.title, 34)}</a>
+                                            ))}
+                                        </div>
+                                    )}
+                                </details>
+
+                                <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+                                    <a href={candidate.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">
+                                        Visit site <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={() => void researchCandidate(candidate)}
+                                        disabled={isAnalyzing || researchingCandidateUrl !== null}
+                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-[11px] font-black uppercase disabled:opacity-50"
+                                    >
+                                        {researchingCandidateUrl === candidate.url ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                                        Research & add
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
             )}
 
             <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">

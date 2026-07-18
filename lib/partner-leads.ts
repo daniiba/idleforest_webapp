@@ -37,6 +37,25 @@ export interface PartnerSource {
     url: string
 }
 
+export interface PartnerDiscoveryCandidate {
+    url: string
+    name: string
+    summary: string
+    location: string
+    country_code: string
+    category: string[]
+    delivery_model: PartnerDeliveryModel
+    discovery_score: number
+    community_platform: string
+    community_size: number | null
+    community_source_url: string
+    activity_status: PartnerActivityStatus
+    activity_signal: string
+    why_fit: string
+    verification_gaps: string[]
+    sources: PartnerSource[]
+}
+
 export interface PartnerLead {
     id: string
     url: string
