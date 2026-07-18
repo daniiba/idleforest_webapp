@@ -38,8 +38,15 @@ const partnerSchema = {
                     handle: { type: 'string' },
                     followers: nullableInteger,
                     url: { type: 'string' },
+                    count_quality: { type: 'string', enum: ['verified', 'estimated', 'unavailable'] },
+                    count_source_url: { type: 'string' },
+                    count_note: { type: 'string' },
+                    checked_at: { type: 'string' },
                 },
-                required: ['platform', 'handle', 'followers', 'url'],
+                required: [
+                    'platform', 'handle', 'followers', 'url', 'count_quality',
+                    'count_source_url', 'count_note', 'checked_at',
+                ],
             },
         },
         contacts: {
@@ -205,8 +212,13 @@ Scoring rubric (100 points): mission/category 25, one qualifying community 20, r
 
 Rules:
 - Today is ${today}. Prefer recent primary sources, official profiles, current reports, registries, and reputable reporting.
-- Do not guess. Use "Unknown — not publicly verified" for unsupported facts and add the gap to risks.
-- Record each platform separately with its own follower count. Use null when a count cannot be verified.
+- Do not guess unsupported organizational or financial facts. Use "Unknown — not publicly verified" and add the gap to risks.
+- Keep scan-level fields extremely concise: location must be only "City/Region, Country" (no street address, programme footprint, or operating explanation); structure and operator_type must be short labels; team_model must be one short phrase; summary must be at most two short sentences. Put supporting nuance in evidence_summary or sources instead.
+- Research Instagram, YouTube, and Facebook audience sizes explicitly for every organization that has those profiles. Run focused searches for each platform and inspect the official profile plus current indexed results.
+- Record each platform separately. Never combine audiences. Convert displayed values such as 4.2K or 18.7K to integers such as 4200 or 18700.
+- Set count_quality to verified when the count comes from the official platform/profile or an official organization statement. Set it to estimated when a recent search result, reputable social analytics listing, or other public source provides an approximate count; still return the rounded integer and the evidence URL. Use unavailable/null only after focused searches fail to produce a defensible current number.
+- For YouTube use subscribers, for Instagram use followers, and for Facebook prefer followers (page likes only when followers are unavailable, and explain that in count_note). Never substitute post likes, video views, or engagement totals for community size.
+- Set checked_at to ${today}. Make count_note a short plain-language evidence note and count_source_url the page that supports the number.
 - Financial situation must distinguish verified facts from reasonable inference.
 - Contacts must be public organization/professional channels only; never infer private addresses.
 - Source links must directly support the record and should include the official website plus the best evidence for community, activity, and finances.
@@ -225,7 +237,7 @@ Rules:
                 model: process.env.OPENAI_PARTNER_MODEL || 'gpt-5.6',
                 instructions,
                 input: `Research these potential partners:\n${urls.map((url, index) => `${index + 1}. ${url}`).join('\n')}`,
-                tools: [{ type: 'web_search', search_context_size: 'medium' }],
+                tools: [{ type: 'web_search', search_context_size: 'high' }],
                 reasoning: { effort: 'medium' },
                 text: {
                     format: {
