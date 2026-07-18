@@ -7,6 +7,7 @@ import {
     Bell,
     Check,
     CheckCircle2,
+    ChevronDown,
     ChevronRight,
     CircleDollarSign,
     Clock3,
@@ -50,9 +51,10 @@ const recommendationStyles = {
     not_a_fit: 'bg-red-100 text-red-900 border-red-700',
 }
 
-function formatFollowerCount(value: number | null) {
-    if (value === null) return 'Unverified'
-    return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
+function formatFollowerCount(value: number | null, quality?: 'verified' | 'estimated' | 'unavailable') {
+    if (value === null) return 'No count found'
+    const formatted = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
+    return quality === 'estimated' ? `≈${formatted}` : formatted
 }
 
 function formatDate(value: string | null) {
@@ -82,6 +84,22 @@ function friendlyError(error: unknown, fallback: string) {
     return message
 }
 
+function getNextBestAction(lead: PartnerLead) {
+    if (lead.status === 'partner') return 'Keep the relationship warm and record the next joint opportunity.'
+    if (lead.status === 'contacted' || lead.status === 'follow_up') return 'Follow up with the strongest project-specific reason to collaborate.'
+    if (lead.recommendation === 'strong_fit') return 'Send the tailored introduction and schedule a 7-day follow-up.'
+    if (lead.recommendation === 'potential_fit') return 'Verify the remaining audience or funding gap before outreach.'
+    return 'Reject this lead unless there is a strategic reason to keep monitoring it.'
+}
+
+function compactText(value: string, maxLength = 96) {
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    if (normalized.length <= maxLength) return normalized
+    const shortened = normalized.slice(0, maxLength)
+    const lastSpace = shortened.lastIndexOf(' ')
+    return `${shortened.slice(0, lastSpace > 60 ? lastSpace : maxLength).trim()}…`
+}
+
 export default function PartnerCommandCenter() {
     const [leads, setLeads] = useState<PartnerLead[]>([])
     const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -91,6 +109,7 @@ export default function PartnerCommandCenter() {
     const [isLoading, setIsLoading] = useState(true)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [updatingId, setUpdatingId] = useState<string | null>(null)
+    const [expandedLeadId, setExpandedLeadId] = useState<string | null>(null)
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
 
@@ -117,6 +136,7 @@ export default function PartnerCommandCenter() {
     }, [])
 
     const selected = leads.find(lead => lead.id === selectedId) || null
+    const isSelectedExpanded = Boolean(selected && expandedLeadId === selected.id)
 
     const filteredLeads = useMemo(() => {
         const query = search.trim().toLowerCase()
@@ -158,12 +178,7 @@ export default function PartnerCommandCenter() {
         }
     }
 
-    const analyzeUrls = async () => {
-        const urls = urlInput
-            .split(/[\n,]/)
-            .map(value => value.trim())
-            .filter(Boolean)
-
+    const researchUrls = async (urls: string[], clearInput = false) => {
         if (!urls.length) {
             setError('Add at least one organization URL.')
             return
@@ -191,13 +206,21 @@ export default function PartnerCommandCenter() {
                 return [...result.partners!, ...current.filter(lead => !incomingIds.has(lead.id))]
             })
             setSelectedId(result.partners[0]?.id || null)
-            setUrlInput('')
+            if (clearInput) setUrlInput('')
             setNotice(`${result.partners.length} partner${result.partners.length === 1 ? '' : 's'} researched and saved.`)
         } catch (analysisError) {
             setError(friendlyError(analysisError, 'Partner research failed.'))
         } finally {
             setIsAnalyzing(false)
         }
+    }
+
+    const analyzeUrls = () => {
+        const urls = urlInput
+            .split(/[\n,]/)
+            .map(value => value.trim())
+            .filter(Boolean)
+        void researchUrls(urls, true)
     }
 
     const reachOut = (lead: PartnerLead) => {
@@ -371,6 +394,14 @@ export default function PartnerCommandCenter() {
                                         </a>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
+                                        <button
+                                            type="button"
+                                            disabled={isAnalyzing}
+                                            onClick={() => void researchUrls([selected.url])}
+                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-xs font-black uppercase hover:bg-neutral-100 disabled:opacity-50"
+                                        >
+                                            {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Refresh research
+                                        </button>
                                         <button type="button" onClick={() => reachOut(selected)} className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000]">
                                             <Mail className="h-4 w-4" /> Reach out
                                         </button>
@@ -392,10 +423,21 @@ export default function PartnerCommandCenter() {
                                         </button>
                                     </div>
                                 </div>
-                                <p className="mt-5 max-w-4xl text-sm leading-relaxed text-neutral-700">{selected.summary}</p>
+                                <p className="mt-5 max-w-4xl text-sm leading-relaxed text-neutral-700">
+                                    {isSelectedExpanded ? selected.summary : compactText(selected.summary, 220)}
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={() => setExpandedLeadId(isSelectedExpanded ? null : selected.id)}
+                                    className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-600 hover:text-black"
+                                    aria-expanded={isSelectedExpanded}
+                                >
+                                    {isSelectedExpanded ? 'Hide full profile' : 'Show full profile'}
+                                    <ChevronDown className={`h-4 w-4 transition-transform ${isSelectedExpanded ? 'rotate-180' : ''}`} />
+                                </button>
                             </header>
 
-                            <div className="grid border-b-2 border-black sm:grid-cols-2 xl:grid-cols-4">
+                            {isSelectedExpanded && <div className="grid border-b-2 border-black sm:grid-cols-2 xl:grid-cols-4">
                                 {[
                                     { label: 'Structure', value: selected.structure, icon: Users },
                                     { label: 'Location', value: selected.location, icon: MapPin },
@@ -404,10 +446,16 @@ export default function PartnerCommandCenter() {
                                 ].map((field, index) => (
                                     <div key={field.label} className={`p-4 ${index < 3 ? 'xl:border-r-2 xl:border-black' : ''} ${index % 2 === 0 ? 'sm:border-r-2 sm:border-black xl:border-r-2' : ''} ${index < 2 ? 'border-b-2 border-black xl:border-b-0' : ''}`}>
                                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-neutral-500"><field.icon className="h-3.5 w-3.5" />{field.label}</div>
-                                        <p className="mt-1.5 text-sm font-bold leading-snug">{field.value}</p>
+                                        <p className="mt-1.5 text-sm font-bold leading-snug">{compactText(field.value)}</p>
+                                        {field.value.replace(/\s+/g, ' ').trim().length > 96 && (
+                                            <details className="mt-2 text-xs text-neutral-600">
+                                                <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Full details</summary>
+                                                <p className="mt-2 leading-relaxed">{field.value}</p>
+                                            </details>
+                                        )}
                                     </div>
                                 ))}
-                            </div>
+                            </div>}
 
                             <div className="grid xl:grid-cols-[1fr_320px]">
                                 <div className="space-y-6 p-5 md:p-6 xl:border-r-2 xl:border-black">
@@ -423,13 +471,15 @@ export default function PartnerCommandCenter() {
                                             <div className="border-2 border-black bg-green-50 p-4">
                                                 <p className="flex items-center gap-2 text-xs font-black uppercase"><CheckCircle2 className="h-4 w-4 text-green-700" /> Why it fits</p>
                                                 <ul className="mt-3 space-y-2 text-sm">
-                                                    {selected.fit_reasons.map(reason => <li key={reason} className="flex gap-2"><span className="font-black text-green-700">+</span><span>{reason}</span></li>)}
+                                                    {selected.fit_reasons.slice(0, isSelectedExpanded ? undefined : 2).map(reason => <li key={reason} className="flex gap-2"><span className="font-black text-green-700">+</span><span>{isSelectedExpanded ? reason : compactText(reason, 140)}</span></li>)}
+                                                    {!isSelectedExpanded && selected.fit_reasons.length > 2 && <li className="text-xs font-bold text-neutral-500">+{selected.fit_reasons.length - 2} more in full profile</li>}
                                                 </ul>
                                             </div>
                                             <div className="border-2 border-black bg-amber-50 p-4">
                                                 <p className="flex items-center gap-2 text-xs font-black uppercase"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps & risks</p>
                                                 <ul className="mt-3 space-y-2 text-sm">
-                                                    {selected.risks.map(risk => <li key={risk} className="flex gap-2"><span className="font-black text-amber-700">!</span><span>{risk}</span></li>)}
+                                                    {selected.risks.slice(0, isSelectedExpanded ? undefined : 2).map(risk => <li key={risk} className="flex gap-2"><span className="font-black text-amber-700">!</span><span>{isSelectedExpanded ? risk : compactText(risk, 140)}</span></li>)}
+                                                    {!isSelectedExpanded && selected.risks.length > 2 && <li className="text-xs font-bold text-neutral-500">+{selected.risks.length - 2} more in full profile</li>}
                                                 </ul>
                                             </div>
                                         </div>
@@ -440,27 +490,43 @@ export default function PartnerCommandCenter() {
                                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                             {selected.communities.length ? selected.communities.map(community => {
                                                 const qualifies = community.followers !== null && community.followers >= 4000 && community.followers <= 500000
+                                                const quality = community.count_quality || (community.followers === null ? 'unavailable' : 'estimated')
+                                                const rangeLabel = community.followers === null
+                                                    ? 'Count unavailable'
+                                                    : qualifies
+                                                        ? 'Ideal range'
+                                                        : community.followers < 4000 ? 'Below 4K' : 'Above 500K'
                                                 return (
-                                                    <a key={`${community.platform}-${community.url}`} href={community.url} target="_blank" rel="noreferrer" className="border-2 border-black p-3 hover:bg-neutral-50">
+                                                    <div key={`${community.platform}-${community.url}`} className="border-2 border-black bg-white p-3">
                                                         <div className="flex items-center justify-between gap-2">
                                                             <span className="text-xs font-black uppercase">{community.platform}</span>
-                                                            <ArrowUpRight className="h-3.5 w-3.5" />
+                                                            <a href={community.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:underline">Profile <ArrowUpRight className="h-3.5 w-3.5" /></a>
                                                         </div>
                                                         <div className="mt-2 flex items-end justify-between gap-3">
-                                                            <span className="font-candu text-2xl font-extrabold">{formatFollowerCount(community.followers)}</span>
-                                                            <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${qualifies ? 'bg-green-100 text-green-800' : 'bg-neutral-100 text-neutral-500'}`}>{qualifies ? 'In range' : 'Not verified'}</span>
+                                                            <span className="font-candu text-2xl font-extrabold">{formatFollowerCount(community.followers, quality)}</span>
+                                                            <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${qualifies ? 'bg-green-100 text-green-800' : 'bg-neutral-100 text-neutral-600'}`}>{rangeLabel}</span>
                                                         </div>
-                                                        <p className="mt-1 truncate text-xs text-neutral-500">{community.handle}</p>
-                                                    </a>
+                                                        <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
+                                                            <span className="truncate text-neutral-500">{community.handle}</span>
+                                                            <span className={`font-black uppercase ${quality === 'verified' ? 'text-green-700' : quality === 'estimated' ? 'text-amber-700' : 'text-neutral-400'}`}>
+                                                                {quality === 'verified' ? 'Verified' : quality === 'estimated' ? 'Sourced estimate' : 'Unavailable'}
+                                                            </span>
+                                                        </div>
+                                                        {community.count_note && <p className="mt-2 text-[11px] leading-snug text-neutral-500">{community.count_note}</p>}
+                                                        {community.count_source_url && (
+                                                            <a href={community.count_source_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:underline">Audience source <ExternalLink className="h-3 w-3" /></a>
+                                                        )}
+                                                    </div>
                                                 )
                                             }) : <p className="text-sm text-neutral-500">No independently verified community figures found.</p>}
                                         </div>
                                         <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
                                             <div className="flex items-center gap-2 text-xs font-black uppercase"><Clock3 className="h-4 w-4" /> Latest activity: {selected.last_activity}</div>
-                                            <p className="mt-2 text-sm text-neutral-700">{selected.activity_summary}</p>
+                                            <p className="mt-2 text-sm text-neutral-700">{isSelectedExpanded ? selected.activity_summary : compactText(selected.activity_summary, 160)}</p>
                                         </div>
                                     </section>
 
+                                    {isSelectedExpanded && <>
                                     <section className="border-t-2 border-black pt-5">
                                         <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><CircleDollarSign className="h-5 w-5" /> Funding & credibility</h4>
                                         <div className="mt-3 grid gap-3 md:grid-cols-2">
@@ -490,9 +556,14 @@ export default function PartnerCommandCenter() {
                                             <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">{selected.outreach_message}</p>
                                         </div>
                                     </section>
+                                    </>}
                                 </div>
 
                                 <aside className="space-y-5 bg-neutral-50 p-5">
+                                    <section className="border-2 border-black bg-brand-yellow p-4 shadow-[3px_3px_0_#000]">
+                                        <p className="text-[10px] font-black uppercase tracking-wider">Next best action</p>
+                                        <p className="mt-2 text-sm font-bold leading-snug">{getNextBestAction(selected)}</p>
+                                    </section>
                                     <section>
                                         <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Pipeline status</label>
                                         <select
@@ -514,6 +585,7 @@ export default function PartnerCommandCenter() {
                                         {selected.reminder_at && <button type="button" onClick={() => patchLead(selected.id, { reminder_at: null })} className="mt-2 text-xs font-bold text-neutral-500 underline">Clear reminder</button>}
                                     </section>
 
+                                    {isSelectedExpanded && <>
                                     <section className="border-t-2 border-black pt-4">
                                         <p className="text-xs font-black uppercase">Contact</p>
                                         <div className="mt-3 space-y-2">
@@ -558,6 +630,7 @@ export default function PartnerCommandCenter() {
                                             ))}
                                         </div>
                                     </section>
+                                    </>}
                                 </aside>
                             </div>
                         </div>
