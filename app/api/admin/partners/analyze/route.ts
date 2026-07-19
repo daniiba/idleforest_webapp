@@ -91,6 +91,11 @@ const partnerSchema = {
         activity_summary: { type: 'string' },
         last_activity: { type: 'string' },
         activity_status: { type: 'string', enum: ['active', 'irregular', 'inactive', 'unknown'] },
+        accessibility_score: nullableInteger,
+        accessibility_tier: { type: 'string', enum: ['ready_now', 'nurture', 'unlikely_now', 'unknown'] },
+        accessibility_summary: { type: 'string' },
+        state_dependency: { type: 'string', enum: ['low', 'medium', 'high', 'unknown'] },
+        small_company_signal: { type: 'string', enum: ['positive', 'negative', 'unknown'] },
         fit_reasons: { type: 'array', items: { type: 'string' } },
         risks: { type: 'array', items: { type: 'string' } },
         outreach_angle: { type: 'string' },
@@ -117,7 +122,9 @@ const partnerSchema = {
         'financial_situation', 'annual_revenue_amount', 'annual_revenue_currency',
         'annual_revenue_year', 'revenue_band', 'funding_status', 'sponsors',
         'communities', 'community_max', 'community_band', 'contacts', 'socials',
-        'activity_summary', 'last_activity', 'activity_status', 'fit_reasons', 'risks', 'outreach_angle',
+        'activity_summary', 'last_activity', 'activity_status', 'accessibility_score',
+        'accessibility_tier', 'accessibility_summary', 'state_dependency', 'small_company_signal',
+        'fit_reasons', 'risks', 'outreach_angle',
         'outreach_subject', 'outreach_message', 'sources', 'confidence',
     ],
 }
@@ -137,6 +144,14 @@ function normalizeUrl(input: string) {
     if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Only http(s) URLs are supported')
     url.hash = ''
     return url.toString()
+}
+
+function normalizeHost(input: string) {
+    try {
+        return new URL(normalizeUrl(input)).hostname.toLowerCase().replace(/^www\./, '')
+    } catch {
+        return ''
+    }
 }
 
 function getOutputText(payload: Record<string, unknown>) {
@@ -229,6 +244,10 @@ function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): Partner
         contacts: analysis.contacts.filter(item => item.value && item.type),
         socials: analysis.socials.filter(item => item.value),
         activity_summary: compactText(analysis.activity_summary, 150),
+        accessibility_score: analysis.accessibility_score !== null && Number.isFinite(analysis.accessibility_score)
+            ? Math.max(0, Math.min(100, Math.round(analysis.accessibility_score)))
+            : null,
+        accessibility_summary: compactText(analysis.accessibility_summary, 120),
         fit_reasons: analysis.fit_reasons.slice(0, 3).map(reason => compactText(reason, 100)),
         risks: analysis.risks.slice(0, 3).map(risk => compactText(risk, 100)),
         sources: uniqueByUrl(analysis.sources).slice(0, 12),
@@ -273,7 +292,7 @@ Qualification criteria:
 - Verify recent, regular public activity and state the latest dated activity you can establish.
 - Establish structure (company, NGO, university, individual, etc.), country/location, volunteers versus paid staff, whether it directly performs conservation or is a network/fund/manager, financial model and current financial situation, official sponsors/partnerships, social profiles, and public professional contact information.
 
-Scoring rubric (100 points): mission/category 25, one qualifying community 20, recency/regularity 15, direct conservation delivery 15, financial/funding fit 10, public contactability 5, credibility/transparency/partnerships 10. A strong_fit normally scores 75+ and must satisfy both mission and community requirements. Use potential_fit for credible but incomplete evidence. Use not_a_fit when a mandatory requirement clearly fails.
+Scoring rubric (100 points): mission/category 25, one qualifying community 20, recency/regularity 15, direct conservation delivery 10, financial/funding fit 5, public contactability 5, credibility/transparency 5, accessibility for IdleForest now 15. A strong_fit normally scores 75+, must satisfy mission and community requirements, and cannot be unlikely_now. Use potential_fit for credible but incomplete evidence or nurture prospects. Use not_a_fit when a mandatory requirement clearly fails.
 
 Normalized fields:
 - organization_type must be the single best enum value.
@@ -282,11 +301,16 @@ Normalized fields:
 - activity_status: active for credible public activity within 90 days and a regular pattern; irregular for sporadic recent activity; inactive for no meaningful activity in 12 months; otherwise unknown.
 - annual_revenue_amount/currency/year must come from the latest public filing or annual report. Return null rather than estimating. Revenue and community bands must match the numeric values.
 - funding_status: stable, growing, fundraising, constrained, or unknown, based only on explicit current evidence.
+- accessibility_score measures whether a small company like IdleForest can realistically start a partnership now: small-company/startup partnership evidence 25, low minimum or pilot route 25, clear partnership contact 20, low bureaucracy/fast decision path 15, ability to fund a named project directly 15. Return null when public evidence is insufficient.
+- accessibility_tier: ready_now for score 70+ with a credible low-friction route; nurture for 40–69 or moderate institutional friction; unlikely_now below 40 or when partnerships are institutional-only, tender/procurement-led, require large minimums, or depend heavily on state programmes without a flexible corporate route; otherwise unknown.
+- state_dependency: high when funding/delivery is dominated by governments, public tenders, EU/UN programmes, or state agreements; medium when material but not exclusive; low when independent corporate/donor/project routes are clear; otherwise unknown.
+- small_company_signal: positive only with evidence of SME/startup/small-donor collaboration; negative with explicit high minimums or institutional-only routes; otherwise unknown.
 
 Rules:
 - Today is ${today}. Prefer recent primary sources, official profiles, current reports, registries, and reputable reporting.
 - Do not guess unsupported organizational or financial facts. Use "Unknown — not publicly verified" and add the gap to risks.
-- This is a metrics extraction and scoring task, not a report. Summary must be one plain-language sentence of at most 160 characters. Location must be only "City/Region, Country"; country_code must be ISO alpha-2; structure, operator_type, team_model, financial_situation, activity_summary, fit reasons, and risks must each be terse labels or short facts, never paragraphs.
+- Do not assume a foundation is accessible merely because it accepts donations. Look for pilots, corporate partnerships, SME/startup examples, selectable projects, public sponsorship routes, decision-maker contacts, minimum commitments, procurement requirements, and institutional dependencies.
+- This is a metrics extraction and scoring task, not a report. Summary must be one plain-language sentence of at most 160 characters. Location must be only "City/Region, Country"; country_code must be ISO alpha-2; structure, operator_type, team_model, financial_situation, activity_summary, accessibility_summary, fit reasons, and risks must each be terse labels or short facts, never paragraphs.
 - Return at most three fit reasons and three risks, each under 100 characters. Evidence belongs in sources, not narrative fields.
 - Research Instagram, YouTube, and Facebook audience sizes explicitly for every organization that has those profiles. Run focused searches for each platform and inspect the official profile plus current indexed results.
 - Record each platform separately. Never combine audiences. Convert displayed values such as 4.2K or 18.7K to integers such as 4200 or 18700.
@@ -295,7 +319,7 @@ Rules:
 - Set checked_at to ${today}. Make count_note a short plain-language evidence note and count_source_url the page that supports the number.
 - Financial situation must distinguish verified facts from reasonable inference.
 - Contacts must be public organization/professional channels only; never infer private addresses.
-- Source links must directly support the record and should include the official website plus the best evidence for community, activity, and finances.
+- Source links must directly support the record and should include the official website plus the best evidence for community, activity, finances, and partnership accessibility.
 - Draft a concise, warm outreach email from IdleForest. Reference a specific verified project or strength and propose a low-friction introductory call. Do not make unsupported claims or promise funding.
 - Return the submitted organization URL in the url field.`
 
@@ -361,6 +385,17 @@ Rules:
             saved.push(data as PartnerLead)
         }
 
+        const researchedDomains = analyses.map(analysis => normalizeHost(analysis.url)).filter(Boolean)
+        if (researchedDomains.length > 0) {
+            const { error: discoveryUpdateError } = await admin
+                .from('partner_discoveries')
+                .update({ status: 'researched' })
+                .in('domain', researchedDomains)
+            if (discoveryUpdateError && !['42P01', 'PGRST205'].includes(discoveryUpdateError.code)) {
+                console.error('Could not update partner discovery status:', discoveryUpdateError)
+            }
+        }
+
         return NextResponse.json({ partners: saved })
     } catch (error) {
         console.error('Could not parse or save partner research:', error)
@@ -368,6 +403,12 @@ Rules:
         if (databaseError.code === '42P01') {
             return NextResponse.json(
                 { error: 'Partner storage is not initialized yet. Apply the 20260718 partner leads migration, then try again.' },
+                { status: 503 }
+            )
+        }
+        if (databaseError.code === 'PGRST204' && databaseError.message?.includes('accessibility_')) {
+            return NextResponse.json(
+                { error: 'Partner accessibility fields are not initialized yet. Apply the 20260720 accessibility migration, then try again.' },
                 { status: 503 }
             )
         }

@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
-import type { PartnerDiscoveryCandidate } from '@/lib/partner-leads'
+import type { PartnerDiscoveryCandidate, PartnerDiscoveryStatus, PartnerDiscoveryUsage } from '@/lib/partner-leads'
 
 export const maxDuration = 180
 
 const ADMIN_SESSION_COOKIE = 'admin_session'
 const DEFAULT_RESULT_COUNT = 6
 const MAX_RESULT_COUNT = 8
+const MAX_EXCLUDED_URLS = 200
 const nullableInteger = { type: ['integer', 'null'] }
+
+const modelPricing: Record<string, { input: number; cachedInput: number; output: number }> = {
+    'gpt-5.6-sol': { input: 5, cachedInput: 0.5, output: 30 },
+    'gpt-5.6-terra': { input: 2.5, cachedInput: 0.25, output: 15 },
+    'gpt-5.6-luna': { input: 1, cachedInput: 0.1, output: 6 },
+}
 
 const candidateSchema = {
     type: 'object',
@@ -25,6 +32,11 @@ const candidateSchema = {
             enum: ['direct_operator', 'land_owner_manager', 'project_network', 'grantmaker_funder', 'research_education', 'advocacy', 'mixed', 'unknown'],
         },
         discovery_score: { type: 'integer', minimum: 0, maximum: 100 },
+        accessibility_score: { type: 'integer', minimum: 0, maximum: 100 },
+        accessibility_tier: { type: 'string', enum: ['ready_now', 'nurture', 'unlikely_now', 'unknown'] },
+        accessibility_summary: { type: 'string' },
+        state_dependency: { type: 'string', enum: ['low', 'medium', 'high', 'unknown'] },
+        small_company_signal: { type: 'string', enum: ['positive', 'negative', 'unknown'] },
         community_platform: { type: 'string' },
         community_size: nullableInteger,
         community_source_url: { type: 'string' },
@@ -47,7 +59,8 @@ const candidateSchema = {
     },
     required: [
         'url', 'name', 'summary', 'location', 'country_code', 'category', 'delivery_model',
-        'discovery_score', 'community_platform', 'community_size', 'community_source_url',
+        'discovery_score', 'accessibility_score', 'accessibility_tier', 'accessibility_summary',
+        'state_dependency', 'small_company_signal', 'community_platform', 'community_size', 'community_source_url',
         'activity_status', 'activity_signal', 'why_fit', 'verification_gaps', 'sources',
     ],
 }
@@ -93,6 +106,68 @@ function getOutputText(payload: Record<string, unknown>) {
     return ''
 }
 
+function isAdminSession(cookieValue: string | undefined) {
+    const sessionSecret = process.env.ADMIN_SESSION_SECRET
+    return Boolean(sessionSecret && cookieValue === sessionSecret)
+}
+
+function isMissingDiscoveryTable(error: { code?: string; message?: string } | null) {
+    return Boolean(error && (
+        error.code === '42P01'
+        || error.code === 'PGRST205'
+        || error.message?.includes("partner_discoveries") && error.message.includes('schema cache')
+    ))
+}
+
+function getSearchCallCount(payload: Record<string, unknown>) {
+    const output = Array.isArray(payload.output) ? payload.output : []
+    return output.filter(item => {
+        if (!item || typeof item !== 'object' || (item as { type?: string }).type !== 'web_search_call') return false
+        const action = (item as { action?: unknown }).action
+        return Boolean(action && typeof action === 'object' && (action as { type?: string }).type === 'search')
+    }).length
+}
+
+function getUsage(payload: Record<string, unknown>, model: string): PartnerDiscoveryUsage {
+    const usage = payload.usage && typeof payload.usage === 'object'
+        ? payload.usage as {
+            input_tokens?: number
+            output_tokens?: number
+            input_tokens_details?: { cached_tokens?: number }
+        }
+        : {}
+    const inputTokens = Number(usage.input_tokens) || 0
+    const outputTokens = Number(usage.output_tokens) || 0
+    const cachedInputTokens = Math.min(inputTokens, Number(usage.input_tokens_details?.cached_tokens) || 0)
+    const searchCalls = getSearchCallCount(payload)
+    const pricing = modelPricing[model]
+    const estimatedCost = pricing
+        ? ((inputTokens - cachedInputTokens) * pricing.input
+            + cachedInputTokens * pricing.cachedInput
+            + outputTokens * pricing.output) / 1_000_000
+            + searchCalls * 0.01
+        : null
+
+    return {
+        model,
+        input_tokens: inputTokens,
+        cached_input_tokens: cachedInputTokens,
+        output_tokens: outputTokens,
+        search_calls: searchCalls,
+        estimated_cost_usd: estimatedCost === null ? null : Number(estimatedCost.toFixed(6)),
+    }
+}
+
+function candidateToRow(candidate: PartnerDiscoveryCandidate, focus: string) {
+    return {
+        domain: normalizeHost(candidate.url),
+        ...candidate,
+        focus,
+        status: 'discovered' as const,
+        last_discovered_at: new Date().toISOString(),
+    }
+}
+
 function compactText(value: string, maxLength: number) {
     const normalized = value.replace(/\s+/g, ' ').trim()
     if (normalized.length <= maxLength) return normalized
@@ -125,8 +200,10 @@ function cleanCandidate(candidate: PartnerDiscoveryCandidate): PartnerDiscoveryC
     const communitySize = candidate.community_size !== null && Number.isFinite(candidate.community_size)
         ? Math.max(0, Math.round(candidate.community_size))
         : null
+    const accessibilityScore = Math.max(0, Math.min(100, Math.round(candidate.accessibility_score)))
 
     if (communitySize !== null && (communitySize < 4_000 || communitySize > 500_000)) return null
+    if (accessibilityScore < 40 || !['ready_now', 'nurture'].includes(candidate.accessibility_tier)) return null
 
     return {
         ...candidate,
@@ -137,6 +214,8 @@ function cleanCandidate(candidate: PartnerDiscoveryCandidate): PartnerDiscoveryC
         country_code: /^[A-Za-z]{2}$/.test(candidate.country_code) ? candidate.country_code.toUpperCase() : 'XX',
         category: candidate.category.slice(0, 3).map(value => compactText(value, 40)),
         discovery_score: Math.max(0, Math.min(100, Math.round(candidate.discovery_score))),
+        accessibility_score: accessibilityScore,
+        accessibility_summary: compactText(candidate.accessibility_summary, 110),
         community_platform: compactText(candidate.community_platform, 30) || 'Unknown',
         community_size: communitySize,
         community_source_url: isHttpUrl(candidate.community_source_url) ? candidate.community_source_url : '',
@@ -147,10 +226,60 @@ function cleanCandidate(candidate: PartnerDiscoveryCandidate): PartnerDiscoveryC
     }
 }
 
-export async function POST(request: NextRequest) {
-    const sessionSecret = process.env.ADMIN_SESSION_SECRET
+export async function GET(request: NextRequest) {
     const cookieStore = await cookies()
-    if (!sessionSecret || cookieStore.get(ADMIN_SESSION_COOKIE)?.value !== sessionSecret) {
+    if (!isAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const requestedLimit = Number(request.nextUrl.searchParams.get('limit') || 100)
+    const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(300, Math.round(requestedLimit))) : 100
+    const { data, error } = await createAdminClient()
+        .from('partner_discoveries')
+        .select('*')
+        .order('last_discovered_at', { ascending: false })
+        .limit(limit)
+
+    if (error) {
+        if (isMissingDiscoveryTable(error)) {
+            return NextResponse.json({ candidates: [], setup_required: true })
+        }
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ candidates: data || [] })
+}
+
+export async function PATCH(request: NextRequest) {
+    const cookieStore = await cookies()
+    if (!isAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    let url = ''
+    let status: PartnerDiscoveryStatus = 'discovered'
+    try {
+        const body = await request.json() as { url?: unknown; status?: unknown }
+        if (typeof body.url !== 'string' || !normalizeHost(body.url)) throw new Error('A valid candidate URL is required')
+        if (!['discovered', 'researched', 'dismissed'].includes(String(body.status))) throw new Error('Invalid discovery status')
+        url = body.url
+        status = body.status as PartnerDiscoveryStatus
+    } catch (error) {
+        return NextResponse.json({ error: error instanceof Error ? error.message : 'Invalid update' }, { status: 400 })
+    }
+
+    const { error } = await createAdminClient()
+        .from('partner_discoveries')
+        .update({ status })
+        .eq('domain', normalizeHost(url))
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+}
+
+export async function POST(request: NextRequest) {
+    const cookieStore = await cookies()
+    if (!isAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -161,25 +290,42 @@ export async function POST(request: NextRequest) {
 
     let focus = ''
     let count = DEFAULT_RESULT_COUNT
+    let requestExcludeUrls: string[] = []
     try {
-        const body = await request.json() as { focus?: unknown; count?: unknown }
+        const body = await request.json() as { focus?: unknown; count?: unknown; exclude_urls?: unknown }
         focus = typeof body.focus === 'string' ? body.focus.replace(/\s+/g, ' ').trim().slice(0, 240) : ''
         if (body.count !== undefined) {
             const requestedCount = Number(body.count)
             if (!Number.isFinite(requestedCount)) throw new Error('count must be a number')
             count = Math.max(3, Math.min(MAX_RESULT_COUNT, Math.round(requestedCount)))
         }
+        if (body.exclude_urls !== undefined && !Array.isArray(body.exclude_urls)) {
+            throw new Error('exclude_urls must be an array')
+        }
+        requestExcludeUrls = Array.isArray(body.exclude_urls)
+            ? body.exclude_urls.filter((value): value is string => typeof value === 'string').slice(0, MAX_EXCLUDED_URLS)
+            : []
     } catch (error) {
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Invalid discovery input' }, { status: 400 })
     }
 
     const admin = createAdminClient()
-    const { data: existing, error: existingError } = await admin.from('partner_leads').select('url').limit(500)
+    const [{ data: existing, error: existingError }, { data: discovered, error: discoveredError }] = await Promise.all([
+        admin.from('partner_leads').select('url').limit(1000),
+        admin.from('partner_discoveries').select('domain').order('last_discovered_at', { ascending: false }).limit(5000),
+    ])
     if (existingError && existingError.code !== '42P01') {
         return NextResponse.json({ error: existingError.message }, { status: 500 })
     }
-    const existingHosts = new Set((existing || []).map(item => normalizeHost(item.url)).filter(Boolean))
-    const exclusionList = Array.from(existingHosts).slice(0, 250)
+    if (discoveredError && !isMissingDiscoveryTable(discoveredError)) {
+        return NextResponse.json({ error: discoveredError.message }, { status: 500 })
+    }
+    const excludedHosts = new Set([
+        ...(existing || []).map(item => normalizeHost(item.url)),
+        ...(discovered || []).map(item => item.domain),
+        ...requestExcludeUrls.map(normalizeHost),
+    ].filter(Boolean))
+    const exclusionList = Array.from(excludedHosts).slice(0, 1000)
     const today = new Date().toISOString().slice(0, 10)
 
     const instructions = `You find new potential conservation partners for IdleForest using live web search.
@@ -190,15 +336,26 @@ Mandatory fit:
 - Mission: reforestation, landscape restoration, animal conservation, animal rewilding, or conservation land acquisition.
 - Audience: credible evidence that at least one individual platform has 4,000–500,000 followers or members. Never combine platforms. If a likely fit has no defensible current number, community_size must be null and the gap must be explicit.
 - Activity: recent and regular public work, preferably within 90 days.
-- Prefer direct field operators and land owners/managers over large umbrella funds or global institutions.
+- Accessibility now: IdleForest is a small company and should have a realistic route to a pilot, donation, sponsorship, or project partnership without a large tender or institutional minimum.
+- Prefer direct field operators, land owners/managers, and flexible mid-sized organizations over large state-dependent foundations, umbrella funds, or global institutions.
 
-Discovery score (100): mission 35, qualifying audience signal 25, recent activity 20, direct delivery 10, public contactability 10. This is a preliminary discovery score, not the final partner qualification score.
+Discovery score (100): mission 30, qualifying audience signal 20, recent activity 15, direct delivery 10, accessibility for IdleForest now 25. This is a preliminary discovery score, not the final partner qualification score.
+
+Accessibility score (100): evidence of small-company/startup partnerships 25, low minimum or pilot route 25, clear partnership owner/contact 20, low bureaucracy/fast decision path 15, ability to fund a named project directly 15.
+- ready_now: score 70+ with a credible low-friction route.
+- nurture: score 40–69 or some institutional friction but a possible route.
+- unlikely_now: below 40, institutional-only, tender/procurement-led, high minimum, or heavily state-dependent with no flexible corporate route.
+- state_dependency measures how much delivery/funding appears tied to governments, public tenders, or institutional programmes.
+- small_company_signal is positive only with evidence of SME/startup/small-donor collaboration; negative with explicit large minimums or institutional-only routes; otherwise unknown.
 
 Rules:
 - Today is ${today}. Use recent primary sources and official profiles wherever possible.
 - Exclude any organization whose domain appears in the exclusion list.
 - Do not invent follower counts, activity, projects, or locations. Use null/unknown and add a verification gap.
-- summary, why_fit, and activity_signal must each be one short factual sentence, never a paragraph.
+- Do not assume a foundation is accessible merely because it accepts donations. Look for evidence of pilots, corporate partnerships, SME/startup work, selectable projects, published sponsorship routes, or low minimums.
+- Deprioritize organizations that mainly work through governments, EU/UN programmes, formal procurement, or major corporations unless a separate flexible small-company route is publicly evidenced.
+- Normally return only ready_now or nurture candidates. Include unlikely_now only when its strategic value is exceptional and clearly label the barrier.
+- summary, why_fit, activity_signal, and accessibility_summary must each be one short factual sentence, never a paragraph.
 - location must be only "City/Region, Country" and country_code must be ISO alpha-2.
 - community_source_url must directly support the audience number; return an empty string when no number is defensible.
 - Include 2–5 direct evidence links per candidate, including the official website.
@@ -207,8 +364,9 @@ Rules:
 
     const input = [
         focus ? `Search focus from the team: ${focus}` : 'Search focus: worldwide; diversify across eligible conservation categories.',
-        exclusionList.length ? `Already in the pipeline — exclude these domains:\n${exclusionList.join('\n')}` : 'The current pipeline is empty.',
+        exclusionList.length ? `Already surfaced or in the pipeline — exclude these domains:\n${exclusionList.join('\n')}` : 'No organizations have been surfaced yet.',
     ].join('\n\n')
+    const model = process.env.OPENAI_PARTNER_DISCOVERY_MODEL || 'gpt-5.6-luna'
 
     let openAIResponse: Response
     try {
@@ -219,7 +377,7 @@ Rules:
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: process.env.OPENAI_PARTNER_MODEL || 'gpt-5.6',
+                model,
                 instructions,
                 input,
                 tools: [{ type: 'web_search', search_context_size: 'high' }],
@@ -253,7 +411,7 @@ Rules:
         const parsed = JSON.parse(getOutputText(payload)) as { candidates: PartnerDiscoveryCandidate[] }
         if (!Array.isArray(parsed.candidates)) throw new Error('Discovery returned an invalid shortlist')
 
-        const seen = new Set(existingHosts)
+        const seen = new Set(excludedHosts)
         const candidates = parsed.candidates
             .map(cleanCandidate)
             .filter((candidate): candidate is PartnerDiscoveryCandidate => candidate !== null)
@@ -266,7 +424,24 @@ Rules:
             .sort((a, b) => b.discovery_score - a.discovery_score)
             .slice(0, count)
 
-        return NextResponse.json({ candidates })
+        let archiveSaved = true
+        if (candidates.length > 0 && !discoveredError) {
+            const { error: archiveError } = await admin
+                .from('partner_discoveries')
+                .upsert(candidates.map(candidate => candidateToRow(candidate, focus)), { onConflict: 'domain' })
+            if (archiveError) {
+                archiveSaved = false
+                console.error('Could not archive partner discoveries:', archiveError)
+            }
+        } else if (isMissingDiscoveryTable(discoveredError)) {
+            archiveSaved = false
+        }
+
+        return NextResponse.json({
+            candidates,
+            usage: getUsage(payload, model),
+            archive_saved: archiveSaved,
+        })
     } catch (error) {
         console.error('Could not parse partner discovery:', error)
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Could not parse the discovery shortlist.' }, { status: 500 })

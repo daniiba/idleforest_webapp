@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
     AlertTriangle,
+    Archive,
     ArrowUpRight,
     Bell,
     Check,
@@ -31,8 +32,11 @@ import {
 import {
     PARTNER_RECOMMENDATION_LABELS,
     PARTNER_STATUS_LABELS,
+    type PartnerAccessibilityTier,
     type PartnerCommunityBand,
     type PartnerDiscoveryCandidate,
+    type PartnerDiscoveryRecord,
+    type PartnerDiscoveryUsage,
     type PartnerDeliveryModel,
     type PartnerLead,
     type PartnerLeadStatus,
@@ -85,6 +89,13 @@ const revenueBandLabels: Record<PartnerRevenueBand, string> = {
     unknown: 'Unknown revenue',
 }
 
+const accessibilityTierLabels: Record<PartnerAccessibilityTier, string> = {
+    ready_now: 'Ready now',
+    nurture: 'Nurture',
+    unlikely_now: 'Unlikely now',
+    unknown: 'Unknown access',
+}
+
 function formatFollowerCount(value: number | null, quality?: 'verified' | 'estimated' | 'unavailable') {
     if (value === null) return 'No count found'
     const formatted = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
@@ -113,6 +124,22 @@ function getCommunityMax(lead: PartnerLead) {
     return counts.length ? Math.max(...counts) : null
 }
 
+function getCommunityBandFromValue(value: number | null): PartnerCommunityBand {
+    if (value === null) return 'unknown'
+    if (value < 4_000) return 'under_4k'
+    if (value < 25_000) return '4k_25k'
+    if (value < 100_000) return '25k_100k'
+    if (value <= 500_000) return '100k_500k'
+    return 'over_500k'
+}
+
+function formatAccessibility(lead: PartnerLead) {
+    const tier = accessibilityTierLabels[lead.accessibility_tier || 'unknown']
+    return lead.accessibility_score === null || lead.accessibility_score === undefined
+        ? tier
+        : `${lead.accessibility_score}/100 · ${tier}`
+}
+
 function getEmail(lead: PartnerLead) {
     return lead.contacts.find(contact => contact.type.toLowerCase() === 'email' || contact.value.includes('@'))?.value
 }
@@ -131,6 +158,9 @@ function friendlyError(error: unknown, fallback: string) {
     const message = error instanceof Error ? error.message : fallback
     if (message.includes('partner_leads') && message.includes('does not exist')) {
         return 'Partner storage is not initialized yet. Apply the 20260718 partner leads migration, then refresh this tab.'
+    }
+    if (message.includes('accessibility_score') || message.includes('accessibility_tier')) {
+        return 'Partner accessibility fields are not initialized yet. Apply the 20260720 accessibility migration, then refresh this tab.'
     }
     return message
 }
@@ -151,6 +181,28 @@ function compactText(value: string, maxLength = 96) {
     return `${shortened.slice(0, lastSpace > 60 ? lastSpace : maxLength).trim()}…`
 }
 
+function discoveryDomain(url: string) {
+    try {
+        return new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`).hostname.toLowerCase().replace(/^www\./, '')
+    } catch {
+        return url.toLowerCase()
+    }
+}
+
+function mergeDiscoveryCandidates(current: PartnerDiscoveryCandidate[], incoming: PartnerDiscoveryCandidate[]) {
+    const seen = new Set<string>()
+    return [...current, ...incoming].filter(candidate => {
+        const domain = discoveryDomain(candidate.url)
+        if (seen.has(domain)) return false
+        seen.add(domain)
+        return true
+    })
+}
+
+function formatDiscoveryCost(value: number) {
+    return value < 0.01 ? '<$0.01' : `$${value.toFixed(2)}`
+}
+
 export default function PartnerCommandCenter() {
     const [leads, setLeads] = useState<PartnerLead[]>([])
     const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -158,11 +210,22 @@ export default function PartnerCommandCenter() {
     const [urlInput, setUrlInput] = useState('')
     const [discoveryFocus, setDiscoveryFocus] = useState('')
     const [discoveryCandidates, setDiscoveryCandidates] = useState<PartnerDiscoveryCandidate[]>([])
+    const [discoveryUsage, setDiscoveryUsage] = useState<PartnerDiscoveryUsage | null>(null)
+    const [discoverySessionCost, setDiscoverySessionCost] = useState(0)
+    const [archiveCandidates, setArchiveCandidates] = useState<PartnerDiscoveryRecord[]>([])
+    const [isArchiveOpen, setIsArchiveOpen] = useState(false)
+    const [isArchiveLoaded, setIsArchiveLoaded] = useState(false)
+    const [isLoadingArchive, setIsLoadingArchive] = useState(false)
+    const [archiveSearch, setArchiveSearch] = useState('')
+    const [archiveAccessibility, setArchiveAccessibility] = useState<'all' | PartnerAccessibilityTier>('all')
+    const [archiveDelivery, setArchiveDelivery] = useState<'all' | PartnerDeliveryModel>('all')
+    const [archiveCommunity, setArchiveCommunity] = useState<'all' | PartnerCommunityBand>('all')
     const [search, setSearch] = useState('')
     const [statusFilter, setStatusFilter] = useState<'all' | PartnerLeadStatus>('all')
     const [deliveryFilter, setDeliveryFilter] = useState<'all' | PartnerDeliveryModel>('all')
     const [communityFilter, setCommunityFilter] = useState<'all' | PartnerCommunityBand>('all')
     const [revenueFilter, setRevenueFilter] = useState<'all' | PartnerRevenueBand>('all')
+    const [accessibilityFilter, setAccessibilityFilter] = useState<'all' | PartnerAccessibilityTier>('all')
     const [isLoading, setIsLoading] = useState(true)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [isDiscovering, setIsDiscovering] = useState(false)
@@ -204,13 +267,14 @@ export default function PartnerCommandCenter() {
             const deliveryMatches = deliveryFilter === 'all' || (lead.delivery_model || 'unknown') === deliveryFilter
             const communityMatches = communityFilter === 'all' || (lead.community_band || 'unknown') === communityFilter
             const revenueMatches = revenueFilter === 'all' || (lead.revenue_band || 'unknown') === revenueFilter
+            const accessibilityMatches = accessibilityFilter === 'all' || (lead.accessibility_tier || 'unknown') === accessibilityFilter
             const searchMatches = !query || [lead.name, lead.url, lead.location, lead.country_code, lead.organization_type, ...lead.category]
                 .join(' ')
                 .toLowerCase()
                 .includes(query)
-            return statusMatches && deliveryMatches && communityMatches && revenueMatches && searchMatches
+            return statusMatches && deliveryMatches && communityMatches && revenueMatches && accessibilityMatches && searchMatches
         })
-    }, [leads, search, statusFilter, deliveryFilter, communityFilter, revenueFilter])
+    }, [leads, search, statusFilter, deliveryFilter, communityFilter, revenueFilter, accessibilityFilter])
 
     const stats = useMemo(() => ({
         pipeline: leads.filter(lead => !['rejected', 'partner'].includes(lead.status)).length,
@@ -218,6 +282,20 @@ export default function PartnerCommandCenter() {
         contacted: leads.filter(lead => ['contacted', 'follow_up', 'partner'].includes(lead.status)).length,
         due: leads.filter(lead => lead.status !== 'rejected' && isReminderDue(lead.reminder_at)).length,
     }), [leads])
+
+    const filteredArchive = useMemo(() => {
+        const query = archiveSearch.trim().toLowerCase()
+        return archiveCandidates.filter(candidate => {
+            const accessibilityMatches = archiveAccessibility === 'all' || candidate.accessibility_tier === archiveAccessibility
+            const deliveryMatches = archiveDelivery === 'all' || candidate.delivery_model === archiveDelivery
+            const communityMatches = archiveCommunity === 'all' || getCommunityBandFromValue(candidate.community_size) === archiveCommunity
+            const searchMatches = !query || [candidate.name, candidate.url, candidate.location, candidate.delivery_model, ...candidate.category]
+                .join(' ')
+                .toLowerCase()
+                .includes(query)
+            return accessibilityMatches && deliveryMatches && communityMatches && searchMatches
+        })
+    }, [archiveCandidates, archiveSearch, archiveAccessibility, archiveDelivery, archiveCommunity])
 
     const patchLead = async (
         id: string,
@@ -287,7 +365,46 @@ export default function PartnerCommandCenter() {
         void researchUrls(urls, true)
     }
 
-    const discoverPartners = async () => {
+    const loadDiscoveryArchive = async (force = false) => {
+        if ((!force && isArchiveLoaded) || isLoadingArchive) return
+        setIsLoadingArchive(true)
+        setError('')
+        try {
+            const response = await fetch('/api/admin/partners/discover?limit=300')
+            const result = await response.json() as { candidates?: PartnerDiscoveryRecord[]; setup_required?: boolean; error?: string }
+            if (!response.ok || !result.candidates) throw new Error(result.error || 'Could not load the discovery archive.')
+            setArchiveCandidates(result.candidates)
+            setIsArchiveLoaded(true)
+            if (result.setup_required) {
+                setError('The discovery archive is not initialized yet. Apply the 20260720 accessibility migration, then refresh this tab.')
+            }
+        } catch (archiveError) {
+            setError(friendlyError(archiveError, 'Could not load the discovery archive.'))
+        } finally {
+            setIsLoadingArchive(false)
+        }
+    }
+
+    const toggleDiscoveryArchive = () => {
+        const opening = !isArchiveOpen
+        setIsArchiveOpen(opening)
+        if (opening) void loadDiscoveryArchive()
+    }
+
+    const markDiscoveryStatus = async (url: string, status: 'researched' | 'dismissed') => {
+        setArchiveCandidates(current => current.map(candidate => candidate.domain === discoveryDomain(url) ? { ...candidate, status } : candidate))
+        try {
+            await fetch('/api/admin/partners/discover', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, status }),
+            })
+        } catch {
+            // The researched lead is already saved; archive status is only supporting metadata.
+        }
+    }
+
+    const discoverPartners = async (append = false) => {
         setIsDiscovering(true)
         setError('')
         setNotice('')
@@ -295,14 +412,31 @@ export default function PartnerCommandCenter() {
             const response = await fetch('/api/admin/partners/discover', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ focus: discoveryFocus, count: 6 }),
+                body: JSON.stringify({
+                    focus: discoveryFocus,
+                    count: 6,
+                    exclude_urls: discoveryCandidates.map(candidate => candidate.url),
+                }),
             })
-            const result = await response.json() as { candidates?: PartnerDiscoveryCandidate[]; error?: string }
+            const result = await response.json() as {
+                candidates?: PartnerDiscoveryCandidate[]
+                usage?: PartnerDiscoveryUsage
+                archive_saved?: boolean
+                error?: string
+            }
             if (!response.ok || !result.candidates) throw new Error(result.error || 'Partner discovery failed.')
 
-            setDiscoveryCandidates(result.candidates)
+            setDiscoveryCandidates(current => append ? mergeDiscoveryCandidates(current, result.candidates!) : result.candidates!)
+            if (result.usage) {
+                setDiscoveryUsage(result.usage)
+                if (result.usage.estimated_cost_usd !== null) {
+                    setDiscoverySessionCost(current => current + result.usage!.estimated_cost_usd!)
+                }
+            }
+            setIsArchiveLoaded(false)
+            if (isArchiveOpen) void loadDiscoveryArchive(true)
             setNotice(result.candidates.length
-                ? `${result.candidates.length} new potential partners found. Research only the ones worth adding.`
+                ? `${result.candidates.length} new potential partners found and ${result.archive_saved === false ? 'shown, but not archived — apply the latest migration' : 'saved to the discovery archive'}.`
                 : 'No new partners met the discovery threshold. Try a more specific region or category.')
         } catch (discoveryError) {
             setError(friendlyError(discoveryError, 'Partner discovery failed.'))
@@ -316,6 +450,7 @@ export default function PartnerCommandCenter() {
         try {
             const saved = await researchUrls([candidate.url])
             if (saved) {
+                void markDiscoveryStatus(candidate.url, 'researched')
                 setDiscoveryCandidates(current => current.filter(item => item.url !== candidate.url))
             }
         } finally {
@@ -330,6 +465,7 @@ export default function PartnerCommandCenter() {
         try {
             const saved = await researchUrls(urls)
             if (saved) {
+                urls.forEach(url => void markDiscoveryStatus(url, 'researched'))
                 const researched = new Set(urls)
                 setDiscoveryCandidates(current => current.filter(item => !researched.has(item.url)))
             }
@@ -402,20 +538,25 @@ export default function PartnerCommandCenter() {
                                     id="partner-discovery-focus"
                                     value={discoveryFocus}
                                     onChange={event => setDiscoveryFocus(event.target.value)}
-                                    onKeyDown={event => { if (event.key === 'Enter' && !isDiscovering && !isAnalyzing) void discoverPartners() }}
+                                    onKeyDown={event => { if (event.key === 'Enter' && !isDiscovering && !isAnalyzing) void discoverPartners(discoveryCandidates.length > 0) }}
                                     placeholder="e.g. Iberia · animal rewilding · direct operators"
                                     className="w-full border-2 border-black bg-neutral-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                                 />
                                 <div className="mt-3 flex items-center justify-between gap-3">
-                                    <span className="text-[11px] leading-tight text-neutral-500">Finds 6 new candidates. Deep research happens only after approval.</span>
+                                    <div className="space-y-1">
+                                        <span className="block text-[11px] leading-tight text-neutral-500">6 per batch · usually $0.10–$0.35 · saved automatically</span>
+                                        <button type="button" onClick={toggleDiscoveryArchive} className="inline-flex items-center gap-1 text-[11px] font-black text-blue-700 hover:underline">
+                                            <Archive className="h-3 w-3" /> {isArchiveOpen ? 'Hide archive' : 'Browse archive'}
+                                        </button>
+                                    </div>
                                     <button
                                         type="button"
-                                        onClick={() => void discoverPartners()}
+                                        onClick={() => void discoverPartners(discoveryCandidates.length > 0)}
                                         disabled={isDiscovering || isAnalyzing}
                                         className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
                                     >
                                         {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
-                                        {isDiscovering ? 'Searching…' : 'Find partners'}
+                                        {isDiscovering ? 'Searching…' : discoveryCandidates.length > 0 ? 'Find 6 more' : 'Find partners'}
                                     </button>
                                 </div>
                             </div>
@@ -461,16 +602,32 @@ export default function PartnerCommandCenter() {
                     <div className="flex flex-col gap-3 border-b-2 border-black pb-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
-                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential partners</h3>
-                            <p className="mt-1 text-xs text-neutral-600">Preliminary signals only. Full metrics are fetched when you add a candidate.</p>
+                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential partners · {discoveryCandidates.length}</h3>
+                            <p className="mt-1 text-xs text-neutral-600">Preliminary signals only. Everything here is already saved; full metrics are fetched when you add a candidate.</p>
+                            {discoveryUsage && (
+                                <p className="mt-1 text-[11px] font-bold text-neutral-500">
+                                    Last batch {discoveryUsage.estimated_cost_usd === null ? 'cost unavailable' : `≈${formatDiscoveryCost(discoveryUsage.estimated_cost_usd)}`}
+                                    {' · '}{discoveryUsage.search_calls} searches
+                                    {discoverySessionCost > 0 && ` · session ≈${formatDiscoveryCost(discoverySessionCost)}`}
+                                </p>
+                            )}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                             <button
                                 type="button"
                                 onClick={() => setDiscoveryCandidates([])}
                                 className="border-2 border-black bg-white px-3 py-2 text-xs font-black uppercase hover:bg-neutral-100"
                             >
-                                Clear
+                                Clear view
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => void discoverPartners(true)}
+                                disabled={isDiscovering || isAnalyzing}
+                                className="inline-flex items-center gap-2 border-2 border-black bg-white px-3 py-2 text-xs font-black uppercase hover:bg-neutral-100 disabled:opacity-50"
+                            >
+                                {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
+                                Find 6 more
                             </button>
                             <button
                                 type="button"
@@ -497,16 +654,21 @@ export default function PartnerCommandCenter() {
 
                                 <p className="mt-3 text-sm leading-snug text-neutral-700">{compactText(candidate.summary, 150)}</p>
 
-                                <div className="mt-3 grid grid-cols-2 border-2 border-black bg-neutral-50">
+                                <div className="mt-3 grid grid-cols-3 border-2 border-black bg-neutral-50">
                                     <div className="border-r-2 border-black p-2.5">
                                         <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Audience signal</p>
                                         <p className="mt-1 text-xs font-black">
                                             {candidate.community_size !== null ? `${formatFollowerCount(candidate.community_size, 'estimated')} · ${candidate.community_platform}` : 'Needs verification'}
                                         </p>
                                     </div>
-                                    <div className="p-2.5">
+                                    <div className="border-r-2 border-black p-2.5">
                                         <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Activity</p>
                                         <p className="mt-1 text-xs font-black">{humanize(candidate.activity_status)}</p>
+                                    </div>
+                                    <div className="p-2.5">
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Access now</p>
+                                        <p className="mt-1 text-xs font-black">{candidate.accessibility_score}/100</p>
+                                        <p className="mt-0.5 text-[9px] font-bold text-neutral-500">{accessibilityTierLabels[candidate.accessibility_tier]}</p>
                                     </div>
                                 </div>
 
@@ -525,6 +687,8 @@ export default function PartnerCommandCenter() {
                                     <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Why it surfaced</summary>
                                     <p className="mt-2 leading-relaxed">{candidate.why_fit}</p>
                                     <p className="mt-1 leading-relaxed"><span className="font-black">Activity:</span> {candidate.activity_signal}</p>
+                                    <p className="mt-1 leading-relaxed"><span className="font-black">Accessibility:</span> {candidate.accessibility_summary}</p>
+                                    <p className="mt-1 leading-relaxed"><span className="font-black">State dependency:</span> {humanize(candidate.state_dependency)} · <span className="font-black">Small-company evidence:</span> {humanize(candidate.small_company_signal)}</p>
                                     {candidate.sources.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
                                             {candidate.sources.slice(0, 3).map(source => (
@@ -551,6 +715,84 @@ export default function PartnerCommandCenter() {
                             </article>
                         ))}
                     </div>
+                </section>
+            )}
+
+            {isArchiveOpen && (
+                <section className="border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] md:p-5">
+                    <div className="flex flex-col gap-3 border-b-2 border-black pb-4 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Archive className="h-4 w-4" /> Saved discoveries</div>
+                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">Discovery archive · {archiveCandidates.length}</h3>
+                            <p className="mt-1 text-xs text-neutral-600">Candidates stay here even when you do not add them to the outreach pipeline.</p>
+                        </div>
+                        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_150px_170px_150px]">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                <input
+                                    value={archiveSearch}
+                                    onChange={event => setArchiveSearch(event.target.value)}
+                                    placeholder="Search saved discoveries"
+                                    className="w-full border-2 border-black bg-neutral-50 py-2 pl-9 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                />
+                            </div>
+                            <select
+                                value={archiveAccessibility}
+                                onChange={event => setArchiveAccessibility(event.target.value as 'all' | PartnerAccessibilityTier)}
+                                className="border-2 border-black bg-white px-2 py-2 text-xs font-bold"
+                            >
+                                <option value="all">All accessibility</option>
+                                {Object.entries(accessibilityTierLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                            <select value={archiveDelivery} onChange={event => setArchiveDelivery(event.target.value as 'all' | PartnerDeliveryModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All delivery models</option>
+                                {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                            <select value={archiveCommunity} onChange={event => setArchiveCommunity(event.target.value as 'all' | PartnerCommunityBand)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All audiences</option>
+                                {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    {isLoadingArchive ? (
+                        <div className="flex items-center justify-center gap-2 py-10 text-sm font-bold text-neutral-500"><Loader2 className="h-4 w-4 animate-spin" /> Loading saved discoveries…</div>
+                    ) : filteredArchive.length === 0 ? (
+                        <p className="py-10 text-center text-sm text-neutral-500">No saved discoveries match these filters yet.</p>
+                    ) : (
+                        <div className="mt-4 grid gap-2 lg:grid-cols-2">
+                            {filteredArchive.map(candidate => (
+                                <article key={candidate.id} className="flex min-w-0 items-start gap-3 border-2 border-black bg-neutral-50 p-3">
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <a href={candidate.url} target="_blank" rel="noreferrer" className="truncate font-black hover:underline">{candidate.name}</a>
+                                            <span className="bg-white px-1.5 py-0.5 text-[10px] font-black uppercase">{candidate.discovery_score}/100</span>
+                                            <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${candidate.status === 'researched' ? 'bg-green-100' : 'bg-brand-yellow'}`}>
+                                                {candidate.status === 'researched' ? 'In pipeline' : accessibilityTierLabels[candidate.accessibility_tier]}
+                                            </span>
+                                        </div>
+                                        <p className="mt-1 truncate text-xs text-neutral-500">{candidate.location} · {deliveryLabels[candidate.delivery_model]}</p>
+                                        <p className="mt-1 text-xs text-neutral-700">{compactText(candidate.summary, 120)}</p>
+                                        <p className="mt-2 text-[10px] font-bold uppercase tracking-wide text-neutral-500">
+                                            {candidate.community_size === null ? 'Audience unverified' : `${formatFollowerCount(candidate.community_size, 'estimated')} on ${candidate.community_platform}`}
+                                            {' · '}Access {candidate.accessibility_score}/100
+                                        </p>
+                                    </div>
+                                    {candidate.status !== 'researched' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => void researchCandidate(candidate)}
+                                            disabled={isAnalyzing || researchingCandidateUrl !== null}
+                                            className="inline-flex flex-none items-center gap-1 border-2 border-black bg-brand-yellow px-2 py-1.5 text-[10px] font-black uppercase disabled:opacity-50"
+                                        >
+                                            {researchingCandidateUrl === candidate.url ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
+                                            Research
+                                        </button>
+                                    )}
+                                </article>
+                            ))}
+                        </div>
+                    )}
                 </section>
             )}
 
@@ -604,6 +846,10 @@ export default function PartnerCommandCenter() {
                                 <option value="all">All revenue bands</option>
                                 {Object.entries(revenueBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
+                            <select value={accessibilityFilter} onChange={event => setAccessibilityFilter(event.target.value as 'all' | PartnerAccessibilityTier)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <option value="all">All accessibility</option>
+                                {Object.entries(accessibilityTierLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                            </select>
                         </div>
                         <button type="button" onClick={loadLeads} className="flex w-full items-center justify-center gap-2 border-2 border-black bg-white p-2 text-xs font-black uppercase hover:bg-brand-yellow" aria-label="Refresh leads">
                             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> Refresh data
@@ -632,6 +878,9 @@ export default function PartnerCommandCenter() {
                                         <p className="mt-0.5 truncate text-xs text-neutral-500">{lead.location}</p>
                                         <div className="mt-2 flex items-center gap-2">
                                             <span className="border border-black bg-white px-1.5 py-0.5 text-[10px] font-black">{lead.score}/100</span>
+                                            {lead.accessibility_score !== null && lead.accessibility_score !== undefined && (
+                                                <span className="border border-black bg-green-50 px-1.5 py-0.5 text-[10px] font-black">Access {lead.accessibility_score}</span>
+                                            )}
                                             <span className={`border border-black px-1.5 py-0.5 text-[10px] font-black uppercase ${statusStyles[lead.status]}`}>{PARTNER_STATUS_LABELS[lead.status]}</span>
                                         </div>
                                     </div>
@@ -739,7 +988,7 @@ export default function PartnerCommandCenter() {
                                         <div className="flex flex-wrap gap-2">
                                             {selected.category.map(category => <span key={category} className="border-2 border-black bg-green-100 px-2 py-1 text-xs font-bold">{category}</span>)}
                                         </div>
-                                        <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+                                        <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
                                             {[
                                                 ['Organization', humanize(selected.organization_type)],
                                                 ['Delivery', deliveryLabels[selected.delivery_model || 'unknown']],
@@ -749,6 +998,7 @@ export default function PartnerCommandCenter() {
                                                 ['Revenue', formatRevenue(selected)],
                                                 ['Funding', humanize(selected.funding_status)],
                                                 ['Activity', humanize(selected.activity_status)],
+                                                ['Accessibility', formatAccessibility(selected)],
                                             ].map(([label, value]) => (
                                                 <div key={label} className="border-2 border-black bg-neutral-50 p-3">
                                                     <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{label}</p>
@@ -811,6 +1061,17 @@ export default function PartnerCommandCenter() {
                                                 <p className="flex items-center gap-2 text-xs font-black uppercase"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps</p>
                                                 <ul className="mt-3 space-y-2 text-sm">{selected.risks.map(risk => <li key={risk}>! {risk}</li>)}</ul>
                                             </div>
+                                        </div>
+                                    </section>
+                                    <section className="border-t-2 border-black pt-5">
+                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><Target className="h-5 w-5" /> Accessibility now</h4>
+                                        <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
+                                            <div className="grid gap-3 sm:grid-cols-3">
+                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Score & tier</p><p className="mt-1 text-sm font-black">{formatAccessibility(selected)}</p></div>
+                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">State dependency</p><p className="mt-1 text-sm font-black">{humanize(selected.state_dependency)}</p></div>
+                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Small-company evidence</p><p className="mt-1 text-sm font-black">{humanize(selected.small_company_signal)}</p></div>
+                                            </div>
+                                            <p className="mt-3 text-sm leading-relaxed text-neutral-700">{selected.accessibility_summary || 'Not researched yet. Refresh this partner after applying the accessibility migration.'}</p>
                                         </div>
                                     </section>
                                     <section className="border-t-2 border-black pt-5">

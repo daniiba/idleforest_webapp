@@ -14,6 +14,10 @@ export type PartnerCommunityBand = 'under_4k' | '4k_25k' | '25k_100k' | '100k_50
 export type PartnerRevenueBand = 'under_100k' | '100k_1m' | '1m_10m' | '10m_plus' | 'unknown'
 export type PartnerFundingStatus = 'stable' | 'growing' | 'fundraising' | 'constrained' | 'unknown'
 export type PartnerActivityStatus = 'active' | 'irregular' | 'inactive' | 'unknown'
+export type PartnerAccessibilityTier = 'ready_now' | 'nurture' | 'unlikely_now' | 'unknown'
+export type PartnerStateDependency = 'low' | 'medium' | 'high' | 'unknown'
+export type PartnerSmallCompanySignal = 'positive' | 'negative' | 'unknown'
+export type PartnerDiscoveryStatus = 'discovered' | 'researched' | 'dismissed'
 
 export interface PartnerCommunity {
     platform: string
@@ -46,6 +50,11 @@ export interface PartnerDiscoveryCandidate {
     category: string[]
     delivery_model: PartnerDeliveryModel
     discovery_score: number
+    accessibility_score: number
+    accessibility_tier: PartnerAccessibilityTier
+    accessibility_summary: string
+    state_dependency: PartnerStateDependency
+    small_company_signal: PartnerSmallCompanySignal
     community_platform: string
     community_size: number | null
     community_source_url: string
@@ -54,6 +63,24 @@ export interface PartnerDiscoveryCandidate {
     why_fit: string
     verification_gaps: string[]
     sources: PartnerSource[]
+}
+
+export interface PartnerDiscoveryRecord extends PartnerDiscoveryCandidate {
+    id: string
+    domain: string
+    focus: string
+    status: PartnerDiscoveryStatus
+    first_discovered_at: string
+    last_discovered_at: string
+}
+
+export interface PartnerDiscoveryUsage {
+    model: string
+    input_tokens: number
+    cached_input_tokens: number
+    output_tokens: number
+    search_calls: number
+    estimated_cost_usd: number | null
 }
 
 export interface PartnerLead {
@@ -89,6 +116,11 @@ export interface PartnerLead {
     activity_summary: string
     last_activity: string
     activity_status: PartnerActivityStatus
+    accessibility_score: number | null
+    accessibility_tier: PartnerAccessibilityTier
+    accessibility_summary: string
+    state_dependency: PartnerStateDependency
+    small_company_signal: PartnerSmallCompanySignal
     fit_reasons: string[]
     risks: string[]
     outreach_angle: string
@@ -136,6 +168,11 @@ export interface PartnerAnalysis {
     activity_summary: string
     last_activity: string
     activity_status: PartnerActivityStatus
+    accessibility_score: number | null
+    accessibility_tier: PartnerAccessibilityTier
+    accessibility_summary: string
+    state_dependency: PartnerStateDependency
+    small_company_signal: PartnerSmallCompanySignal
     fit_reasons: string[]
     risks: string[]
     outreach_angle: string
