@@ -236,56 +236,94 @@
         },
         {
             "month": "May 2026",
-            "installs": 145,
-            "uninstalls": 39,
-            "netGrowth": 106,
+            "installs": 195,
+            "uninstalls": 48,
+            "netGrowth": 147,
             "wauStart": 691,
-            "wauEnd": 818,
-            "wauAvg": 764,
+            "wauEnd": 859,
+            "wauAvg": 789,
             "reportedWauStart": 691,
-            "reportedWauEnd": 1679,
-            "reportedWauAvg": 1677,
+            "reportedWauEnd": 972,
+            "reportedWauAvg": 1495,
+            "isWauAdjusted": true
+        },
+        {
+            "month": "Jun 2026",
+            "installs": 168,
+            "uninstalls": 41,
+            "netGrowth": 127,
+            "wauStart": 864,
+            "wauEnd": 986,
+            "wauAvg": 927,
+            "reportedWauStart": 969,
+            "reportedWauEnd": 743,
+            "reportedWauAvg": 895,
+            "isWauAdjusted": true
+        },
+        {
+            "month": "Jul 2026",
+            "installs": 119,
+            "uninstalls": 29,
+            "netGrowth": 90,
+            "wauStart": 992,
+            "wauEnd": 1076,
+            "wauAvg": 1037,
+            "reportedWauStart": 734,
+            "reportedWauEnd": 769,
+            "reportedWauAvg": 747,
             "isWauAdjusted": true
         }
     ],
     "desktopData": [
         {
+            "month": "Dec 2025",
+            "wauAvg": 56
+        },
+        {
             "month": "Jan 2026",
-            "wauAvg": 49
+            "wauAvg": 91
         },
         {
             "month": "Feb 2026",
-            "wauAvg": 65
+            "wauAvg": 83
         },
         {
             "month": "Mar 2026",
-            "wauAvg": 62
+            "wauAvg": 105
         },
         {
             "month": "Apr 2026",
-            "wauAvg": 69
+            "wauAvg": 105
         },
         {
             "month": "May 2026",
-            "wauAvg": 75
+            "wauAvg": 130
+        },
+        {
+            "month": "Jun 2026",
+            "wauAvg": 179
+        },
+        {
+            "month": "Jul 2026",
+            "wauAvg": 191
         }
     ],
     "totals": {
-        "totalInstalls": 1837,
-        "totalUninstalls": 669,
-        "netUsers": 1168,
-        "currentWau": 818,
-        "reportedCurrentWau": 1679,
-        "peakWau": 818,
-        "peakWauDate": "May 21, 2026",
+        "totalInstalls": 2174,
+        "totalUninstalls": 748,
+        "netUsers": 1426,
+        "currentWau": 1076,
+        "reportedCurrentWau": 769,
+        "peakWau": 1076,
+        "peakWauDate": "Jul 21, 2026",
         "reportedPeakWau": 2199,
         "reportedPeakWauDate": "May 17, 2026"
     },
     "yearOverYear": {
-        "wauGrowth": "409x",
-        "wauGrowthPercent": 40800,
+        "wauGrowth": "538x",
+        "wauGrowthPercent": 53700,
         "startWau": 2,
-        "endWau": 818
+        "endWau": 1076
     },
     "wauAdjustment": {
         "enabled": true,
