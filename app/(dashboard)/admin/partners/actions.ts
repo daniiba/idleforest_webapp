@@ -1,7 +1,7 @@
 'use server'
 
 import { createAdminClient } from '@/lib/supabase/admin'
-import type { PartnerLead, PartnerLeadStatus } from '@/lib/partner-leads'
+import type { PartnerLead, PartnerLeadStatus, PartnerResearchTrack } from '@/lib/partner-leads'
 import { verifyAdminSession } from '../actions'
 
 async function requireAdmin() {
@@ -10,7 +10,7 @@ async function requireAdmin() {
     }
 }
 
-export async function getPartnerLeads(): Promise<{
+export async function getPartnerLeads(researchTrack: PartnerResearchTrack = 'idleforest'): Promise<{
     leads: PartnerLead[]
     setupRequired?: boolean
 }> {
@@ -19,6 +19,7 @@ export async function getPartnerLeads(): Promise<{
     const { data, error } = await createAdminClient()
         .from('partner_leads')
         .select('*')
+        .eq('research_track', researchTrack)
         .order('updated_at', { ascending: false })
 
     if (error) {

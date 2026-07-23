@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
-import type { PartnerAnalysis, PartnerLead } from '@/lib/partner-leads'
+import type { PartnerAnalysis, PartnerLead, PartnerResearchTrack } from '@/lib/partner-leads'
 
 export const maxDuration = 300
 
@@ -114,6 +114,18 @@ const partnerSchema = {
             },
         },
         confidence: { type: 'number', minimum: 0, maximum: 1 },
+        fundraising_platform: { type: 'string' },
+        fundraising_model: {
+            type: 'string',
+            enum: ['recurring_membership', 'long_running_campaign', 'open_ended_campaign', 'fixed_term_campaign', 'unknown'],
+        },
+        fundraising_url: { type: 'string' },
+        funding_goal_amount: nullableNumber,
+        amount_raised: nullableNumber,
+        funding_currency: nullableString,
+        campaign_started_at: nullableString,
+        fundraising_signal: { type: 'string' },
+        is_environmental: { type: 'boolean' },
     },
     required: [
         'url', 'name', 'logo_url', 'score', 'recommendation', 'category', 'summary',
@@ -126,6 +138,9 @@ const partnerSchema = {
         'accessibility_tier', 'accessibility_summary', 'state_dependency', 'small_company_signal',
         'fit_reasons', 'risks', 'outreach_angle',
         'outreach_subject', 'outreach_message', 'sources', 'confidence',
+        'fundraising_platform', 'fundraising_model', 'fundraising_url', 'funding_goal_amount',
+        'amount_raised', 'funding_currency', 'campaign_started_at', 'fundraising_signal',
+        'is_environmental',
     ],
 }
 
@@ -152,6 +167,22 @@ function normalizeHost(input: string) {
     } catch {
         return ''
     }
+}
+
+function normalizeResearchKey(input: string, researchTrack: PartnerResearchTrack) {
+    if (researchTrack === 'idleforest') return normalizeHost(input)
+    try {
+        const url = new URL(normalizeUrl(input))
+        const host = url.hostname.toLowerCase().replace(/^www\./, '')
+        const path = url.pathname.replace(/\/+$/, '').toLowerCase()
+        return `${host}${path || '/'}`
+    } catch {
+        return ''
+    }
+}
+
+function parseResearchTrack(value: unknown): PartnerResearchTrack {
+    return value === 'cloudfund' ? 'cloudfund' : 'idleforest'
 }
 
 function getOutputText(payload: Record<string, unknown>) {
@@ -221,6 +252,15 @@ function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): Partner
     const annualRevenue = analysis.annual_revenue_amount !== null && Number.isFinite(analysis.annual_revenue_amount)
         ? Math.max(0, analysis.annual_revenue_amount)
         : null
+    const fundingGoal = analysis.funding_goal_amount !== null && Number.isFinite(analysis.funding_goal_amount)
+        ? Math.max(0, analysis.funding_goal_amount)
+        : null
+    const amountRaised = analysis.amount_raised !== null && Number.isFinite(analysis.amount_raised)
+        ? Math.max(0, analysis.amount_raised)
+        : null
+    const campaignStartedAt = analysis.campaign_started_at && /^\d{4}-\d{2}-\d{2}$/.test(analysis.campaign_started_at)
+        ? analysis.campaign_started_at
+        : null
 
     return {
         ...analysis,
@@ -252,6 +292,19 @@ function cleanAnalysis(analysis: PartnerAnalysis, submittedUrl: string): Partner
         risks: analysis.risks.slice(0, 3).map(risk => compactText(risk, 100)),
         sources: uniqueByUrl(analysis.sources).slice(0, 12),
         confidence: Math.max(0, Math.min(1, analysis.confidence)),
+        fundraising_platform: compactText(analysis.fundraising_platform, 40),
+        fundraising_url: (() => {
+            try {
+                return normalizeUrl(analysis.fundraising_url)
+            } catch {
+                return ''
+            }
+        })(),
+        funding_goal_amount: fundingGoal,
+        amount_raised: amountRaised,
+        funding_currency: analysis.funding_currency?.toUpperCase().slice(0, 3) || null,
+        campaign_started_at: campaignStartedAt,
+        fundraising_signal: compactText(analysis.fundraising_signal, 150),
     }
 }
 
@@ -271,8 +324,10 @@ export async function POST(request: NextRequest) {
     }
 
     let urls: string[]
+    let researchTrack: PartnerResearchTrack = 'idleforest'
     try {
-        const body = await request.json() as { urls?: unknown }
+        const body = await request.json() as { urls?: unknown; research_track?: unknown }
+        researchTrack = parseResearchTrack(body.research_track)
         if (!Array.isArray(body.urls)) throw new Error('urls must be an array')
         urls = Array.from(new Set(body.urls.map(value => normalizeUrl(String(value))))).slice(0, MAX_URLS)
         if (!urls.length) throw new Error('Add at least one URL')
@@ -284,7 +339,49 @@ export async function POST(request: NextRequest) {
     }
 
     const today = new Date().toISOString().slice(0, 10)
-    const instructions = `You are IdleForest's partnership research analyst. Research every submitted organization using live web search and return one record per URL.
+    const instructions = researchTrack === 'cloudfund'
+        ? `You are CloudFund's project research analyst. Research every submitted fundraiser using live web search and return one record per URL.
+
+CloudFund turns unused internet bandwidth into steady funding for verified projects. Qualify active non-environmental projects that could join CloudFund's project network.
+
+Mandatory fit:
+- Exclude climate, conservation, reforestation, wildlife, sustainability, clean-energy, and environmental campaigns. Set is_environmental=true when any material part of the project is environmental.
+- Verify a live recurring membership, open-ended fundraiser, or campaign that has run for at least six months and still has a current need. Patreon, Open Collective, GitHub Sponsors, Ko-fi/Buy Me a Coffee memberships, Givebutter, Donorbox, and long-running GoFundMe campaigns are valid examples.
+- Verify who is responsible, what the money pays for, who benefits, and how progress or updates are shared.
+- Prefer education, health, open science, public technology, open source, community infrastructure, mutual aid, and creator-led communities with durable operating costs.
+- Reject resolved emergencies, dormant or fully funded campaigns, pure personal consumption, speculative investments, political candidates, short fixed campaigns, and anonymous fundraisers with no accountable operator.
+
+Scoring rubric (100): active recurring/long-running fundraising 25, clear funding plan 20, public/community benefit 20, operator credibility 15, recent updates 10, CloudFund integration fit 10. A strong_fit normally scores 75+ and must have a verified active fundraiser, non-environmental scope, and accountable operator. Use potential_fit for one material verification gap. Use not_a_fit when a mandatory requirement fails.
+
+Fundraising fields:
+- fundraising_platform is the named platform or "Direct".
+- fundraising_model must be recurring_membership, long_running_campaign, open_ended_campaign, fixed_term_campaign, or unknown.
+- fundraising_url links directly to the live fundraiser, even when the submitted URL is the project website.
+- campaign_started_at is YYYY-MM-DD only when verified; otherwise null.
+- funding_goal_amount, amount_raised, and funding_currency come from current public evidence; return null rather than estimating.
+- fundraising_signal is a terse fact establishing campaign duration, current activity, and ongoing need.
+- financial_situation should summarize the stated use of funds and any verified budget gap.
+
+Normalized fields:
+- organization_type must be the best enum; individual is valid for a creator or personal campaign.
+- delivery_model: direct_operator for the project owner doing the work; research_education for research or education; project_network for a community/platform; advocacy for campaigns; mixed only when necessary.
+- activity_status is active for a substantive update or fundraiser activity within 90 days; irregular for sporadic recent activity; inactive for no meaningful activity in 12 months.
+- funding_status should normally be fundraising for a current campaign; use constrained when explicit evidence shows an urgent gap.
+- accessibility_score measures CloudFund onboarding readiness: accountable owner/contact 25, verifiable budget and outcomes 25, recurring/durable need 20, active community 15, update/reporting capability 15.
+- accessibility_tier: ready_now for 70+ and a clear live fundraiser; nurture for 40–69 or one moderate verification gap; unlikely_now below 40 or when the fundraiser is inactive, short-term only, anonymous, or unclear.
+- state_dependency and small_company_signal retain their existing meanings; small_company_signal is positive when the operator can work directly with an early-stage funding platform.
+
+Rules:
+- Today is ${today}. Prefer live fundraising pages, official project pages, current updates, registries, and reputable reporting.
+- Do not guess campaign dates, amounts, operator identity, financial facts, or contacts. Use null/unknown and add the gap to risks.
+- Summary and all evidence fields must be terse. Location must be only "City/Region, Country"; country_code must be ISO alpha-2.
+- Return at most three fit reasons and three risks, each under 100 characters.
+- Record Patreon members, platform backers, Discord members, and social audiences separately when publicly visible. Never combine counts.
+- Contacts must be public professional/project channels only.
+- Sources must include the live fundraiser, official project page, latest activity evidence, and operator/contact evidence where available.
+- Draft a concise, warm outreach email from CloudFund. Explain that CloudFund can turn opt-in unused bandwidth into an additional steady funding stream, reference a verified funding need, and propose a short project-fit call. Do not promise funding.
+- Return the submitted URL in the url field.`
+        : `You are IdleForest's partnership research analyst. Research every submitted organization using live web search and return one record per URL.
 
 Qualification criteria:
 - The organization must work in reforestation, landscape restoration, animal conservation, animal rewilding, or conservation land acquisition.
@@ -334,13 +431,13 @@ Rules:
             body: JSON.stringify({
                 model: process.env.OPENAI_PARTNER_MODEL || 'gpt-5.6',
                 instructions,
-                input: `Research these potential partners:\n${urls.map((url, index) => `${index + 1}. ${url}`).join('\n')}`,
+                input: `${researchTrack === 'cloudfund' ? 'Research these potential CloudFund projects' : 'Research these potential partners'}:\n${urls.map((url, index) => `${index + 1}. ${url}`).join('\n')}`,
                 tools: [{ type: 'web_search', search_context_size: 'high' }],
                 reasoning: { effort: 'medium' },
                 text: {
                     format: {
                         type: 'json_schema',
-                        name: 'idleforest_partner_analysis',
+                        name: researchTrack === 'cloudfund' ? 'cloudfund_project_analysis' : 'idleforest_partner_analysis',
                         strict: true,
                         schema: responseSchema,
                     },
@@ -370,14 +467,17 @@ Rules:
 
         const analyses = parsed.partners
             .slice(0, urls.length)
-            .map((item, index) => cleanAnalysis(item, urls[index]))
+            .map((item, index) => ({
+                ...cleanAnalysis(item, urls[index]),
+                research_track: researchTrack,
+            }))
         const admin = createAdminClient()
         const saved: PartnerLead[] = []
 
         for (const analysis of analyses) {
             const { data, error } = await admin
                 .from('partner_leads')
-                .upsert(analysis, { onConflict: 'url' })
+                .upsert(analysis, { onConflict: 'research_track,url' })
                 .select('*')
                 .single()
 
@@ -385,12 +485,13 @@ Rules:
             saved.push(data as PartnerLead)
         }
 
-        const researchedDomains = analyses.map(analysis => normalizeHost(analysis.url)).filter(Boolean)
-        if (researchedDomains.length > 0) {
+        const researchedKeys = urls.map(url => normalizeResearchKey(url, researchTrack)).filter(Boolean)
+        if (researchedKeys.length > 0) {
             const { error: discoveryUpdateError } = await admin
                 .from('partner_discoveries')
                 .update({ status: 'researched' })
-                .in('domain', researchedDomains)
+                .eq('research_track', researchTrack)
+                .in('domain', researchedKeys)
             if (discoveryUpdateError && !['42P01', 'PGRST205'].includes(discoveryUpdateError.code)) {
                 console.error('Could not update partner discovery status:', discoveryUpdateError)
             }

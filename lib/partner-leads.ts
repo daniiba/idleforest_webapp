@@ -18,6 +18,13 @@ export type PartnerAccessibilityTier = 'ready_now' | 'nurture' | 'unlikely_now' 
 export type PartnerStateDependency = 'low' | 'medium' | 'high' | 'unknown'
 export type PartnerSmallCompanySignal = 'positive' | 'negative' | 'unknown'
 export type PartnerDiscoveryStatus = 'discovered' | 'researched' | 'dismissed'
+export type PartnerResearchTrack = 'idleforest' | 'cloudfund'
+export type PartnerFundraisingModel =
+    | 'recurring_membership'
+    | 'long_running_campaign'
+    | 'open_ended_campaign'
+    | 'fixed_term_campaign'
+    | 'unknown'
 
 export interface PartnerCommunity {
     platform: string
@@ -63,6 +70,15 @@ export interface PartnerDiscoveryCandidate {
     why_fit: string
     verification_gaps: string[]
     sources: PartnerSource[]
+    fundraising_platform: string
+    fundraising_model: PartnerFundraisingModel
+    fundraising_url: string
+    funding_goal_amount: number | null
+    amount_raised: number | null
+    funding_currency: string | null
+    campaign_started_at: string | null
+    fundraising_signal: string
+    is_environmental: boolean
 }
 
 export interface PartnerDiscoveryRecord extends PartnerDiscoveryCandidate {
@@ -72,6 +88,7 @@ export interface PartnerDiscoveryRecord extends PartnerDiscoveryCandidate {
     status: PartnerDiscoveryStatus
     first_discovered_at: string
     last_discovered_at: string
+    research_track: PartnerResearchTrack
 }
 
 export interface PartnerDiscoveryUsage {
@@ -134,6 +151,16 @@ export interface PartnerLead {
     notes: string
     created_at: string
     updated_at: string
+    research_track: PartnerResearchTrack
+    fundraising_platform: string
+    fundraising_model: PartnerFundraisingModel
+    fundraising_url: string
+    funding_goal_amount: number | null
+    amount_raised: number | null
+    funding_currency: string | null
+    campaign_started_at: string | null
+    fundraising_signal: string
+    is_environmental: boolean
 }
 
 export interface PartnerAnalysis {
@@ -180,6 +207,15 @@ export interface PartnerAnalysis {
     outreach_message: string
     sources: PartnerSource[]
     confidence: number
+    fundraising_platform: string
+    fundraising_model: PartnerFundraisingModel
+    fundraising_url: string
+    funding_goal_amount: number | null
+    amount_raised: number | null
+    funding_currency: string | null
+    campaign_started_at: string | null
+    fundraising_signal: string
+    is_environmental: boolean
 }
 
 export const PARTNER_STATUS_LABELS: Record<PartnerLeadStatus, string> = {

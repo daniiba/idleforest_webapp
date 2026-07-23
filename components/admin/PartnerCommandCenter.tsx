@@ -38,8 +38,10 @@ import {
     type PartnerDiscoveryRecord,
     type PartnerDiscoveryUsage,
     type PartnerDeliveryModel,
+    type PartnerFundraisingModel,
     type PartnerLead,
     type PartnerLeadStatus,
+    type PartnerResearchTrack,
     type PartnerRevenueBand,
 } from '@/lib/partner-leads'
 import { getPartnerLeads, updatePartnerLead } from '@/app/(dashboard)/admin/partners/actions'
@@ -96,6 +98,14 @@ const accessibilityTierLabels: Record<PartnerAccessibilityTier, string> = {
     unknown: 'Unknown access',
 }
 
+const fundraisingModelLabels: Record<PartnerFundraisingModel, string> = {
+    recurring_membership: 'Recurring membership',
+    long_running_campaign: 'Long-running campaign',
+    open_ended_campaign: 'Open-ended campaign',
+    fixed_term_campaign: 'Fixed-term campaign',
+    unknown: 'Unknown fundraiser',
+}
+
 function formatFollowerCount(value: number | null, quality?: 'verified' | 'estimated' | 'unavailable') {
     if (value === null) return 'No count found'
     const formatted = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
@@ -111,6 +121,20 @@ function formatRevenue(lead: PartnerLead) {
     if (lead.annual_revenue_amount === null || lead.annual_revenue_amount === undefined) return 'Unknown'
     const amount = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(lead.annual_revenue_amount)
     return `${lead.annual_revenue_currency || ''} ${amount}`.trim()
+}
+
+function formatFundingAmount(value: number | null, currency: string | null) {
+    if (value === null || value === undefined) return 'Unknown'
+    const amount = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
+    return `${currency || ''} ${amount}`.trim()
+}
+
+function formatFundingProgress(lead: Pick<PartnerLead, 'amount_raised' | 'funding_goal_amount' | 'funding_currency'>) {
+    if (lead.amount_raised === null && lead.funding_goal_amount === null) return 'Not public'
+    const raised = formatFundingAmount(lead.amount_raised, lead.funding_currency)
+    return lead.funding_goal_amount === null
+        ? `${raised} raised`
+        : `${raised} / ${formatFundingAmount(lead.funding_goal_amount, lead.funding_currency)}`
 }
 
 function humanize(value: string | null | undefined) {
@@ -162,14 +186,21 @@ function friendlyError(error: unknown, fallback: string) {
     if (message.includes('accessibility_score') || message.includes('accessibility_tier')) {
         return 'Partner accessibility fields are not initialized yet. Apply the 20260720 accessibility migration, then refresh this tab.'
     }
+    if (message.includes('research_track') || message.includes('fundraising_model')) {
+        return 'CloudFund research is not initialized yet. Apply the 20260723 CloudFund research migration, then refresh this tab.'
+    }
     return message
 }
 
-function getNextBestAction(lead: PartnerLead) {
+function getNextBestAction(lead: PartnerLead, researchTrack: PartnerResearchTrack) {
     if (lead.status === 'partner') return 'Keep the relationship warm and record the next joint opportunity.'
     if (lead.status === 'contacted' || lead.status === 'follow_up') return 'Follow up with the strongest project-specific reason to collaborate.'
     if (lead.recommendation === 'strong_fit') return 'Send the tailored introduction and schedule a 7-day follow-up.'
-    if (lead.recommendation === 'potential_fit') return 'Verify the remaining audience or funding gap before outreach.'
+    if (lead.recommendation === 'potential_fit') {
+        return researchTrack === 'cloudfund'
+            ? 'Verify the fundraiser duration, budget, or responsible operator before outreach.'
+            : 'Verify the remaining audience or funding gap before outreach.'
+    }
     return 'Reject this lead unless there is a strategic reason to keep monitoring it.'
 }
 
@@ -181,20 +212,28 @@ function compactText(value: string, maxLength = 96) {
     return `${shortened.slice(0, lastSpace > 60 ? lastSpace : maxLength).trim()}…`
 }
 
-function discoveryDomain(url: string) {
+function discoveryKey(url: string, researchTrack: PartnerResearchTrack) {
     try {
-        return new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`).hostname.toLowerCase().replace(/^www\./, '')
+        const parsed = new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`)
+        const host = parsed.hostname.toLowerCase().replace(/^www\./, '')
+        if (researchTrack === 'idleforest') return host
+        const path = parsed.pathname.replace(/\/+$/, '').toLowerCase()
+        return `${host}${path || '/'}`
     } catch {
         return url.toLowerCase()
     }
 }
 
-function mergeDiscoveryCandidates(current: PartnerDiscoveryCandidate[], incoming: PartnerDiscoveryCandidate[]) {
+function mergeDiscoveryCandidates(
+    current: PartnerDiscoveryCandidate[],
+    incoming: PartnerDiscoveryCandidate[],
+    researchTrack: PartnerResearchTrack
+) {
     const seen = new Set<string>()
     return [...current, ...incoming].filter(candidate => {
-        const domain = discoveryDomain(candidate.url)
-        if (seen.has(domain)) return false
-        seen.add(domain)
+        const key = discoveryKey(candidate.url, researchTrack)
+        if (seen.has(key)) return false
+        seen.add(key)
         return true
     })
 }
@@ -203,7 +242,14 @@ function formatDiscoveryCost(value: number) {
     return value < 0.01 ? '<$0.01' : `$${value.toFixed(2)}`
 }
 
-export default function PartnerCommandCenter() {
+export default function PartnerCommandCenter({
+    researchTrack = 'idleforest',
+}: {
+    researchTrack?: PartnerResearchTrack
+}) {
+    const isCloudfund = researchTrack === 'cloudfund'
+    const entityLabel = isCloudfund ? 'project' : 'partner'
+    const entityLabelPlural = isCloudfund ? 'projects' : 'partners'
     const [leads, setLeads] = useState<PartnerLead[]>([])
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const [inputMode, setInputMode] = useState<'discover' | 'urls'>('discover')
@@ -219,10 +265,12 @@ export default function PartnerCommandCenter() {
     const [archiveSearch, setArchiveSearch] = useState('')
     const [archiveAccessibility, setArchiveAccessibility] = useState<'all' | PartnerAccessibilityTier>('all')
     const [archiveDelivery, setArchiveDelivery] = useState<'all' | PartnerDeliveryModel>('all')
+    const [archiveFundraising, setArchiveFundraising] = useState<'all' | PartnerFundraisingModel>('all')
     const [archiveCommunity, setArchiveCommunity] = useState<'all' | PartnerCommunityBand>('all')
     const [search, setSearch] = useState('')
     const [statusFilter, setStatusFilter] = useState<'all' | PartnerLeadStatus>('all')
     const [deliveryFilter, setDeliveryFilter] = useState<'all' | PartnerDeliveryModel>('all')
+    const [fundraisingFilter, setFundraisingFilter] = useState<'all' | PartnerFundraisingModel>('all')
     const [communityFilter, setCommunityFilter] = useState<'all' | PartnerCommunityBand>('all')
     const [revenueFilter, setRevenueFilter] = useState<'all' | PartnerRevenueBand>('all')
     const [accessibilityFilter, setAccessibilityFilter] = useState<'all' | PartnerAccessibilityTier>('all')
@@ -239,15 +287,15 @@ export default function PartnerCommandCenter() {
         setIsLoading(true)
         setError('')
         try {
-            const result = await getPartnerLeads()
+            const result = await getPartnerLeads(researchTrack)
             const data = result.leads
             setLeads(data)
             setSelectedId(current => current && data.some(lead => lead.id === current) ? current : data[0]?.id || null)
             if (result.setupRequired) {
-                setError('Partner storage is not initialized yet. Apply the 20260718 partner leads migration, then refresh this tab.')
+                setError('Research storage is not initialized yet. Apply the partner leads migrations, then refresh this tab.')
             }
         } catch (loadError) {
-            setError(friendlyError(loadError, 'Could not load partner leads.'))
+            setError(friendlyError(loadError, `Could not load ${entityLabelPlural}.`))
         } finally {
             setIsLoading(false)
         }
@@ -255,7 +303,7 @@ export default function PartnerCommandCenter() {
 
     useEffect(() => {
         void loadLeads()
-    }, [])
+    }, [researchTrack])
 
     const selected = leads.find(lead => lead.id === selectedId) || null
     const isSelectedExpanded = Boolean(selected && expandedLeadId === selected.id)
@@ -265,6 +313,7 @@ export default function PartnerCommandCenter() {
         return leads.filter(lead => {
             const statusMatches = statusFilter === 'all' || lead.status === statusFilter
             const deliveryMatches = deliveryFilter === 'all' || (lead.delivery_model || 'unknown') === deliveryFilter
+            const fundraisingMatches = fundraisingFilter === 'all' || (lead.fundraising_model || 'unknown') === fundraisingFilter
             const communityMatches = communityFilter === 'all' || (lead.community_band || 'unknown') === communityFilter
             const revenueMatches = revenueFilter === 'all' || (lead.revenue_band || 'unknown') === revenueFilter
             const accessibilityMatches = accessibilityFilter === 'all' || (lead.accessibility_tier || 'unknown') === accessibilityFilter
@@ -272,9 +321,14 @@ export default function PartnerCommandCenter() {
                 .join(' ')
                 .toLowerCase()
                 .includes(query)
-            return statusMatches && deliveryMatches && communityMatches && revenueMatches && accessibilityMatches && searchMatches
+            return statusMatches
+                && (isCloudfund ? fundraisingMatches : deliveryMatches)
+                && communityMatches
+                && revenueMatches
+                && accessibilityMatches
+                && searchMatches
         })
-    }, [leads, search, statusFilter, deliveryFilter, communityFilter, revenueFilter, accessibilityFilter])
+    }, [leads, search, statusFilter, deliveryFilter, fundraisingFilter, communityFilter, revenueFilter, accessibilityFilter, isCloudfund])
 
     const stats = useMemo(() => ({
         pipeline: leads.filter(lead => !['rejected', 'partner'].includes(lead.status)).length,
@@ -288,14 +342,15 @@ export default function PartnerCommandCenter() {
         return archiveCandidates.filter(candidate => {
             const accessibilityMatches = archiveAccessibility === 'all' || candidate.accessibility_tier === archiveAccessibility
             const deliveryMatches = archiveDelivery === 'all' || candidate.delivery_model === archiveDelivery
+            const fundraisingMatches = archiveFundraising === 'all' || candidate.fundraising_model === archiveFundraising
             const communityMatches = archiveCommunity === 'all' || getCommunityBandFromValue(candidate.community_size) === archiveCommunity
             const searchMatches = !query || [candidate.name, candidate.url, candidate.location, candidate.delivery_model, ...candidate.category]
                 .join(' ')
                 .toLowerCase()
                 .includes(query)
-            return accessibilityMatches && deliveryMatches && communityMatches && searchMatches
+            return accessibilityMatches && (isCloudfund ? fundraisingMatches : deliveryMatches) && communityMatches && searchMatches
         })
-    }, [archiveCandidates, archiveSearch, archiveAccessibility, archiveDelivery, archiveCommunity])
+    }, [archiveCandidates, archiveSearch, archiveAccessibility, archiveDelivery, archiveFundraising, archiveCommunity, isCloudfund])
 
     const patchLead = async (
         id: string,
@@ -312,7 +367,7 @@ export default function PartnerCommandCenter() {
                 window.setTimeout(() => setNotice(''), 2500)
             }
         } catch (updateError) {
-            setError(friendlyError(updateError, 'Could not update partner.'))
+            setError(friendlyError(updateError, `Could not update ${entityLabel}.`))
         } finally {
             setUpdatingId(null)
         }
@@ -320,7 +375,7 @@ export default function PartnerCommandCenter() {
 
     const researchUrls = async (urls: string[], clearInput = false) => {
         if (!urls.length) {
-            setError('Add at least one organization URL.')
+            setError(`Add at least one ${isCloudfund ? 'fundraiser or project' : 'organization'} URL.`)
             return false
         }
 
@@ -336,10 +391,10 @@ export default function PartnerCommandCenter() {
             const response = await fetch('/api/admin/partners/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ urls }),
+                body: JSON.stringify({ urls, research_track: researchTrack }),
             })
             const result = await response.json() as { partners?: PartnerLead[]; error?: string }
-            if (!response.ok || !result.partners) throw new Error(result.error || 'Partner research failed.')
+            if (!response.ok || !result.partners) throw new Error(result.error || `${isCloudfund ? 'Project' : 'Partner'} research failed.`)
 
             setLeads(current => {
                 const incomingIds = new Set(result.partners!.map(lead => lead.id))
@@ -347,10 +402,10 @@ export default function PartnerCommandCenter() {
             })
             setSelectedId(result.partners[0]?.id || null)
             if (clearInput) setUrlInput('')
-            setNotice(`${result.partners.length} partner${result.partners.length === 1 ? '' : 's'} researched and saved.`)
+            setNotice(`${result.partners.length} ${result.partners.length === 1 ? entityLabel : entityLabelPlural} researched and saved.`)
             return true
         } catch (analysisError) {
-            setError(friendlyError(analysisError, 'Partner research failed.'))
+            setError(friendlyError(analysisError, `${isCloudfund ? 'Project' : 'Partner'} research failed.`))
             return false
         } finally {
             setIsAnalyzing(false)
@@ -370,7 +425,7 @@ export default function PartnerCommandCenter() {
         setIsLoadingArchive(true)
         setError('')
         try {
-            const response = await fetch('/api/admin/partners/discover?limit=300')
+            const response = await fetch(`/api/admin/partners/discover?limit=300&research_track=${researchTrack}`)
             const result = await response.json() as { candidates?: PartnerDiscoveryRecord[]; setup_required?: boolean; error?: string }
             if (!response.ok || !result.candidates) throw new Error(result.error || 'Could not load the discovery archive.')
             setArchiveCandidates(result.candidates)
@@ -392,12 +447,12 @@ export default function PartnerCommandCenter() {
     }
 
     const markDiscoveryStatus = async (url: string, status: 'researched' | 'dismissed') => {
-        setArchiveCandidates(current => current.map(candidate => candidate.domain === discoveryDomain(url) ? { ...candidate, status } : candidate))
+        setArchiveCandidates(current => current.map(candidate => candidate.domain === discoveryKey(url, researchTrack) ? { ...candidate, status } : candidate))
         try {
             await fetch('/api/admin/partners/discover', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url, status }),
+                body: JSON.stringify({ url, status, research_track: researchTrack }),
             })
         } catch {
             // The researched lead is already saved; archive status is only supporting metadata.
@@ -416,6 +471,7 @@ export default function PartnerCommandCenter() {
                     focus: discoveryFocus,
                     count: 6,
                     exclude_urls: discoveryCandidates.map(candidate => candidate.url),
+                    research_track: researchTrack,
                 }),
             })
             const result = await response.json() as {
@@ -424,9 +480,9 @@ export default function PartnerCommandCenter() {
                 archive_saved?: boolean
                 error?: string
             }
-            if (!response.ok || !result.candidates) throw new Error(result.error || 'Partner discovery failed.')
+            if (!response.ok || !result.candidates) throw new Error(result.error || `${isCloudfund ? 'Project' : 'Partner'} discovery failed.`)
 
-            setDiscoveryCandidates(current => append ? mergeDiscoveryCandidates(current, result.candidates!) : result.candidates!)
+            setDiscoveryCandidates(current => append ? mergeDiscoveryCandidates(current, result.candidates!, researchTrack) : result.candidates!)
             if (result.usage) {
                 setDiscoveryUsage(result.usage)
                 if (result.usage.estimated_cost_usd !== null) {
@@ -436,10 +492,10 @@ export default function PartnerCommandCenter() {
             setIsArchiveLoaded(false)
             if (isArchiveOpen) void loadDiscoveryArchive(true)
             setNotice(result.candidates.length
-                ? `${result.candidates.length} new potential partners found and ${result.archive_saved === false ? 'shown, but not archived — apply the latest migration' : 'saved to the discovery archive'}.`
-                : 'No new partners met the discovery threshold. Try a more specific region or category.')
+                ? `${result.candidates.length} new potential ${entityLabelPlural} found and ${result.archive_saved === false ? 'shown, but not archived — apply the latest migration' : 'saved to the discovery archive'}.`
+                : `No new ${entityLabelPlural} met the discovery threshold. Try a more specific region or category.`)
         } catch (discoveryError) {
-            setError(friendlyError(discoveryError, 'Partner discovery failed.'))
+            setError(friendlyError(discoveryError, `${isCloudfund ? 'Project' : 'Partner'} discovery failed.`))
         } finally {
             setIsDiscovering(false)
         }
@@ -506,10 +562,16 @@ export default function PartnerCommandCenter() {
                 <div className="relative grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-end">
                     <div>
                         <div className="flex items-center gap-2 text-brand-yellow text-xs font-black uppercase tracking-[0.18em] mb-3">
-                            <Sparkles className="h-4 w-4" /> AI partner research
+                            <Sparkles className="h-4 w-4" /> {isCloudfund ? 'AI funding research' : 'AI partner research'}
                         </div>
-                        <h2 className="font-candu text-3xl md:text-4xl font-extrabold uppercase leading-none">Partner command center</h2>
-                        <p className="mt-3 max-w-xl text-sm text-white/70">Qualify conservation organizations, capture the evidence, and move each relationship from research to follow-up.</p>
+                        <h2 className="font-candu text-3xl md:text-4xl font-extrabold uppercase leading-none">
+                            {isCloudfund ? 'CloudFund research desk' : 'Partner command center'}
+                        </h2>
+                        <p className="mt-3 max-w-xl text-sm text-white/70">
+                            {isCloudfund
+                                ? 'Find active non-environmental projects with recurring or long-running fundraising, verify the funding need, and build an outreach pipeline.'
+                                : 'Qualify conservation organizations, capture the evidence, and move each relationship from research to follow-up.'}
+                        </p>
                     </div>
                     <div className="bg-white text-black border-2 border-black p-3 shadow-[4px_4px_0px_0px_rgba(224,241,70,1)]">
                         <div className="mb-3 grid grid-cols-2 border-2 border-black bg-neutral-100 p-0.5">
@@ -533,13 +595,15 @@ export default function PartnerCommandCenter() {
 
                         {inputMode === 'discover' ? (
                             <div>
-                                <label htmlFor="partner-discovery-focus" className="mb-2 block text-[11px] font-black uppercase tracking-wider">Optional search focus</label>
+                                <label htmlFor={`${researchTrack}-discovery-focus`} className="mb-2 block text-[11px] font-black uppercase tracking-wider">Optional search focus</label>
                                 <input
-                                    id="partner-discovery-focus"
+                                    id={`${researchTrack}-discovery-focus`}
                                     value={discoveryFocus}
                                     onChange={event => setDiscoveryFocus(event.target.value)}
                                     onKeyDown={event => { if (event.key === 'Enter' && !isDiscovering && !isAnalyzing) void discoverPartners(discoveryCandidates.length > 0) }}
-                                    placeholder="e.g. Iberia · animal rewilding · direct operators"
+                                    placeholder={isCloudfund
+                                        ? 'e.g. Patreon creators · open source · long-running GoFundMe'
+                                        : 'e.g. Iberia · animal rewilding · direct operators'}
                                     className="w-full border-2 border-black bg-neutral-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                                 />
                                 <div className="mt-3 flex items-center justify-between gap-3">
@@ -556,18 +620,20 @@ export default function PartnerCommandCenter() {
                                         className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
                                     >
                                         {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
-                                        {isDiscovering ? 'Searching…' : discoveryCandidates.length > 0 ? 'Find 6 more' : 'Find partners'}
+                                        {isDiscovering ? 'Searching…' : discoveryCandidates.length > 0 ? 'Find 6 more' : `Find ${entityLabelPlural}`}
                                     </button>
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <label htmlFor="partner-urls" className="mb-2 block text-[11px] font-black uppercase tracking-wider">Organization URLs · one per line</label>
+                                <label htmlFor={`${researchTrack}-urls`} className="mb-2 block text-[11px] font-black uppercase tracking-wider">
+                                    {isCloudfund ? 'Fundraiser or project URLs' : 'Organization URLs'} · one per line
+                                </label>
                                 <textarea
-                                    id="partner-urls"
+                                    id={`${researchTrack}-urls`}
                                     value={urlInput}
                                     onChange={event => setUrlInput(event.target.value)}
-                                    placeholder={'mossy.earth\nrewilding-europe.com'}
+                                    placeholder={isCloudfund ? 'patreon.com/example\nwww.gofundme.com/f/example' : 'mossy.earth\nrewilding-europe.com'}
                                     rows={3}
                                     className="w-full resize-none border-2 border-black bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                                 />
@@ -602,8 +668,12 @@ export default function PartnerCommandCenter() {
                     <div className="flex flex-col gap-3 border-b-2 border-black pb-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
-                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential partners · {discoveryCandidates.length}</h3>
-                            <p className="mt-1 text-xs text-neutral-600">Preliminary signals only. Everything here is already saved; full metrics are fetched when you add a candidate.</p>
+                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential {entityLabelPlural} · {discoveryCandidates.length}</h3>
+                            <p className="mt-1 text-xs text-neutral-600">
+                                {isCloudfund
+                                    ? 'Preliminary fundraising signals only. Everything here is saved; full campaign, operator, and outreach research is fetched when you add a project.'
+                                    : 'Preliminary signals only. Everything here is already saved; full metrics are fetched when you add a candidate.'}
+                            </p>
                             {discoveryUsage && (
                                 <p className="mt-1 text-[11px] font-bold text-neutral-500">
                                     Last batch {discoveryUsage.estimated_cost_usd === null ? 'cost unavailable' : `≈${formatDiscoveryCost(discoveryUsage.estimated_cost_usd)}`}
@@ -656,14 +726,16 @@ export default function PartnerCommandCenter() {
 
                                 <div className="mt-3 grid grid-cols-3 border-2 border-black bg-neutral-50">
                                     <div className="border-r-2 border-black p-2.5">
-                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Audience signal</p>
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">{isCloudfund ? 'Fundraiser' : 'Audience signal'}</p>
                                         <p className="mt-1 text-xs font-black">
-                                            {candidate.community_size !== null ? `${formatFollowerCount(candidate.community_size, 'estimated')} · ${candidate.community_platform}` : 'Needs verification'}
+                                            {isCloudfund
+                                                ? `${fundraisingModelLabels[candidate.fundraising_model]}${candidate.fundraising_platform ? ` · ${candidate.fundraising_platform}` : ''}`
+                                                : candidate.community_size !== null ? `${formatFollowerCount(candidate.community_size, 'estimated')} · ${candidate.community_platform}` : 'Needs verification'}
                                         </p>
                                     </div>
                                     <div className="border-r-2 border-black p-2.5">
-                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Activity</p>
-                                        <p className="mt-1 text-xs font-black">{humanize(candidate.activity_status)}</p>
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">{isCloudfund ? 'Funding' : 'Activity'}</p>
+                                        <p className="mt-1 text-xs font-black">{isCloudfund ? formatFundingProgress(candidate) : humanize(candidate.activity_status)}</p>
                                     </div>
                                     <div className="p-2.5">
                                         <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Access now</p>
@@ -674,7 +746,9 @@ export default function PartnerCommandCenter() {
 
                                 <div className="mt-3 flex flex-wrap gap-1.5">
                                     {candidate.category.slice(0, 2).map(category => <span key={category} className="bg-neutral-100 px-2 py-1 text-[10px] font-bold">{category}</span>)}
-                                    <span className="bg-neutral-100 px-2 py-1 text-[10px] font-bold">{deliveryLabels[candidate.delivery_model]}</span>
+                                    <span className="bg-neutral-100 px-2 py-1 text-[10px] font-bold">
+                                        {isCloudfund ? fundraisingModelLabels[candidate.fundraising_model] : deliveryLabels[candidate.delivery_model]}
+                                    </span>
                                 </div>
 
                                 {candidate.verification_gaps.length > 0 && (
@@ -687,6 +761,7 @@ export default function PartnerCommandCenter() {
                                     <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Why it surfaced</summary>
                                     <p className="mt-2 leading-relaxed">{candidate.why_fit}</p>
                                     <p className="mt-1 leading-relaxed"><span className="font-black">Activity:</span> {candidate.activity_signal}</p>
+                                    {isCloudfund && <p className="mt-1 leading-relaxed"><span className="font-black">Fundraising:</span> {candidate.fundraising_signal}</p>}
                                     <p className="mt-1 leading-relaxed"><span className="font-black">Accessibility:</span> {candidate.accessibility_summary}</p>
                                     <p className="mt-1 leading-relaxed"><span className="font-black">State dependency:</span> {humanize(candidate.state_dependency)} · <span className="font-black">Small-company evidence:</span> {humanize(candidate.small_company_signal)}</p>
                                     {candidate.sources.length > 0 && (
@@ -744,10 +819,17 @@ export default function PartnerCommandCenter() {
                                 <option value="all">All accessibility</option>
                                 {Object.entries(accessibilityTierLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
-                            <select value={archiveDelivery} onChange={event => setArchiveDelivery(event.target.value as 'all' | PartnerDeliveryModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
-                                <option value="all">All delivery models</option>
-                                {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                            </select>
+                            {isCloudfund ? (
+                                <select value={archiveFundraising} onChange={event => setArchiveFundraising(event.target.value as 'all' | PartnerFundraisingModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                    <option value="all">All fundraiser models</option>
+                                    {Object.entries(fundraisingModelLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                                </select>
+                            ) : (
+                                <select value={archiveDelivery} onChange={event => setArchiveDelivery(event.target.value as 'all' | PartnerDeliveryModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                    <option value="all">All delivery models</option>
+                                    {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                                </select>
+                            )}
                             <select value={archiveCommunity} onChange={event => setArchiveCommunity(event.target.value as 'all' | PartnerCommunityBand)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
                                 <option value="all">All audiences</option>
                                 {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -771,10 +853,14 @@ export default function PartnerCommandCenter() {
                                                 {candidate.status === 'researched' ? 'In pipeline' : accessibilityTierLabels[candidate.accessibility_tier]}
                                             </span>
                                         </div>
-                                        <p className="mt-1 truncate text-xs text-neutral-500">{candidate.location} · {deliveryLabels[candidate.delivery_model]}</p>
+                                        <p className="mt-1 truncate text-xs text-neutral-500">
+                                            {candidate.location} · {isCloudfund ? fundraisingModelLabels[candidate.fundraising_model] : deliveryLabels[candidate.delivery_model]}
+                                        </p>
                                         <p className="mt-1 text-xs text-neutral-700">{compactText(candidate.summary, 120)}</p>
                                         <p className="mt-2 text-[10px] font-bold uppercase tracking-wide text-neutral-500">
-                                            {candidate.community_size === null ? 'Audience unverified' : `${formatFollowerCount(candidate.community_size, 'estimated')} on ${candidate.community_platform}`}
+                                            {isCloudfund
+                                                ? `${formatFundingProgress(candidate)}${candidate.fundraising_platform ? ` · ${candidate.fundraising_platform}` : ''}`
+                                                : candidate.community_size === null ? 'Audience unverified' : `${formatFollowerCount(candidate.community_size, 'estimated')} on ${candidate.community_platform}`}
                                             {' · '}Access {candidate.accessibility_score}/100
                                         </p>
                                     </div>
@@ -821,7 +907,7 @@ export default function PartnerCommandCenter() {
                             <input
                                 value={search}
                                 onChange={event => setSearch(event.target.value)}
-                                placeholder="Search partners"
+                                placeholder={`Search ${entityLabelPlural}`}
                                 className="w-full border-2 border-black bg-white py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                             />
                         </div>
@@ -834,10 +920,17 @@ export default function PartnerCommandCenter() {
                                 <option value="all">All statuses</option>
                                 {statusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
-                            <select value={deliveryFilter} onChange={event => setDeliveryFilter(event.target.value as 'all' | PartnerDeliveryModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
-                                <option value="all">All delivery models</option>
-                                {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                            </select>
+                            {isCloudfund ? (
+                                <select value={fundraisingFilter} onChange={event => setFundraisingFilter(event.target.value as 'all' | PartnerFundraisingModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                    <option value="all">All fundraiser models</option>
+                                    {Object.entries(fundraisingModelLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                                </select>
+                            ) : (
+                                <select value={deliveryFilter} onChange={event => setDeliveryFilter(event.target.value as 'all' | PartnerDeliveryModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                    <option value="all">All delivery models</option>
+                                    {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                                </select>
+                            )}
                             <select value={communityFilter} onChange={event => setCommunityFilter(event.target.value as 'all' | PartnerCommunityBand)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
                                 <option value="all">All audience sizes</option>
                                 {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -890,7 +983,7 @@ export default function PartnerCommandCenter() {
                         )) : (
                             <div className="p-8 text-center">
                                 <Globe2 className="mx-auto h-8 w-8 text-neutral-300" />
-                                <p className="mt-3 font-black">No partners here</p>
+                                <p className="mt-3 font-black">No {entityLabelPlural} here</p>
                                 <p className="mt-1 text-xs text-neutral-500">Add URLs above or change your filters.</p>
                             </div>
                         )}
@@ -937,7 +1030,7 @@ export default function PartnerCommandCenter() {
                                         <button
                                             type="button"
                                             disabled={updatingId === selected.id}
-                                            onClick={() => patchLead(selected.id, { status: 'rejected', reminder_at: null }, 'Partner moved to rejected.')}
+                                            onClick={() => patchLead(selected.id, { status: 'rejected', reminder_at: null }, `${isCloudfund ? 'Project' : 'Partner'} moved to rejected.`)}
                                             className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-xs font-black uppercase hover:bg-red-100 disabled:opacity-50"
                                         >
                                             <X className="h-4 w-4" /> Reject
@@ -960,10 +1053,18 @@ export default function PartnerCommandCenter() {
 
                             {isSelectedExpanded && <div className="grid border-b-2 border-black sm:grid-cols-2 xl:grid-cols-4">
                                 {[
-                                    { label: 'Organization', value: humanize(selected.organization_type) || selected.structure, icon: Users },
+                                    { label: isCloudfund ? 'Project owner' : 'Organization', value: humanize(selected.organization_type) || selected.structure, icon: Users },
                                     { label: 'Location', value: selected.location, icon: MapPin },
-                                    { label: 'Delivery model', value: deliveryLabels[selected.delivery_model || 'unknown'], icon: Target },
-                                    { label: 'Team', value: humanize(selected.team_type), icon: Users },
+                                    {
+                                        label: isCloudfund ? 'Fundraiser' : 'Delivery model',
+                                        value: isCloudfund ? fundraisingModelLabels[selected.fundraising_model || 'unknown'] : deliveryLabels[selected.delivery_model || 'unknown'],
+                                        icon: Target,
+                                    },
+                                    {
+                                        label: isCloudfund ? 'Platform' : 'Team',
+                                        value: isCloudfund ? selected.fundraising_platform || 'Direct / unknown' : humanize(selected.team_type),
+                                        icon: Users,
+                                    },
                                 ].map((field, index) => (
                                     <div key={field.label} className={`p-4 ${index < 3 ? 'xl:border-r-2 xl:border-black' : ''} ${index % 2 === 0 ? 'sm:border-r-2 sm:border-black xl:border-r-2' : ''} ${index < 2 ? 'border-b-2 border-black xl:border-b-0' : ''}`}>
                                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-neutral-500"><field.icon className="h-3.5 w-3.5" />{field.label}</div>
@@ -982,14 +1083,23 @@ export default function PartnerCommandCenter() {
                                 <div className="space-y-6 p-5 md:p-6 xl:border-r-2 xl:border-black">
                                     <section>
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h4 className="font-candu text-lg font-extrabold uppercase">Partner metrics</h4>
+                                            <h4 className="font-candu text-lg font-extrabold uppercase">{isCloudfund ? 'Funding fit' : 'Partner metrics'}</h4>
                                             <div className="flex h-12 w-12 items-center justify-center border-2 border-black bg-brand-navy font-candu text-lg font-extrabold text-brand-yellow">{selected.score}</div>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {selected.category.map(category => <span key={category} className="border-2 border-black bg-green-100 px-2 py-1 text-xs font-bold">{category}</span>)}
                                         </div>
                                         <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
-                                            {[
+                                            {(isCloudfund ? [
+                                                ['Owner', humanize(selected.organization_type)],
+                                                ['Fundraiser', fundraisingModelLabels[selected.fundraising_model || 'unknown']],
+                                                ['Platform', selected.fundraising_platform || 'Direct / unknown'],
+                                                ['Country', selected.country_code && selected.country_code !== 'XX' ? selected.country_code : compactText(selected.location, 30)],
+                                                ['Funding progress', formatFundingProgress(selected)],
+                                                ['Campaign since', selected.campaign_started_at ? formatDate(selected.campaign_started_at) : 'Unknown'],
+                                                ['Activity', humanize(selected.activity_status)],
+                                                ['Onboarding fit', formatAccessibility(selected)],
+                                            ] : [
                                                 ['Organization', humanize(selected.organization_type)],
                                                 ['Delivery', deliveryLabels[selected.delivery_model || 'unknown']],
                                                 ['Team', humanize(selected.team_type)],
@@ -999,7 +1109,7 @@ export default function PartnerCommandCenter() {
                                                 ['Funding', humanize(selected.funding_status)],
                                                 ['Activity', humanize(selected.activity_status)],
                                                 ['Accessibility', formatAccessibility(selected)],
-                                            ].map(([label, value]) => (
+                                            ]).map(([label, value]) => (
                                                 <div key={label} className="border-2 border-black bg-neutral-50 p-3">
                                                     <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{label}</p>
                                                     <p className="mt-1 text-sm font-black leading-tight">{value}</p>
@@ -1009,15 +1119,15 @@ export default function PartnerCommandCenter() {
                                     </section>
 
                                     <section className="border-t-2 border-black pt-5">
-                                        <h4 className="font-candu text-lg font-extrabold uppercase">Platform audiences</h4>
+                                        <h4 className="font-candu text-lg font-extrabold uppercase">{isCloudfund ? 'Audience & supporters' : 'Platform audiences'}</h4>
                                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                             {selected.communities.length ? selected.communities.map(community => {
-                                                const qualifies = community.followers !== null && community.followers >= 4000 && community.followers <= 500000
+                                                const qualifies = community.followers !== null && (isCloudfund || (community.followers >= 4000 && community.followers <= 500000))
                                                 const quality = community.count_quality || (community.followers === null ? 'unavailable' : 'estimated')
                                                 const rangeLabel = community.followers === null
                                                     ? 'Count unavailable'
                                                     : qualifies
-                                                        ? 'Ideal range'
+                                                        ? isCloudfund ? 'Public count' : 'Ideal range'
                                                         : community.followers < 4000 ? 'Below 4K' : 'Above 500K'
                                                 return (
                                                     <div key={`${community.platform}-${community.url}`} className="border-2 border-black bg-white p-3">
@@ -1064,36 +1174,61 @@ export default function PartnerCommandCenter() {
                                         </div>
                                     </section>
                                     <section className="border-t-2 border-black pt-5">
-                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><Target className="h-5 w-5" /> Accessibility now</h4>
+                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase">
+                                            <Target className="h-5 w-5" /> {isCloudfund ? 'CloudFund onboarding fit' : 'Accessibility now'}
+                                        </h4>
                                         <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
                                             <div className="grid gap-3 sm:grid-cols-3">
                                                 <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Score & tier</p><p className="mt-1 text-sm font-black">{formatAccessibility(selected)}</p></div>
                                                 <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">State dependency</p><p className="mt-1 text-sm font-black">{humanize(selected.state_dependency)}</p></div>
                                                 <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Small-company evidence</p><p className="mt-1 text-sm font-black">{humanize(selected.small_company_signal)}</p></div>
                                             </div>
-                                            <p className="mt-3 text-sm leading-relaxed text-neutral-700">{selected.accessibility_summary || 'Not researched yet. Refresh this partner after applying the accessibility migration.'}</p>
+                                            <p className="mt-3 text-sm leading-relaxed text-neutral-700">{selected.accessibility_summary || `Not researched yet. Refresh this ${entityLabel}.`}</p>
                                         </div>
                                     </section>
                                     <section className="border-t-2 border-black pt-5">
-                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><CircleDollarSign className="h-5 w-5" /> Funding & credibility</h4>
-                                        <div className="mt-3 grid gap-3 md:grid-cols-2">
-                                            <div className="border-2 border-black p-4">
-                                                <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Financial model</p>
-                                                <p className="mt-2 text-sm font-bold">{selected.financial_model.join(' · ') || 'Unknown — not publicly verified'}</p>
-                                                <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                                                    <div><dt className="font-black uppercase text-neutral-500">Revenue</dt><dd className="mt-1 font-bold">{formatRevenue(selected)}</dd></div>
-                                                    <div><dt className="font-black uppercase text-neutral-500">Year</dt><dd className="mt-1 font-bold">{selected.annual_revenue_year || 'Unknown'}</dd></div>
-                                                    <div><dt className="font-black uppercase text-neutral-500">Band</dt><dd className="mt-1 font-bold">{revenueBandLabels[selected.revenue_band || 'unknown']}</dd></div>
-                                                    <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
-                                                </dl>
-                                            </div>
-                                            <div className="border-2 border-black p-4">
-                                                <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Official partners & sponsors</p>
-                                                <div className="mt-2 flex flex-wrap gap-2">
-                                                    {selected.sponsors.length ? selected.sponsors.map(sponsor => <span key={sponsor} className="bg-neutral-100 px-2 py-1 text-xs font-bold">{sponsor}</span>) : <p className="text-sm text-neutral-500">None publicly verified.</p>}
+                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><CircleDollarSign className="h-5 w-5" /> {isCloudfund ? 'Fundraiser & credibility' : 'Funding & credibility'}</h4>
+                                        {isCloudfund ? (
+                                            <div className="mt-3 grid gap-3 md:grid-cols-2">
+                                                <div className="border-2 border-black p-4">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Live fundraiser</p>
+                                                    <p className="mt-2 text-sm font-bold">{fundraisingModelLabels[selected.fundraising_model || 'unknown']} · {selected.fundraising_platform || 'Direct / unknown'}</p>
+                                                    {selected.fundraising_url ? (
+                                                        <a href={selected.fundraising_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">Open fundraiser <ExternalLink className="h-3.5 w-3.5" /></a>
+                                                    ) : <p className="mt-2 text-xs text-amber-700">Direct fundraiser URL not verified.</p>}
+                                                    <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                                                        <div><dt className="font-black uppercase text-neutral-500">Raised</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.amount_raised, selected.funding_currency)}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Goal</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.funding_goal_amount, selected.funding_currency)}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Started</dt><dd className="mt-1 font-bold">{selected.campaign_started_at ? formatDate(selected.campaign_started_at) : 'Unknown'}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
+                                                    </dl>
+                                                </div>
+                                                <div className="border-2 border-black p-4">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Current funding evidence</p>
+                                                    <p className="mt-2 text-sm font-bold">{selected.fundraising_signal || 'No durable fundraising signal verified.'}</p>
+                                                    <p className="mt-3 text-xs leading-relaxed text-neutral-600">{selected.financial_situation}</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <div className="mt-3 grid gap-3 md:grid-cols-2">
+                                                <div className="border-2 border-black p-4">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Financial model</p>
+                                                    <p className="mt-2 text-sm font-bold">{selected.financial_model.join(' · ') || 'Unknown — not publicly verified'}</p>
+                                                    <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                                                        <div><dt className="font-black uppercase text-neutral-500">Revenue</dt><dd className="mt-1 font-bold">{formatRevenue(selected)}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Year</dt><dd className="mt-1 font-bold">{selected.annual_revenue_year || 'Unknown'}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Band</dt><dd className="mt-1 font-bold">{revenueBandLabels[selected.revenue_band || 'unknown']}</dd></div>
+                                                        <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
+                                                    </dl>
+                                                </div>
+                                                <div className="border-2 border-black p-4">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Official partners & sponsors</p>
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {selected.sponsors.length ? selected.sponsors.map(sponsor => <span key={sponsor} className="bg-neutral-100 px-2 py-1 text-xs font-bold">{sponsor}</span>) : <p className="text-sm text-neutral-500">None publicly verified.</p>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </section>
 
                                     <section className="border-t-2 border-black pt-5">
@@ -1114,7 +1249,7 @@ export default function PartnerCommandCenter() {
                                 <aside className="space-y-5 bg-neutral-50 p-5">
                                     <section className="border-2 border-black bg-brand-yellow p-4 shadow-[3px_3px_0_#000]">
                                         <p className="text-[10px] font-black uppercase tracking-wider">Next best action</p>
-                                        <p className="mt-2 text-sm font-bold leading-snug">{getNextBestAction(selected)}</p>
+                                        <p className="mt-2 text-sm font-bold leading-snug">{getNextBestAction(selected, researchTrack)}</p>
                                     </section>
                                     <section>
                                         <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Pipeline status</label>
@@ -1157,9 +1292,9 @@ export default function PartnerCommandCenter() {
                                     </section>
 
                                     <section className="border-t-2 border-black pt-4">
-                                        <label htmlFor="partner-notes" className="text-xs font-black uppercase">Internal notes</label>
+                                        <label htmlFor={`${researchTrack}-notes`} className="text-xs font-black uppercase">Internal notes</label>
                                         <textarea
-                                            id="partner-notes"
+                                            id={`${researchTrack}-notes`}
                                             key={`${selected.id}-${selected.notes}`}
                                             defaultValue={selected.notes}
                                             onBlur={event => {
@@ -1190,8 +1325,12 @@ export default function PartnerCommandCenter() {
                         <div className="flex min-h-[540px] items-center justify-center p-8 text-center">
                             <div>
                                 <Globe2 className="mx-auto h-12 w-12 text-neutral-300" />
-                                <h3 className="mt-4 font-candu text-2xl font-extrabold uppercase">Your partner pipeline starts here</h3>
-                                <p className="mx-auto mt-2 max-w-md text-sm text-neutral-500">Submit one or more organization URLs above. The research agent will validate fit, audience, activity, finances, contacts, and a tailored way in.</p>
+                                <h3 className="mt-4 font-candu text-2xl font-extrabold uppercase">Your {entityLabel} pipeline starts here</h3>
+                                <p className="mx-auto mt-2 max-w-md text-sm text-neutral-500">
+                                    {isCloudfund
+                                        ? 'Find active fundraisers or submit project URLs. The research agent will verify campaign duration, current need, operator credibility, activity, contacts, and a tailored CloudFund introduction.'
+                                        : 'Submit one or more organization URLs above. The research agent will validate fit, audience, activity, finances, contacts, and a tailored way in.'}
+                                </p>
                             </div>
                         </div>
                     )}
