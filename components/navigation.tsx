@@ -26,7 +26,7 @@ const moreLinks = [
   { href: '/teams', label: 'Rankings' },
   { href: '/map', label: 'Map' },
   { href: '/report', label: 'Report' },
-  { href: '/business', label: 'Business' },
+  { href: '/business', label: 'Partner Funding' },
   { href: '/discord-bot', label: 'Discord Bot' },
 ]
 

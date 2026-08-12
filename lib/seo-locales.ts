@@ -38,11 +38,11 @@ export const DISCORD_BOT_TITLE_BY_LOCALE: Record<string, string> = {
 };
 
 export const BUSINESS_TITLE_BY_LOCALE: Record<string, string> = {
-  en: 'IdleForest for Business | ESG Reforestation for Teams',
-  es: 'IdleForest para empresas | Reforestación ESG para equipos',
-  de: 'IdleForest für Unternehmen | ESG-Aufforstung für Teams',
-  pt: 'IdleForest para empresas | Reflorestação ESG para equipas',
-  fr: 'IdleForest pour les entreprises | Reforestation ESG pour les équipes',
+  en: 'Funding for Environmental NGOs & Partners | IdleForest',
+  es: 'Financiación para ONG y entidades ambientales | IdleForest',
+  de: 'Finanzierung für Umwelt-NGOs und Partner | IdleForest',
+  pt: 'Financiamento para ONG e parceiros ambientais | IdleForest',
+  fr: 'Financement pour ONG et partenaires environnementaux | IdleForest',
 };
 
 export const TEAMS_TITLE_BY_LOCALE: Record<string, string> = {
