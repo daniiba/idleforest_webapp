@@ -111,7 +111,6 @@ export default function ReportPage() {
               {activeTab === 'report' && (
                 <AnnualReport2023
                   liveEarnings={latestStats?.earnings ?? null}
-                  liveSnapshotAt={latestStats?.created_at ?? null}
                 />
               )}
 

@@ -1,8 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Check, Clock3, ExternalLink, Flag, Sprout, Target, Trees } from "lucide-react"
+import { Check, ExternalLink, Target, Trees } from "lucide-react"
 import { plantingsData, Receipt } from "@/lib/plantings"
 import { useTranslations } from "next-intl"
 
@@ -11,10 +10,9 @@ const TREE_ROADMAP = [5000, 10000, 25000, 50000, 100000] as const
 
 interface CharityCommitmentsProps {
   liveEarnings?: number | null
-  liveSnapshotAt?: string | null
 }
 
-export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: CharityCommitmentsProps) {
+export default function CharityCommitments({ liveEarnings }: CharityCommitmentsProps) {
   const t = useTranslations('Report')
   // Calculate totals
   const totalTrees = plantingsData.events.reduce((sum, e) => sum + e.trees, 0);
@@ -37,8 +35,7 @@ export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: Cha
   const fundedShare = 100 - plantedShare;
   const nextTreeGoal = TREE_ROADMAP.find((goal) => goal > totalTrees);
 
-  // The previous 5,000-tree and $2,000 funding milestones have been reached.
-  const goalTrees = 10000;
+  // The previous $2,000 funding milestone has been reached.
   const goalDonation = 5000;
 
   // Map events to milestones
@@ -61,7 +58,6 @@ export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: Cha
       date: event.date,
       description: project ? t(`projects.${project.id}.name`) : t('projects.default_contribution', { partner: partner?.name || '' }),
       trees: event.trees,
-      impact: project?.description ? t(`projects.${project.id}.description`) : t('projects.default_impact', { trees: event.trees, partner: partner?.name || '' }),
       receipts: eventReceipts.map(r => ({
         url: r.url || r.filePath,
         label: t('view_certificate')
@@ -85,122 +81,67 @@ export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: Cha
           </CardHeader>
           <CardContent className="px-0">
             <div className="space-y-8">
-              <div className="space-y-6 bg-brand-gray/30 p-6 border-2 border-black/10">
-                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">{t('total_contributions')}</h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm font-bold text-black">
-                      <span>{t('trees_planted_progress')}</span>
-                      <span>{totalTrees} <span className="text-neutral-500">/ {goalTrees}</span></span>
-                    </div>
-                    <Progress value={Math.min((totalTrees / goalTrees) * 100, 100)} className="h-4 bg-white border-2 border-black rounded-full [&>div]:bg-brand-green" />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm font-bold text-black">
-                      <span>{t('est_donation')}</span>
-                      <span>${totalDonations.toFixed(2)} <span className="text-neutral-500">/ ${goalDonation}</span></span>
-                    </div>
-                    <Progress value={Math.min((totalDonations / goalDonation) * 100, 100)} className="h-4 bg-white border-2 border-black rounded-full [&>div]:bg-brand-yellow" />
-                  </div>
-                </div>
-              </div>
-
-              <section className="overflow-hidden border-2 border-black bg-white" aria-labelledby="funding-pipeline-title">
-                <div className="flex flex-col gap-3 border-b-2 border-black bg-black p-5 text-white sm:flex-row sm:items-start sm:justify-between">
+              <section className="overflow-hidden border-2 border-black bg-white" aria-labelledby="impact-summary-title">
+                <div className="grid gap-5 bg-black p-5 text-white sm:grid-cols-[1fr_auto] sm:items-end sm:p-6">
                   <div>
-                    <div className="mb-2 flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow">
-                      <Sprout className="h-4 w-4" />
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow">
                       {t('funding_pipeline_label')}
-                    </div>
-                    <h3 id="funding-pipeline-title" className="font-rethink-sans text-2xl font-extrabold">
-                      {t('funding_pipeline_title')}
-                    </h3>
-                    <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-neutral-300">
-                      {t('funding_pipeline_desc')}
                     </p>
+                    <h3 id="impact-summary-title" className="mt-2 font-rethink-sans text-3xl font-black sm:text-4xl">
+                      {totalTrees.toLocaleString()} <span className="text-xl font-bold text-neutral-300 sm:text-2xl">{t('trees_planted_progress')}</span>
+                    </h3>
                   </div>
-                  <div className="shrink-0 border-2 border-brand-yellow px-3 py-2 text-xs font-extrabold uppercase tracking-wide text-brand-yellow">
-                    {t('live_estimate')}
+                  <div className="sm:text-right">
+                    <div className="font-rethink-sans text-2xl font-black tabular-nums text-brand-yellow">
+                      {fundedTreesTotal.toLocaleString()}
+                    </div>
+                    <div className="text-xs font-bold uppercase tracking-wide text-neutral-300">{t('funded_total')}</div>
                   </div>
                 </div>
 
-                <div className="space-y-5 p-5 sm:p-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="border-2 border-black bg-black p-5 text-white">
-                      <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-brand-yellow">
-                        <Check className="h-4 w-4" />
-                        {t('planted_verified')}
-                      </div>
-                      <div className="mt-3 text-4xl font-black tabular-nums">{totalTrees.toLocaleString()}</div>
-                      <p className="mt-2 text-sm font-medium text-neutral-300">{t('planted_verified_desc')}</p>
-                    </div>
-
+                <div className="space-y-4 p-5 sm:p-6">
+                  <div
+                    className="flex h-7 overflow-hidden border-2 border-black bg-white"
+                    role="img"
+                    aria-label={t('funding_pipeline_aria', {
+                      planted: totalTrees.toLocaleString(),
+                      awaiting: fundedAwaitingPlanting.toLocaleString(),
+                    })}
+                  >
+                    <div className="h-full bg-black" style={{ width: `${plantedShare}%` }} />
                     <div
-                      className="border-2 border-black bg-brand-yellow p-5 text-black"
+                      className="h-full border-l-2 border-black bg-brand-yellow"
                       style={{
-                        backgroundImage: "repeating-linear-gradient(135deg, rgba(255,255,255,0.26) 0, rgba(255,255,255,0.26) 10px, transparent 10px, transparent 20px)",
+                        width: `${fundedShare}%`,
+                        backgroundImage: "repeating-linear-gradient(135deg, rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 6px, transparent 6px, transparent 12px)",
                       }}
-                    >
-                      <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide">
-                        <Clock3 className="h-4 w-4" />
-                        {t('funded_awaiting')}
-                      </div>
-                      <div className="mt-3 text-4xl font-black tabular-nums">{fundedAwaitingPlanting.toLocaleString()}</div>
-                      <p className="mt-2 text-sm font-bold text-neutral-800">{t('funded_awaiting_desc')}</p>
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-black tabular-nums text-black">{totalTrees.toLocaleString()}</span>
+                      <span className="ml-1.5 font-medium text-neutral-600">{t('planted')}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-black tabular-nums text-black">{fundedAwaitingPlanting.toLocaleString()}</span>
+                      <span className="ml-1.5 font-medium text-neutral-600">{t('awaiting_planting')}</span>
                     </div>
                   </div>
 
-                  <div>
-                    <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
-                      <span className="text-sm font-extrabold uppercase tracking-wide text-black">{t('funded_total')}</span>
-                      <span className="font-rethink-sans text-2xl font-black tabular-nums text-black">
-                        {fundedTreesTotal.toLocaleString()} {t('trees')}
-                      </span>
-                    </div>
-                    <div
-                      className="flex h-8 overflow-hidden border-2 border-black bg-white"
-                      role="img"
-                      aria-label={t('funding_pipeline_aria', {
-                        planted: totalTrees.toLocaleString(),
-                        awaiting: fundedAwaitingPlanting.toLocaleString(),
-                      })}
-                    >
-                      <div className="h-full bg-black" style={{ width: `${plantedShare}%` }} />
-                      <div
-                        className="h-full border-l-2 border-black bg-brand-yellow"
-                        style={{
-                          width: `${fundedShare}%`,
-                          backgroundImage: "repeating-linear-gradient(135deg, rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 6px, transparent 6px, transparent 12px)",
-                        }}
-                      />
-                    </div>
-                    <div className="mt-2 flex justify-between gap-4 text-xs font-bold text-neutral-600">
-                      <span>{t('planted')}</span>
-                      <span className="text-right">{t('awaiting_planting')}</span>
-                    </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-black/15 pt-4 text-sm">
+                    <span className="font-medium text-neutral-600">{t('next_funding_goal')}</span>
+                    <span className="font-bold tabular-nums text-black">${totalDonations.toFixed(0)} / ${goalDonation.toLocaleString()}</span>
                   </div>
-
-                  <p className="border-l-4 border-brand-yellow pl-3 text-sm font-medium leading-relaxed text-neutral-700">
-                    {t('funding_pipeline_note', { cost: TREE_COST_USD.toFixed(2) })}
-                    {liveSnapshotAt && (
-                      <> {t('funding_snapshot', { date: new Date(liveSnapshotAt).toLocaleDateString() })}</>
-                    )}
-                  </p>
+                  <p className="text-xs font-medium text-neutral-500">{t('funding_pipeline_note', { cost: TREE_COST_USD.toFixed(2) })}</p>
                 </div>
               </section>
 
-              <section className="border-2 border-black bg-brand-gray/30 p-5 sm:p-6" aria-labelledby="roadmap-title">
-                <div className="mb-5 flex items-start gap-3">
-                  <Flag className="mt-1 h-6 w-6 shrink-0 text-black" />
-                  <div>
-                    <h3 id="roadmap-title" className="font-rethink-sans text-2xl font-extrabold text-black">
-                      {t('roadmap_title')}
-                    </h3>
-                    <p className="mt-1 text-sm font-medium leading-relaxed text-neutral-700">{t('roadmap_desc')}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              <section aria-labelledby="roadmap-title">
+                <h3 id="roadmap-title" className="mb-3 font-rethink-sans text-xl font-extrabold text-black">
+                  {t('roadmap_title')}
+                </h3>
+                <div className="flex flex-wrap gap-2">
                   {TREE_ROADMAP.map((goal) => {
                     const reached = totalTrees >= goal;
                     const isNext = goal === nextTreeGoal;
@@ -208,20 +149,13 @@ export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: Cha
                     return (
                       <div
                         key={goal}
-                        className={`min-h-28 border-2 border-black p-3 ${
+                        className={`flex items-center gap-2 border-2 border-black px-3 py-2 ${
                           reached ? 'bg-black text-white' : isNext ? 'bg-brand-yellow text-black' : 'bg-white text-black'
                         }`}
                       >
-                        <div className="flex min-h-8 items-start gap-1.5 text-[10px] font-extrabold uppercase tracking-wide">
-                          {reached && <Check className="h-3.5 w-3.5 shrink-0 text-brand-yellow" />}
-                          {reached ? t('goal_reached') : isNext ? t('goal_next') : t('goal_long_term')}
-                        </div>
-                        <div className="mt-3 font-rethink-sans text-2xl font-black tabular-nums">
-                          {goal.toLocaleString()}
-                        </div>
-                        <div className={`text-xs font-bold uppercase tracking-wide ${reached ? 'text-neutral-300' : 'text-neutral-600'}`}>
-                          {t('trees')}
-                        </div>
+                        {reached && <Check className="h-4 w-4 shrink-0 text-brand-yellow" />}
+                        <span className="font-rethink-sans text-lg font-black tabular-nums">{goal / 1000}K</span>
+                        {isNext && <span className="border-l border-black/30 pl-2 text-[10px] font-extrabold uppercase tracking-wide">{t('goal_next')}</span>}
                       </div>
                     )
                   })}
@@ -257,7 +191,6 @@ export default function CharityCommitments({ liveEarnings, liveSnapshotAt }: Cha
                         </div>
                       )}
 
-                      <p className="text-neutral-800 font-medium leading-relaxed mb-6">{milestone.impact}</p>
                       {milestone.receipts && milestone.receipts.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {milestone.receipts.map((receipt, i) => receipt.url && (
