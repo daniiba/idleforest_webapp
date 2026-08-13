@@ -32,6 +32,7 @@ export default function ReportPage() {
   const [data, setData] = useState<HistoricalData[]>([])
   const [userHistory, setUserHistory] = useState<UserHistoryData[]>([])
   const [loading, setLoading] = useState(true)
+  const latestStats = data[data.length - 1]
 
   useEffect(() => {
     fetchHistoricalData()
@@ -107,7 +108,12 @@ export default function ReportPage() {
               </div>
 
               {/* Content */}
-              {activeTab === 'report' && <AnnualReport2023 />}
+              {activeTab === 'report' && (
+                <AnnualReport2023
+                  liveEarnings={latestStats?.earnings ?? null}
+                  liveSnapshotAt={latestStats?.created_at ?? null}
+                />
+              )}
 
               {activeTab === 'analytics' && (
                 <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8">
