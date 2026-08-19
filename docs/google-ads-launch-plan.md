@@ -98,58 +98,75 @@ Split ad groups by promise and landing page:
 
 | Ad group | Landing page | Purpose |
 | --- | --- | --- |
-| Windows install | `/download/windows` | Explicit Windows software intent |
-| Mac install | `/download/mac` | Explicit Mac software intent |
-| Tree-planting app | OS-matched page or `/downloads` | Generic product intent |
-| Extension alternatives (experiment) | OS-matched desktop page | Users willing to install, but ad must explicitly say desktop app |
+| Help the environment for free | OS-matched desktop page | Higher-volume environmental-action searches; ad must say desktop app |
+| Tree-charity alternative | OS-matched desktop page | Donation/charity searches; offer a free alternative to donating money |
+| Environmental apps | OS-matched desktop page | Lower-volume users already looking for software |
 
 ## Keyword priorities
 
-These are launch seeds, not claimed search-volume estimates. Run them through Keyword Planner for the actual target countries and keep only terms with enough volume and commercially reasonable CPCs.
+The table below is from Google Keyword Planner for **United States, English, Google Search, July 2025–June 2026**, checked on August 19, 2026. This account currently receives Google's volume bands rather than exact counts; bid estimates are shown in the account currency (EUR).
 
-### Tier 1 — strongest product/install intent
+| Keyword | Avg. US searches/month | 3-month change | Competition | Top-of-page bid range | Launch decision |
+| --- | ---: | ---: | --- | ---: | --- |
+| `how to help environment` | 1K–10K | -90% | Medium | €0.51–€5.19 | Test, phrase + exact |
+| `ways to help environment` | 1K–10K | -90% | Low | €0.06–€6.85 | Test, phrase + exact |
+| `plant trees` | 1K–10K | -90% | Medium | €1.25–€6.70 | Exact only; aggressive gardening negatives |
+| `green apps` | 1K–10K | 0% | Low | €2.98–€7.26 | Small test; desktop must be explicit |
+| `sustainability app` | 100–1K | -90% | Low | — | Exact + phrase, low bid |
+| `charity app` | 100–1K | 0% | Low | €2.71–€9.41 | Exact only; desktop must be explicit |
+| `tree planting charity` | 100–1K | 0% | Medium | €2.00–€7.19 | Test as free donation alternative |
+| `environmental charities` | 100–1K | 0% | Medium | €3.35–€13.41 | Small exact-only test |
+| `best environmental charities` | 100–1K | 0% | Medium | €3.23–€13.07 | Small exact-only test |
+| `plant a tree donation` | 100–1K | 0% | Medium | €2.89–€10.37 | Test as free donation alternative |
+| `donate trees` | 100–1K | 0% | Medium | €2.35–€8.77 | Test as free donation alternative |
+| `tree planting organizations` | 100–1K | 0% | Medium | €1.45–€5.47 | Exact only |
 
-Use exact first, then phrase variants after the search-term report is clean.
+The direct product terms are real but too small to carry a campaign: `tree planting app`, `apps that plant trees`, `environmental apps`, `best environmental apps`, `climate change app`, and `apps to reduce carbon footprint` are each only **10–100 US searches/month**. Keep the strongest ones as low-bid exact matches so they can convert, but do not build the budget forecast around them.
+
+### Launch set — environmental action
+
+These have the most usable demand. The ad must answer the query directly: **help the environment for free by running the IdleForest desktop app**. Do not imply that clicking the ad plants a tree.
 
 ```text
-[tree planting app for windows]
-[tree planting app for mac]
+[how to help environment]
+"how to help environment"
+[ways to help environment]
+"ways to help environment"
+[plant trees]
+```
+
+### Launch set — environmental apps
+
+This is the only cluster that already implies software, but most demand is mobile or ambiguous. Target computers only and put **Desktop App for Windows & Mac** in the headline.
+
+```text
+[green apps]
+"green apps"
+[sustainability app]
+"sustainability app"
+[charity app]
 [tree planting app]
-[app that plants trees]
-[free tree planting app]
-[plant trees while browsing]
-[plant trees with unused internet]
-"tree planting desktop app"
-"app that plants trees in the background"
+[apps that plant trees]
 ```
 
-### Tier 2 — sustainability software intent
+### Launch set — free alternative to donating
+
+These users clearly want environmental impact, but they expect a charity or monetary donation. Keep them in a separate, capped campaign. The ad must say **No donation required—install the free IdleForest desktop app** so clicks self-qualify before they cost money.
 
 ```text
-"eco friendly app for windows"
-"eco friendly app for mac"
-"sustainability app for windows"
-"sustainability app for mac"
-"environmental desktop app"
-"background app for charity"
-"passive charity app"
+[tree planting charity]
+"tree planting charity"
+[tree planting charities]
+[environmental charities]
+[best environmental charities]
+[plant a tree donation]
+[donate trees]
+[tree planting organizations]
 ```
 
-### Tier 3 — install-ready adjacent intent, isolated test budget
+Do **not** launch `Ecosia alternative`: that query is for a search engine. Also exclude `give a tree` despite its 10K–100K band; current results are dominated by gifts, memorial certificates, and direct donations, and the term fell 90% both over three months and year over year. `distributed computing` and `background app` have 1K–10K bands but are technically or generically motivated, not environmental intent. `donate unused bandwidth`, `share unused bandwidth`, `passive donation`, and `passive charity` did not return enough US demand to appear as usable seeds.
 
-People searching these terms are comfortable installing software, but the intent can mismatch. Keep them in separate ad groups and judge them on active-day-14 CAC, not clicks.
-
-```text
-"tree planting chrome extension"
-"chrome extension that plants trees"
-"browser extension that plants trees"
-"ecosia extension alternative"
-"treeclicks alternative"
-"share unused bandwidth for charity"
-"donate unused internet bandwidth"
-```
-
-Do not start with Honeygain or generic “sell bandwidth” competitor terms. Those users usually expect personal cash payouts, while IdleForest directs proceeds to environmental impact.
+Allocate the first test budget roughly 60% environmental action, 25% environmental apps, and 15% donation alternative. Keep exact and phrase traffic in separate ad groups. Judge expansion only on connected desktop nodes and active-day-14 CAC—not click-through rate or downloads.
 
 ## Negative keyword starter list
 
@@ -185,9 +202,23 @@ free saplings
 tree seeds
 tree nursery
 tree planting service
+garden
+gardening
+landscaping
+arborist
+tree removal
+tree trimming
+privacy trees
+near me
+memorial
+certificate
+gift
+green screen
+app design
+ux design
 ```
 
-If extension-alternative terms are not in their own controlled experiment, also negate `extension`, `chrome extension`, `browser extension`, `ecosia`, and `treeclicks` from the main desktop campaign.
+Negate `extension`, `chrome extension`, `browser extension`, `ecosia`, `search engine`, and `treeclicks` account-wide. In the environmental-action campaign, cross-negate `charity`, `charities`, `donate`, and `donation`; add the opposite cross-negatives to the donation-alternative campaign so the experiments remain interpretable.
 
 Review search terms at least twice a week during launch and add negatives from actual queries.
 
