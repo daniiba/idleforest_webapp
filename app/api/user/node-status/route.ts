@@ -1,6 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import {
+    ACQUISITION_COOKIE,
+    claimDesktopNodeForAttribution,
+    normalizeAttributionId,
+} from '@/lib/acquisition-attribution'
 
 // Helper to create Supabase client for route handlers
 async function createSupabaseClient() {
@@ -42,7 +47,7 @@ export async function GET() {
         // Query nodes linked to this user
         const { data: nodes, error: nodesError } = await supabase
             .from('nodes')
-            .select('id, platform')
+            .select('id, node_identifier, platform, total_requests, created_at, opt_in')
             .eq('user_id', user.id)
 
         if (nodesError) {
@@ -68,6 +73,20 @@ export async function GET() {
 
         const hasDesktopNode = platforms.includes('windows') || platforms.includes('mac')
         const desktopNodeCount = nodes?.filter(n => n.platform === 'win32' || n.platform === 'darwin').length || 0
+
+        const cookieStore = await cookies()
+        const attributionId = normalizeAttributionId(cookieStore.get(ACQUISITION_COOKIE)?.value)
+        const eligibleDesktopNode = nodes
+            ?.filter(node => node.platform === 'win32' || node.platform === 'darwin')
+            .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())[0]
+
+        if (attributionId && eligibleDesktopNode) {
+            await claimDesktopNodeForAttribution({
+                attributionId,
+                node: eligibleDesktopNode,
+                userId: user.id,
+            })
+        }
 
         return NextResponse.json({
             hasNode,

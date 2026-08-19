@@ -1,6 +1,11 @@
 import createMiddleware from 'next-intl/middleware';
 import { updateSession } from '@/lib/supabase/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  ACQUISITION_COOKIE,
+  ACQUISITION_COOKIE_MAX_AGE,
+  hasAcquisitionParameters,
+} from '@/lib/acquisition-constants';
 
 const handleI18nRouting = createMiddleware({
   locales: ['en', 'es', 'de', 'pt', 'fr'],
@@ -42,6 +47,20 @@ async function entityExists(table: 'teams' | 'profiles', column: 'slug' | 'displ
   } catch {
     return null;
   }
+}
+
+function withAcquisitionCookie(request: NextRequest, response: NextResponse) {
+  if (hasAcquisitionParameters(request.nextUrl.searchParams)) {
+    response.cookies.set(ACQUISITION_COOKIE, crypto.randomUUID(), {
+      httpOnly: true,
+      secure: request.nextUrl.protocol === 'https:',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: ACQUISITION_COOKIE_MAX_AGE,
+    });
+  }
+
+  return response;
 }
 
 export async function middleware(request: NextRequest) {
@@ -90,7 +109,7 @@ export async function middleware(request: NextRequest) {
   // Only skip i18n for app-internal routes (API, auth, game, dashboard pages)
   const skipI18nPaths = ['/api', '/auth', '/game', '/install', '/extension-auth', '/onboarding', '/create-team', '/test-donation', '/claim-tree', '/share', '/download-success', '/download', '/impact', '/stats', '/profile', '/admin', '/record'];
   if (skipI18nPaths.some(path => pathname.startsWith(path))) {
-    return await updateSession(requestWithPathname);
+    return withAcquisitionCookie(request, await updateSession(requestWithPathname));
   }
 
   const homepagePaths = ['/', '/es', '/de', '/pt', '/fr'];
@@ -116,6 +135,9 @@ export async function middleware(request: NextRequest) {
   const supabaseResponse = await updateSession(requestWithPathname, response);
   supabaseResponse.headers.set('x-pathname', pathname);
 
+  // Start a new first-party attribution session for every external campaign click.
+  // The ID is intentionally opaque; click details are stored server-side.
+
   // 3. A/B Testing Logic
   const url = request.nextUrl
   const variantParam = url.searchParams.get('variant')
@@ -128,7 +150,7 @@ export async function middleware(request: NextRequest) {
     supabaseResponse.cookies.set('ab-variant', randomVariant)
   }
 
-  return supabaseResponse;
+  return withAcquisitionCookie(request, supabaseResponse);
 }
 
 export const config = {
