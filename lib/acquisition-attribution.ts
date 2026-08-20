@@ -151,3 +151,22 @@ export async function recordAcquisitionDownload({
         console.error('Failed to record acquisition download', insertError)
     }
 }
+
+export async function recordAcquisitionDownloadBestEffort(
+    input: Parameters<typeof recordAcquisitionDownload>[0],
+    timeoutMs = 500,
+) {
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined
+    try {
+        await Promise.race([
+            recordAcquisitionDownload(input),
+            new Promise<void>((resolve) => {
+                timeoutHandle = setTimeout(resolve, timeoutMs)
+            }),
+        ])
+    } catch (error) {
+        console.error('Failed to record acquisition download before redirect', error)
+    } finally {
+        if (timeoutHandle) clearTimeout(timeoutHandle)
+    }
+}

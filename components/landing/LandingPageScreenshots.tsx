@@ -265,7 +265,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                     className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
                                 >
                                     <Link
-                                        href="https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe"
+                                        href="/download/windows/installer"
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -297,7 +297,7 @@ export default function LandingPageScreenshots({ deviceInfo }: { deviceInfo?: De
                                     className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
                                 >
                                     <Link
-                                        href="https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
+                                        href="/download/mac/installer"
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"

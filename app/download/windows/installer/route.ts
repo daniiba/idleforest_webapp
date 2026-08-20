@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { ACQUISITION_COOKIE, normalizeAttributionId, recordAcquisitionDownload } from "@/lib/acquisition-attribution";
+import { ACQUISITION_COOKIE, normalizeAttributionId, recordAcquisitionDownloadBestEffort } from "@/lib/acquisition-attribution";
 
 export async function GET(request: Request) {
   const cookieStore = await cookies();
   const attributionId = normalizeAttributionId(cookieStore.get(ACQUISITION_COOKIE)?.value);
   if (attributionId) {
-    await recordAcquisitionDownload({
+    await recordAcquisitionDownloadBestEffort({
       attributionId,
       platform: 'win32',
       referrer: request.headers.get('referer'),

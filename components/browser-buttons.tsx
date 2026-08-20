@@ -94,11 +94,11 @@ export const MacDownloadButton = () => {
   const handleDownload = (e: React.MouseEvent) => {
     e.preventDefault();
     // Create a temporary link to trigger the download
-    const downloadUrl = "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip";
+    const downloadUrl = "/download/mac/installer";
 
     trackPinterestEvent({
       eventName: 'lead',
-      eventSourceUrl: downloadUrl,
+      eventSourceUrl: "https://www.idleforest.com/download/mac/installer",
       customData: { lead_type: 'Desktop Download - Mac' },
     });
 

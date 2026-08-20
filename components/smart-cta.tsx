@@ -87,8 +87,8 @@ export function SmartCTA({
                             <Link
                                 href={
                                     isMac
-                                        ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
-                                        : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe"
+                                        ? "/download/mac/installer"
+                                        : "/download/windows/installer"
                                 }
                                 className="flex items-center justify-center gap-2 w-full sm:w-auto"
                                 target="_blank"
