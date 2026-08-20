@@ -11,5 +11,11 @@
       "destination": "https://www.idleforest.com/:path*",
       "statusCode": 301
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/admin/acquisition-retention",
+      "schedule": "15 2 * * *"
+    }
   ]
 }

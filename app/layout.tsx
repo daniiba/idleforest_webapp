@@ -15,6 +15,7 @@ import { howItWorksSchemas } from "@/lib/how-it-works-schema";
 import { macDownloadSchemas } from "@/lib/mac-download-schema";
 import { windowsDownloadSchemas } from "@/lib/windows-download-schema";
 import { pathWithoutLocale } from "@/lib/i18n-routes";
+import GoogleAdsAttribution from "@/components/GoogleAdsAttribution";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -68,6 +69,7 @@ export default async function RootLayout({
     const locale = await getLocale();
     const messages = await getMessages();
     const pinterestTagId = process.env.PINTEREST_TAG_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID;
+    const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
     const pathname = headers().get('x-pathname') || '/';
     const normalizedPathname = pathWithoutLocale(pathname);
     const shouldRenderChromeDownloadSchemas = normalizedPathname === '/download/chrome';
@@ -125,6 +127,7 @@ export default async function RootLayout({
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-NXHH094YJK');
+          ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ''}
         `}
                 </Script>
                 <Script id="facebook-pixel" strategy="afterInteractive">
@@ -234,6 +237,7 @@ fbq('track', 'PageView');
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <TreeStatsProvider>
                         <AuthProvider>
+                            <GoogleAdsAttribution />
                             {children}
                             <Toaster />
                             {!shouldHideGlobalFooter && <Footer />}
