@@ -28,7 +28,7 @@ export function SmartCTA({
     desktopOnly?: boolean;
     showExtensionDownload?: boolean;
 }) {
-    const { isMobile, isDesktop, isChrome, isMac } = useDeviceDetection(deviceInfo);
+    const { isMobile, isDesktop, isChrome, isMac, isLinux } = useDeviceDetection(deviceInfo);
 
     const buttonClass = buttonVariant === "inverse"
         ? "w-full sm:w-auto bg-black text-brand-yellow font-bold hover:bg-black/80 rounded-full px-8 py-6 justify-center"
@@ -66,7 +66,7 @@ export function SmartCTA({
                     <div className="bg-neutral-900/10 p-4 rounded-lg border border-neutral-900/20">
                         <p className="font-bold mb-2">Not available on this device</p>
                         <p className="text-sm mb-4 opacity-90">
-                            IdleForest is currently available for Desktop (Windows/Mac) and as a browser extension.
+                            IdleForest is currently available for desktop (Windows, macOS, and Linux) and as a browser extension.
                         </p>
                         <div className="flex flex-col gap-3">
 
@@ -88,7 +88,9 @@ export function SmartCTA({
                                 href={
                                     isMac
                                         ? "/download/mac/installer"
-                                        : "/download/windows/installer"
+                                        : isLinux
+                                            ? "/download/linux/installer"
+                                            : "/download/windows/installer"
                                 }
                                 className="flex items-center justify-center gap-2 w-full sm:w-auto"
                                 target="_blank"
@@ -96,8 +98,10 @@ export function SmartCTA({
                                 onClick={() => trackLead(
                                     isMac
                                         ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
-                                        : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
-                                    isMac ? "Desktop Download - Mac" : "Desktop Download - Windows"
+                                        : isLinux
+                                            ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/linux/x64/idle-forest.deb"
+                                            : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",
+                                    isMac ? "Desktop Download - Mac" : isLinux ? "Desktop Download - Linux" : "Desktop Download - Windows"
                                 )}
                             >
                                 {isMac ? (
@@ -105,7 +109,7 @@ export function SmartCTA({
                                 ) : (
                                     <Monitor className="h-8 w-8" />
                                 )}
-                                {isMac ? "Download for Mac — It’s Free" : "Download for Windows — It’s Free"}
+                                {isMac ? "Download for Mac — It’s Free" : isLinux ? "Download for Linux — It’s Free" : "Download for Windows — It’s Free"}
                             </Link>
                         </Button>
                         {/* Angled overlay badge */}

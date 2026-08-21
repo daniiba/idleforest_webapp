@@ -59,25 +59,27 @@ export async function GET() {
         const nodeCount = nodes?.length || 0
 
         // Determine installed platforms
-        // platform: 'win32' = Windows, 'darwin' = Mac, null = extension
+        // platform: 'win32' = Windows, 'darwin' = Mac, 'linux' = Linux, null = extension
         const platforms: string[] = []
         if (nodes) {
             const hasDesktopWindows = nodes.some(n => n.platform === 'win32')
             const hasDesktopMac = nodes.some(n => n.platform === 'darwin')
+            const hasDesktopLinux = nodes.some(n => n.platform === 'linux')
             const hasExtension = nodes.some(n => n.platform === null)
 
             if (hasDesktopWindows) platforms.push('windows')
             if (hasDesktopMac) platforms.push('mac')
+            if (hasDesktopLinux) platforms.push('linux')
             if (hasExtension) platforms.push('extension')
         }
 
-        const hasDesktopNode = platforms.includes('windows') || platforms.includes('mac')
-        const desktopNodeCount = nodes?.filter(n => n.platform === 'win32' || n.platform === 'darwin').length || 0
+        const hasDesktopNode = platforms.includes('windows') || platforms.includes('mac') || platforms.includes('linux')
+        const desktopNodeCount = nodes?.filter(n => ['win32', 'darwin', 'linux'].includes(n.platform || '')).length || 0
 
         const cookieStore = await cookies()
         const attributionId = normalizeAttributionId(cookieStore.get(ACQUISITION_COOKIE)?.value)
         const eligibleDesktopNode = nodes
-            ?.filter(node => node.platform === 'win32' || node.platform === 'darwin')
+            ?.filter(node => ['win32', 'darwin', 'linux'].includes(node.platform || ''))
             .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())[0]
 
         if (attributionId && eligibleDesktopNode) {

@@ -68,7 +68,7 @@ const faqItems = [
   {
     question: "Does it work on mobile?",
     answer:
-      "Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile networks carry far less idle bandwidth than home connections, so a mobile version is on the roadmap but not live.",
+      "Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac, Windows, and Linux. Mobile networks carry far less idle bandwidth than home connections, so a mobile version is on the roadmap but not live.",
   },
   {
     question: "How do I pause or uninstall it?",
@@ -173,7 +173,7 @@ export default function HowItWorksPage() {
 
             <div className="mt-12 grid gap-5 md:grid-cols-2">
               <StepCard id="step-1" number="1." title="You Install the App">
-                Add the Chrome extension in one click, or install the small desktop app for Mac or Windows. There is no
+                Add the Chrome extension in one click, or install the small desktop app for Mac, Windows, or Linux. There is no
                 account to make, no form to fill, and no payment. The install takes about ten seconds.
               </StepCard>
               <StepCard id="step-2" number="2." title="It Runs Small Data Tasks in the Background">

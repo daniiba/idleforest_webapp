@@ -25,7 +25,7 @@ interface NodeStatus {
     platforms: string[]
 }
 
-type Platform = 'windows' | 'mac' | 'other'
+type Platform = 'windows' | 'mac' | 'linux' | 'other'
 type RewardState = 'idle' | 'claiming' | 'awarded' | 'already-awarded' | 'error'
 type AuthState = 'loading' | 'authenticated' | 'unauthenticated'
 
@@ -48,6 +48,8 @@ export default function WelcomePage() {
             setDetectedPlatform('windows')
         } else if (platformString.includes('mac')) {
             setDetectedPlatform('mac')
+        } else if (platformString.includes('linux')) {
+            setDetectedPlatform('linux')
         }
 
         checkAuthAndNodeStatus()
@@ -78,10 +80,14 @@ export default function WelcomePage() {
             return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
         }
 
+        if (detectedPlatform === 'linux') {
+            return '/download/linux/installer'
+        }
+
         return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
     }, [detectedPlatform])
 
-    const platformLabel = detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'windows' ? 'Windows' : 'Desktop'
+    const platformLabel = detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'windows' ? 'Windows' : detectedPlatform === 'linux' ? 'Linux' : 'Desktop'
 
     const checkAuthAndNodeStatus = async () => {
         setLoadingStatus(true)

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { useParams } from 'next/navigation'
-import { Building2, Gift, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Share2, Trophy, Users } from 'lucide-react'
+import { Building2, Gift, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Monitor, Share2, Trophy, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
@@ -235,6 +235,7 @@ export default function PublicProfilePage() {
                     const userPlatforms: string[] = []
                     if (nodesData.some(n => n.platform === 'win32')) userPlatforms.push('windows')
                     if (nodesData.some(n => n.platform === 'darwin')) userPlatforms.push('mac')
+                    if (nodesData.some(n => n.platform === 'linux')) userPlatforms.push('linux')
                     if (nodesData.some(n => n.platform === null)) userPlatforms.push('extension')
                     setPlatforms(userPlatforms)
                 }
@@ -480,6 +481,11 @@ export default function PublicProfilePage() {
                                 {platforms.includes('mac') && (
                                     <div className="bg-gray-100 p-2 rounded border-2 border-black" title="Mac">
                                         <Apple className="w-4 h-4 text-gray-700" />
+                                    </div>
+                                )}
+                                {platforms.includes('linux') && (
+                                    <div className="bg-amber-100 p-2 rounded border-2 border-black" title="Linux">
+                                        <Monitor className="w-4 h-4 text-amber-700" />
                                     </div>
                                 )}
                                 {platforms.includes('extension') && (

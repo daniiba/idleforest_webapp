@@ -82,16 +82,20 @@ const faqs = [
       "Right-click the IdleForest icon in Chrome and choose remove, or manage it from the extensions menu. Once removed, no bandwidth is used. The trees you have already funded stay funded.",
   },
   {
-    question: "Is there a version for Mac or Windows?",
+    question: "Is there a version for Mac, Windows, or Linux?",
     richAnswer: (
       <>
         Yes. If you would rather run it outside the browser, IdleForest has a{" "}
         <Link href="/download/mac" className="font-bold underline underline-offset-4 hover:text-brand-navy">
           desktop app for Mac
         </Link>
-        {" "}and{" "}
+        {", "}
         <Link href="/download/windows" className="font-bold underline underline-offset-4 hover:text-brand-navy">
           Windows
+        </Link>
+        {", and "}
+        <Link href="/downloads#desktop-apps" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+          Linux
         </Link>
         . The desktop app can fund more trees because it runs even when Chrome is closed.
       </>
@@ -132,8 +136,8 @@ export default function ChromeDownloadPage() {
   const headersList = headers();
   const userAgent = headersList.get("user-agent") || "";
   const deviceInfo = getDeviceInfo(userAgent);
-  const desktopDownloadHref = deviceInfo.isWindows ? "/download/windows" : "/download/mac";
-  const desktopDownloadLabel = deviceInfo.isWindows ? "Download for Windows" : deviceInfo.isMac ? "Download for Mac" : "Download for Mac / Windows";
+  const desktopDownloadHref = deviceInfo.isWindows ? "/download/windows" : deviceInfo.isLinux ? "/download/linux/installer" : "/download/mac";
+  const desktopDownloadLabel = deviceInfo.isWindows ? "Download for Windows" : deviceInfo.isMac ? "Download for Mac" : deviceInfo.isLinux ? "Download for Linux" : "Download for Mac / Windows / Linux";
 
   return (
     <>
@@ -354,7 +358,7 @@ function ChromeCtas({
         {compact ? null : <span>Prefer a desktop app?</span>}
         <Link href={desktopDownloadHref} className="inline-flex items-center gap-1 underline underline-offset-4 hover:text-brand-navy">
           <Download className="h-4 w-4" />
-          {compact ? "Download for Mac / Windows" : desktopDownloadLabel}
+          {compact ? "Download for Mac / Windows / Linux" : desktopDownloadLabel}
         </Link>
       </div>
     </div>

@@ -89,7 +89,7 @@ export default function CompanyWelcomePage() {
     const [nodeStatus, setNodeStatus] = useState<NodeStatus | null>(null)
     const [loading, setLoading] = useState(true)
     const [isCheckingConnection, setIsCheckingConnection] = useState(false)
-    const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'other'>('other')
+    const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'linux' | 'other'>('other')
     const [hasClickedDownload, setHasClickedDownload] = useState(false)
     const hasTrackedDesktopConnection = useRef(false)
     const params = useParams()
@@ -102,6 +102,8 @@ export default function CompanyWelcomePage() {
             setDetectedPlatform('windows')
         } else if (platformString.includes('mac')) {
             setDetectedPlatform('mac')
+        } else if (platformString.includes('linux')) {
+            setDetectedPlatform('linux')
         }
 
         fetchData()
@@ -360,7 +362,9 @@ export default function CompanyWelcomePage() {
                                 ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
                                 : detectedPlatform === 'windows'
                                     ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
-                                    : '/downloads#desktop-apps'
+                                    : detectedPlatform === 'linux'
+                                        ? '/download/linux/installer'
+                                        : '/downloads#desktop-apps'
                             }
                             target="_blank"
                             onClick={() => {
@@ -378,7 +382,7 @@ export default function CompanyWelcomePage() {
                             <div className="flex-1">
                                 <p className="font-bold text-lg">Desktop App</p>
                                 <p className="text-sm text-gray-300">
-                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : 'Windows or Mac'} • Starts company impact
+                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : detectedPlatform === 'linux' ? 'For Linux' : 'Windows, Mac, or Linux'} • Starts company impact
                                 </p>
                             </div>
                             <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">

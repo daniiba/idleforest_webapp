@@ -21,6 +21,7 @@ const Footer = () => {
         { href: '/download/chrome', label: 'Chrome Extension' },
         { href: '/download/windows', label: 'Windows App' },
         { href: '/download/mac', label: 'Mac App' },
+        { href: '/downloads#desktop-apps', label: 'Linux App' },
         { href: '/transparency', label: 'Transparency' },
       ],
     },

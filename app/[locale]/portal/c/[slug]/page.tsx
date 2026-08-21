@@ -241,8 +241,8 @@ export default async function CompanyMemberPortalPage({
         : 0
     const personalGeneratedPoints = generatedPoints > 0 ? generatedPoints : fallbackGeneratedPoints
     const estimatedFundingCents = Math.floor((personalGeneratedPoints / 1000) * (typedCompany.payout_rate_cents_per_1000_points || 27))
-    const hasDesktopNode = typedNodes.some((node) => node.platform === 'win32' || node.platform === 'darwin')
-    const desktopNodeCount = typedNodes.filter((node) => node.platform === 'win32' || node.platform === 'darwin').length
+    const hasDesktopNode = typedNodes.some((node) => ['win32', 'darwin', 'linux'].includes(node.platform || ''))
+    const desktopNodeCount = typedNodes.filter((node) => ['win32', 'darwin', 'linux'].includes(node.platform || '')).length
     const extensionNodeCount = typedNodes.filter((node) => node.platform === null).length
     const activeNodeCount = typedNodes.filter((node) => node.opt_in !== false).length
     const publicCompanyHref = getPublicCompanyHref(params.locale, typedCompany.slug)

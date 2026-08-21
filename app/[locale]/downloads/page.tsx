@@ -42,7 +42,7 @@ const DownloadsPage = () => {
         {/* Desktop Applications Section */}
         <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24 pb-20">
           <div className="container mx-auto px-6">
-            <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+            <div className="grid gap-6 md:grid-cols-3 max-w-7xl mx-auto">
               {/* Windows Card */}
               <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
@@ -66,6 +66,33 @@ const DownloadsPage = () => {
                   >
                     <Download className="h-5 w-5" />
                     {t('download_windows')}
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Linux Card */}
+              <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
+                  <Monitor className="h-6 w-6 text-brand-yellow" />
+                </div>
+                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
+                  LINUX
+                </h3>
+                <p className="text-neutral-800 mb-8 max-w-sm">
+                  {t('linux_desc')}
+                </p>
+                <Button
+                  asChild
+                  className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
+                >
+                  <Link
+                    href="/download/linux/installer"
+                    className="flex items-center gap-2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="h-5 w-5" />
+                    {t('download_linux')}
                   </Link>
                 </Button>
               </div>

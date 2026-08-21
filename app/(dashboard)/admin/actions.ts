@@ -282,7 +282,7 @@ export async function getAdminStats() {
     if (allNodes) {
         for (const node of allNodes) {
             const requests = node.total_requests || 0
-            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            const isDesktop = ['win32', 'darwin', 'linux'].includes(node.platform || '')
             if (isDesktop) {
                 desktopRequests += requests
                 desktopNodeCount++
@@ -479,13 +479,13 @@ export async function getPowerUsers(): Promise<PowerUser[]> {
             if (!node.user_id) return
 
             // Existing logic for unopted desktop
-            if ((node.platform === 'win32' || node.platform === 'darwin') && node.opt_in === false) {
+            if (['win32', 'darwin', 'linux'].includes(node.platform || '') && node.opt_in === false) {
                 unoptedDesktopUserIds.add(node.user_id)
             }
 
             // Logic for extension_no_desktop
             const stats = userNodesMap.get(node.user_id) || { hasDesktop: false, hasAnyNode: true, allPlatformsNull: true }
-            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            const isDesktop = ['win32', 'darwin', 'linux'].includes(node.platform || '')
             if (isDesktop) {
                 stats.hasDesktop = true
                 desktopUserIds.add(node.user_id)
@@ -2989,7 +2989,7 @@ async function syncPendingTeamAdoptionRewards(adminClient: ReturnType<typeof cre
         }
 
         ;((nodes || []) as TeamRewardNode[]).forEach(node => {
-            const isDesktop = node.platform === 'win32' || node.platform === 'darwin'
+            const isDesktop = ['win32', 'darwin', 'linux'].includes(node.platform || '')
             if (node.user_id && isDesktop && node.opt_in !== false && (node.total_requests || 0) > 0) {
                 activeDesktopUsers.add(node.user_id)
             }

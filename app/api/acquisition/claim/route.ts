@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         .from('nodes')
         .select('node_identifier, platform, total_requests, created_at, opt_in')
         .eq('node_identifier', nodeIdentifier)
-        .in('platform', ['win32', 'darwin'])
+        .in('platform', ['win32', 'darwin', 'linux'])
         .maybeSingle()
 
     if (!node) {

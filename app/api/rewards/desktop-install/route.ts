@@ -21,7 +21,7 @@ export async function POST() {
             .from('nodes')
             .select('id, platform')
             .eq('user_id', user.id)
-            .in('platform', ['win32', 'darwin'])
+            .in('platform', ['win32', 'darwin', 'linux'])
             .limit(1)
 
         if (nodesError) {

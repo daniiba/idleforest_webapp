@@ -89,8 +89,10 @@
             "description": "Mit dem Download von IdleForest trittst du einer globalen Gemeinschaft bei, die sich der Aufforstung und dem Umweltschutz widmet.",
             "windows_desc": "Lade IdleForest für Windows herunter und beginne mit deiner ungenutzten Rechenleistung einen Unterschied zu machen.",
             "mac_desc": "Lade IdleForest für macOS herunter und trage zur Aufforstung bei, während dein Computer im Leerlauf ist.",
+            "linux_desc": "Lade das 64-Bit-.deb-Paket für Linux herunter und unterstütze verifizierte Aufforstung im Hintergrund.",
             "download_windows": "Für Windows herunterladen",
-            "download_mac": "Für Mac OS herunterladen"
+            "download_mac": "Für Mac OS herunterladen",
+            "download_linux": "Für Linux herunterladen"
         },
         "impact": {
             "heading": "Unsere Wirkung",
@@ -325,8 +327,10 @@
         "description": "Starte mit IdleForest auf deiner bevorzugten Plattform. Wähle unsere Desktop-Apps oder leichtgewichtige Browser-Erweiterungen.",
         "windows_desc": "Lade IdleForest für Windows herunter und mache einen Unterschied mit deiner ungenutzten Rechenleistung.",
         "mac_desc": "Lade IdleForest für macOS herunter und trage zur Aufforstung bei.",
+        "linux_desc": "Lade das 64-Bit-.deb-Paket für Linux herunter und unterstütze verifizierte Aufforstung im Hintergrund.",
         "download_windows": "Für Windows herunterladen",
         "download_mac": "Für Mac OS herunterladen",
+        "download_linux": "Für Linux herunterladen",
         "browser_heading": "Browser-Erweiterungen",
         "browser_desc": "Leichtgewichtig und einfach in deinem Lieblingsbrowser zu installieren."
     },

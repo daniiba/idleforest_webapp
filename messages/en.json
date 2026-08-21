@@ -77,7 +77,7 @@
             "subheading": "Install IdleForest once. Browse normally. Your unused bandwidth quietly funds verified tree planting in the background.",
             "trees_planted_badge": "{count} trees planted by our community",
             "step1_title": "Install in One Click",
-            "step1_desc": "Add IdleForest to Chrome from the Web Store, or download the desktop app for Mac or Windows. No signup, payment method, or browser-setting changes required.",
+            "step1_desc": "Add IdleForest to Chrome from the Web Store, or download the desktop app for Mac, Windows, or Linux. No signup, payment method, or browser-setting changes required.",
             "step2_title": "Browse Normally",
             "step2_desc": "IdleForest stays in the background and uses only the bandwidth you are not using for small, sessionless backend tasks. Your browser stays fast and your data stays on your machine.",
             "step2_link": "Read the full technical explanation",
@@ -89,8 +89,10 @@
             "description": "Install IdleForest, browse like you always do, and let unused bandwidth fund verified reforestation. It is free, background-friendly, and built so you can forget it is running.",
             "windows_desc": "Download IdleForest for Windows and plant trees with idle bandwidth while your computer is on.",
             "mac_desc": "Download IdleForest for macOS and contribute to verified reforestation while your computer is idle.",
+            "linux_desc": "Download the 64-bit .deb package for Linux and fund verified reforestation in the background.",
             "download_windows": "Download for Windows",
-            "download_mac": "Download for Mac OS"
+            "download_mac": "Download for Mac OS",
+            "download_linux": "Download for Linux"
         },
         "impact": {
             "heading": "Our Impact",
@@ -153,7 +155,7 @@
             "trees_a2": "We partner with established organizations like Trees for the Future and Tree-Nation to ensure every tree is planted, tracked, and contributes to real environmental impact. You can track your personal contribution in real-time through your dashboard.",
             "browser_q": "Do I need to keep my browser open?",
             "browser_a1": "For the browser extension, yes—your browser needs to be open for IdleForest to work.",
-            "browser_a2": "However, we also offer desktop applications for Windows and macOS that run in the background even when your browser is closed. This allows you to maximize your impact without changing your daily routine.",
+            "browser_a2": "However, we also offer desktop applications for Windows, macOS, and Linux that run in the background even when your browser is closed. This allows you to maximize your impact without changing your daily routine.",
             "ai_q": "I'm concerned about supporting AI companies. Why should I use IdleForest?",
             "ai_a1": "We understand this concern. Here's the reality: AI companies will collect web data regardless—it's essential for training models and powering applications.",
             "ai_a2": "The question isn't whether data collection happens, but how. Traditional web scraping uses massive data centers that consume enormous amounts of electricity and water. These server farms are responsible for 1-2% of global electricity consumption.",
@@ -325,8 +327,10 @@
         "description": "Get started with IdleForest on your preferred platform. Choose from our desktop applications for an enhanced experience or our lightweight browser extensions.",
         "windows_desc": "Download IdleForest for Windows to start making a difference with your idle computing power.",
         "mac_desc": "Download IdleForest for macOS to contribute to reforestation efforts while your computer is idle.",
+        "linux_desc": "Download the 64-bit .deb package for Linux and contribute to verified reforestation in the background.",
         "download_windows": "Download for Windows",
         "download_mac": "Download for Mac OS",
+        "download_linux": "Download for Linux",
         "browser_heading": "Browser Extensions",
         "browser_desc": "Lightweight and easy to install in your favorite browser."
     },

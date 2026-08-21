@@ -44,7 +44,7 @@ const comparisonProducts = [
     {
         name: "IdleForest",
         summary: "A passive layer that runs beside the browser and computer you already use.",
-        values: ["Free", "Install once; keep browsing", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, and Windows"],
+        values: ["Free", "Install once; keep browsing", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, Windows, and Linux"],
         featured: true,
     },
     {
@@ -595,7 +595,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </p>
                         </div>
 
-                        <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+                        <div className="grid gap-6 md:grid-cols-3 max-w-7xl mx-auto">
                             {/* Windows Card */}
                             <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
                                 <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
@@ -624,6 +624,38 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     >
                                         <Download className="h-5 w-5" />
                                         {t('desktop_apps.download_windows')}
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/* Linux Card */}
+                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
+                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                                </div>
+                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
+                                    LINUX
+                                </h3>
+                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                    {t('desktop_apps.linux_desc')}
+                                </p>
+                                <Button
+                                    asChild
+                                    className="bg-brand-navy text-brand-yellow hover:bg-black rounded-full px-6 py-6 font-bold"
+                                >
+                                    <Link
+                                        href="/download/linux/installer"
+                                        className="flex items-center gap-2"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => trackPinterestEvent({
+                                            eventName: "lead",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/linux/x64/idle-forest.deb",
+                                            customData: { lead_type: 'Desktop Download - Linux' }
+                                        })}
+                                    >
+                                        <Download className="h-5 w-5" />
+                                        {t('desktop_apps.download_linux')}
                                     </Link>
                                 </Button>
                             </div>
@@ -946,7 +978,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 answer={
                                     <>
                                         <p className="mb-3">
-                                            Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac and Windows.
+                                            Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac, Windows, and Linux.
                                         </p>
                                         <p>
                                             Mobile is on the roadmap, but mobile networks usually have less idle bandwidth than home connections, so the impact per user would be lower. We will launch when the math works.
@@ -1084,7 +1116,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "name": "Is IdleForest available on mobile?",
                                 "acceptedAnswer": {
                                     "@type": "Answer",
-                                    "text": "Not yet. The app runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections, so the impact per user would be lower. We will launch when the math works."
+                                    "text": "Not yet. The app runs as a Chrome extension and as a desktop app for Mac, Windows, and Linux. Mobile is on the roadmap, but mobile networks have less idle bandwidth than home connections, so the impact per user would be lower. We will launch when the math works."
                                 }
                             },
                             {
@@ -1114,7 +1146,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 "@type": "HowToStep",
                                 "position": 1,
                                 "name": "Install the app",
-                                "text": "Add IdleForest to Chrome or download the desktop app for Mac or Windows. Takes 10 seconds.",
+                                "text": "Add IdleForest to Chrome or download the desktop app for Mac, Windows, or Linux. Takes 10 seconds.",
                                 "url": "https://www.idleforest.com/#step-1"
                             },
                             {

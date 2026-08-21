@@ -211,6 +211,7 @@ export default function TeamClient() {
 						if (nodesData) {
 							if (nodesData.some(n => n.platform === 'win32')) platforms.push('windows')
 							if (nodesData.some(n => n.platform === 'darwin')) platforms.push('mac')
+							if (nodesData.some(n => n.platform === 'linux')) platforms.push('linux')
 							if (nodesData.some(n => n.platform === null)) platforms.push('extension')
 						}
 

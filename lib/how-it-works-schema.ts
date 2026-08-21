@@ -8,7 +8,7 @@ export const howItWorksHowToSchema = {
       "@type": "HowToStep",
       "position": 1,
       "name": "Install the app",
-      "text": "Add the Chrome extension in one click, or install the desktop app for Mac or Windows. No account, no payment.",
+      "text": "Add the Chrome extension in one click, or install the desktop app for Mac, Windows, or Linux. No account, no payment.",
       "url": "https://www.idleforest.com/how-it-works#step-1",
     },
     {
@@ -100,7 +100,7 @@ export const howItWorksFaqSchema = {
       "name": "Does it work on mobile?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac and Windows. Mobile networks carry far less idle bandwidth than home connections, so a mobile version is on the roadmap but not live.",
+        "text": "Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac, Windows, and Linux. Mobile networks carry far less idle bandwidth than home connections, so a mobile version is on the roadmap but not live.",
       },
     },
     {

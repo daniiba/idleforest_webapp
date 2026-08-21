@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
-import { Users, Apple, Chrome } from "lucide-react"
+import { Users, Apple, Chrome, Monitor } from "lucide-react"
 
 interface TeamMember {
     id: string
@@ -12,7 +12,7 @@ interface TeamMember {
         display_name: string
         username?: string
     }
-    platforms?: string[] // 'windows' | 'mac' | 'extension'
+    platforms?: string[] // 'windows' | 'mac' | 'linux' | 'extension'
     role?: 'owner' | 'admin' | 'member'
 }
 
@@ -62,6 +62,11 @@ export function TeamMembers({ members, teamCreatorId }: TeamMembersProps) {
                                             {member.platforms.includes('mac') && (
                                                 <div className="bg-gray-500/20 p-1 rounded" title="Mac">
                                                     <Apple className="w-3 h-3 text-gray-300" />
+                                                </div>
+                                            )}
+                                            {member.platforms.includes('linux') && (
+                                                <div className="bg-amber-500/20 p-1 rounded" title="Linux">
+                                                    <Monitor className="w-3 h-3 text-amber-300" />
                                                 </div>
                                             )}
                                             {member.platforms.includes('extension') && (

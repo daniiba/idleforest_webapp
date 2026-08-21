@@ -33,7 +33,7 @@ export async function claimDesktopNodeForAttribution({
     userId?: string | null
 }) {
     const normalizedId = normalizeAttributionId(attributionId)
-    if (!normalizedId || !node.node_identifier || !['win32', 'darwin'].includes(node.platform || '')) {
+    if (!normalizedId || !node.node_identifier || !['win32', 'darwin', 'linux'].includes(node.platform || '')) {
         return { claimed: false, reason: 'invalid-attribution-or-node' } as const
     }
 
@@ -99,7 +99,7 @@ export async function recordAcquisitionDownload({
     userAgent,
 }: {
     attributionId: string
-    platform: 'win32' | 'darwin'
+    platform: 'win32' | 'darwin' | 'linux'
     referrer?: string | null
     userAgent?: string | null
 }) {

@@ -56,7 +56,7 @@ export async function GET(request: Request) {
                 .from('nodes')
                 .select('user_id, platform, total_requests, opt_in')
                 .in('user_id', userIds)
-                .in('platform', ['win32', 'darwin']),
+                .in('platform', ['win32', 'darwin', 'linux']),
         ])
 
         if (claimsResult.error) {

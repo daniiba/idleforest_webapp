@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
     const desktopUserIds = new Set(
         nodes
-            ?.filter(node => node.platform === 'win32' || node.platform === 'darwin')
+            ?.filter(node => ['win32', 'darwin', 'linux'].includes(node.platform || ''))
             .map(node => node.user_id)
             .filter(Boolean) || []
     )

@@ -7,6 +7,7 @@ export interface DeviceDetection {
     isSafari: boolean;
     isMac: boolean;
     isWindows: boolean;
+    isLinux: boolean;
     isIOS: boolean;
     isAndroid: boolean;
 }
@@ -19,6 +20,7 @@ export const defaultDeviceInfo: DeviceDetection = {
     isSafari: false,
     isMac: false,
     isWindows: false, // Default to false to avoid hydration mismatch if we don't know
+    isLinux: false,
     isIOS: false,
     isAndroid: false,
 };
@@ -36,6 +38,7 @@ export function getDeviceInfo(userAgent: string): DeviceDetection {
     // Note: platform is not available on server, so we rely on UA
     const isMac = /Mac|iPod|iPhone|iPad/.test(ua) || /Macintosh/.test(ua);
     const isWindows = /Windows/.test(ua);
+    const isLinux = /Linux/.test(ua) && !isAndroid;
 
     // Browser Detection
     // Edge includes "Edg/"
@@ -53,6 +56,7 @@ export function getDeviceInfo(userAgent: string): DeviceDetection {
         isSafari,
         isMac,
         isWindows,
+        isLinux,
         isIOS,
         isAndroid,
     };

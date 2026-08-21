@@ -89,8 +89,10 @@
             "description": "Ao baixar o IdleForest, você se junta a uma comunidade global dedicada à reflorestamento e conservação ambiental. Nosso aplicativo funciona em segundo plano, utilizando seus recursos computacionais ociosos para ajudar a plantar árvores ao redor do mundo.",
             "windows_desc": "Baixe o IdleForest para Windows e comece a fazer a diferença com seu poder computacional ocioso.",
             "mac_desc": "Baixe o IdleForest para macOS e contribua para os esforços de reflorestamento enquanto seu computador está parado.",
+            "linux_desc": "Baixe o pacote .deb de 64 bits para Linux e contribua para a reflorestação verificada em segundo plano.",
             "download_windows": "Baixar para Windows",
-            "download_mac": "Baixar para Mac OS"
+            "download_mac": "Baixar para Mac OS",
+            "download_linux": "Baixar para Linux"
         },
         "impact": {
             "heading": "Nosso Impacto",
@@ -325,8 +327,10 @@
         "description": "Comece com o IdleForest na sua plataforma preferida. Escolha entre nossos aplicativos de desktop para uma experiência aprimorada ou nossas extensões leves de navegador.",
         "windows_desc": "Baixe o IdleForest para Windows e comece a fazer a diferença com seu poder computacional ocioso.",
         "mac_desc": "Baixe o IdleForest para macOS e contribua para os esforços de reflorestamento enquanto seu computador está parado.",
+        "linux_desc": "Baixe o pacote .deb de 64 bits para Linux e contribua para a reflorestação verificada em segundo plano.",
         "download_windows": "Baixar para Windows",
         "download_mac": "Baixar para Mac OS",
+        "download_linux": "Baixar para Linux",
         "browser_heading": "Extensões do Navegador",
         "browser_desc": "Leves e fáceis de instalar no seu navegador favorito."
     },

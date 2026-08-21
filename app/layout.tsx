@@ -91,7 +91,7 @@ export default async function RootLayout({
             ? "macOS 11+"
             : shouldRenderWindowsDownloadSchemas
                 ? "Windows 10, Windows 11"
-                : "Chrome, Edge, macOS, Windows",
+                : "Chrome, Edge, macOS, Windows, Linux",
         "offers": {
             "@type": "Offer",
             "price": "0",

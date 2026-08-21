@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
                 .from('nodes')
                 .select('node_identifier, total_requests, opt_in, platform')
                 .in('node_identifier', nodeIdentifiers)
-                .in('platform', ['win32', 'darwin'])
+                .in('platform', ['win32', 'darwin', 'linux'])
             : { data: [], error: null }
 
         if (nodesError) throw nodesError

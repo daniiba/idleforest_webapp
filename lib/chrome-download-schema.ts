@@ -90,10 +90,10 @@ export const chromeDownloadFaqSchema = {
     },
     {
       "@type": "Question",
-      "name": "Is there a version for Mac or Windows?",
+      "name": "Is there a version for Mac, Windows, or Linux?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. If you would rather run it outside the browser, IdleForest has a desktop app for Mac and Windows. The desktop app can fund more trees because it runs even when Chrome is closed.",
+        "text": "Yes. If you would rather run it outside the browser, IdleForest has a desktop app for Mac, Windows, and Linux. The desktop app can fund more trees because it runs even when Chrome is closed.",
       },
     },
   ],
