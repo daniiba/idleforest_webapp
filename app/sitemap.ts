@@ -147,6 +147,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/download/chrome', changeFrequency: 'monthly', priority: 0.9, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/download/mac', changeFrequency: 'monthly', priority: 0.85, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/download/windows', changeFrequency: 'monthly', priority: 0.85, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
+    { path: '/download/linux', changeFrequency: 'monthly', priority: 0.85, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/c/mossy-earth', changeFrequency: 'weekly', priority: 0.75, lastModified: new Date('2026-06-15T00:00:00.000Z'), translated: false },
     { path: '/c/planetwild', changeFrequency: 'weekly', priority: 0.75, lastModified: new Date('2026-06-22T00:00:00.000Z'), translated: false },
     { path: '/c/silveira', changeFrequency: 'weekly', priority: 0.75, lastModified: new Date('2026-06-16T00:00:00.000Z'), translated: false },

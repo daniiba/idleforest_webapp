@@ -94,7 +94,7 @@ const faqs = [
           Windows
         </Link>
         {", and "}
-        <Link href="/downloads#desktop-apps" className="font-bold underline underline-offset-4 hover:text-brand-navy">
+        <Link href="/download/linux" className="font-bold underline underline-offset-4 hover:text-brand-navy">
           Linux
         </Link>
         . The desktop app can fund more trees because it runs even when Chrome is closed.

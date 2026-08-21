@@ -18,6 +18,7 @@ const downloadLinks = [
   { href: '/download/chrome', label: 'Chrome Extension' },
   { href: '/download/windows', label: 'Windows App' },
   { href: '/download/mac', label: 'Mac App' },
+  { href: '/download/linux', label: 'Linux App' },
 ]
 
 const moreLinks = [
@@ -41,7 +42,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const pathname = usePathname()
   const router = useRouter()
   const t = useTranslations('Navigation')
-  const { isMobile, isChrome, isMac } = useDeviceDetection()
+  const { isMobile, isChrome, isMac, isLinux } = useDeviceDetection()
 
   // Use centralized auth context
   const { user, signOut } = useAuth()
@@ -108,12 +109,12 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href)
   const hasActiveChild = (items: Array<{ href: string }>) => items.some(({ href }) => isActive(href))
   const pathSuggestsMac = pathname.startsWith('/download/mac')
-  const headerCtaIsMac = isMac || pathSuggestsMac
-  const desktopDownloadActionHref = headerCtaIsMac ? '/download/mac/installer' : '/download/windows/installer'
-  const desktopDownloadLabel = headerCtaIsMac
-    ? 'Download for Mac — It’s Free'
-    : 'Download for Windows — It’s Free'
-  const DesktopDownloadIcon = headerCtaIsMac ? Apple : Monitor
+  const pathSuggestsLinux = pathname.startsWith('/download/linux')
+  const headerCtaPlatform = isLinux || pathSuggestsLinux ? 'linux' : isMac || pathSuggestsMac ? 'mac' : 'windows'
+  const headerCtaPlatformLabel = headerCtaPlatform === 'mac' ? 'Mac' : headerCtaPlatform === 'linux' ? 'Linux' : 'Windows'
+  const desktopDownloadActionHref = `/download/${headerCtaPlatform}/installer`
+  const desktopDownloadLabel = `Download for ${headerCtaPlatformLabel} — It’s Free`
+  const DesktopDownloadIcon = headerCtaPlatform === 'mac' ? Apple : Monitor
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
@@ -176,7 +177,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
           <a
             href={desktopDownloadActionHref}
             data-source-page={pathname}
-            onClick={() => trackHeaderInstallClick(headerCtaIsMac ? 'download_mac_header' : 'download_windows_header')}
+            onClick={() => trackHeaderInstallClick(`download_${headerCtaPlatform}_header`)}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
           >
             <DesktopDownloadIcon className="h-5 w-5 shrink-0" />

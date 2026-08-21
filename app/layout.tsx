@@ -12,6 +12,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { chromeDownloadSchemas } from "@/lib/chrome-download-schema";
 import { howItWorksSchemas } from "@/lib/how-it-works-schema";
+import { linuxDownloadSchemas } from "@/lib/linux-download-schema";
 import { macDownloadSchemas } from "@/lib/mac-download-schema";
 import { windowsDownloadSchemas } from "@/lib/windows-download-schema";
 import { pathWithoutLocale } from "@/lib/i18n-routes";
@@ -74,6 +75,7 @@ export default async function RootLayout({
     const normalizedPathname = pathWithoutLocale(pathname);
     const shouldRenderChromeDownloadSchemas = normalizedPathname === '/download/chrome';
     const shouldRenderHowItWorksSchemas = normalizedPathname === '/how-it-works';
+    const shouldRenderLinuxDownloadSchemas = normalizedPathname === '/download/linux';
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
     const shouldHideGlobalFooter =
@@ -81,7 +83,7 @@ export default async function RootLayout({
         normalizedPathname.startsWith('/c/planetwild') ||
         normalizedPathname.startsWith('/c/mossy-earth') ||
         normalizedPathname.startsWith('/c/silveira');
-    const isDesktopDownloadPage = shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
+    const isDesktopDownloadPage = shouldRenderLinuxDownloadSchemas || shouldRenderMacDownloadSchemas || shouldRenderWindowsDownloadSchemas;
     const softwareApplicationSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -89,9 +91,11 @@ export default async function RootLayout({
         "applicationCategory": isDesktopDownloadPage ? "GreenApplication" : "BrowserExtension",
         "operatingSystem": shouldRenderMacDownloadSchemas
             ? "macOS 11+"
-            : shouldRenderWindowsDownloadSchemas
-                ? "Windows 10, Windows 11"
-                : "Chrome, Edge, macOS, Windows, Linux",
+            : shouldRenderLinuxDownloadSchemas
+                ? "Linux (x64, Debian package)"
+                : shouldRenderWindowsDownloadSchemas
+                    ? "Windows 10, Windows 11"
+                    : "Chrome, Edge, macOS, Windows, Linux",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -216,6 +220,13 @@ fbq('track', 'PageView');
                     />
                 )) : null}
                 {shouldRenderMacDownloadSchemas ? macDownloadSchemas.map((schema) => (
+                    <script
+                        key={schema["@type"]}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                    />
+                )) : null}
+                {shouldRenderLinuxDownloadSchemas ? linuxDownloadSchemas.map((schema) => (
                     <script
                         key={schema["@type"]}
                         type="application/ld+json"
