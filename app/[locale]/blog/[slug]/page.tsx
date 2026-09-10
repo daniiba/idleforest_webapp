@@ -9,6 +9,8 @@ import BrowserButtons from "@/components/browser-buttons";
 import { SmartCTA } from "@/components/smart-cta";
 import { getHashnodePost } from '@/lib/hashnode-blog'
 import FreeTreeGuideIntro from '@/components/free-tree-guide-intro'
+import FreeTreeResources from '@/components/free-tree-resources'
+import { FREE_TREE_RELATED_ARTICLE_SLUGS } from '@/lib/free-tree-guide'
 import { FREE_TREE_GUIDE_SLUG, FREE_TREE_GUIDE_PATH, FREE_TREE_GUIDE_TITLE, FREE_TREE_GUIDE_DESCRIPTION, FREE_TREE_GUIDE_UPDATED_AT, prepareFreeTreeGuideHtml } from '@/lib/free-tree-guide'
 
 export const revalidate = 60 // invalidate every hour
@@ -69,6 +71,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   }
 
   const isFreeTreeGuide = (post.slug || params.slug) === FREE_TREE_GUIDE_SLUG
+  const isFreeTreeTopic = FREE_TREE_RELATED_ARTICLE_SLUGS.includes(post.slug || params.slug)
   const title = isFreeTreeGuide ? FREE_TREE_GUIDE_TITLE : post.title
   const normalizedHtml = normalizeBlogHtml(post.content.html)
   const contentHtml = isFreeTreeGuide ? prepareFreeTreeGuideHtml(normalizedHtml) : normalizedHtml
@@ -194,7 +197,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 Want a passive extension that plants verified trees?
               </h2>
               <p className="mt-3 text-neutral-800">
-                IdleForest has a dedicated install-intent guide for people who want tree planting without switching
+                IdleForest’s extension page explains how to fund trees without switching
                 search engines, buying through partner shops, or running a focus timer.
               </p>
               <Link
@@ -230,7 +233,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 Comparing free tree-planting tools too?
               </h2>
               <p className="mt-3 text-neutral-800">
-                Planet Wild and Mossy Earth are paid conservation memberships. IdleForest also keeps a shallow hub for
+                Planet Wild and Mossy Earth are paid conservation memberships. IdleForest also compares
                 free search, shopping, focus, and passive browser tools.
               </p>
               <Link
@@ -275,11 +278,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         </div>
 
 
-        {recommendedPosts.length > 0 && (
+        {isFreeTreeTopic && <FreeTreeResources currentPath={`/blog/${post.slug || params.slug}`} />}
+
+        {!isFreeTreeTopic && recommendedPosts.filter((item) => item.slug !== post.slug).length > 0 && (
           <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-8 text-black">Recommended Posts</h2>
+            <h2 className="text-2xl font-bold mb-8 text-black">Latest articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {recommendedPosts.map((post: BlogPost) => (
+              {recommendedPosts.filter((item) => item.slug !== post.slug).map((post: BlogPost) => (
                 <BlogPostCard key={post.slug} post={post} />
               ))}
             </div>

@@ -547,10 +547,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </div>
                         </div>
 
-                        <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-bold">
-                            <NextLink href={FREE_TREE_GUIDE_PATH} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">
-                                How to plant trees for free
-                            </NextLink>
+                        <p className="mx-auto mt-8 max-w-3xl text-center leading-7">
+                            Looking for a free option? Our guide to{' '}
+                            <NextLink href={FREE_TREE_GUIDE_PATH} className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                                how to plant trees for free
+                            </NextLink>{' '}
+                            compares online tools, local tree giveaways, and volunteering, including who pays and what you need to do.
+                        </p>
+                        <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm font-bold">
                             <span className="text-neutral-700">Compare in detail:</span>
                             {comparisonLinks.map((item) => (
                                 <Link key={item.label} href={item.href} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">

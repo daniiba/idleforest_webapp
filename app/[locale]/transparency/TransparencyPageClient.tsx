@@ -15,6 +15,8 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "@/navigation";
+import NextLink from "next/link";
+import { FREE_TREE_GUIDE_PATH } from "@/lib/free-tree-guide";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
@@ -964,11 +966,12 @@ export default function TransparencyPage() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-10">
                 <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
-                  Next steps
+                  Choose how to contribute
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
-                  This page answers whether the planting is real. These related pages cover user proof, comparison
-                  research, and how IdleForest can run alongside the tools you already use.
+                  Compare the funding methods, check user feedback, or see how IdleForest works with the tools you already use.
+                  Our <NextLink href={FREE_TREE_GUIDE_PATH} className="font-bold underline underline-offset-4">guide to planting trees for free</NextLink>{' '}
+                  also covers search engines, local tree giveaways, and volunteering.
                 </p>
               </div>
 

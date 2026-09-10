@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { featuredPlantingRecords } from '@/lib/planting-proof';
 
 const methods = [
   ['IdleForest desktop app', 'Use your computer as usual', 'Unused internet bandwidth funds verified planting; no donation or purchase required.'],
@@ -21,6 +22,7 @@ export default function FreeTreeGuideIntro() {
         The desktop app runs while your computer is on and connected to the internet, even with your browser closed.
         Paying clients fund bandwidth tasks, and the revenue supports tree planting through our partners.
         There is no subscription or donation. The Chrome extension is also free and works while your browser is open.
+        Both use your internet connection and electricity; check your data plan before enabling bandwidth sharing.
       </p>
       <p>
         <Link href="/downloads">Get the free IdleForest app</Link>{' '}
@@ -43,6 +45,30 @@ export default function FreeTreeGuideIntro() {
         Online tools fund trees in partner projects; they do not send you a seedling.
         For physical trees, check your council, parks department, or local nonprofit.
         Membership schemes that require a donation are not completely free.
+      </p>
+      <h2>What does free tree-planting funding look like in practice?</h2>
+      <p>
+        Here are two dated entries from IdleForest’s public funding records. Each links directly to the
+        partner certificate so you can check the project and tree count yourself.
+      </p>
+      <ul>
+        {featuredPlantingRecords.map((record) => (
+          <li key={record.id}>
+            <strong>{record.trees.toLocaleString('en-US')} trees</strong> — {record.project}, recorded{' '}
+            <time dateTime={record.date}>{record.dateLabel}</time>.{' '}
+            <a href={record.href} target="_blank" rel="noopener noreferrer">Open the {record.provider} certificate</a>.
+          </li>
+        ))}
+      </ul>
+      <p>
+        These are community funding records, not a promise of a particular number of trees per user.
+        A funding certificate alone does not measure long-term tree survival or carbon removal.
+        Read <Link href="/how-it-works">how the bandwidth funding works</Link> and our{' '}
+        <Link href="/transparency">full planting records</Link> for context.
+      </p>
+      <p className="text-sm">
+        About this guide: IdleForest publishes this comparison and operates one of the tools listed.
+        Compare the funding model, costs, and evidence for each option before choosing.
       </p>
     </>
   );

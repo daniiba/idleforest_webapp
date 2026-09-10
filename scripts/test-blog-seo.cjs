@@ -54,4 +54,10 @@ const response = (slugs, hasNextPage, endCursor) => new Response(JSON.stringify(
   assert.equal(prepareFreeTreeGuideHtml(changedCms), changedCms);
   assert.equal(prepareFreeTreeGuideHtml(detailed + '<table><tr><td>Another table</td></tr></table>'), detailed + '<table><tr><td>Another table</td></tr></table>');
   console.log('PASS: guide preserves detailed content, source links, unknown tables and changed CMS structure');
+  const unsupported = detailed + '<p>The distributed network model is itself greener than traditional data centers, which consume 1-2% of global electricity. Distributed networks use 80-90% less energy than their data center equivalents, according to IdleForest\'s <a href="https://www.idleforest.com/transparency">transparency page</a>.</p>';
+  const corrected = prepareFreeTreeGuideHtml(unsupported);
+  assert(!corrected.includes('80-90%'));
+  assert(corrected.includes('href="/transparency"'));
+  assert(corrected.includes('do not establish'));
+  console.log('PASS: unsupported energy comparison is replaced without losing the proof link');
 })().finally(() => { global.fetch = originalFetch; });

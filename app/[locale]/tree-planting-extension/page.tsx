@@ -19,7 +19,9 @@ import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/navigation";
-import { groupByProject, plantingsData } from "@/lib/plantings";
+import { plantingsData } from "@/lib/plantings";
+import { featuredPlantingRecords } from "@/lib/planting-proof";
+import FreeTreeResources from "@/components/free-tree-resources";
 import { routeAlternates } from "@/lib/i18n-routes";
 
 const title = "Plant a Tree Chrome Extension: Free & Verified | IdleForest";
@@ -27,7 +29,6 @@ const description =
   "Install IdleForest, the free Chrome extension that plants verified trees with your idle bandwidth. No signup, no search switch, rated 4.8 on Chrome.";
 const canonical = "https://www.idleforest.com/tree-planting-extension/";
 
-const projectStats = groupByProject(plantingsData.events);
 const totalTrees = plantingsData.events.reduce((sum, event) => sum + event.trees, 0);
 
 const comparisonRows = [
@@ -38,22 +39,6 @@ const comparisonRows = [
   ["Real-tree proof", "Named partners, receipts, live counter", "Over 2 million trees via Trees for the Future", "Trees planted, mainly in India"],
 ];
 
-const proofProjects = [
-  {
-    id: "tn-syzygium",
-    name: "Native forest recovery in Lushoto District, Tanzania",
-    image: "/report-images/mkussu-forest.jpg",
-    partner: "Tree-Nation",
-    href: "https://tree-nation.com/projects/replanting-the-burnt-mkussu-forest",
-  },
-  {
-    id: "tftf-kisumu7-awach",
-    name: "Agroforestry with smallholder farmers in Kisumu, Kenya",
-    image: "https://images.1clickimpact.com/projects/trees-kenya-fgp/thumb.jpg",
-    partner: "Trees for the Future",
-    href: "https://1clickimpact.com/climate-projects/trees-kenya-fgp",
-  },
-];
 
 const faqs = [
   {
@@ -228,11 +213,15 @@ export default function TreePlantingExtensionPage() {
                 plant a tree chrome extension
               </p>
               <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
-                Plant a Tree Chrome Extension That Works in the Background
+                Plant Trees for Free with the IdleForest Chrome Extension
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
                 IdleForest is a free Chrome extension that funds verified tree planting with the internet bandwidth you
                 are not using. No signup, no donations, and no change to how you browse or which search engine you use.
+              </p>
+              <p className="mt-4 max-w-3xl text-base leading-7 text-neutral-800">
+                The extension works while your browser is open. To contribute while using your computer with
+                the browser closed, <Link href="/downloads" className="font-bold underline underline-offset-4">choose the desktop app</Link>.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild className="h-auto rounded-full bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-black">
@@ -395,27 +384,28 @@ export default function TreePlantingExtensionPage() {
                   marketing figure.
                 </p>
                 <p className="mt-4 text-lg leading-8 text-neutral-800">
-                  Native-species and food-forest projects survive better and help local income, which is why they were
-                  chosen over cheap monoculture planting.
+                  The examples below link directly to dated partner certificates. They document community funding;
+                  they do not measure long-term tree survival or guarantee a fixed number of trees per user.
                 </p>
               </div>
               <div className="grid gap-5 md:grid-cols-2">
-                {proofProjects.map((project) => (
+                {featuredPlantingRecords.map((project) => (
                   <a key={project.id} href={project.href} target="_blank" rel="noopener noreferrer" className="group block h-full">
                     <article className="flex h-full flex-col overflow-hidden border-2 border-black bg-brand-yellow transition-transform group-hover:-translate-y-1">
                       <div className="relative h-48 border-b-2 border-black">
-                        <Image src={project.image} alt={project.name} fill className="object-cover" />
+                        <Image src={project.image} alt={project.project} fill className="object-cover" />
                       </div>
                       <div className="flex flex-1 flex-col p-5">
-                        <p className="text-sm font-bold uppercase text-neutral-700">{project.partner}</p>
-                        <h3 className="mt-2 font-rethink-sans text-2xl font-extrabold">{project.name}</h3>
+                        <p className="text-sm font-bold uppercase text-neutral-700">{project.provider}</p>
+                        <h3 className="mt-2 font-rethink-sans text-2xl font-extrabold">{project.project}</h3>
+                        <p className="mt-2 text-sm text-neutral-700"><time dateTime={project.date}>{project.dateLabel}</time></p>
                         <div className="mt-5 flex items-end justify-between gap-4 border-t-2 border-black pt-4">
                           <div>
-                            <p className="font-candu text-4xl">{(projectStats[project.id]?.trees ?? 0).toLocaleString()}</p>
+                            <p className="font-candu text-4xl">{project.trees.toLocaleString('en-US')}</p>
                             <p className="text-xs font-bold uppercase tracking-wide text-neutral-700">trees in records</p>
                           </div>
                           <span className="inline-flex items-center gap-1 font-bold underline underline-offset-4">
-                            Open record <ExternalLink className="h-4 w-4" />
+                            Open certificate <ExternalLink className="h-4 w-4" />
                           </span>
                         </div>
                       </div>
@@ -460,12 +450,12 @@ export default function TreePlantingExtensionPage() {
               <CircleDollarSign className="h-10 w-10 text-brand-navy" />
               <h2 className="mt-4 font-rethink-sans text-3xl font-extrabold">How much impact does idle bandwidth really make?</h2>
               <p className="mt-4 text-lg leading-8 text-neutral-800">
-                The revenue per person is small, often a few cents per month for an average connection. The model works
-                at scale, not by pretending one person can reforest a hillside alone.
+                Contributions vary with demand for bandwidth tasks, your location, and how long the extension is
+                connected. There is no fixed number of trees per hour or per user.
               </p>
               <p className="mt-4 text-lg leading-8 text-neutral-800">
-                At 1,000+ active users, pooled bandwidth funds verified trees every month. That is the trade: zero effort
-                from you, real trees at scale.
+                Revenue is pooled to fund partner projects. Use the dated certificates above to check recorded
+                funding, and your app’s activity to see your own contribution.
               </p>
             </Card>
             <Card className="border-2 border-black bg-white p-7">
@@ -489,7 +479,7 @@ export default function TreePlantingExtensionPage() {
         <section className="bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
-              Plant a tree Chrome extension: frequently asked questions
+              Questions about the tree-planting extension
             </h2>
             <div className="mt-10 divide-y-2 divide-black border-y-2 border-black">
               {faqs.map((faq) => (
@@ -575,6 +565,7 @@ export default function TreePlantingExtensionPage() {
             </p>
           </div>
         </section>
+        <div className="container mx-auto px-6"><FreeTreeResources currentPath="/tree-planting-extension" /></div>
       </main>
     </>
   );

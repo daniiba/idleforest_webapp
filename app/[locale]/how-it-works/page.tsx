@@ -1,3 +1,4 @@
+import FreeTreeResources from "@/components/free-tree-resources";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { ArrowRight, BadgeCheck, Leaf, ShieldCheck, Sprout, Trees, Wifi } from "lucide-react";
@@ -289,6 +290,7 @@ export default function HowItWorksPage() {
             </div>
           </div>
         </section>
+        <div className="container mx-auto px-6"><FreeTreeResources currentPath="/how-it-works" /></div>
       </main>
     </>
   );
