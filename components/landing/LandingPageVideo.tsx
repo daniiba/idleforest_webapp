@@ -2,7 +2,6 @@
 
 import { Link } from "@/navigation";
 import Image from "next/image";
-import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
@@ -18,8 +17,8 @@ import TopTeamsBanner from "@/components/TopTeamsBanner";
 import { useTranslations } from "next-intl";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
 import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
-import { FREE_TREE_GUIDE_PATH } from "@/lib/free-tree-guide";
 import ProjectsSection from "@/components/landing/ProjectsSection";
+import PartnerProjects from "@/components/landing/PartnerProjects";
 import TeamSection from "@/components/landing/TeamSection";
 
 const screenshots = [
@@ -34,98 +33,6 @@ const STATIC_IMPACT_STATS = {
     totalRequests: "10.1M",
     totalUsers: "1,000+",
 };
-
-const comparisonCriteria = [
-    "Cost",
-    "Effort",
-    "How trees are funded",
-    "Works with your browser",
-];
-
-const comparisonProducts = [
-    {
-        name: "IdleForest",
-        summary: "A passive layer that runs beside the browser and computer you already use.",
-        values: ["Free", "Install once; use your computer as usual", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, Windows, and Linux"],
-        featured: true,
-    },
-    {
-        name: "Ecosia",
-        summary: "A search engine that turns everyday searches into funding for tree planting.",
-        values: ["Free", "Switch your default search engine", "Search ad revenue funds climate projects", "Yes, if you choose Ecosia as your search engine"],
-    },
-    {
-        name: "Mossy Earth",
-        summary: "A field-led rewilding membership with biologists, project updates, and deep conservation work.",
-        values: ["Paid membership", "Subscribe and follow projects", "Member fees fund rewilding work", "Yes, but it is not a browser tool"],
-    },
-    {
-        name: "Direct donations",
-        summary: "Straightforward support for charities or local projects you already trust.",
-        values: ["You choose the donation", "Give manually", "Your donation funds the project directly", "Yes, but it is separate from browsing"],
-    },
-];
-
-const comparisonLinks = [
-    {
-        label: "IdleForest vs Ecosia",
-        href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
-    },
-    {
-        label: "Planet Wild vs Mossy Earth",
-        href: "/blog/planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025",
-    },
-    {
-        label: "9 alternatives to Ecosia",
-        href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
-    },
-];
-
-const partnerAnnouncements = [
-    {
-        id: "mossy-earth",
-        eyebrow: "Support page",
-        logoSrc: "/game/idleforest_icon.png",
-        logoAlt: "IdleForest logo",
-        title: "Support Mossy Earth for free with IdleForest.",
-        description:
-            "Open the IdleForest support page, install once, and future background activity can help generate passive conservation funding for Mossy Earth.",
-        href: "/c/mossy-earth",
-        cta: "Support for free",
-        externalHref: "https://www.mossy.earth/",
-        externalCta: "Visit Mossy Earth",
-        stats: [
-            { value: "700K+", label: "YouTube subscribers" },
-            { value: "£408K", label: "to rewilding in Q1 2026" },
-        ],
-        tags: ["Rewilding", "Conservation", "Free to join"],
-        videoSrc: "/partner/mossy-earth/hero-video.mp4",
-        imageSrc: "/partner/mossy-earth/planting-portrait.png",
-        imageAlt: "A restoration worker planting a young seedling",
-        accentClassName: "bg-brand-yellow",
-    },
-    {
-        id: "wastefree-planet",
-        eyebrow: "New cleanup partner",
-        logoSrc: "/partner/wastefree/wfp-logo-white.webp",
-        logoAlt: "Waste Free Planet logo",
-        title: "Waste Free Planet joins IdleForest.",
-        description:
-            "The Waste Free Planet cleanup fund is now live. Join for free and let future background activity help fund ocean-bound plastic recovery through 1ClickImpact and Plastic Bank.",
-        href: "/c/wastefree-planet",
-        cta: "Join for free",
-        externalHref: "https://www.wastefreeplanet.org/",
-        externalCta: "Visit Waste Free Planet",
-        stats: [
-            { value: "100%", label: "profits to plastic removal" },
-            { value: "0¢", label: "cost to participate" },
-        ],
-        tags: ["Plastic removal", "Ocean cleanup", "Free to join"],
-        imageSrc: "/partner/wastefree/hero-coast.jpg",
-        imageAlt: "A coastline connected to Waste Free Planet cleanup work",
-        accentClassName: "bg-cyan-200",
-    },
-];
 
 export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDetection }) {
     const [stats, setStats] = useState({
@@ -256,113 +163,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     </div>
                 </section>
 
-                {/* PARTNERSHIP ANNOUNCEMENTS */}
-                <section id="partner-announcements" className="relative overflow-hidden bg-brand-gray text-black scroll-mt-24">
-                    <div className="container mx-auto px-6 py-14 md:py-20">
-                        <div className="mx-auto max-w-3xl text-center">
-                            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-700">
-                                Partner projects
-                            </p>
-                            <h2 className="mt-3 font-rethink-sans text-[34px] font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-                                Meet the projects you can support with IdleForest.
-                            </h2>
-                            <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg md:leading-8">
-                                Choose a partner page, join for free, and future background activity can support that project&apos;s impact stream.
-                            </p>
-                        </div>
-
-                        {/* Hallmark · component: partner-announcement-cards · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
-                        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-                            {partnerAnnouncements.map((partner) => (
-                                <article
-                                    key={partner.id}
-                                    id={partner.id}
-                                    className="flex min-w-0 flex-col overflow-hidden rounded-lg border-2 border-black bg-white shadow-none"
-                                >
-                                    <div className="relative aspect-[16/10] overflow-hidden border-b-2 border-black bg-brand-navy">
-                                        {partner.videoSrc ? (
-                                            <video
-                                                className="h-full w-full object-cover"
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                preload="metadata"
-                                                aria-label={`${partner.title} footage`}
-                                            >
-                                                <source src={partner.videoSrc} type="video/mp4" />
-                                            </video>
-                                        ) : (
-                                            <Image
-                                                src={partner.imageSrc}
-                                                alt={partner.imageAlt}
-                                                fill
-                                                sizes="(min-width: 1024px) 50vw, 100vw"
-                                                className="object-cover"
-                                            />
-                                        )}
-                                        <div className="absolute left-4 top-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-none">
-                                            <span className="flex h-9 w-9 flex-none items-center justify-center overflow-hidden rounded-sm bg-brand-navy p-1">
-                                                <Image src={partner.logoSrc} alt={partner.logoAlt} width={36} height={36} className="h-full w-full object-contain" />
-                                            </span>
-                                            <span className="min-w-0 text-[10px] font-extrabold uppercase leading-tight tracking-[0.14em] text-neutral-700 sm:text-xs">
-                                                {partner.eyebrow}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-1 flex-col p-5 sm:p-6">
-                                        <div className="flex flex-wrap gap-2">
-                                            {partner.tags.map((tag) => (
-                                                <span
-                                                    key={tag}
-                                                    className={`border-2 border-black px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-black ${partner.accentClassName}`}
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <h3 className="mt-5 font-rethink-sans text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
-                                            {partner.title}
-                                        </h3>
-                                        <p className="mt-4 text-sm leading-7 text-neutral-800 sm:text-base">
-                                            {partner.description}
-                                        </p>
-
-                                        <div className="mt-6 grid grid-cols-2 gap-3">
-                                            {partner.stats.map((stat) => (
-                                                <div key={stat.label} className="min-h-[94px] border-2 border-black bg-brand-gray p-4">
-                                                    <p className="font-candu text-3xl leading-none text-black">{stat.value}</p>
-                                                    <p className="mt-2 text-[10px] font-bold uppercase leading-snug tracking-[0.12em] text-neutral-700">
-                                                        {stat.label}
-                                                    </p>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <div className="mt-auto flex flex-col gap-3 pt-6 sm:flex-row">
-                                            <Link
-                                                href={partner.href}
-                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold text-black shadow-none transition-all hover:bg-white hover:shadow-none"
-                                            >
-                                                {partner.cta} <ArrowRight className="h-4 w-4 flex-none" />
-                                            </Link>
-                                            <a
-                                                href={partner.externalHref}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-sm font-bold text-black shadow-none transition-all hover:bg-brand-yellow hover:shadow-none"
-                                            >
-                                                {partner.externalCta} <ArrowRight className="h-4 w-4 flex-none" />
-                                            </a>
-                                        </div>
-                                    </div>
-                                </article>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                <PartnerProjects />
 
                 <ProjectsSection />
 
@@ -458,98 +259,6 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-none transition-all hover:bg-black hover:shadow-none"
                             >
                                 See how it works in detail →
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-
-                {/* COMPARISON */}
-                <section id="comparison" className="relative bg-brand-gray text-black scroll-mt-24">
-                    <div className="container mx-auto px-6 py-20 md:py-24">
-                        <div className="mx-auto max-w-3xl text-center">
-                            <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                                Why IdleForest Is Different From Other Tree Planting Apps
-                            </h2>
-                            <p className="mt-4 text-base md:text-lg text-neutral-800">
-                                Ecosia, Mossy Earth, direct donations, and IdleForest all help in different ways. IdleForest is the extra passive layer: install it once, keep your habits, and let it add funding in the background.
-                            </p>
-                        </div>
-
-                        {/* Hallmark · component: comparison-proof · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
-                        <div className="mt-12 grid gap-4 lg:grid-cols-4">
-                            {comparisonProducts.map((product) => (
-                                <article
-                                    key={product.name}
-                                    className={`relative flex min-w-0 flex-col border-2 border-black p-5 shadow-none ${product.featured
-                                        ? "bg-brand-navy text-brand-yellow"
-                                        : "bg-white text-black"
-                                        }`}
-                                >
-                                    {product.featured ? (
-                                        <div className="absolute right-4 top-4 border-2 border-brand-yellow bg-brand-yellow px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-black">
-                                            Passive layer
-                                        </div>
-                                    ) : null}
-                                    <div className={product.featured ? "pr-24" : ""}>
-                                        <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight">
-                                            {product.name}
-                                        </h3>
-                                        <p className={`mt-3 text-sm leading-6 ${product.featured ? "text-brand-yellow/80" : "text-neutral-700"}`}>
-                                            {product.summary}
-                                        </p>
-                                    </div>
-                                    <dl className="mt-6 flex-1">
-                                        {comparisonCriteria.map((criterion, index) => (
-                                            <div
-                                                key={`${product.name}-${criterion}`}
-                                                className={`border-t py-4 ${product.featured ? "border-brand-yellow/25" : "border-black/10"}`}
-                                            >
-                                                <dt className={`text-[11px] font-extrabold uppercase tracking-[0.16em] ${product.featured ? "text-brand-yellow/65" : "text-neutral-500"}`}>
-                                                    {criterion}
-                                                </dt>
-                                                <dd className={`mt-1 text-sm font-semibold leading-6 ${product.featured ? "text-brand-yellow" : "text-black"}`}>
-                                                    {product.values[index]}
-                                                </dd>
-                                            </div>
-                                        ))}
-                                    </dl>
-                                </article>
-                            ))}
-                        </div>
-
-                        <div className="mt-6 grid gap-4 md:grid-cols-2">
-                            <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-none">
-                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/70">Stack your impact</p>
-                                <p className="mt-2 text-sm font-semibold leading-6">
-                                    You can use Ecosia, support Mossy Earth, donate directly, and still add IdleForest in the background.
-                                </p>
-                            </div>
-                            <div className="border-2 border-black bg-white p-5 text-black shadow-none">
-                                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-500">Different strengths</p>
-                                <p className="mt-2 text-sm font-semibold leading-6">
-                                    Search tools are great for daily habits. Rewilding memberships fund expert field teams. IdleForest adds passive funding without replacing either.
-                                </p>
-                            </div>
-                        </div>
-
-                        <p className="mx-auto mt-8 max-w-3xl text-center leading-7">
-                            Looking for a free option? Our guide to{' '}
-                            <NextLink href={FREE_TREE_GUIDE_PATH} className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
-                                how to plant trees for free
-                            </NextLink>{' '}
-                            compares online tools, local tree giveaways, and volunteering, including who pays and what you need to do.
-                        </p>
-                        <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm font-bold">
-                            <span className="text-neutral-700">Compare in detail:</span>
-                            {comparisonLinks.map((item) => (
-                                <Link key={item.label} href={item.href} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">
-                                    {item.label}
-                                </Link>
-                            ))}
-                        </div>
-                        <div className="mt-6 text-center">
-                            <Link href="/compare" className="inline-flex items-center gap-2 font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">
-                                Browse the full comparison hub →
                             </Link>
                         </div>
                     </div>
