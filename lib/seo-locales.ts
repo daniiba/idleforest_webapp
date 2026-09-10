@@ -8,8 +8,8 @@ export const LOCALE_NAMES: Record<string, string> = {
 
 export const HOME_META_BY_LOCALE: Record<string, { title: string; description: string }> = {
   en: {
-    title: 'IdleForest: The Free Tree Planting App, Plant While Browsing',
-    description: 'The free tree planting app that works in the background. Install IdleForest and plant verified trees while you browse, no donations, no signup needed.',
+    title: 'Plant Trees for Free While You Use Your Computer | IdleForest',
+    description: 'Plant trees for free while you use your computer. IdleForest uses unused internet bandwidth to fund verified tree planting. No donations or signup needed.',
   },
   es: {
     title: 'Planta árboles gratis mientras navegas | IdleForest',

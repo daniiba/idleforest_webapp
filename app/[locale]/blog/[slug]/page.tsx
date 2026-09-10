@@ -8,6 +8,8 @@ import type { BlogPost } from '@/components/blog-post-card'
 import BrowserButtons from "@/components/browser-buttons";
 import { SmartCTA } from "@/components/smart-cta";
 import { getHashnodePost } from '@/lib/hashnode-blog'
+import FreeTreeGuideIntro from '@/components/free-tree-guide-intro'
+import { FREE_TREE_GUIDE_SLUG, FREE_TREE_GUIDE_PATH, FREE_TREE_GUIDE_TITLE, FREE_TREE_GUIDE_DESCRIPTION, FREE_TREE_GUIDE_UPDATED_AT, prepareFreeTreeGuideHtml } from '@/lib/free-tree-guide'
 
 export const revalidate = 60 // invalidate every hour
 
@@ -27,21 +29,24 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   // Strip HTML tags from content for meta description
   const contentText = normalizeBlogHtml(post.content.html).replace(/<[^>]*>/g, '')
-  const description = contentText.length > 200 ? contentText.substring(0, 197) + '...' : contentText
+  const isFreeTreeGuide = (post.slug || params.slug) === FREE_TREE_GUIDE_SLUG
+  const title = isFreeTreeGuide ? FREE_TREE_GUIDE_TITLE : post.title
+  const description = isFreeTreeGuide ? FREE_TREE_GUIDE_DESCRIPTION : (contentText.length > 200 ? contentText.substring(0, 197) + '...' : contentText)
 
   return {
-    title: `${post.title}`,
+    title,
     description: description,
     openGraph: {
-      title: post.title,
+      title,
       description: description,
       images: [post.coverImage.url],
       type: 'article',
       publishedTime: post.publishedAt,
+      ...(isFreeTreeGuide ? { modifiedTime: FREE_TREE_GUIDE_UPDATED_AT } : {}),
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
+      title,
       description: description,
       images: [post.coverImage.url],
     }
@@ -63,7 +68,10 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     )
   }
 
-  const contentHtml = normalizeBlogHtml(post.content.html)
+  const isFreeTreeGuide = (post.slug || params.slug) === FREE_TREE_GUIDE_SLUG
+  const title = isFreeTreeGuide ? FREE_TREE_GUIDE_TITLE : post.title
+  const normalizedHtml = normalizeBlogHtml(post.content.html)
+  const contentHtml = isFreeTreeGuide ? prepareFreeTreeGuideHtml(normalizedHtml) : normalizedHtml
   const blogPostUrl = `https://www.idleforest.com/blog/${params.slug}`;
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -84,7 +92,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       {
         "@type": "ListItem",
         position: 3,
-        name: post.title,
+        name: title,
         item: blogPostUrl,
       },
     ],
@@ -106,12 +114,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             className="w-full h-[400px] object-fit md:object-cover rounded-lg mb-8"
           />
 
-          <h1 className="text-4xl font-bold mb-6 text-black">{post.title}</h1>
+          <h1 className="text-4xl font-bold mb-6 text-black">{title}</h1>
 
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="flex items-center gap-2 text-gray-600">
               <Calendar size={16} />
               {new Date(post.publishedAt).toLocaleDateString()}
+              {isFreeTreeGuide && <span> · Updated September 10, 2026</span>}
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <Clock size={16} />
@@ -146,6 +155,18 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4
             prose-hr:border-gray-200
             prose-img:rounded-lg prose-img:shadow-lg">
+            {isFreeTreeGuide && <FreeTreeGuideIntro />}
+            {[
+              "does-ecosia-actually-plant-trees",
+              "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
+              "best-chrome-extensions-for-climate-change-and-environmental-impact-2025-guide",
+            ].includes(params.slug) && (
+              <p>
+                Looking for a way to contribute yourself? Our guide to{' '}
+                <Link href={FREE_TREE_GUIDE_PATH}>how to plant trees for free</Link>{' '}
+                compares computer apps, search tools, and local planting programs, including who pays and how to start.
+              </p>
+            )}
             <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
           </div>
 
@@ -244,7 +265,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center justify-center gap-6 text-center">
               <div>
-                <h2 className="text-3xl font-extrabold text-white mb-2">Plant trees for free while you read</h2>
+                <h2 className="text-3xl font-extrabold text-white mb-2">Plant trees for free while you use your computer</h2>
                 <p className="text-white">Install IdleForest in one click and turn unused bandwidth into trees. Lightweight, secure, and runs automatically.</p>
               </div>
               <SmartCTA className="text-white" showLearnMore={true} onDarkBackground={true} />

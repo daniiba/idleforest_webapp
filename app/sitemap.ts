@@ -1,4 +1,6 @@
 import { MetadataRoute } from 'next'
+import { getHashnodeSitemapPosts } from '@/lib/hashnode-blog'
+import { FREE_TREE_GUIDE_SLUG, FREE_TREE_GUIDE_UPDATED_AT } from '@/lib/free-tree-guide'
 import { getIndexableComparisonPaths } from '@/lib/carbon-routing'
 import { getAllCarbonData } from '@/lib/carbon-data'
 import { canonicalUrl, translatedLocalesForPath } from '@/lib/i18n-routes'
@@ -6,62 +8,12 @@ import { canonicalUrl, translatedLocalesForPath } from '@/lib/i18n-routes'
 const SEO_CLUSTER_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
 const CORE_SITE_LAST_MODIFIED = new Date('2026-05-09T00:00:00.000Z')
 
-interface BlogPost {
-  node: {
-    slug: string
-    publishedAt: string
-  }
-}
-
-async function getBlogPosts() {
-  try {
-    // Add a unique timestamp to the query name to bypass caching
-    const timestamp = Date.now();
-    const query = `
-      query Publication_${timestamp} {
-        publication(host: "idleforest.hashnode.dev") {
-          posts(first: 30) {
-            edges {
-              node {
-                slug
-                publishedAt
-              }
-            }
-          }
-        }
-      }
-    `;
-
-    const response = await fetch('https://gql.hashnode.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query: query
-      }),
-      cache: 'no-store' // Prevent caching
-    })
-
-    const data = await response.json()
-    if (!data?.data?.publication?.posts?.edges) {
-      console.error('Invalid blog post data structure:', data)
-      return []
-    }
-    return data.data.publication.posts.edges as BlogPost[]
-  } catch (error) {
-    console.error('Error fetching blog posts:', error)
-    return []
-  }
-}
-
 function getStableDate(value?: string) {
   return value ? new Date(value) : SEO_CLUSTER_LAST_MODIFIED
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const blogPosts = await getBlogPosts()
+  const blogPosts = await getHashnodeSitemapPosts()
   const carbonPagesData = await getAllCarbonData()
   const carbonComparisonPaths = getIndexableComparisonPaths()
 
@@ -104,8 +56,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  const posts = blogPosts.flatMap((post) => generateLocalizedUrls(`/blog/${post.node.slug}`, {
-    lastModified: new Date(post.node.publishedAt),
+  const posts = blogPosts.flatMap((post) => generateLocalizedUrls(`/blog/${post.slug}`, {
+    lastModified: new Date(post.slug === FREE_TREE_GUIDE_SLUG ? FREE_TREE_GUIDE_UPDATED_AT : post.publishedAt),
     changeFrequency: 'monthly',
     priority: 0.7,
   }, false))
@@ -131,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const routesOptions: RouteOption[] = [
-    { path: '', changeFrequency: 'daily', priority: 1, lastModified: CORE_SITE_LAST_MODIFIED },
+    { path: '', changeFrequency: 'daily', priority: 1, lastModified: new Date('2026-09-10T00:00:00.000Z') },
     { path: '/blog', changeFrequency: 'daily', priority: 0.8, lastModified: CORE_SITE_LAST_MODIFIED, translated: false },
     { path: '/carbon-footprint', changeFrequency: 'weekly', priority: 0.85, lastModified: SEO_CLUSTER_LAST_MODIFIED },
     { path: '/carbon-footprint/ai', changeFrequency: 'weekly', priority: 0.8, lastModified: SEO_CLUSTER_LAST_MODIFIED },

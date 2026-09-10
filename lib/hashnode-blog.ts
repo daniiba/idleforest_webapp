@@ -76,7 +76,7 @@ export function getHashnodeHeaders() {
   return headers;
 }
 
-async function fetchHashnode<T>(query: string, variables: Record<string, unknown>): Promise<T | null> {
+async function fetchHashnode<T>(query: string, variables: Record<string, unknown>, throwOnError = false): Promise<T | null> {
   try {
     const response = await fetch(HASHNODE_ENDPOINT, {
       method: 'POST',
@@ -102,6 +102,7 @@ async function fetchHashnode<T>(query: string, variables: Record<string, unknown
     return data as T;
   } catch (error) {
     console.error('Error fetching Hashnode blog data:', error);
+    if (throwOnError) throw error;
     return null;
   }
 }
@@ -237,4 +238,57 @@ export async function getHashnodePosts({
     posts: posts?.edges?.map((edge) => edge.node) || [],
     pageInfo: posts?.pageInfo || { hasNextPage: false, endCursor: null },
   };
+}
+
+type SitemapPost = { slug: string; publishedAt: string };
+type SitemapPostsResponse = {
+  data?: {
+    publication?: {
+      posts?: {
+        edges: Array<{ node: SitemapPost }>;
+        pageInfo: HashnodePageInfo;
+      };
+    } | null;
+  };
+};
+
+const SITEMAP_POSTS_QUERY = `
+  query SitemapPosts($host: String!, $after: String) {
+    publication(host: $host) {
+      posts(first: 30, after: $after) {
+        edges { node { slug publishedAt } }
+        pageInfo { hasNextPage endCursor }
+      }
+    }
+  }
+`;
+
+export async function getHashnodeSitemapPosts(): Promise<SitemapPost[]> {
+  const posts = new Map<string, SitemapPost>();
+  const seenCursors = new Set<string>();
+  let cursor: string | null = null;
+
+  while (true) {
+    // A failed page must not silently publish an incomplete sitemap.
+    const response: SitemapPostsResponse | null = await fetchHashnode<SitemapPostsResponse>(
+      SITEMAP_POSTS_QUERY,
+      { host: HASHNODE_PUBLICATION_HOST, after: cursor },
+      true,
+    );
+    const page: { edges: Array<{ node: SitemapPost }>; pageInfo: HashnodePageInfo } | undefined = response?.data?.publication?.posts;
+    if (!page?.edges || typeof page.pageInfo?.hasNextPage !== 'boolean') {
+      throw new Error('Missing Hashnode sitemap pagination data');
+    }
+    for (const { node } of page.edges) {
+      posts.set(node.slug, node);
+    }
+    if (!page.pageInfo.hasNextPage) return Array.from(posts.values());
+
+    const nextCursor: string | null | undefined = page.pageInfo.endCursor;
+    if (!nextCursor || seenCursors.has(nextCursor)) {
+      throw new Error('Hashnode sitemap pagination did not advance');
+    }
+    seenCursors.add(nextCursor);
+    cursor = nextCursor;
+  }
 }

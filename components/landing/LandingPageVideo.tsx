@@ -2,6 +2,7 @@
 
 import { Link } from "@/navigation";
 import Image from "next/image";
+import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
@@ -17,6 +18,7 @@ import TopTeamsBanner from "@/components/TopTeamsBanner";
 import { useTranslations } from "next-intl";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
 import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
+import { FREE_TREE_GUIDE_PATH } from "@/lib/free-tree-guide";
 import ProjectsSection from "@/components/landing/ProjectsSection";
 import TeamSection from "@/components/landing/TeamSection";
 
@@ -44,7 +46,7 @@ const comparisonProducts = [
     {
         name: "IdleForest",
         summary: "A passive layer that runs beside the browser and computer you already use.",
-        values: ["Free", "Install once; keep browsing", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, Windows, and Linux"],
+        values: ["Free", "Install once; use your computer as usual", "Idle bandwidth revenue funds verified trees", "Yes: Chrome, Edge, Mac, Windows, and Linux"],
         featured: true,
     },
     {
@@ -242,6 +244,12 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </div>
                                 <p className="text-sm font-bold text-black">
                                     Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 5,364 verified trees planted
+                                </p>
+                                <p className="text-sm text-neutral-800">
+                                    Paid bandwidth tasks fund planting through our partners.{' '}
+                                    <Link href="/transparency" className="font-bold underline underline-offset-4">
+                                        See the verified planting records
+                                    </Link>.
                                 </p>
                                 <HeroTrustSignals />
                             </div>
@@ -540,6 +548,9 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         </div>
 
                         <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-bold">
+                            <NextLink href={FREE_TREE_GUIDE_PATH} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">
+                                How to plant trees for free
+                            </NextLink>
                             <span className="text-neutral-700">Compare in detail:</span>
                             {comparisonLinks.map((item) => (
                                 <Link key={item.label} href={item.href} className="underline decoration-2 underline-offset-4 hover:text-brand-navy">
@@ -1021,7 +1032,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 Start Planting Trees in 10 Seconds
                             </h2>
                             <p className="mt-4 text-base md:text-lg text-brand-yellow/80">
-                                Install IdleForest. Browse like you always do. Watch trees get planted.
+                                Install IdleForest. Use your computer as usual. Help fund verified trees.
                             </p>
                             <div className="mt-8 flex justify-center">
                                 <SmartCTA deviceInfo={deviceInfo} buttonVariant="default" showExtensionDownload />
@@ -1139,7 +1150,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "HowTo",
-                        "name": "How to plant trees by browsing with IdleForest",
+                        "name": "How to plant trees for free while you use your computer",
                         "totalTime": "PT10S",
                         "step": [
                             {
@@ -1152,8 +1163,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             {
                                 "@type": "HowToStep",
                                 "position": 2,
-                                "name": "Browse normally",
-                                "text": "The app runs quietly in the background, using only your unused internet bandwidth.",
+                                "name": "Use your computer as usual",
+                                "text": "The desktop app uses unused internet bandwidth while your computer is on and connected, even with your browser closed. The extension works while your browser is open.",
                                 "url": "https://www.idleforest.com/#step-2"
                             },
                             {

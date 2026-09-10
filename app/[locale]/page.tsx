@@ -24,7 +24,7 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
           url: '/preview.png',
           width: 1280,
           height: 800,
-          alt: 'IdleForest - plant trees while you browse',
+          alt: 'IdleForest - plant trees for free while you use your computer',
         },
       ],
     },

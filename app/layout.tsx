@@ -57,8 +57,8 @@ const roboto = Roboto({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-    title: "IdleForest: The Free Tree Planting App, Plant While Browsing",
-    description: "The free tree planting app that works in the background. Install IdleForest and plant verified trees while you browse, no donations, no signup needed.",
+    title: "Plant Trees for Free While You Use Your Computer | IdleForest",
+    description: "Plant trees for free while you use your computer. IdleForest uses unused internet bandwidth to fund verified tree planting. No donations or signup needed.",
     metadataBase: new URL('https://www.idleforest.com'),
 };
 
