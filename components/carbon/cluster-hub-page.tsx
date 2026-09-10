@@ -113,7 +113,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     <span className="text-black">{hub.title}</span>
                 </div>
 
-                <section className="border-2 border-black bg-white p-8 md:p-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-10">
+                <section className="border-2 border-black bg-white p-8 md:p-12 shadow-none mb-10">
                     <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
                         {hub.eyebrow}
                     </p>
@@ -138,7 +138,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                 </section>
 
                 <section className="mb-12">
-                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="border-2 border-black bg-white p-6 shadow-none">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_top_emitters_eyebrow")}</p>
                         <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.hub_top_emitters_title")}</h2>
                         <div className="space-y-4">
@@ -178,7 +178,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                 <Link
                                     key={page.slug}
                                     href={`/carbon-footprint/${page.slug}`}
-                                    className="group border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="group border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
                                 >
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="w-12 h-12 border-2 border-black bg-brand-gray flex items-center justify-center">
@@ -225,7 +225,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                 <Link
                                     key={href}
                                     href={href}
-                                    className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
                                 >
                                     <div className="flex items-center gap-4 mb-4">
                                         <div className="flex -space-x-2">
@@ -253,7 +253,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </section>
                 ) : null}
 
-                <section className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <section className="mb-12 border-2 border-black bg-white p-6 shadow-none">
                     <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_faq_eyebrow")}</p>
                     <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">{t("page.hub_faq_title")}</h2>
                     <div className="space-y-4">

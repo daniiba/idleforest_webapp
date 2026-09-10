@@ -373,7 +373,7 @@ function ProductIcon({
 
   if (!src) {
     return (
-      <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black bg-brand-yellow font-candu text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black bg-brand-yellow font-candu text-xl shadow-none">
         {name.slice(0, 2).toUpperCase()}
       </div>
     );
@@ -384,7 +384,7 @@ function ProductIcon({
 
   return (
     <div
-      className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${featured ? "bg-brand-navy" : "bg-white"}`}
+      className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black shadow-none ${featured ? "bg-brand-navy" : "bg-white"}`}
     >
       {src.startsWith("http") ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -435,7 +435,7 @@ function ExternalToolLink({
 
 function StarRating() {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-3 py-2 text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+    <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-3 py-2 text-black shadow-none">
       <span className="font-candu text-2xl leading-none">4.8</span>
       <div className="flex gap-0.5" aria-label="4.8 star rating">
         {[0, 1, 2, 3, 4].map((item) => (
@@ -454,7 +454,7 @@ function StarRating() {
 
 function DesktopPanel() {
   return (
-    <aside className="overflow-hidden rounded-[32px] border-2 border-black bg-white text-black shadow-[14px_14px_0px_0px_rgba(0,0,0,1)]">
+    <aside className="overflow-hidden rounded-[32px] border-2 border-black bg-white text-black shadow-none">
       <div className="bg-brand-navy p-6 text-brand-yellow">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
@@ -527,14 +527,14 @@ function DesktopPanel() {
       <div className="grid gap-3 border-t-2 border-black bg-brand-yellow p-5 sm:grid-cols-2">
         <Link
           href="/downloads"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
         >
           <MonitorDown className="h-5 w-5" />
           Desktop app
         </Link>
         <Link
           href="/download/chrome"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-center font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-brand-yellow hover:shadow-none"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-center font-bold text-black shadow-none hover:bg-black hover:text-brand-yellow hover:shadow-none"
         >
           <Image src="/chrome.png" alt="" width={22} height={22} />
           Chrome
@@ -560,7 +560,7 @@ export default function EcoFriendlySearchEnginePage() {
         <section className="border-b-2 border-black bg-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.78fr)] lg:items-center lg:py-20">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-none">
                 <Search className="h-4 w-4" />
                 sustainable search engine guide
               </p>
@@ -578,7 +578,7 @@ export default function EcoFriendlySearchEnginePage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none"
+                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
                 >
                   <Link
                     href="/download/chrome"
@@ -608,12 +608,12 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <StarRating />
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <span className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-none">
                   1,000+ users
                 </span>
                 <Link
                   href="/transparency"
-                  className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-navy hover:text-brand-yellow"
+                  className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-none hover:bg-brand-navy hover:text-brand-yellow"
                 >
                   {totalTrees.toLocaleString()} trees verified
                 </Link>
@@ -655,7 +655,7 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-black bg-white p-5 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-[28px] border-2 border-black bg-white p-5 shadow-none"
                 >
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
                     {item.icon}
@@ -692,7 +692,7 @@ export default function EcoFriendlySearchEnginePage() {
               {criteria.map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-black bg-brand-gray p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-[28px] border-2 border-black bg-brand-gray p-6 shadow-none"
                 >
                   <div className="flex gap-4">
                     <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
@@ -711,7 +711,7 @@ export default function EcoFriendlySearchEnginePage() {
               ))}
             </div>
 
-            <div className="mt-10 rounded-[32px] border-2 border-black bg-brand-navy p-6 text-brand-yellow shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-10 rounded-[32px] border-2 border-black bg-brand-navy p-6 text-brand-yellow shadow-none">
               <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                 <div className="flex items-center gap-4">
                   <ProductIcon name="IdleForest" featured />
@@ -767,7 +767,7 @@ export default function EcoFriendlySearchEnginePage() {
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-none">
             <table className="w-full min-w-[1280px] text-left">
               <thead className="bg-brand-navy text-brand-yellow">
                 <tr>
@@ -895,7 +895,7 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-brand-yellow bg-white p-5 text-black shadow-[7px_7px_0px_0px_rgba(224,241,70,0.28)]"
+                  className="rounded-[28px] border-2 border-brand-yellow bg-white p-5 text-black shadow-none"
                 >
                   <div className="flex gap-4">
                     {item.icon}
@@ -932,7 +932,7 @@ export default function EcoFriendlySearchEnginePage() {
             {setupCards.map((item) => (
               <article
                 key={item.title}
-                className="rounded-[28px] border-2 border-black bg-white p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]"
+                className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none"
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
                   {item.icon}
@@ -963,7 +963,7 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
               <Link
                 href="/ecosia-alternatives"
-                className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-brand-yellow hover:shadow-none"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold shadow-none hover:bg-black hover:text-brand-yellow hover:shadow-none"
               >
                 see our full Ecosia alternatives guide{" "}
                 <ArrowRight className="h-4 w-4" />
@@ -977,7 +977,7 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item, index) => (
                 <div
                   key={item}
-                  className="flex gap-4 rounded-2xl border-2 border-black bg-brand-gray p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+                  className="flex gap-4 rounded-2xl border-2 border-black bg-brand-gray p-5 shadow-none"
                 >
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
                     {index + 1}
@@ -1004,7 +1004,7 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
             </div>
             <div className="grid gap-5 md:grid-cols-2">
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]">
+              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none">
                 <div className="mb-5 flex items-center gap-3">
                   <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-white">
                     <MonitorDown className="h-7 w-7 text-brand-navy" />
@@ -1023,7 +1023,7 @@ export default function EcoFriendlySearchEnginePage() {
                   the browser is closed.
                 </p>
               </article>
-              <article className="rounded-[28px] border-2 border-black bg-white p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]">
+              <article className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none">
                 <div className="mb-5 flex items-center gap-3">
                   <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-brand-gray">
                     <Image
@@ -1060,7 +1060,7 @@ export default function EcoFriendlySearchEnginePage() {
               ].map(([metric, label, body]) => (
                 <article
                   key={metric}
-                  className="rounded-[28px] border-2 border-black bg-white p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none"
                 >
                   <p className="font-candu text-5xl leading-none text-brand-navy">
                     {metric}
@@ -1073,7 +1073,7 @@ export default function EcoFriendlySearchEnginePage() {
                   </p>
                 </article>
               ))}
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] md:col-span-2">
+              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none md:col-span-2">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="font-candu text-5xl leading-none">
@@ -1085,7 +1085,7 @@ export default function EcoFriendlySearchEnginePage() {
                   </div>
                   <Link
                     href="/transparency"
-                    className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 font-bold text-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none"
+                    className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
                   >
                     Verified planting records <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -1110,7 +1110,7 @@ export default function EcoFriendlySearchEnginePage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group rounded-[24px] border-2 border-black bg-brand-gray p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1"
+                  className="group rounded-[24px] border-2 border-black bg-brand-gray p-5 shadow-none transition-transform hover:-translate-y-1"
                 >
                   <h3 className="font-rethink-sans text-xl font-extrabold leading-tight group-hover:underline">
                     {item.title}
@@ -1138,7 +1138,7 @@ export default function EcoFriendlySearchEnginePage() {
               {faqs.map((faq, index) => (
                 <section
                   key={faq.question}
-                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-none"
                 >
                   <div className="flex gap-4">
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">

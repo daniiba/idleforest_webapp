@@ -134,7 +134,7 @@ export default function BusinessPage() {
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/contact"
-                  className="inline-flex min-h-14 items-center justify-center gap-3 border-2 border-brand-yellow bg-brand-yellow px-7 text-base font-black text-black shadow-[5px_5px_0_#fff] transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
+                  className="inline-flex min-h-14 items-center justify-center gap-3 border-2 border-brand-yellow bg-brand-yellow px-7 text-base font-black text-black shadow-none transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow"
                 >
                   {t("contact_us")}{" "}
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
@@ -161,7 +161,7 @@ export default function BusinessPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/5 to-transparent" />
 
-            <div className="absolute bottom-6 left-5 right-5 border-2 border-black bg-white p-5 text-black shadow-[8px_8px_0_#E0F146] sm:bottom-10 sm:left-10 sm:right-auto sm:w-[390px] sm:p-7">
+            <div className="absolute bottom-6 left-5 right-5 border-2 border-black bg-white p-5 text-black shadow-none sm:bottom-10 sm:left-10 sm:right-auto sm:w-[390px] sm:p-7">
               <div className="flex items-center justify-between border-b-2 border-black pb-4">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.18em]">
                   {t("cert_impact")}
@@ -296,7 +296,7 @@ export default function BusinessPage() {
             <div className="space-y-5">
               {fundingSteps.map(({ icon: Icon, title, description }, index) => (
                 <Reveal key={title} delay={index * 0.08}>
-                  <article className="relative grid grid-cols-[52px_1fr] gap-5 border-2 border-black bg-brand-gray p-5 shadow-[5px_5px_0_#0B101F] md:grid-cols-[64px_1fr] md:p-7">
+                  <article className="relative grid grid-cols-[52px_1fr] gap-5 border-2 border-black bg-brand-gray p-5 shadow-none md:grid-cols-[64px_1fr] md:p-7">
                     <div className="relative z-10 flex h-13 w-13 items-center justify-center rounded-full border-2 border-black bg-brand-yellow md:h-16 md:w-16">
                       <Icon
                         className="h-6 w-6 md:h-7 md:w-7"
@@ -355,7 +355,7 @@ export default function BusinessPage() {
           </Reveal>
 
           <Reveal
-            className="relative border-2 border-white bg-brand-gray p-6 text-black shadow-[10px_10px_0_#E0F146] sm:p-8"
+            className="relative border-2 border-white bg-brand-gray p-6 text-black shadow-none sm:p-8"
             delay={0.08}
           >
             <div className="flex items-center justify-between border-b-2 border-black pb-5">
@@ -418,7 +418,7 @@ export default function BusinessPage() {
           </p>
           <Link
             href="/contact"
-            className="mt-9 inline-flex min-h-14 items-center justify-center gap-3 border-2 border-black bg-black px-8 text-lg font-black text-brand-yellow shadow-[6px_6px_0_#fff] transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-black"
+            className="mt-9 inline-flex min-h-14 items-center justify-center gap-3 border-2 border-black bg-black px-8 text-lg font-black text-brand-yellow shadow-none transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-black"
           >
             {t("contact_us")}{" "}
             <ArrowRight className="h-5 w-5" aria-hidden="true" />

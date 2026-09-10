@@ -34,7 +34,7 @@ export const TechItem = memo(({ tech, isOwned, canAfford, onBuy, currencyIcon }:
             layout
             className={`w-full text-left relative group border-2 transition-all duration-150 active:translate-y-1 active:shadow-none
                 ${canAfford
-                    ? "bg-blue-50 border-blue-900 shadow-[4px_4px_0px_0px_rgba(30,58,138,1)] hover:bg-blue-100"
+                    ? "bg-blue-50 border-blue-900 shadow-none hover:bg-blue-100"
                     : "bg-neutral-200 border-neutral-400 text-neutral-400 cursor-not-allowed grayscale"
                 }
             `}

@@ -45,7 +45,7 @@ export default function RankingsPage() {
     return (
         <div className="container mx-auto p-4 pt-12 max-w-4xl">
             <div className="flex items-center gap-4 mb-8">
-                <div className="bg-brand-yellow p-3 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div className="bg-brand-yellow p-3 border-2 border-black shadow-none">
                     <Trophy className="w-8 h-8 text-black" />
                 </div>
                 <div>
@@ -58,7 +58,7 @@ export default function RankingsPage() {
                 </div>
             </div>
 
-            <Card className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+            <Card className="bg-white border-2 border-black shadow-none overflow-hidden">
                 <div className="grid grid-cols-12 gap-4 p-4 bg-brand-navy text-white font-bold uppercase tracking-wider text-xs border-b-2 border-black">
                     <div className="col-span-2 md:col-span-1 text-center">Rank</div>
                     <div className="col-span-7 md:col-span-8">Planter</div>

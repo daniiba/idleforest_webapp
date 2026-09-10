@@ -140,7 +140,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                     </Link>
                 </div>
 
-                <section className="border-2 border-black bg-white p-8 md:p-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-10">
+                <section className="border-2 border-black bg-white p-8 md:p-12 shadow-none mb-10">
                     <div className="max-w-4xl">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
                             {hub?.eyebrow || t("page.carbon_footprint_cluster_hub")}
@@ -159,7 +159,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                                 <Link
                                     key={card.href}
                                     href={card.href}
-                                    className={`${card.className} group hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all`}
+                                    className={`${card.className} group hover:-translate-y-1 hover:shadow-none transition-all`}
                                 >
                                     <div className="flex items-center justify-between gap-3 mb-2">
                                         <div className="flex items-center gap-2 font-bold text-black">
@@ -214,7 +214,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                 ) : null}
 
                 <section className="mb-12">
-                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="border-2 border-black bg-white p-6 shadow-none">
                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.overview_top_emitters_eyebrow")}</p>
                         <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.overview_top_emitters_title")}</h2>
                         <div className="space-y-4">
@@ -256,7 +256,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                                 <Link
                                     key={page.slug}
                                     href={`/carbon-footprint/${page.slug}`}
-                                    className="group border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="group border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
                                 >
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="w-12 h-12 border-2 border-black bg-brand-gray flex items-center justify-center">
@@ -303,7 +303,7 @@ export default async function CarbonFootprintHubPage({ params }: PageProps) {
                             <Link
                                 key={comparison.href}
                                 href={comparison.href}
-                                className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
                             >
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="flex -space-x-2">

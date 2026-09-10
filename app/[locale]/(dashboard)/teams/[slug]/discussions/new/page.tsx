@@ -91,7 +91,7 @@ export default function NewThreadPage() {
                     Back to Team
                 </Link>
 
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="bg-white border-2 border-black shadow-none p-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Start a New Discussion</h1>
                     <p className="text-gray-600 mb-8">Share ideas, ask questions, or start a conversation with your team.</p>
 
@@ -148,14 +148,14 @@ export default function NewThreadPage() {
                         <div className="flex gap-4 justify-end">
                             <Link
                                 href={`/teams/${teamSlug}`}
-                                className="px-6 py-3 bg-gray-100 text-gray-700 font-bold border-2 border-black hover:bg-gray-200 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]"
+                                className="px-6 py-3 bg-gray-100 text-gray-700 font-bold border-2 border-black hover:bg-gray-200 transition-all shadow-none"
                             >
                                 Cancel
                             </Link>
                             <button
                                 type="submit"
                                 disabled={isSubmitting || title.length < 10 || content.length < 20}
-                                className="px-6 py-3 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]"
+                                className="px-6 py-3 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                             >
                                 {isSubmitting ? 'Creating...' : 'Create Discussion'}
                             </button>

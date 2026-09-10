@@ -61,7 +61,7 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
     }
 
     return (
-        <div className="bg-brand-navy border border-black rounded-lg p-8 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="bg-brand-navy border border-black rounded-lg p-8 text-white shadow-none">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-yellow/80 mb-3">
                 Start with the calculator
             </p>

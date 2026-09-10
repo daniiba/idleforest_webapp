@@ -200,7 +200,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                         <div className="flex flex-col md:flex-row gap-6 items-stretch mb-12">
                             {/* App 1 Card */}
-                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center">
+                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-none flex flex-col items-center text-center">
                                 <div className="w-20 h-20 bg-brand-gray flex items-center justify-center border-2 border-black mb-6">
                                     {!iconUrl1.startsWith("fallback:") ? (
                                         // eslint-disable-next-line @next/next/no-img-element
@@ -229,7 +229,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </div>
 
                             {/* App 2 Card */}
-                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center">
+                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-none flex flex-col items-center text-center">
                                 <div className="w-20 h-20 bg-brand-gray flex items-center justify-center border-2 border-black mb-6">
                                     {!iconUrl2.startsWith("fallback:") ? (
                                         // eslint-disable-next-line @next/next/no-img-element
@@ -252,7 +252,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </div>
                         </div>
 
-                        <div className="mb-12 border-2 border-black bg-white p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="mb-12 border-2 border-black bg-white p-8 shadow-none">
                             <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{comparisonHeading}</p>
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
                             <p className="text-lg text-neutral-800 leading-relaxed">
@@ -272,7 +272,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                         {comparisonReasons.length ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <div className="border-2 border-black bg-white p-6 shadow-none">
                                     <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.why_gap_title")}</h3>
                                     <ul className="space-y-3">
                                         {comparisonReasons.map((reason) => (
@@ -284,7 +284,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                     </ul>
                                 </div>
 
-                                <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <div className="border-2 border-black bg-white p-6 shadow-none">
                                     <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.action_first_title")}</h3>
                                     <p className="text-neutral-800 leading-relaxed mb-5">{comparisonAction}</p>
                                     {winner && lighter ? (
@@ -312,14 +312,14 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Link
                                     href={`/carbon-footprint/${data1.slug}`}
-                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-bold group"
+                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-none transition-all font-bold group"
                                 >
                                     {t("page.read_full_report", { app: data1.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                                 <Link
                                     href={`/carbon-footprint/${data2.slug}`}
-                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-bold group"
+                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-none transition-all font-bold group"
                                 >
                                     {t("page.read_full_report", { app: data2.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -331,7 +331,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
                         {comparisonReasons.length ? (
-                            <div className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="bg-white border-2 border-black p-6 shadow-none">
                                 <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_takeaways_title")}</h3>
                                 <div className="space-y-3">
                                     {comparisonReasons.slice(0, 2).map((reason) => (
@@ -344,7 +344,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </div>
                         ) : null}
 
-                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-none">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}
                             </h3>

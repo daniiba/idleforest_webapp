@@ -69,7 +69,7 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
   return (
     <div className="w-full">
       <div className="space-y-6">
-        <Card className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 sm:p-6 rounded-none">
+        <Card className="bg-white border-2 border-black shadow-none p-4 sm:p-6 rounded-none">
           <CardHeader className="px-0 pt-0">
             <CardTitle className="flex items-center gap-3 text-2xl font-rethink-sans font-bold text-black">
               <Target className="h-8 w-8 text-black" />
@@ -166,7 +166,7 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
                 <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">{t('impact_milestones')}</h3>
                 <div className="space-y-6">
                   {milestones.map((milestone, index) => (
-                    <div key={index} className="group border-2 border-black bg-white p-6 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 hover:-translate-y-1">
+                    <div key={index} className="group border-2 border-black bg-white p-6 hover:shadow-none transition-all duration-200 hover:-translate-y-1">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-4">
                         <div>
                           <div className="flex items-center gap-2 mb-2">

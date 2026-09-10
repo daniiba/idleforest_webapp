@@ -60,7 +60,7 @@ export default async function LeaderboardPage() {
                         </p>
                     </div>
 
-                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] divide-y-2 divide-black/20 overflow-hidden">
+                    <div className="bg-white border-4 border-black shadow-none divide-y-2 divide-black/20 overflow-hidden">
                         {sortedApps.map((app, index) => {
                             const iconUrl = getIconUrl(app);
                             const isCrypto = app.category === "Crypto";

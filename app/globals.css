@@ -138,7 +138,7 @@ body {
   justify-self: end;
   background: var(--me-yellow);
   color: var(--me-ink);
-  box-shadow: 4px 4px 0 var(--me-ink);
+  box-shadow: none;
 }
 
 .mossy-earth-nav .mossy-earth-pill-solid,
@@ -353,14 +353,14 @@ body {
   border-radius: 8px;
   background: var(--me-bg);
   padding: 18px 20px;
-  box-shadow: 5px 5px 0 var(--me-ink);
+  box-shadow: none;
   transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
 .mossy-earth-receipt-row:hover {
   transform: translateY(-2px);
   background: var(--me-yellow);
-  box-shadow: 7px 7px 0 var(--me-ink);
+  box-shadow: none;
 }
 
 .mossy-earth-receipt-icon {
@@ -1463,7 +1463,7 @@ pre[class*="language-"].line-numbers > code {
   min-height: 14px;
   padding: 0 5%;
   background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 1px 0 rgba(11, 16, 31, 0.08);
+  box-shadow: none;
   backdrop-filter: blur(6px);
 }
 

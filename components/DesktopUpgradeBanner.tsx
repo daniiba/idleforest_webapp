@@ -39,7 +39,7 @@ export default function DesktopUpgradeBanner() {
                 </div>
                 <Link
                     href="/welcome"
-                    className="inline-flex items-center justify-center gap-2 border-2 border-black bg-black px-4 py-2 text-xs uppercase text-white shadow-[3px_3px_0px_0px_rgba(11,16,31,0.25)]"
+                    className="inline-flex items-center justify-center gap-2 border-2 border-black bg-black px-4 py-2 text-xs uppercase text-white shadow-none"
                 >
                     <TreePine className="h-4 w-4" />
                     Unlock Bonus

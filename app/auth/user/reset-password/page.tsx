@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
     if (checkingSession) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Verifying session...</p>
                 </div>
@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
 
     return (
         <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-            <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+            <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
                 <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-4">
                     New Password
                 </h1>
@@ -106,7 +106,7 @@ export default function ResetPasswordPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+                                className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
                                 required
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+                                className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                             >
                                 {loading ? (
                                     <><Loader2 className="h-5 w-5 mr-2 animate-spin text-black" /> Updating...</>

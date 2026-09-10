@@ -23,7 +23,7 @@ export default function AnimalsPage() {
 	return (
 		<div className="container mx-auto px-4 pb-16 pt-32">
 			<div className="mx-auto max-w-6xl">
-				<div className="mb-6 border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+				<div className="mb-6 border-2 border-black bg-white p-6 shadow-none">
 					<div className="inline-flex border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase text-black">
 						IdleForest animal tracking
 					</div>

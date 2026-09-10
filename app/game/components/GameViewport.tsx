@@ -138,7 +138,7 @@ export function GameViewport({ state, stats, onTreeClick, handlePrestigeClick, s
     };
 
     return (
-        <div className="relative w-full aspect-square md:aspect-video min-h-[400px] bg-[#87CEEB] border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden cursor-default group touch-manipulation user-select-none">
+        <div className="relative w-full aspect-square md:aspect-video min-h-[400px] bg-[#87CEEB] border-2 border-black shadow-none overflow-hidden cursor-default group touch-manipulation user-select-none">
 
             {/* OPTIMIZED LAYER 1: Background */}
             <GameBackground
@@ -208,7 +208,7 @@ export function GameViewport({ state, stats, onTreeClick, handlePrestigeClick, s
                         animate={{ opacity: 0, y: -100, scale: 1.2 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="absolute top-0 left-0 pointer-events-none z-50 font-black text-4xl text-brand-yellow drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-stroke-thin"
+                        className="absolute top-0 left-0 pointer-events-none z-50 font-black text-4xl text-brand-yellow drop-shadow-none text-stroke-thin"
                         style={{ left: ft.x, top: ft.y }}
                     >
                         {ft.value}

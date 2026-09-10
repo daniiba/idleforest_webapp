@@ -566,7 +566,7 @@ export default function TeamClient() {
 
 				<Tabs defaultValue="stats" className="w-full">
 					{/* Team Header Card - Now wraps TabsList */}
-					<div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8">
+					<div className="bg-white border-2 border-black shadow-none mb-8">
 						<div className="p-6 md:p-8">
 							<div className="flex flex-col md:flex-row gap-6">
 								{/* Team Image */}
@@ -575,11 +575,11 @@ export default function TeamClient() {
 										<img
 											src={team.image_url}
 											alt={`${team.name} logo`}
-											className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+											className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-black shadow-none"
 										/>
 									</div>
 								) : (
-									<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
+									<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-black shadow-none flex items-center justify-center">
 										<Users className="w-12 h-12 md:w-16 md:h-16 text-black/60" />
 									</div>
 								)}
@@ -599,7 +599,7 @@ export default function TeamClient() {
 													onClick={() => handleJoinTeam()}
 													disabled={joiningTeam}
 													title="Join Team"
-													className="flex items-center justify-center p-2.5 bg-green-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+													className="flex items-center justify-center p-2.5 bg-green-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 												>
 													{joiningTeam ? (
 														<Loader2 className="w-5 h-5 animate-spin" />
@@ -613,7 +613,7 @@ export default function TeamClient() {
 											{isMember && (
 												<button
 													onClick={toggleInviteSection}
-													className="flex items-center gap-2 px-5 py-2.5 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+													className="flex items-center gap-2 px-5 py-2.5 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 												>
 													<UserPlus className="w-5 h-5" />
 													Invite
@@ -625,7 +625,7 @@ export default function TeamClient() {
 												<div
 													title="Discord team"
 													aria-label="Discord team"
-													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-none"
 												>
 													<MessageSquare className="w-5 h-5" />
 													Discord
@@ -637,7 +637,7 @@ export default function TeamClient() {
 												<button
 													onClick={() => setShowLeaveConfirm(true)}
 													title="Leave Team"
-													className="flex items-center justify-center p-2.5 bg-gray-100 border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+													className="flex items-center justify-center p-2.5 bg-gray-100 border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 												>
 													<LogOut className="w-5 h-5" />
 												</button>
@@ -648,7 +648,7 @@ export default function TeamClient() {
 												<button
 													onClick={openEditModal}
 													title="Edit Team"
-													className="flex items-center justify-center p-2.5 bg-blue-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+													className="flex items-center justify-center p-2.5 bg-blue-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 												>
 													<Pencil className="w-5 h-5" />
 												</button>
@@ -659,7 +659,7 @@ export default function TeamClient() {
 												<button
 													onClick={() => setShowDeleteConfirm(true)}
 													title="Delete Team"
-													className="flex items-center justify-center p-2.5 bg-red-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+													className="flex items-center justify-center p-2.5 bg-red-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 												>
 													<Trash2 className="w-5 h-5" />
 												</button>
@@ -669,7 +669,7 @@ export default function TeamClient() {
 											<Link
 												href={`/share/team/${params.slug}`}
 												title="Share Team"
-												className="flex items-center justify-center p-2.5 bg-purple-500 text-white border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+												className="flex items-center justify-center p-2.5 bg-purple-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 											>
 												<Share2 className="w-5 h-5" />
 											</Link>
@@ -678,7 +678,7 @@ export default function TeamClient() {
 
 									{/* Contribution Status Badge */}
 									{isMember && hasDesktopNode && (
-										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform -rotate-1">
+										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-none transform -rotate-1">
 											<div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
 											Desktop Connected
 										</div>
@@ -757,7 +757,7 @@ export default function TeamClient() {
 
 					{/* Invite Section - Expandable */}
 					{showInviteSection && isMember && (
-						<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8">
+						<Card className="p-6 bg-white border-2 border-black shadow-none mb-8">
 							<div className="flex items-center justify-between mb-4">
 								<div className="flex items-center gap-3">
 									<div className="bg-brand-yellow p-2 border-2 border-black">
@@ -772,7 +772,7 @@ export default function TeamClient() {
 									<button
 										onClick={handleCreateInvite}
 										disabled={creatingInvite}
-										className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+										className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 									>
 										{creatingInvite ? (
 											<><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
@@ -876,20 +876,20 @@ export default function TeamClient() {
 				{/* Leave Team Confirmation Modal */}
 				{showLeaveConfirm && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-md mx-4">
+						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
 							<h3 className="text-xl font-bold mb-4">Leave Team?</h3>
 							<p className="text-gray-600 mb-6">Are you sure you want to leave <strong>{team.name}</strong>? You will lose your contribution points for this team.</p>
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowLeaveConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleLeaveTeam}
 									disabled={leavingTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 								>
 									{leavingTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Leaving...</> : 'Leave Team'}
 								</button>
@@ -901,20 +901,20 @@ export default function TeamClient() {
 				{/* Delete Team Confirmation Modal */}
 				{showDeleteConfirm && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-md mx-4">
+						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
 							<h3 className="text-xl font-bold mb-4 text-red-600">Delete Team?</h3>
 							<p className="text-gray-600 mb-6">Are you sure you want to delete <strong>{team.name}</strong>? This action cannot be undone. All team members and invite links will be removed.</p>
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowDeleteConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleDeleteTeam}
 									disabled={deletingTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 								>
 									{deletingTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Deleting...</> : 'Delete Team'}
 								</button>
@@ -926,7 +926,7 @@ export default function TeamClient() {
 				{/* Join Team Confirmation Modal */}
 				{showJoinConfirm && existingTeam && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-md mx-4">
+						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
 							<div className="flex items-center gap-3 mb-4">
 								<AlertTriangle className="w-6 h-6 text-orange-500" />
 								<h3 className="text-xl font-bold">Switch Teams?</h3>
@@ -938,14 +938,14 @@ export default function TeamClient() {
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowJoinConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleConfirmJoin}
 									disabled={joiningTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white border-2 border-black font-bold uppercase text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 								>
 									{joiningTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Switching...</> : 'Switch Teams'}
 								</button>
@@ -957,7 +957,7 @@ export default function TeamClient() {
 				{/* Edit Team Modal */}
 				{showEditModal && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-						<div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+						<div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
 							<h2 className="text-2xl font-extrabold uppercase mb-4">Edit Team</h2>
 							<p className="text-neutral-600 mb-6">Update your team&apos;s description and image.</p>
 
@@ -1016,14 +1016,14 @@ export default function TeamClient() {
 										setEditImagePreview(null)
 										setEditError('')
 									}}
-									className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+									className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleUpdateTeam}
 									disabled={editingTeam}
-									className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
 								>
 									{editingTeam ? (
 										<><Loader2 className="w-4 h-4 animate-spin" /> {uploadingImage ? 'Uploading...' : 'Saving...'}</>

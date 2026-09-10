@@ -179,7 +179,7 @@
   margin: 0;
   border: 2px solid var(--values-rule);
   background: var(--values-accent);
-  box-shadow: 0.32rem 0.32rem 0 var(--values-rule);
+  box-shadow: none;
   padding: 0.45rem 0.7rem 0.5rem;
   font-family: var(--values-font-display);
   font-size: clamp(1.05rem, 1.5vw, 1.55rem);
@@ -214,7 +214,7 @@
   border: 2px solid var(--values-rule);
   background: var(--values-paper-soft);
   padding: 0.04em 0.09em 0.1em;
-  box-shadow: 0.09em 0.09em 0 var(--values-accent);
+  box-shadow: none;
   isolation: isolate;
   overflow: hidden;
   text-wrap: balance;
@@ -228,7 +228,7 @@
 
 .headlineCard:nth-child(2) {
   margin-left: clamp(0.3rem, 1vw, 0.8rem);
-  box-shadow: -0.08em 0.1em 0 color-mix(in srgb, var(--values-accent) 82%, var(--values-paper-soft));
+  box-shadow: none;
   transform: rotate(1deg);
 }
 
@@ -236,7 +236,7 @@
   margin-left: clamp(0.75rem, 2.5vw, 2rem);
   background: var(--values-ink);
   color: var(--values-paper-soft);
-  box-shadow: 0.1em 0.1em 0 var(--values-paper-soft), 0.14em 0.14em 0 var(--values-rule);
+  box-shadow: none;
   transform: rotate(-0.6deg);
 }
 
@@ -581,7 +581,7 @@
 
 .actionLinkPrimary {
   background: var(--values-accent);
-  box-shadow: 4px 4px 0 var(--values-rule);
+  box-shadow: none;
 }
 
 .actionLinkSecondary {

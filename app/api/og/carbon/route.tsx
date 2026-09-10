@@ -74,7 +74,7 @@ export async function GET(request: Request) {
                             backgroundColor: '#FFFFFF',
                             border: '4px solid #000000',
                             padding: '24px 48px',
-                            boxShadow: '12px 12px 0px 0px rgba(0,0,0,1)',
+                            boxShadow: 'none',
                         }}
                     >
                         {!iconUrl.startsWith("fallback:") && (

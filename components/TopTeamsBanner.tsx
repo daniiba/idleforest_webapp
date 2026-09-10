@@ -73,7 +73,7 @@ export default function TopTeamsBanner() {
 
     return (
         <div className="hidden md:block bg-brand-gray p-0.5 font-rethink-sans mx-auto w-full">
-            <div className="bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-1.5 relative overflow-hidden">
+            <div className="bg-brand-yellow border-2 border-black shadow-none p-1.5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-1 opacity-10">
                     <Flame size={40} className="text-black" />
                 </div>
@@ -89,7 +89,7 @@ export default function TopTeamsBanner() {
 
                 <div className="grid gap-1.5 md:grid-cols-3 relative z-10">
                     {topDailyTeams.map((team, idx) => (
-                        <div key={team.team_id} className="bg-white border text-black border-black p-1 flex items-center gap-1.5 hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <div key={team.team_id} className="bg-white border text-black border-black p-1 flex items-center gap-1.5 hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all shadow-none">
                             <div className={`
                                 w-5 h-5 flex items-center justify-center font-bold border border-black text-[10px] shrink-0
                                 ${idx === 0 ? 'bg-[#FFD700] text-black' :

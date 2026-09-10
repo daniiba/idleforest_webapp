@@ -103,7 +103,7 @@ export async function GET(request: Request) {
                                 backgroundColor: '#FFFFFF',
                                 border: '4px solid #000000',
                                 padding: '40px',
-                                boxShadow: '8px 8px 0px 0px rgba(0,0,0,1)',
+                                boxShadow: 'none',
                                 flex: 1,
                             }}
                         >
@@ -148,7 +148,7 @@ export async function GET(request: Request) {
                                 backgroundColor: '#FFFFFF',
                                 border: '4px solid #000000',
                                 padding: '40px',
-                                boxShadow: '8px 8px 0px 0px rgba(0,0,0,1)',
+                                boxShadow: 'none',
                                 flex: 1,
                             }}
                         >

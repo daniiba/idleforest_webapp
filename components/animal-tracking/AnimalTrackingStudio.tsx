@@ -61,7 +61,7 @@ function AnimalMap({ animal }: { animal: AnimalTrackingProfile }) {
 	const first = points[0]
 
 	return (
-		<div className="border-2 border-black bg-[#f5f7ef] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+		<div className="border-2 border-black bg-[#f5f7ef] shadow-none">
 			<div className="flex flex-col gap-3 border-b-2 border-black bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<div className="flex items-center gap-2 text-xs font-extrabold uppercase text-neutral-500">
@@ -146,7 +146,7 @@ function AnimalSelector({
 						type="button"
 						onClick={() => onSelect(profile.id)}
 						className={`min-h-[112px] border-2 border-black bg-white p-3 text-left transition-all hover:translate-x-[1px] hover:translate-y-[1px] ${
-							selected ? 'shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]' : 'shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+							selected ? 'shadow-none' : 'shadow-none'
 						}`}
 					>
 						<div className="flex items-start justify-between gap-3">
@@ -230,7 +230,7 @@ export function AnimalTrackingStudio({
 	return (
 		<section className="space-y-6">
 			{showTeamProgress && typeof activeDesktopMembers === 'number' && (
-				<div className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+				<div className="border-2 border-black bg-white p-5 shadow-none">
 					<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 						<div>
 							<div className="inline-flex items-center gap-2 border-2 border-black bg-green-100 px-3 py-1 text-xs font-extrabold uppercase text-green-900">
@@ -264,7 +264,7 @@ export function AnimalTrackingStudio({
 
 			<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
 				<div className="space-y-6">
-					<div className="overflow-hidden border-2 border-black bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+					<div className="overflow-hidden border-2 border-black bg-white shadow-none">
 						<div className="relative min-h-[360px]">
 							<Image
 								src={selectedAnimal.heroImage}
@@ -318,7 +318,7 @@ export function AnimalTrackingStudio({
 
 					<div className="grid gap-4 md:grid-cols-3">
 						{selectedAnimal.latestImages.map((image) => (
-							<div key={`${image.url}-${image.capturedAt}`} className="overflow-hidden border-2 border-black bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+							<div key={`${image.url}-${image.capturedAt}`} className="overflow-hidden border-2 border-black bg-white shadow-none">
 								<div className="relative h-44 w-full">
 									<Image
 										src={image.url}
@@ -342,7 +342,7 @@ export function AnimalTrackingStudio({
 				</div>
 
 				<aside className="space-y-4">
-					<div className="border-2 border-black bg-brand-yellow p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
+					<div className="border-2 border-black bg-brand-yellow p-5 shadow-none">
 						<div className="flex items-center gap-2 text-xs font-black uppercase text-black">
 							<HeartHandshake className="h-4 w-4" />
 							Cause
@@ -359,13 +359,13 @@ export function AnimalTrackingStudio({
 							href={selectedAnimal.causeUrl}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="mt-4 inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-black px-4 py-3 text-sm font-extrabold uppercase text-white shadow-[2px_2px_0px_0px_rgba(255,255,255,0.5)] transition-all hover:translate-x-[1px] hover:translate-y-[1px]"
+							className="mt-4 inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-black px-4 py-3 text-sm font-extrabold uppercase text-white shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px]"
 						>
 							Donate <ArrowUpRight className="h-4 w-4" />
 						</a>
 					</div>
 
-					<div className="border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
+					<div className="border-2 border-black bg-white p-5 shadow-none">
 						<div className="flex items-center gap-2 text-xs font-black uppercase text-neutral-500">
 							<ShoppingBag className="h-4 w-4" />
 							{selectedAnimal.storeTheme}
@@ -383,7 +383,7 @@ export function AnimalTrackingStudio({
 						</div>
 					</div>
 
-					<div className="grid gap-3 border-2 border-black bg-white p-5 text-sm shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
+					<div className="grid gap-3 border-2 border-black bg-white p-5 text-sm shadow-none">
 						<div className="flex items-center gap-3">
 							<RadioTower className="h-5 w-5 text-green-700" />
 							<span className="font-bold text-neutral-800">{selectedAnimal.updateFrequency}</span>
@@ -396,7 +396,7 @@ export function AnimalTrackingStudio({
 
 					<Link
 						href="/teams"
-						className="inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-white px-4 py-3 text-sm font-extrabold uppercase text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px]"
+						className="inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-white px-4 py-3 text-sm font-extrabold uppercase text-black shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px]"
 					>
 						Find a team <ArrowUpRight className="h-4 w-4" />
 					</Link>

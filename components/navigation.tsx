@@ -141,7 +141,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             rel="noopener noreferrer"
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick('add_to_chrome_header_mobile')}
-            className="lg:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black"
+            className="lg:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-none ring-2 ring-black"
           >
             <Chrome className="h-4 w-4 shrink-0" />
             Add to Chrome — It’s Free
@@ -155,7 +155,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             <div className="flex items-center gap-2">
 
               <Link href={profileUrl}>
-                <Button className="bg-brand-yellow text-black border-2 border-black hover:bg-white hover:text-black font-bold font-candu uppercase text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none translate-y-0 transition-all active:translate-y-1">
+                <Button className="bg-brand-yellow text-black border-2 border-black hover:bg-white hover:text-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-none translate-y-0 transition-all active:translate-y-1">
                   {t('profile')}
                 </Button>
               </Link>
@@ -169,7 +169,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             </div>
           ) : (
             <Link href="/auth/user/login">
-              <Button className="bg-black text-white border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <Button className="bg-black text-white border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-none transition-all">
                 {t('login')}
               </Button>
             </Link>
@@ -178,7 +178,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             href={desktopDownloadActionHref}
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick(`download_${headerCtaPlatform}_header`)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-none ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
           >
             <DesktopDownloadIcon className="h-5 w-5 shrink-0" />
             <span>{desktopDownloadLabel}</span>
@@ -226,7 +226,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             {user ? (
               <div className="space-y-4">
                 <Link href={profileUrl} onClick={() => setIsMenuOpen(false)} className="w-full">
-                  <Button className="w-full bg-brand-yellow text-black border-2 border-black font-bold font-candu uppercase text-xl py-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <Button className="w-full bg-brand-yellow text-black border-2 border-black font-bold font-candu uppercase text-xl py-6 shadow-none">
                     {t('go_to_profile')}
                   </Button>
                 </Link>
@@ -284,7 +284,7 @@ function NavDropdown({
         {label}
         <ChevronDown className="h-4 w-4" />
       </button>
-      <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-lg border-2 border-black bg-white p-2 opacity-0 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+      <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-lg border-2 border-black bg-white p-2 opacity-0 shadow-none transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
         {items.map(({ href, label: itemLabel }) => (
           <Link
             key={href}

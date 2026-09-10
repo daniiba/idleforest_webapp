@@ -400,7 +400,7 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
             <div className={`w-full relative overflow-hidden transform transition-all ${variant === 'light' ? 'border-2 border-black hover:translate-x-[2px] hover:translate-y-[2px]' : 'rounded-lg hover:scale-105'}`}
               style={{
                 background: tier.style.cardBg,
-                boxShadow: variant === 'light' ? '4px 4px 0px 0px rgba(0,0,0,1)' : `0 8px 32px ${tier.style.shadowColor}`,
+                boxShadow: variant === 'light' ? 'none' : `0 8px 32px ${tier.style.shadowColor}`,
               }}>
               <div className="p-6 flex flex-col items-center relative z-10">
                 <div className="relative mb-6">

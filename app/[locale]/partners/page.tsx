@@ -119,7 +119,7 @@ export default async function PartnersPage() {
                   Join one to direct your future IdleForest support there.
                 </p>
               </div>
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
                 <p className="font-rethink-sans text-5xl font-extrabold">{partners.length}</p>
                 <p className="mt-2 text-sm font-bold uppercase tracking-[0.16em] text-neutral-600">
                   active partners
@@ -140,7 +140,7 @@ export default async function PartnersPage() {
                 return (
                   <article
                     key={company.id}
-                    className="flex min-h-[320px] flex-col justify-between rounded-lg border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
+                    className="flex min-h-[320px] flex-col justify-between rounded-lg border-2 border-black bg-white p-6 shadow-none"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-4">
@@ -203,7 +203,7 @@ export default async function PartnersPage() {
               })}
             </div>
           ) : (
-            <div className="rounded-lg border-2 border-black bg-white p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="rounded-lg border-2 border-black bg-white p-8 text-center shadow-none">
               <SearchX className="mx-auto h-10 w-10 text-brand-navy" />
               <h2 className="mt-4 font-rethink-sans text-3xl font-extrabold">No partners to show yet</h2>
               <p className="mx-auto mt-3 max-w-xl text-neutral-700">

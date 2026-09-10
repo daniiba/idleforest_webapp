@@ -184,7 +184,7 @@ export default function CreateTeamPage() {
     if (isLoading) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
                 </div>
@@ -196,7 +196,7 @@ export default function CreateTeamPage() {
     if (existingTeam) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 pt-32 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="bg-brand-yellow p-3 border-2 border-black">
                             <Users className="w-6 h-6 text-black" />
@@ -210,7 +210,7 @@ export default function CreateTeamPage() {
                     <div className="flex gap-3">
                         <Link
                             href={`/teams/${existingTeam.slug}`}
-                            className="flex-1 py-4 text-center font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex-1 py-4 text-center font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                         >
                             Go to Your Team
                         </Link>
@@ -225,12 +225,12 @@ export default function CreateTeamPage() {
             <div className="w-full max-w-2xl mx-auto">
                 {/* Progress Indicator */}
                 <div className="flex items-center justify-center gap-4 mb-8">
-                    <div className={`flex items-center gap-2 px-4 py-2 border-2 border-black ${step === 'details' ? 'bg-brand-yellow shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'bg-white'}`}>
+                    <div className={`flex items-center gap-2 px-4 py-2 border-2 border-black ${step === 'details' ? 'bg-brand-yellow shadow-none' : 'bg-white'}`}>
                         <span className="font-bold">1</span>
                         <span className="text-sm font-bold uppercase">Create</span>
                     </div>
                     <ArrowRight className="w-5 h-5 text-neutral-400" />
-                    <div className={`flex items-center gap-2 px-4 py-2 border-2 border-black ${step === 'success' ? 'bg-brand-yellow shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'bg-white'}`}>
+                    <div className={`flex items-center gap-2 px-4 py-2 border-2 border-black ${step === 'success' ? 'bg-brand-yellow shadow-none' : 'bg-white'}`}>
                         <span className="font-bold">2</span>
                         <span className="text-sm font-bold uppercase">Invite</span>
                     </div>
@@ -238,7 +238,7 @@ export default function CreateTeamPage() {
 
                 {/* Step 1: Details */}
                 {step === 'details' && (
-                    <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="bg-white border-2 border-black shadow-none">
                         {/* Hero Section */}
                         <div className="bg-brand-navy p-8 border-b-2 border-black">
                             <div className="flex items-center gap-4 mb-4">
@@ -345,7 +345,7 @@ export default function CreateTeamPage() {
                                 <button
                                     onClick={handleCreateTeam}
                                     disabled={isSubmitting || !teamName.trim()}
-                                    className="w-full flex items-center justify-center gap-3 py-5 text-xl font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-3 py-5 text-xl font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -366,10 +366,10 @@ export default function CreateTeamPage() {
 
                 {/* Step 2: Success */}
                 {step === 'success' && createdTeam && (
-                    <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] reveal-animation">
+                    <div className="bg-white border-2 border-black shadow-none reveal-animation">
                         {/* Success Hero */}
                         <div className="bg-green-500 p-8 border-b-2 border-black text-center">
-                            <div className="inline-flex items-center justify-center bg-white p-4 border-2 border-black mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="inline-flex items-center justify-center bg-white p-4 border-2 border-black mb-4 shadow-none">
                                 <span className="text-4xl">🎉</span>
                             </div>
                             <h1 className="text-3xl font-extrabold font-candu uppercase text-white mb-2">
@@ -400,7 +400,7 @@ export default function CreateTeamPage() {
                                             </code>
                                             <button
                                                 onClick={handleCopyInvite}
-                                                className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all ${copied ? 'bg-green-500 text-white' : 'bg-brand-yellow'
+                                                className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all ${copied ? 'bg-green-500 text-white' : 'bg-brand-yellow'
                                                     }`}
                                             >
                                                 {copied ? (
@@ -437,14 +437,14 @@ export default function CreateTeamPage() {
                             <div className="flex flex-col sm:flex-row gap-3 mt-8">
                                 <Link
                                     href={`/teams/${createdTeam.slug}`}
-                                    className="flex-1 flex items-center justify-center gap-2 py-4 text-lg font-bold uppercase tracking-wider bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="flex-1 flex items-center justify-center gap-2 py-4 text-lg font-bold uppercase tracking-wider bg-brand-navy text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                                 >
                                     <Users className="w-5 h-5" />
                                     Go to Team Page
                                 </Link>
                                 <Link
                                     href="/teams"
-                                    className="flex-1 flex items-center justify-center gap-2 py-4 text-lg font-bold uppercase tracking-wider bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="flex-1 flex items-center justify-center gap-2 py-4 text-lg font-bold uppercase tracking-wider bg-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                                 >
                                     View All Teams
                                 </Link>

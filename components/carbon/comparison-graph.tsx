@@ -56,7 +56,7 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
     } satisfies ChartConfig;
 
     return (
-        <div className="bg-brand-gray border-2 border-black p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="bg-brand-gray border-2 border-black p-8 shadow-none">
             <h3 className="font-rethink-sans text-2xl font-extrabold mb-8 text-black text-center uppercase">
                 {t("title")}
             </h3>
@@ -109,11 +109,11 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
 
             <div className="mt-8 flex items-center justify-center gap-6">
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-brand-yellow border border-black rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"></div>
+                    <div className="w-4 h-4 bg-brand-yellow border border-black rounded-sm shadow-none"></div>
                     <span className="text-sm font-bold font-rethink-sans">IdleForest</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-red-500 border border-black rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"></div>
+                    <div className="w-4 h-4 bg-red-500 border border-black rounded-sm shadow-none"></div>
                     <span className="text-sm font-bold font-rethink-sans">{data.app_name}</span>
                 </div>
             </div>

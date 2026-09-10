@@ -20,7 +20,7 @@ export const UpgradeItem = memo(({ upgrade, canAfford, onBuy, currentCost, curre
             layout
             className={`w-full text-left relative group border-2 transition-all duration-150 active:translate-y-1 active:shadow-none
                 ${canAfford
-                    ? "bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-brand-yellow/10"
+                    ? "bg-white border-black shadow-none hover:bg-brand-yellow/10"
                     : (upgrade.maxLevel && upgrade.level >= upgrade.maxLevel)
                         ? "bg-green-50 border-green-800 opacity-80 cursor-default" // Ownership state
                         : "bg-neutral-200 border-neutral-400 text-neutral-400 cursor-not-allowed grayscale"

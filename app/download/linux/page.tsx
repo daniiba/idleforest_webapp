@@ -93,7 +93,7 @@ export default function LinuxDownloadPage() {
                 <LinuxCtas />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
                 <div className="grid gap-4">
                   <Signal icon={<Terminal className="h-5 w-5" />} label="64-bit .deb package for x64 Linux" />
                   <Signal icon={<Wifi className="h-5 w-5" />} label="Uses spare bandwidth" />

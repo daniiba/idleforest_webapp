@@ -241,7 +241,7 @@ export default function TreePlantingExtensionPage() {
               </p>
             </div>
 
-            <Card className="border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+            <Card className="border-2 border-black bg-white p-6 shadow-none">
               <div className="flex items-center gap-4 border-b-2 border-black pb-5">
                 <div className="grid h-16 w-16 place-items-center rounded-md bg-brand-yellow">
                   <Image src="/chrome.png" alt="Plant a tree Chrome extension with IdleForest" width={44} height={44} />

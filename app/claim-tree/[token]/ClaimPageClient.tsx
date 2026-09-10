@@ -143,7 +143,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
     if (isExpired) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-brand-gray text-black p-4 font-rethink-sans">
-                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-none">
                     <div className="mx-auto w-16 h-16 bg-red-500 rounded-full flex items-center justify-center border-2 border-black">
                         <TreePine className="w-8 h-8 text-white" />
                     </div>
@@ -158,7 +158,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
     if (isClaimed && !successData) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-brand-gray text-black p-4 font-rethink-sans">
-                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-none">
                     <div className="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center border-2 border-black">
                         <CheckCircle className="w-8 h-8 text-white" />
                     </div>
@@ -177,7 +177,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
         return (
             <div className="min-h-screen bg-brand-gray text-black flex flex-col items-center justify-center p-4 animate-in fade-in duration-700 font-rethink-sans">
-                <div className="max-w-xl w-full bg-white border-2 border-black p-8 text-center space-y-6 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+                <div className="max-w-xl w-full bg-white border-2 border-black p-8 text-center space-y-6 shadow-none">
                     <div className="mx-auto w-24 h-24 bg-brand-yellow rounded-full flex items-center justify-center mb-4 border-2 border-black">
                         <TreePine className="w-12 h-12 text-black" />
                     </div>
@@ -240,18 +240,18 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                 </div>
 
                 {error && (
-                    <div className="max-w-2xl mx-auto p-4 bg-red-100 border-2 border-red-500 text-red-800 text-center font-bold shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]">
+                    <div className="max-w-2xl mx-auto p-4 bg-red-100 border-2 border-red-500 text-red-800 text-center font-bold shadow-none">
                         {error}
                     </div>
                 )}
 
                 <div className="grid md:grid-cols-2 gap-8 items-start">
                     {/* Quick Claim Option */}
-                    <div className="bg-white border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col h-full relative">
+                    <div className="bg-white border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-none flex flex-col h-full relative">
                         <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border-2 border-black px-4 py-1 text-sm font-bold uppercase tracking-wider">
                             Basic
                         </div>
-                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-none">
                             <Zap className="w-8 h-8 text-brand-yellow" />
                         </div>
                         <h2 className="text-3xl font-extrabold font-candu uppercase text-center mb-2">Quick Claim</h2>
@@ -263,19 +263,19 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                         <button
                             onClick={() => handleClaim('quick')}
                             disabled={loading}
-                            className="w-full py-4 bg-white border-2 border-black text-black font-bold uppercase tracking-wider hover:bg-neutral-100 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-white border-2 border-black text-black font-bold uppercase tracking-wider hover:bg-neutral-100 transition-all shadow-none active:shadow-none active:translate-x-[4px] active:translate-y-[4px] flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Plant 1 Tree'}
                         </button>
                     </div>
 
                     {/* Team Claim Option */}
-                    <div className="bg-brand-yellow border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col h-full relative">
+                    <div className="bg-brand-yellow border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-none flex flex-col h-full relative">
                         <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-brand-navy text-brand-yellow border-2 border-black px-4 py-1 text-sm font-bold uppercase tracking-wider flex items-center gap-2">
                             <Flame className="w-4 h-4" /> Recommended
                         </div>
 
-                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-none">
                             <Users className="w-8 h-8 text-brand-yellow" />
                         </div>
                         <h2 className="text-3xl font-extrabold font-candu uppercase text-center mb-1 text-black">Team Claim</h2>
@@ -373,7 +373,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                 }
                             }}
                             disabled={loading || (!isCreatingTeam && !selectedTeam) || (isCreatingTeam && !newTeamName)}
-                            className="w-full py-4 bg-brand-navy text-brand-yellow border-2 border-black font-bold uppercase tracking-wider hover:bg-black transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-brand-navy text-brand-yellow border-2 border-black font-bold uppercase tracking-wider hover:bg-black transition-all shadow-none active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                 isCreatingTeam ? 'Create & Plant 2 Trees' : 'Join & Generate Invite'

@@ -277,7 +277,7 @@ const schemas = [
 
 function ProofPill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+    <span className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-black shadow-none">
       <CheckCircle2 className="h-4 w-4 text-brand-navy" />
       {children}
     </span>
@@ -338,7 +338,7 @@ export default function CompareHubPage() {
           <div className="absolute inset-x-0 top-0 h-6 border-b-2 border-black bg-white/40" />
           <div className="container relative mx-auto grid gap-10 px-6 pb-16 pt-20 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.86fr)] lg:items-center lg:pb-20 lg:pt-24">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-none">
                 <Sparkles className="h-4 w-4" />
                 tree planting app comparison
               </p>
@@ -358,7 +358,7 @@ export default function CompareHubPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none"
+                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
                 >
                   <Link
                     href="/download/chrome"
@@ -397,7 +397,7 @@ export default function CompareHubPage() {
 
             <aside
               aria-label="Tree-planting tool model preview"
-              className="relative border-2 border-black bg-white p-4 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] sm:p-5"
+              className="relative border-2 border-black bg-white p-4 shadow-none sm:p-5"
             >
               <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b-2 border-black pb-4">
                 <div>
@@ -411,7 +411,7 @@ export default function CompareHubPage() {
                     The same outcome can come from very different online habits.
                   </p>
                 </div>
-                <div className="grid h-14 w-14 place-items-center border-2 border-black bg-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div className="grid h-14 w-14 place-items-center border-2 border-black bg-brand-yellow shadow-none">
                   <Trees className="h-7 w-7" />
                 </div>
               </div>
@@ -480,7 +480,7 @@ export default function CompareHubPage() {
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-none">
             <table className="w-full min-w-[940px] text-left">
               <thead className="bg-brand-navy text-brand-yellow">
                 <tr>
@@ -589,7 +589,7 @@ export default function CompareHubPage() {
                 <Link
                   key={card.title}
                   href={card.href}
-                  className="group flex h-full flex-col rounded-[24px] border-2 border-black bg-brand-gray p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1"
+                  className="group flex h-full flex-col rounded-[24px] border-2 border-black bg-brand-gray p-6 shadow-none transition-transform hover:-translate-y-1"
                 >
                   <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight group-hover:underline">
                     {card.title}
@@ -642,7 +642,7 @@ export default function CompareHubPage() {
                 </Link>
                 .
               </p>
-              <div className="rounded-[24px] border-2 border-black bg-brand-yellow p-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <div className="rounded-[24px] border-2 border-black bg-brand-yellow p-5 shadow-none">
                 <p className="font-bold">
                   Looking for alternatives, not comparisons? If you want a list
                   of options to replace Ecosia rather than a head-to-head, see
@@ -680,7 +680,7 @@ export default function CompareHubPage() {
               <ProofPill>Made in Lisbon</ProofPill>
               <Link
                 href="/transparency"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-5 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(224,241,70,0.35)] hover:bg-white"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-5 py-3 font-bold text-black shadow-none hover:bg-white"
               >
                 Verified planting records <ExternalLink className="h-4 w-4" />
               </Link>
@@ -702,7 +702,7 @@ export default function CompareHubPage() {
               {faqs.map((faq, index) => (
                 <section
                   key={faq.question}
-                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-none"
                 >
                   <div className="flex gap-4">
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
@@ -741,7 +741,7 @@ export default function CompareHubPage() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 asChild
-                className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none"
+                className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
               >
                 <Link
                   href="/download/chrome"

@@ -195,7 +195,7 @@ export default function InvitePageClient() {
     if (loading) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Loading invite...</p>
                 </div>
@@ -206,14 +206,14 @@ export default function InvitePageClient() {
     if (error || !inviteData) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
                     <h1 className="text-3xl font-extrabold font-candu uppercase mb-4 text-center">
                         Oops!
                     </h1>
                     <p className="text-neutral-600 text-center mb-6">{error || 'Invalid invite link'}</p>
                     <Link
                         href="/"
-                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
+                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
                     >
                         Go to Homepage
                     </Link>
@@ -224,7 +224,7 @@ export default function InvitePageClient() {
 
     return (
         <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-            <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+            <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-yellow border-2 border-black mb-4">
@@ -246,12 +246,12 @@ export default function InvitePageClient() {
                             <img
                                 src={inviteData.team.image_url}
                                 alt={`${inviteData.team.name} logo`}
-                                className="w-24 h-24 object-cover border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                                className="w-24 h-24 object-cover border-2 border-black shadow-none"
                             />
                         </div>
                     ) : (
                         <div className="flex justify-center mb-4">
-                            <div className="w-24 h-24 bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
+                            <div className="w-24 h-24 bg-brand-yellow border-2 border-black shadow-none flex items-center justify-center">
                                 <Users className="w-10 h-10 text-black" />
                             </div>
                         </div>
@@ -310,7 +310,7 @@ export default function InvitePageClient() {
                                 {isTeamOwner ? (
                                     <Link
                                         href={`/teams/${existingTeam.slug || existingTeam.id}`}
-                                        className="inline-block px-4 py-2 text-sm font-bold uppercase bg-red-500 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                        className="inline-block px-4 py-2 text-sm font-bold uppercase bg-red-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                                     >
                                         Go to Your Team
                                     </Link>
@@ -319,13 +319,13 @@ export default function InvitePageClient() {
                                         <button
                                             onClick={handleConfirmSwitch}
                                             disabled={joining}
-                                            className="px-4 py-2 text-sm font-bold uppercase bg-orange-500 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+                                            className="px-4 py-2 text-sm font-bold uppercase bg-orange-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
                                         >
                                             {joining ? 'Switching...' : 'Confirm Switch'}
                                         </button>
                                         <button
                                             onClick={() => setShowSwitchConfirm(false)}
-                                            className="px-4 py-2 text-sm font-bold uppercase bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                            className="px-4 py-2 text-sm font-bold uppercase bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                                         >
                                             Cancel
                                         </button>
@@ -341,7 +341,7 @@ export default function InvitePageClient() {
                     <button
                         onClick={() => handleJoinTeam()}
                         disabled={joining || showSwitchConfirm || isTeamOwner}
-                        className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
                         {joining ? (
                             <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Joining...</>

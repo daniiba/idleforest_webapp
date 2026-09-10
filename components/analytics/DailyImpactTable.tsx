@@ -223,7 +223,7 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
   })
 
   return (
-    <section className="overflow-hidden border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <section className="overflow-hidden border-2 border-black bg-white shadow-none">
       <div className="flex flex-col gap-4 border-b-2 border-black bg-brand-yellow p-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-black">

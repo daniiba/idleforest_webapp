@@ -393,7 +393,7 @@ export default function TeamsPage() {
 				{/* Top 3 Daily Banner - MOVED TO LAYOUT */}
 
 				{/* Header */}
-				<section className="bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8">
+				<section className="bg-white border-2 border-black shadow-none p-6 md:p-8">
 					<div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
 						<div className="max-w-3xl">
 							<div className="mb-3 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-black">
@@ -410,14 +410,14 @@ export default function TeamsPage() {
 						<div className="flex flex-col sm:flex-row lg:flex-col gap-3">
 							<Link
 								href="/create-team"
-								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm text-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 							>
 								<Plus className="h-5 w-5" />
 								{t('create_team_cta')}
 							</Link>
 							<button
 								onClick={() => setActiveTab('teams')}
-								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black border-2 border-black font-extrabold uppercase text-sm text-white shadow-[3px_3px_0px_0px_rgba(224,241,70,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(224,241,70,1)] transition-all"
+								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black border-2 border-black font-extrabold uppercase text-sm text-white shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
 							>
 								{t('find_team_cta')}
 								<ArrowRight className="h-5 w-5" />
@@ -442,11 +442,11 @@ export default function TeamsPage() {
 
 				{/* Tabs */}
 				<div className="flex justify-center">
-					<div className="inline-flex bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-1 gap-1">
+					<div className="inline-flex bg-white border-2 border-black shadow-none p-1 gap-1">
 						<button
 							onClick={() => setActiveTab('rankings')}
 							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'rankings'
-								? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+								? 'bg-brand-yellow text-black border-2 border-black shadow-none'
 								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
 								}`}
 						>
@@ -456,7 +456,7 @@ export default function TeamsPage() {
 						<button
 							onClick={() => setActiveTab('teams')}
 							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'teams'
-								? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+								? 'bg-brand-yellow text-black border-2 border-black shadow-none'
 								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
 								}`}
 						>
@@ -491,7 +491,7 @@ export default function TeamsPage() {
 							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 								{filteredTeams.map((team) => (
 									<Link href={`/teams/${team.slug}`} key={team.id} className="block min-w-0">
-										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
+										<div className="bg-white border-2 border-black shadow-none p-5 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all cursor-pointer">
 											<div className="flex items-center gap-4 w-full">
 												{/* Team Image */}
 												{team.image_url ? (
@@ -530,7 +530,7 @@ export default function TeamsPage() {
 								))}
 							</div>
 						) : (
-							<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+							<div className="bg-white border-2 border-black shadow-none p-6">
 								<h2 className="text-xl font-bold mb-2 text-black">{t('no_teams')}</h2>
 								<p className="text-neutral-500">
 									{searchQuery ? t('no_teams_search') : t('create_team_prompt')}
@@ -552,7 +552,7 @@ export default function TeamsPage() {
 										key={key}
 										onClick={() => setRankingCategory(key)}
 										className={`flex items-center gap-2 px-3 py-2 font-bold text-xs md:text-sm uppercase transition-all ${rankingCategory === key
-											? 'bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+											? 'bg-brand-yellow text-black border-2 border-black shadow-none'
 											: 'bg-white text-neutral-600 border-2 border-black hover:bg-gray-100'
 											}`}
 									>
@@ -564,7 +564,7 @@ export default function TeamsPage() {
 
 							{/* Time Period Selector */}
 							{rankingCategory !== 'allTime' && (
-								<div className="inline-flex items-center gap-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-1 flex-shrink-0">
+								<div className="inline-flex items-center gap-1 bg-white border-2 border-black shadow-none p-1 flex-shrink-0">
 									<Calendar className="w-4 h-4 text-neutral-500 ml-2" />
 									{timePeriods.map(({ key, label }) => (
 										<button
@@ -594,7 +594,7 @@ export default function TeamsPage() {
 										<div className="text-center">
 											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('all_time_rankings_label')}</p>
 										</div>
-										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
 											{profiles.map((profile, idx) => (
 												<Link
 													key={profile.user_id}
@@ -626,7 +626,7 @@ export default function TeamsPage() {
 										<div className="text-center">
 											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_earners_label')} - {getPeriodLabel()}</p>
 										</div>
-										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
 											{periodTopUsers.map((user, idx) => (
 												<Link
 													key={user.user_id}
@@ -658,7 +658,7 @@ export default function TeamsPage() {
 										<div className="text-center">
 											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_teams_label')} - {getPeriodLabel()}</p>
 										</div>
-										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
 											{periodTopTeams.map((team, idx) => (
 												<Link
 													key={team.team_id}
@@ -697,7 +697,7 @@ export default function TeamsPage() {
 										<div className="text-center">
 											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('fastest_growing_label')} - {getPeriodLabel()}</p>
 										</div>
-										<div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
 											{fastestGrowingTeams.map((team, idx) => (
 												<Link
 													key={team.team_id}

@@ -69,7 +69,7 @@ const celebrationHtml = String.raw`<!doctype html>
         background:
           linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72)),
           #d9d9d9;
-        box-shadow: 18px 18px 0 #0b101f;
+        box-shadow: none;
         overflow: hidden;
       }
 

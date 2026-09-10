@@ -40,7 +40,7 @@ export default async function CompanyWidgetPage({
 
     return (
         <div className="min-h-screen bg-transparent flex items-center justify-center p-4 font-sans">
-            <div className="w-full max-w-sm bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-xl overflow-hidden relative">
+            <div className="w-full max-w-sm bg-white border-4 border-black shadow-none rounded-xl overflow-hidden relative">
 
                 {/* Header Pattern */}
                 <div
@@ -95,10 +95,10 @@ export default async function CompanyWidgetPage({
                         href={joinUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-3 px-4 rounded-xl border-4 border-black font-extrabold uppercase tracking-wider text-black text-center transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                        className="w-full py-3 px-4 rounded-xl border-4 border-black font-extrabold uppercase tracking-wider text-black text-center transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
                         style={{
                             backgroundColor: themeColor,
-                            boxShadow: '4px 4px 0px 0px rgba(0,0,0,1)'
+                            boxShadow: 'none'
                         }}
                     >
                         Plant trees with {company.name}

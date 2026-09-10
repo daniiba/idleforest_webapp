@@ -141,7 +141,7 @@ export default function UseIdleForestWithEcosiaPage() {
             </div>
           </div>
 
-          <div className="border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+          <div className="border-2 border-black bg-white p-6 shadow-none">
             <h2 className="mb-5 font-rethink-sans text-2xl font-extrabold">The simple setup</h2>
             <div className="space-y-5">
               <div className="flex gap-4">
@@ -178,7 +178,7 @@ export default function UseIdleForestWithEcosiaPage() {
           </p>
         </div>
 
-        <div className="overflow-x-auto border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="overflow-x-auto border-2 border-black bg-white shadow-none">
           <table className="w-full min-w-[760px] text-left">
             <thead className="bg-brand-navy text-brand-yellow">
               <tr>
@@ -221,7 +221,7 @@ export default function UseIdleForestWithEcosiaPage() {
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.title} className="border-2 border-black bg-brand-gray p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <div key={item.title} className="border-2 border-black bg-brand-gray p-6 shadow-none">
                 <Icon className="mb-4 h-7 w-7" />
                 <h3 className="mb-2 font-rethink-sans text-xl font-extrabold">{item.title}</h3>
                 <p className="text-neutral-700">{item.body}</p>

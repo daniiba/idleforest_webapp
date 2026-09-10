@@ -1401,7 +1401,7 @@ export default function AdminPage() {
     if (!isAuthenticated) {
         return (
             <div className="min-h-screen bg-brand-gray flex items-center justify-center p-6 font-rethink-sans">
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full max-w-md">
+                <div className="bg-white border-2 border-black shadow-none p-8 w-full max-w-md">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="bg-brand-yellow border-2 border-black p-3">
                             <Lock className="h-6 w-6 text-black" />
@@ -1428,7 +1428,7 @@ export default function AdminPage() {
                         <button
                             type="submit"
                             disabled={isVerifying}
-                            className="w-full bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-3 font-bold uppercase tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                            className="w-full bg-brand-yellow border-2 border-black shadow-none px-6 py-3 font-bold uppercase tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
                         >
                             {isVerifying ? 'Verifying...' : 'Unlock Dashboard'}
                         </button>
@@ -1630,7 +1630,7 @@ export default function AdminPage() {
         <div className="min-h-screen bg-brand-gray p-6 md:p-8 py-24 mt-32 font-rethink-sans">
             <div className="space-y-6 max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8">
+                <div className="bg-white border-2 border-black shadow-none p-6 md:p-8">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
                             <h1 className="text-3xl md:text-4xl font-extrabold font-candu uppercase tracking-tight text-black">Admin Dashboard</h1>
@@ -1649,7 +1649,7 @@ export default function AdminPage() {
                             <button
                                 onClick={generateMonthlyReport}
                                 disabled={isGeneratingPdf}
-                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
                             >
                                 {isGeneratingPdf ? (
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Generating...</>
@@ -1700,7 +1700,7 @@ export default function AdminPage() {
                         }
                     }}
                     className="w-full" defaultValue={'partners'}                 >
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none p-1 h-auto">
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 bg-white border-2 border-black shadow-none rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
                         <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
@@ -1727,7 +1727,7 @@ export default function AdminPage() {
                                 Key Metrics
                             </h2>
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Users className="h-4 w-4 text-brand-navy" />
                                         <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Users</p>
@@ -1738,7 +1738,7 @@ export default function AdminPage() {
                                         +{stats.newTotalUsersCount} this month
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Activity className="h-4 w-4 text-brand-navy" />
                                         <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active (Adjusted)</p>
@@ -1752,7 +1752,7 @@ export default function AdminPage() {
                                         <p className="text-xs text-amber-700 mt-1">Chrome reported {reportedCurrentWau} WAU</p>
                                     )}
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <div className="flex items-center gap-2 mb-2">
                                         <DollarSign className="h-4 w-4 text-brand-navy" />
                                         <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Monthly Revenue</p>
@@ -1760,7 +1760,7 @@ export default function AdminPage() {
                                     <div className="text-3xl font-extrabold font-candu text-black">€{stats.monthlyRevenue.toFixed(2)}</div>
                                     <p className="text-sm text-neutral-600 mt-1">From mellowtel</p>
                                 </div>
-                                <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 ${profit >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+                                <div className={`border-2 border-black shadow-none p-6 ${profit >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         {profit >= 0 ? <TrendingUp className="h-4 w-4 text-green-600" /> : <TrendingDown className="h-4 w-4 text-red-600" />}
                                         <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Monthly Profit</p>
@@ -1780,46 +1780,46 @@ export default function AdminPage() {
                                 Unit Economics
                             </h2>
                             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">CAC</div>
                                     <div className={`text-2xl font-extrabold font-candu ${cac <= targetMaxCac ? 'text-green-600' : 'text-yellow-600'}`}>
                                         €{cac.toFixed(2)}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">€{FINANCIAL_DATA.marketingSpent} / {stats.totalUsersCount}</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Target CAC</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{targetMaxCac.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">LTV / 3</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">LTV</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{ltv.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">ARPU / Churn</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">LTV/CAC</div>
                                     <div className={`text-2xl font-extrabold font-candu ${ltvCacRatio >= 3 ? 'text-green-600' : ltvCacRatio >= 1 ? 'text-yellow-600' : 'text-red-600'}`}>
                                         {ltvCacRatio === Infinity ? '∞' : `${ltvCacRatio.toFixed(1)}x`}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">Target: 3x+</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Blended)</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{arpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">All platforms</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Active 30d)</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{activeLast30DaysArpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.activeLast30DaysUsersCount} registered active users</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Monthly Churn <span className="text-blue-600">(Chrome)</span></div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{(churnRate * 100).toFixed(1)}%</div>
                                     <p className="text-xs text-neutral-600 mt-1">Avg uninstalls / installs</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Opt-Out Rate <span className="text-purple-600">(Desktop)</span></div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{(stats.desktopOptOutRate * 100).toFixed(1)}%</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.desktopNodeCount} desktop devices</p>
@@ -1834,17 +1834,17 @@ export default function AdminPage() {
                                 Platform Breakdown
                             </h2>
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension ARPU</div>
                                     <div className="text-2xl font-extrabold font-candu text-blue-600">€{stats.extensionArpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.chromeWau} WAU • {(stats.extensionRevenueShare * 100).toFixed(0)}% of revenue</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension Devices</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{stats.extensionNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Chrome Extension users</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Desktop Devices</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{stats.desktopNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Windows + macOS users</p>
@@ -1854,7 +1854,7 @@ export default function AdminPage() {
 
                         {/* Path to Profitability - Highlighted */}
                         {profit < 0 && (
-                            <div className="bg-brand-yellow border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8">
+                            <div className="bg-brand-yellow border-2 border-black shadow-none p-6 md:p-8">
                                 <h3 className="text-xl font-extrabold font-candu uppercase mb-2 text-black flex items-center gap-2">
                                     🎯 Path to Profitability
                                 </h3>
@@ -1886,7 +1886,7 @@ export default function AdminPage() {
                         <section>
                             <h2 className="text-xl font-extrabold mb-4 font-candu uppercase text-black">Growth Trends</h2>
                             <div className="grid gap-4 lg:grid-cols-3">
-                                <div id="wau-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div id="wau-chart" className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Weekly Active Users <span className="text-amber-600 text-sm font-normal">(adjusted)</span></h3>
                                     <p className="text-xs text-neutral-600 mb-2">
                                         {chromeStoreData.yearOverYear.startWau} → {chromeStoreData.yearOverYear.endWau} ({chromeStoreData.yearOverYear.wauGrowth})
@@ -1900,7 +1900,7 @@ export default function AdminPage() {
                                     <LazyAdminCharts.ChromeWau data={chromeStoreData.monthlyData} />
                                 </div>
 
-                                <div id="acquisition-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div id="acquisition-chart" className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Acquisition & Churn <span className="text-amber-600 text-sm font-normal">(Chrome Store only)</span></h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         {chromeStoreData.totals.totalInstalls} installs, {chromeStoreData.totals.totalUninstalls} uninstalls ({chromeStoreData.totals.netUsers} net)
@@ -1908,7 +1908,7 @@ export default function AdminPage() {
                                     <LazyAdminCharts.Acquisition data={chromeStoreData.monthlyData} />
                                 </div>
 
-                                <div id="desktop-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div id="desktop-chart" className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Desktop App Growth</h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         Active users on desktop app
@@ -1919,7 +1919,7 @@ export default function AdminPage() {
                         </section>
 
                         {/* Revenue Chart */}
-                        <div id="revenue-chart" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <div id="revenue-chart" className="bg-white border-2 border-black shadow-none p-6">
                             <h3 className="text-base font-bold text-black mb-1">Revenue & ARPU Trend</h3>
                             <p className="text-xs text-neutral-600 mb-4">ARPU uses adjusted Chrome WAU plus desktop WAU where available (Jan 2026+)</p>
                             <LazyAdminCharts.Revenue data={monthlyMetricsData} />
@@ -1930,7 +1930,7 @@ export default function AdminPage() {
                     {/* MARKETING TAB - Posts & Partnerships with Database Persistence */}
                     <TabsContent value="marketing" className="space-y-6 mt-6">
                         {/* Month/Year Selector */}
-                        <div className="flex flex-wrap items-center gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                        <div className="flex flex-wrap items-center gap-4 bg-white border-2 border-black shadow-none p-4">
                             <div className="flex items-center gap-2">
                                 <label className="text-sm font-bold">Month:</label>
                                 <select
@@ -1958,7 +1958,7 @@ export default function AdminPage() {
                             <button
                                 onClick={fetchMarketingEntries}
                                 disabled={isLoadingEntries}
-                                className="bg-brand-yellow border-2 border-black px-4 py-2 font-bold text-sm uppercase flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+                                className="bg-brand-yellow border-2 border-black px-4 py-2 font-bold text-sm uppercase flex items-center gap-2 shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all disabled:opacity-50"
                             >
                                 {isLoadingEntries ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                 Load
@@ -1966,7 +1966,7 @@ export default function AdminPage() {
                         </div>
 
                         {/* Add new entry form */}
-                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <section className="bg-white border-2 border-black shadow-none p-6">
                             <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
                                 <Plus className="h-5 w-5 text-brand-navy" />
                                 Add Entry
@@ -2088,7 +2088,7 @@ export default function AdminPage() {
                             <button
                                 onClick={handleAddMarketingEntry}
                                 disabled={!newEntryUrl.trim() || isAddingEntry}
-                                className="mt-4 bg-brand-yellow border-2 border-black px-6 py-3 font-bold text-sm uppercase disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                className="mt-4 bg-brand-yellow border-2 border-black px-6 py-3 font-bold text-sm uppercase disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                             >
                                 {isAddingEntry ? (
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Adding...</>
@@ -2099,7 +2099,7 @@ export default function AdminPage() {
                         </section>
 
                         {/* Entries List */}
-                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <section className="bg-white border-2 border-black shadow-none p-6">
                             <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
                                 <Link2 className="h-5 w-5 text-brand-navy" />
                                 Entries ({marketingEntries.length})
@@ -2344,7 +2344,7 @@ export default function AdminPage() {
 
                     {/* REPORT TAB - Summary and PDF Generation */}
                     <TabsContent value="report" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
-                        <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <section className="bg-white border-2 border-black shadow-none p-6">
                             <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
                                 <FileText className="h-5 w-5 text-brand-navy" />
                                 Monthly Report Generator
@@ -2387,7 +2387,7 @@ export default function AdminPage() {
                             <button
                                 onClick={generateMonthlyReport}
                                 disabled={isGeneratingPdf}
-                                className="w-full bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-4 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                                className="w-full bg-brand-yellow border-2 border-black shadow-none px-6 py-4 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
                             >
                                 {isGeneratingPdf ? (
                                     <><Loader2 className="h-5 w-5 animate-spin" /> Generating PDF...</>
@@ -2412,7 +2412,7 @@ export default function AdminPage() {
 
                             {/* Key Projection Metrics */}
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 ${organicBreakEvenPossible ? 'bg-green-100' : 'bg-yellow-100'}`}>
+                                <div className={`border-2 border-black shadow-none p-4 ${organicBreakEvenPossible ? 'bg-green-100' : 'bg-yellow-100'}`}>
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Organic Break-Even</div>
                                     <div className={`text-2xl font-extrabold font-candu ${organicBreakEvenPossible ? 'text-green-600' : 'text-yellow-600'}`}>
                                         {breakEvenMonthName}
@@ -2421,14 +2421,14 @@ export default function AdminPage() {
                                         {organicBreakEvenPossible ? '✓ Achievable organically' : '⚠ Needs paid growth'}
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Dec 2026 WAU (Organic)</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">{projection2026[11]?.organicWau.toLocaleString()}</div>
                                     <p className="text-xs text-neutral-600 mt-1">
                                         vs {projection2026[11]?.breakEvenWau.toLocaleString()} needed
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Dec 2026 Revenue</div>
                                     <div className="text-2xl font-extrabold font-candu text-black">€{projection2026[11]?.revenue.toFixed(0)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">
@@ -2437,7 +2437,7 @@ export default function AdminPage() {
                                         </span>
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                                <div className="bg-white border-2 border-black shadow-none p-4">
                                     <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Users Gap (Dec)</div>
                                     <div className={`text-2xl font-extrabold font-candu ${projection2026[11]?.gapToBreakEven <= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                         {projection2026[11]?.gapToBreakEven > 0 ? '+' : ''}{projection2026[11]?.gapToBreakEven.toLocaleString()}
@@ -2447,7 +2447,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Organic vs Break-Even WAU Chart */}
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div className="bg-white border-2 border-black shadow-none p-6">
                                 <h3 className="text-base font-bold text-black mb-1">2026 Organic Growth vs Break-Even Target</h3>
                                 <p className="text-xs text-neutral-600 mb-4">
                                     Green = Projected organic WAU | Red line = WAU needed for break-even | Blue = Paid users needed to fill gap
@@ -2456,7 +2456,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Paid Acquisition Scenarios Table */}
-                            <div className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div className="bg-brand-yellow border-2 border-black shadow-none p-6">
                                 <h3 className="text-base font-bold text-black mb-1 flex items-center gap-2">
                                     💰 Paid Acquisition Scenarios
                                 </h3>
@@ -2511,7 +2511,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Monthly Projection Table (Detailed) */}
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div className="bg-white border-2 border-black shadow-none p-6">
                                 <h3 className="text-base font-bold text-black mb-1">Monthly 2026 Projection</h3>
                                 <p className="text-xs text-neutral-600 mb-4">
                                     Detailed month-by-month forecast based on current trends
@@ -2570,7 +2570,7 @@ export default function AdminPage() {
                                             {(selectedSegment === 'active' || selectedSegment === 'new_users' || selectedSegment === 'power_users' || selectedSegment === 'team_owners' || selectedSegment === 'profile_no_desktop') && (
                                                 <button
                                                     onClick={() => handleSyncSegment(selectedSegment as UserSegment)}
-                                                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border-2 border-black hover:bg-brand-yellow transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border-2 border-black hover:bg-brand-yellow transition-colors shadow-none"
                                                 >
                                                     <Mail className="h-3 w-3" /> Sync to Resend
                                                 </button>
@@ -2578,7 +2578,7 @@ export default function AdminPage() {
                                         </h2>
                                         <button
                                             onClick={fetchPowerUsersData}
-                                            className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                            className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                                         >
                                             <RefreshCw className="h-4 w-4" /> Refresh
                                         </button>
@@ -2593,14 +2593,14 @@ export default function AdminPage() {
                                                 placeholder="Search by name or email..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="w-full pl-10 pr-4 py-3 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                className="w-full pl-10 pr-4 py-3 border-2 border-black shadow-none focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                                             />
                                         </div>
                                     </div>
                                     <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
                                         <button
                                             onClick={() => setSelectedSegment('all')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'all' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'all' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Users className="h-4 w-4 text-brand-navy" />
@@ -2610,7 +2610,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('power_users')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'power_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'power_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Zap className="h-4 w-4 text-yellow-500" />
@@ -2620,7 +2620,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('active')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'active' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'active' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Activity className="h-4 w-4 text-green-500" />
@@ -2630,7 +2630,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('inactive')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'inactive' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'inactive' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Clock className="h-4 w-4 text-red-500" />
@@ -2640,7 +2640,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('new_users')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'new_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'new_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <UserPlus className="h-4 w-4 text-blue-500" />
@@ -2650,7 +2650,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('unopted_desktop')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <AlertTriangle className="h-4 w-4 text-red-500" />
@@ -2660,7 +2660,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('extension_no_desktop')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'extension_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'extension_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <MousePointer className="h-4 w-4 text-orange-500" />
@@ -2670,7 +2670,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('profile_no_desktop')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'profile_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'profile_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Monitor className="h-4 w-4 text-blue-500" />
@@ -2680,7 +2680,7 @@ export default function AdminPage() {
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('team_owners')}
-                                            className={`p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Trophy className="h-4 w-4 text-yellow-500" />
@@ -2692,7 +2692,7 @@ export default function AdminPage() {
                                 </section>
 
                                 {/* Sync to Resend Section */}
-                                <section className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <section className="bg-brand-navy border-2 border-black shadow-none p-6">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -2712,7 +2712,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncAllUsers(true)}
                                                         disabled={isSyncingAllUsers}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
                                                     >
                                                         {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                                         Preview
@@ -2720,7 +2720,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncAllUsers(false)}
                                                         disabled={isSyncingAllUsers}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
                                                     >
                                                         {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                                         Sync Now
@@ -2731,7 +2731,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncSegment(selectedSegment, true)}
                                                         disabled={syncingSegment !== null}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
                                                     >
                                                         {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                                         Preview
@@ -2739,7 +2739,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncSegment(selectedSegment, false)}
                                                         disabled={syncingSegment !== null}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
                                                     >
                                                         {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                                         Sync Now
@@ -2765,7 +2765,7 @@ export default function AdminPage() {
                                 </section>
 
                                 {/* User Table */}
-                                <section className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <section className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-4">
                                         {selectedSegment === 'all' ? 'All Users' : `${selectedSegment.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}`} ({filteredUsers.length})
                                     </h3>
@@ -2866,7 +2866,7 @@ export default function AdminPage() {
                             </h2>
                             <button
                                 onClick={() => selectedAudienceId && fetchContacts(selectedAudienceId)}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingContacts ? 'animate-spin' : ''}`} /> Refresh
                             </button>
@@ -2880,7 +2880,7 @@ export default function AdminPage() {
                                     <button
                                         key={audience.id}
                                         onClick={() => setSelectedAudienceId(audience.id)}
-                                        className={`w-full text-left p-3 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold text-sm transition-all ${selectedAudienceId === audience.id ? 'bg-brand-yellow translate-x-[1px] translate-y-[1px] shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-white hover:bg-gray-50'}`}
+                                        className={`w-full text-left p-3 border-2 border-black shadow-none font-bold text-sm transition-all ${selectedAudienceId === audience.id ? 'bg-brand-yellow translate-x-[1px] translate-y-[1px] shadow-none' : 'bg-white hover:bg-gray-50'}`}
                                     >
                                         {audience.name}
                                     </button>
@@ -2894,7 +2894,7 @@ export default function AdminPage() {
 
                             {/* Contacts Table */}
                             <div className="lg:col-span-3">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-4 flex items-center justify-between">
                                         <span>Contacts in List ({audienceContacts.length})</span>
                                         {selectedAudienceId && <span className="text-xs font-normal text-neutral-500 uppercase tracking-wider">ID: {selectedAudienceId}</span>}
@@ -2964,14 +2964,14 @@ export default function AdminPage() {
                                     setNewTemplate({ name: '', subject: '', content: '', from_email: '' })
                                     setIsTemplateModalOpen(true)
                                 }}
-                                className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                             >
                                 <Plus className="h-4 w-4" /> Create Template
                             </button>
                         </div>
 
                         {/* Broadcast Campaign Section */}
-                        <div className="bg-brand-navy border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 mb-6">
+                        <div className="bg-brand-navy border-2 border-black shadow-none p-6 mb-6">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
                                 <Send className="h-5 w-5 text-brand-yellow" />
                                 Send Broadcast Campaign
@@ -3010,7 +3010,7 @@ export default function AdminPage() {
                                     <button
                                         onClick={handleSendBroadcast}
                                         disabled={!broadcastTemplateId || !broadcastAudienceId || isSendingBroadcast}
-                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                     >
                                         {isSendingBroadcast ? (
                                             <>
@@ -3100,7 +3100,7 @@ export default function AdminPage() {
 
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {templates.map(template => (
-                                <div key={template.id} className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col justify-between">
+                                <div key={template.id} className="bg-white border-2 border-black shadow-none p-6 flex flex-col justify-between">
                                     <div>
                                         <h3 className="text-lg font-bold mb-2">{template.name}</h3>
                                         <p className="text-sm font-semibold text-neutral-600 mb-2">Subject: {template.subject}</p>
@@ -3138,7 +3138,7 @@ export default function AdminPage() {
 
                     {/* ANIMAL REWARDS TAB */}
                     <TabsContent value="animal-rewards" className="space-y-6 mt-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-none p-6">
                             <div>
                                 <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                     <PawPrint className="h-5 w-5 text-brand-navy" />
@@ -3149,7 +3149,7 @@ export default function AdminPage() {
                             <button
                                 onClick={() => fetchAdoptionRewardRequests()}
                                 disabled={isLoadingAdoptionRewards}
-                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingAdoptionRewards ? 'animate-spin' : ''}`} />
                                 Refresh Candidates
@@ -3157,15 +3157,15 @@ export default function AdminPage() {
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-3">
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                            <div className="bg-white border-2 border-black shadow-none p-5">
                                 <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Pending Approval</p>
                                 <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'pending').length}</p>
                             </div>
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                            <div className="bg-white border-2 border-black shadow-none p-5">
                                 <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Approved Not Fulfilled</p>
                                 <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'approved').length}</p>
                             </div>
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5">
+                            <div className="bg-white border-2 border-black shadow-none p-5">
                                 <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Estimated Retail Exposure</p>
                                 <p className="text-3xl font-extrabold font-candu text-black">
                                     ${(adoptionRewardRequests.filter(request => request.status === 'pending' || request.status === 'approved').length * 16.95).toFixed(2)}
@@ -3174,12 +3174,12 @@ export default function AdminPage() {
                         </div>
 
                         {adoptionRewardResult && (
-                            <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 font-bold ${adoptionRewardResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                            <div className={`border-2 border-black shadow-none p-4 font-bold ${adoptionRewardResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
                                 {adoptionRewardResult.message}
                             </div>
                         )}
 
-                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
                             {isLoadingAdoptionRewards ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3312,7 +3312,7 @@ export default function AdminPage() {
 
                     {/* NODE TRANSFERS TAB */}
                     <TabsContent value="node-transfers" className="space-y-6 mt-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-none p-6">
                             <div>
                                 <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                     <Monitor className="h-5 w-5 text-brand-navy" />
@@ -3323,7 +3323,7 @@ export default function AdminPage() {
                             <button
                                 onClick={() => fetchNodeTransferRequests()}
                                 disabled={isLoadingNodeTransfers}
-                                className="bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingNodeTransfers ? 'animate-spin' : ''}`} />
                                 Refresh
@@ -3331,12 +3331,12 @@ export default function AdminPage() {
                         </div>
 
                         {nodeTransferResult && (
-                            <div className={`border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 font-bold ${nodeTransferResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                            <div className={`border-2 border-black shadow-none p-4 font-bold ${nodeTransferResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
                                 {nodeTransferResult.message}
                             </div>
                         )}
 
-                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
                             {isLoadingNodeTransfers ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3436,7 +3436,7 @@ export default function AdminPage() {
 
                     {/* COMPANIES TAB */}
                     <TabsContent value="companies" className="space-y-6 mt-6">
-                        <div className="flex justify-between items-center bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                        <div className="flex justify-between items-center bg-white border-2 border-black shadow-none p-6">
                             <div>
                                 <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                     <TreePine className="h-5 w-5 text-brand-navy" />
@@ -3446,13 +3446,13 @@ export default function AdminPage() {
                             </div>
                             <button
                                 onClick={openCreateCompany}
-                                className="bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 flex items-center gap-2 font-bold hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all"
+                                className="bg-brand-navy text-white border-2 border-black shadow-none px-4 py-2 flex items-center gap-2 font-bold hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all"
                             >
                                 <Plus className="h-4 w-4" /> New Company
                             </button>
                         </div>
 
-                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
                             <div className="flex flex-col gap-3 border-b-2 border-black bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <h3 className="text-lg font-extrabold font-candu uppercase text-black flex items-center gap-2">
@@ -3544,7 +3544,7 @@ export default function AdminPage() {
                             )}
                         </div>
 
-                        <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
                             {isLoadingCompanies ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3626,7 +3626,7 @@ export default function AdminPage() {
                 <div className="mt-6">
                     <button
                         onClick={() => setShowDetails(!showDetails)}
-                        className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-black hover:text-brand-navy transition-colors bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-3 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none"
+                        className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-black hover:text-brand-navy transition-colors bg-brand-yellow border-2 border-black shadow-none px-4 py-3 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none"
                     >
                         {showDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                         {showDetails ? 'Hide' : 'Show'} Detailed Breakdown
@@ -3636,7 +3636,7 @@ export default function AdminPage() {
                         <div className="mt-4 space-y-4">
                             {/* Cost Breakdown & Database Stats Side by Side */}
                             <div className="grid gap-4 lg:grid-cols-2">
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Fixed Monthly Costs</h3>
                                     <p className="text-xs text-neutral-600 mb-4">€{FINANCIAL_DATA.totalCosts}/month total</p>
                                     <Table>
@@ -3659,7 +3659,7 @@ export default function AdminPage() {
                                     </Table>
                                 </div>
 
-                                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                                <div className="bg-white border-2 border-black shadow-none p-6">
                                     <h3 className="text-base font-bold text-black mb-1">Database Stats</h3>
                                     <p className="text-xs text-neutral-600 mb-4">Live from Supabase</p>
                                     <div className="grid grid-cols-2 gap-4">
@@ -3684,7 +3684,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Monthly Breakdown */}
-                            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                            <div className="bg-white border-2 border-black shadow-none p-6">
                                 <h3 className="text-base font-bold text-black mb-1">Monthly Metrics</h3>
                                 <p className="text-xs text-neutral-600 mb-4">Historical data</p>
                                 <div className="overflow-x-auto">
@@ -3732,7 +3732,7 @@ export default function AdminPage() {
             {/* CREATE/EDIT COMPANY MODAL */}
             {isCompanyModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-2xl max-h-[90vh] flex flex-col relative">
+                    <div className="bg-white border-4 border-black shadow-none w-full max-w-2xl max-h-[90vh] flex flex-col relative">
                         {/* Header */}
                         <div className="flex items-center justify-between p-4 border-b-4 border-black bg-brand-yellow">
                             <h2 className="text-xl font-extrabold font-candu uppercase">
@@ -3928,7 +3928,7 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={handleSaveCompany}
                                 disabled={isSavingCompany || !newCompany.name.trim()}
-                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-white bg-brand-navy hover:bg-brand-navy/90 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2"
+                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-white bg-brand-navy hover:bg-brand-navy/90 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-none flex items-center gap-2"
                             >
                                 {isSavingCompany && <Loader2 className="h-4 w-4 animate-spin" />}
                                 Save Company
@@ -3941,7 +3941,7 @@ export default function AdminPage() {
             {/* PREVIEW WIDGET MODAL */}
             {previewCompany && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-md flex flex-col relative overflow-hidden">
+                    <div className="bg-white border-4 border-black shadow-none w-full max-w-md flex flex-col relative overflow-hidden">
                         {/* Header */}
                         <div className="flex items-center justify-between p-4 border-b-4 border-black bg-neutral-50">
                             <h2 className="text-lg font-extrabold font-candu uppercase text-black break-words flex-1 pr-4">
@@ -3978,7 +3978,7 @@ export default function AdminPage() {
             {
                 isTemplateModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-4xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[95vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-4xl border-2 border-black shadow-none p-6 max-h-[95vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-extrabold font-candu uppercase text-black">
                                     {templateModalMode === 'create' ? 'Create Template' : 'Edit Template'}
@@ -4051,7 +4051,7 @@ export default function AdminPage() {
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all"
+                                                className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-none font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all"
                                             >
                                                 {templateModalMode === 'create' ? 'Create Template' : 'Save Changes'}
                                             </button>
@@ -4084,7 +4084,7 @@ export default function AdminPage() {
             {
                 isEmailModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-lg border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-lg border-2 border-black shadow-none p-6 max-h-[90vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
                                     <Mail className="h-5 w-5" /> Send Email
@@ -4148,7 +4148,7 @@ export default function AdminPage() {
                                         type="button"
                                         onClick={handleSendTestEmail}
                                         disabled={emailCompose.loading || !emailCompose.content || !emailCompose.subject}
-                                        className="px-4 py-2 bg-brand-navy text-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold text-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                        className="px-4 py-2 bg-brand-navy text-brand-yellow border-2 border-black shadow-none font-bold text-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
                                         title="Send test email to daniiba account"
                                     >
                                         🧪 Test (daniiba)
@@ -4165,7 +4165,7 @@ export default function AdminPage() {
                                         <button
                                             type="submit"
                                             disabled={emailCompose.loading}
-                                            className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                            className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-none font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
                                         >
                                             {emailCompose.loading ? (
                                                 <span className="flex items-center gap-2">
@@ -4189,7 +4189,7 @@ export default function AdminPage() {
             {
                 isHistoryModalOpen && historyUser && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-2xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-2xl border-2 border-black shadow-none p-6 max-h-[90vh] overflow-y-auto">
                             <div className="flex justify-between items-center mb-6">
                                 <div>
                                     <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">

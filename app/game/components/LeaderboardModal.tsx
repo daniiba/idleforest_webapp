@@ -51,7 +51,7 @@ export function LeaderboardModal({ open, onClose, currentUserId }: LeaderboardMo
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
-                    className="bg-white border-4 border-black text-black p-0 max-w-md w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative flex flex-col max-h-[80vh]"
+                    className="bg-white border-4 border-black text-black p-0 max-w-md w-full shadow-none relative flex flex-col max-h-[80vh]"
                 >
                     {/* Header */}
                     <div className="p-4 border-b-2 border-black flex justify-between items-center bg-brand-yellow">

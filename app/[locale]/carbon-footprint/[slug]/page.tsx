@@ -237,7 +237,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                     {/* Main Content */}
                     <div className="lg:col-span-8">
                         <div className="flex items-center gap-6 mb-6">
-                            <div className="w-20 h-20 bg-white flex items-center justify-center border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="w-20 h-20 bg-white flex items-center justify-center border-2 border-black shadow-none">
                                 {(() => {
                                     const iconUrl = getIconUrl(data);
                                     if (iconUrl.startsWith("fallback:")) {
@@ -276,7 +276,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         </p>
 
                         {data.seo && (
-                            <div className="mb-10 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="mb-10 border-2 border-black bg-white p-6 shadow-none">
                                 <p className="text-lg text-neutral-800 leading-relaxed">
                                     {data.seo.intro}
                                 </p>
@@ -288,7 +288,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         </div>
 
                         {data.seo?.methodology_summary || data.seo?.methodology_bullets?.length ? (
-                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
                                 <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                     {data.seo.methodology_title || t("sources.title")}
                                 </h2>
@@ -310,7 +310,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                             </div>
                         ) : null}
 
-                        <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
                             <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
                                 {CALCULATION_PROOF_COPY.eyebrow}
                             </p>
@@ -339,7 +339,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         {data.seo?.key_drivers?.length || data.seo?.assumptions?.length || data.seo?.uncertainty ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.seo?.key_drivers?.length ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <div className="border-2 border-black bg-white p-6 shadow-none">
                                         <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                             {t("page.drivers_title")}
                                         </h2>
@@ -355,7 +355,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 ) : null}
 
                                 {data.seo?.assumptions?.length || data.seo?.uncertainty ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <div className="border-2 border-black bg-white p-6 shadow-none">
                                         <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                             {t("page.assumptions_title")}
                                         </h2>
@@ -386,7 +386,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         {data.seo?.reduction_tips?.length || data.seo?.reviewer ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.seo?.reduction_tips?.length ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <div className="border-2 border-black bg-white p-6 shadow-none">
                                         <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                             {t("page.reduction_title")}
                                         </h2>
@@ -402,7 +402,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 ) : null}
 
                                 {data.seo?.reviewer ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                    <div className="border-2 border-black bg-white p-6 shadow-none">
                                         <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
                                             {t("page.reviewed_eyebrow")}
                                         </p>
@@ -426,7 +426,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         ) : null}
 
                         {data.seo?.source_references?.length ? (
-                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
                                 <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                     {t("page.sources_title")}
                                 </h2>
@@ -457,7 +457,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 </h2>
                                 <div className="space-y-4">
                                     {data.seo.faq.map((item) => (
-                                        <div key={item.question} className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        <div key={item.question} className="border-2 border-black bg-white p-6 shadow-none">
                                             <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-3">
                                                 {item.question}
                                             </h3>
@@ -477,7 +477,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={item.href}
                                         href={item.href}
-                                        className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                        className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
                                     >
                                         <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.title}</h3>
                                         <p className="text-neutral-700 leading-relaxed">{item.description}</p>
@@ -495,7 +495,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={guide.slug}
                                         href={`/carbon-footprint/${guide.slug}`}
-                                        className="border-2 border-black bg-brand-gray p-5 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                        className="border-2 border-black bg-brand-gray p-5 hover:-translate-y-1 hover:shadow-none transition-all"
                                     >
                                         <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">
                                             {t(`categories.${guide.category}`)}
@@ -516,7 +516,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={related.slug}
                                         href={buildComparisonPath(data.slug, related.slug)}
-                                        className="relative block p-6 bg-white border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group duration-200"
+                                        className="relative block p-6 bg-white border-2 border-black hover:-translate-y-1 hover:shadow-none transition-all group duration-200"
                                     >
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center gap-3">
@@ -566,7 +566,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
-                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-none">
                             <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}
                             </h3>

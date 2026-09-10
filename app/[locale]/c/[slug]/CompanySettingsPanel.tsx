@@ -65,7 +65,7 @@ export default function CompanySettingsPanel({
             <div className="fixed bottom-6 right-6 z-[100]">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="flex items-center justify-center w-14 h-14 bg-black text-white hover:bg-brand-yellow hover:text-black rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] transition-all border-2 border-transparent hover:border-black group"
+                    className="flex items-center justify-center w-14 h-14 bg-black text-white hover:bg-brand-yellow hover:text-black rounded-full shadow-none transition-all border-2 border-transparent hover:border-black group"
                     title="Open Company Settings"
                 >
                     <Settings className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
@@ -75,7 +75,7 @@ export default function CompanySettingsPanel({
     }
 
     return (
-        <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] md:w-[600px] lg:w-[800px] bg-white border-l-4 border-black shadow-[-8px_0_0_0_rgba(0,0,0,0.5)] z-[100] flex flex-col transition-transform transform translate-x-0">
+        <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] md:w-[600px] lg:w-[800px] bg-white border-l-4 border-black shadow-none z-[100] flex flex-col transition-transform transform translate-x-0">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b-4 border-black bg-brand-yellow">
                 <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export default function CompanySettingsPanel({
                 {/* Left Column: Form Settings */}
                 <div className="flex-1 space-y-6">
                     {/* Stats Block */}
-                    <div className="bg-white border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-around">
+                    <div className="bg-white border-2 border-black rounded-xl p-4 shadow-none flex items-center justify-around">
                         <div className="text-center">
                             <p className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Active Members</p>
                             <p className="text-3xl font-extrabold font-candu text-black">{memberCount}</p>
@@ -266,7 +266,7 @@ export default function CompanySettingsPanel({
                     <button
                         onClick={handleSave}
                         disabled={isSaving}
-                        className="flex items-center gap-2 px-8 py-2 bg-black text-brand-yellow hover:bg-brand-navy hover:text-white border-2 border-black rounded-lg font-bold uppercase tracking-wider transition-all disabled:opacity-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
+                        className="flex items-center gap-2 px-8 py-2 bg-black text-brand-yellow hover:bg-brand-navy hover:text-white border-2 border-black rounded-lg font-bold uppercase tracking-wider transition-all disabled:opacity-50 shadow-none"
                     >
                         {isSaving ? <Loader /> : <Save className="w-4 h-4" />}
                         {isSaving ? 'Saving...' : 'Save Settings'}

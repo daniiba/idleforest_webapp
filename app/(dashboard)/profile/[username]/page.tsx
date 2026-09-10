@@ -389,7 +389,7 @@ export default function PublicProfilePage() {
     if (loading) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Loading profile...</p>
                 </div>
@@ -400,12 +400,12 @@ export default function PublicProfilePage() {
     if (!profile) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8">
                     <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Profile Not Found</h2>
                     <p className="text-neutral-600 mb-6">The profile you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                     <Link
                         href="/"
-                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
+                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
                     >
                         Back to Home
                     </Link>
@@ -418,9 +418,9 @@ export default function PublicProfilePage() {
         <main className="min-h-screen bg-brand-gray p-4 py-32 font-rethink-sans">
             <div className="w-full max-w-6xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="relative bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 sm:pr-72">
+                <div className="relative bg-white border-2 border-black shadow-none p-8 sm:pr-72">
                     {companyForest ? (
-                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[250px]">
+                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-none sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[250px]">
                             <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-2" title={getCompanyImpactDescription(companyForest)}>
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
                                     {getCompanyLogoUrl(companyForest) ? (
@@ -452,7 +452,7 @@ export default function PublicProfilePage() {
                             )}
                         </div>
                     ) : isOwnProfile ? (
-                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[230px]">
+                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-none sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[230px]">
                             <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src="/logo_bg.png" alt="" className="h-full w-full object-cover" />
@@ -502,7 +502,7 @@ export default function PublicProfilePage() {
                     {userTeam && (
                         <Link
                             href={`/teams/${userTeam.slug}`}
-                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-navy text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-navy text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                         >
                             <Users className="w-4 h-4 text-brand-yellow" />
                             <span className="font-bold">{userTeam.name}</span>
@@ -514,7 +514,7 @@ export default function PublicProfilePage() {
                     {isOwnProfile && !userTeam && (
                         <button
                             onClick={() => setShowCreateTeamModal(true)}
-                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-yellow text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all font-bold"
+                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-yellow text-black border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all font-bold"
                         >
                             <Plus className="w-4 h-4" />
                             <span>Create Team</span>
@@ -525,7 +525,7 @@ export default function PublicProfilePage() {
                     {isOwnProfile && (
                         <Link
                             href={`/share/user/${profile.display_name}`}
-                            className="inline-flex items-center gap-2 mt-4 ml-2 px-4 py-2 bg-purple-500 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all font-bold"
+                            className="inline-flex items-center gap-2 mt-4 ml-2 px-4 py-2 bg-purple-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all font-bold"
                         >
                             <Share2 className="w-4 h-4" />
                             <span>Share My Stats</span>
@@ -536,7 +536,7 @@ export default function PublicProfilePage() {
                 {/* Create Team Modal */}
                 {showCreateTeamModal && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                        <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
                             <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Create a Team</h2>
                             <p className="text-neutral-600 mb-6">Give your team a name to get started.</p>
 
@@ -605,14 +605,14 @@ export default function PublicProfilePage() {
                                         setImagePreview(null)
                                         setCreateError('')
                                     }}
-                                    className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                    className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleCreateTeam}
                                     disabled={creatingTeam}
-                                    className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50"
+                                    className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
                                 >
                                     {creatingTeam ? (
                                         <><Loader2 className="w-4 h-4 animate-spin" /> {uploadingImage ? 'Uploading...' : 'Creating...'}</>
@@ -627,7 +627,7 @@ export default function PublicProfilePage() {
 
                 {showLeaveCompanyModal && companyForest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                        <div className="w-full max-w-md border-2 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="w-full max-w-md border-2 border-black bg-white p-8 shadow-none">
                             <h2 className="mb-4 text-2xl font-extrabold font-candu uppercase">Return to IdleForest?</h2>
                             <p className="mb-4 text-sm font-semibold leading-6 text-neutral-700">
                                 This will stop routing your future activity to {companyForest.name} and move you back to IdleForest&apos;s general reforestation impact.
@@ -648,7 +648,7 @@ export default function PublicProfilePage() {
                                         setLeaveCompanyError('')
                                     }}
                                     disabled={leavingCompany}
-                                    className="flex-1 border-2 border-black bg-gray-100 py-3 font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+                                    className="flex-1 border-2 border-black bg-gray-100 py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
                                 >
                                     Keep Fund
                                 </button>
@@ -656,7 +656,7 @@ export default function PublicProfilePage() {
                                     type="button"
                                     onClick={handleLeaveCompany}
                                     disabled={leavingCompany}
-                                    className="flex-1 border-2 border-black bg-brand-yellow py-3 font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50"
+                                    className="flex-1 border-2 border-black bg-brand-yellow py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
                                 >
                                     {leavingCompany ? 'Returning...' : 'Return'}
                                 </button>
@@ -668,7 +668,7 @@ export default function PublicProfilePage() {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {/* Total Points */}
-                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <div className="bg-white border-2 border-black shadow-none p-6">
                         <div className="flex items-center gap-2 mb-2">
                             <Trophy className="w-5 h-5 text-brand-yellow" />
                             <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Points</p>
@@ -677,7 +677,7 @@ export default function PublicProfilePage() {
                     </div>
 
                     {/* Trees Planted */}
-                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <div className="bg-white border-2 border-black shadow-none p-6">
                         <div className="flex items-center gap-2 mb-2">
                             <span className="text-green-500 text-lg">🌳</span>
                             <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Trees Planted</p>
@@ -686,7 +686,7 @@ export default function PublicProfilePage() {
                     </div>
 
                     {/* Total Referrals */}
-                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <div className="bg-white border-2 border-black shadow-none p-6">
                         <div className="flex items-center gap-2 mb-2">
                             <Users className="w-5 h-5 text-blue-500" />
                             <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Referrals</p>
@@ -695,7 +695,7 @@ export default function PublicProfilePage() {
                     </div>
 
                     {/* Points from Referrals */}
-                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <div className="bg-white border-2 border-black shadow-none p-6">
                         <div className="flex items-center gap-2 mb-2">
                             <Gift className="w-5 h-5 text-purple-500" />
                             <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Referral Points</p>
@@ -713,7 +713,7 @@ export default function PublicProfilePage() {
                 )}
 
                 {/* Badges Section */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+                <div className="bg-white border-2 border-black shadow-none p-8">
                     <BadgeDisplay userId={profile.user_id} variant="light" />
                 </div>
 

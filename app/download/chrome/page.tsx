@@ -162,7 +162,7 @@ export default function ChromeDownloadPage() {
                 <ChromeCtas desktopDownloadHref={desktopDownloadHref} desktopDownloadLabel={desktopDownloadLabel} />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
                 <div className="mb-5 flex items-center gap-4">
                   <div className="grid h-16 w-16 place-items-center rounded-lg bg-brand-yellow">
                     <Image src="/chrome.png" alt="Chrome logo" width={44} height={44} />

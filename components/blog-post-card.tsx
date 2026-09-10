@@ -23,7 +23,7 @@ export interface BlogPost {
 export function BlogPostCard({ post }: { post: BlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} className="block group">
-      <Card className="h-full flex flex-col bg-brand-navy border-4 border-brand-navy shadow-[0_6px_0_0_#0B101F] hover:shadow-[0_10px_0_0_#0B101F] transition-all">
+      <Card className="h-full flex flex-col bg-brand-navy border-4 border-brand-navy shadow-none hover:shadow-none transition-all">
         <CardContent className="p-0 flex-grow">
           <div className="relative w-full h-52 overflow-hidden">
             <Image

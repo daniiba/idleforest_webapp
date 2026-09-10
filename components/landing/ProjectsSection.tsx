@@ -101,7 +101,7 @@ export default function ProjectsSection() {
                                 aria-label={t(`${project.key}.title`)}
                                 className="group block h-full"
                             >
-                                <article className="flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
+                                <article className="flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-none transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
                                     {project.imageSrc ? (
                                         <div className="relative h-52">
                                             <Image
@@ -138,7 +138,7 @@ export default function ProjectsSection() {
                                                 </p>
                                             </div>
 
-                                            <div className="flex w-[128px] shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow px-3 py-3 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                            <div className="flex w-[128px] shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow px-3 py-3 text-center shadow-none">
                                                 <div className="font-candu text-3xl leading-none text-black">
                                                     {(projectStats[project.projectId]?.trees ?? 0).toLocaleString()}
                                                 </div>
@@ -204,7 +204,7 @@ export default function ProjectsSection() {
                 <div className="mt-12 text-center">
                     <Link
                         href="/transparency"
-                        className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(224,241,70,0.35)] transition-all hover:bg-white"
+                        className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white"
                     >
                         Read our full transparency report <ArrowUpRight className="h-4 w-4" />
                     </Link>

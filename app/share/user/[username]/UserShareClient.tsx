@@ -173,7 +173,7 @@ export default function UserShareClient() {
                             href={shareLinks.twitter}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#1DA1F2] text-white rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#1DA1F2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                         >
                             <Twitter className="w-5 h-5" />
                         </a>
@@ -181,7 +181,7 @@ export default function UserShareClient() {
                             href={shareLinks.facebook}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#4267B2] text-white rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#4267B2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                         >
                             <Facebook className="w-5 h-5" />
                         </a>
@@ -189,13 +189,13 @@ export default function UserShareClient() {
                             href={shareLinks.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#0A66C2] text-white rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#0A66C2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                         >
                             <Linkedin className="w-5 h-5" />
                         </a>
                         <button
                             onClick={handleCopy}
-                            className="flex items-center justify-center w-12 h-12 bg-brand-yellow text-black rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-brand-yellow text-black rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                         >
                             {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                         </button>
@@ -206,7 +206,7 @@ export default function UserShareClient() {
                 <div className="text-center space-y-4">
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow text-black font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow text-black font-bold uppercase border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                     >
                         <ArrowRight className="w-5 h-5" />
                         Join IdleForest

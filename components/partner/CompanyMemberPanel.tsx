@@ -36,7 +36,7 @@ export default function CompanyMemberPanel({
     const isDark = variant === 'dark' || variant === 'ocean'
     const panelClassName = isDark
         ? 'border-white/25 bg-black/45 text-white shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur'
-        : 'border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+        : 'border-black bg-white text-black shadow-none'
     const mutedClassName = isDark ? 'text-white/72' : 'text-neutral-600'
     const secondaryButtonClassName = isDark
         ? 'border-white/25 bg-white/10 text-white hover:bg-white/18'

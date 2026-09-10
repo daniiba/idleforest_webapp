@@ -55,7 +55,7 @@ export function PointsHistoryChart({
         if (!active || !payload || payload.length === 0) return null
 
         return (
-            <div className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-3">
+            <div className="bg-white border-2 border-black shadow-none p-3">
                 <p className="font-bold text-brand-navy mb-2">{label}</p>
                 {payload.map((entry: any, index: number) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
@@ -72,7 +72,7 @@ export function PointsHistoryChart({
     }
 
     return (
-        <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+        <div className="bg-white border-2 border-black shadow-none p-6">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-brand-yellow" />
@@ -82,7 +82,7 @@ export function PointsHistoryChart({
                     <button
                         onClick={() => setShowDailyGain(false)}
                         className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${!showDailyGain
-                            ? 'bg-brand-yellow shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                            ? 'bg-brand-yellow shadow-none'
                             : 'bg-gray-100 hover:bg-gray-200'
                             }`}
                     >
@@ -91,7 +91,7 @@ export function PointsHistoryChart({
                     <button
                         onClick={() => setShowDailyGain(true)}
                         className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${showDailyGain
-                            ? 'bg-brand-yellow shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                            ? 'bg-brand-yellow shadow-none'
                             : 'bg-gray-100 hover:bg-gray-200'
                             }`}
                     >

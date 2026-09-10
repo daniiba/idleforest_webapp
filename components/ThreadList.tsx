@@ -100,7 +100,7 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
     }
 
     return (
-        <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8">
+        <div className="bg-white border-2 border-black shadow-none mb-8">
             {/* Header */}
             <div className="p-4 border-b-2 border-black bg-brand-navy flex justify-between items-center">
                 <h3 className="text-white font-bold text-lg">Team Discussions</h3>
@@ -178,7 +178,7 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
                 {currentUserRole ? (
                     <Link
                         href={`/teams/${teamSlug}/discussions/new`}
-                        className="block w-full py-3 bg-black text-white text-center font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]"
+                        className="block w-full py-3 bg-black text-white text-center font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all shadow-none"
                     >
                         Start New Discussion
                     </Link>

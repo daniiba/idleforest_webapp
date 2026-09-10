@@ -195,7 +195,7 @@ export default function CompanyWelcomePage() {
             <>
                 <Navigation />
                 <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
-                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
                         <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                         <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
                     </div>
@@ -214,7 +214,7 @@ export default function CompanyWelcomePage() {
             <>
                 <Navigation />
                 <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
-                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
                         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 border-2 border-black mb-4">
                             <CheckCircle2 className="w-8 h-8 text-white" />
                         </div>
@@ -240,7 +240,7 @@ export default function CompanyWelcomePage() {
                         </div>
                         <Link
                             href={`/portal/c/${company.slug}`}
-                            className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                         >
                             View Member Portal <ArrowRight className="w-5 h-5" />
                         </Link>
@@ -266,7 +266,7 @@ export default function CompanyWelcomePage() {
                 <div className="w-full max-w-2xl mx-auto relative z-10 space-y-6">
                 {/* Welcome Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-yellow border-2 border-black shadow-none mb-4">
                         <Sparkles className="w-10 h-10 text-black" />
                     </div>
                     <h1 className="text-4xl font-extrabold font-candu uppercase mb-2">
@@ -288,7 +288,7 @@ export default function CompanyWelcomePage() {
                 />
 
                 {/* Company Stats Card */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+                <div className="bg-white border-2 border-black shadow-none p-6">
                     <div className="flex items-center gap-4 mb-4">
                         {company.logo_url ? (
                             <img
@@ -326,7 +326,7 @@ export default function CompanyWelcomePage() {
                     </div>
                 </div>
 
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+                <div className="bg-white border-2 border-black shadow-none p-6">
                     <h3 className="text-xl font-bold font-candu uppercase mb-4">Company Setup Checklist</h3>
                     <div className="grid gap-3 sm:grid-cols-3">
                         <div className="border-2 border-black bg-green-50 p-4">
@@ -348,7 +348,7 @@ export default function CompanyWelcomePage() {
                 </div>
 
                 {/* Install Options */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+                <div className="bg-white border-2 border-black shadow-none p-6">
                     <h3 className="text-xl font-bold font-candu uppercase mb-4 flex items-center gap-2">
                         <Download className="w-5 h-5" /> Get IdleForest
                     </h3>
@@ -374,7 +374,7 @@ export default function CompanyWelcomePage() {
                                     metadata: { companySlug: params.slug, platform: detectedPlatform }
                                 })
                             }}
-                            className="flex items-center gap-4 p-4 bg-brand-navy text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="flex items-center gap-4 p-4 bg-brand-navy text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                         >
                             <div className="bg-brand-yellow text-black p-3 border-2 border-black">
                                 <Monitor className="w-6 h-6" />

@@ -211,7 +211,7 @@ function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+    <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
       {/* Team Invite Banner */}
       {inviteInfo && (
         <div className="mb-6 p-4 bg-brand-navy text-white border-2 border-black">
@@ -251,7 +251,7 @@ function SignupForm() {
             required
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
             placeholder="Your Name"
           />
         </div>
@@ -267,7 +267,7 @@ function SignupForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
             placeholder="you@example.com"
           />
         </div>
@@ -283,7 +283,7 @@ function SignupForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
             placeholder="••••••••"
           />
         </div>
@@ -299,7 +299,7 @@ function SignupForm() {
               type="text"
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+              className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
               placeholder="Enter code"
             />
           </div>
@@ -324,7 +324,7 @@ function SignupForm() {
           <button
             type="submit"
             disabled={loading || !turnstileToken}
-            className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (
               <><Loader2 className="h-5 w-5 mr-2 animate-spin text-black" /> Creating...</>
@@ -359,7 +359,7 @@ function SignupForm() {
 
 function SignupFormLoading() {
   return (
-    <div className="w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+    <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
       <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
       <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
     </div>

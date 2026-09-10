@@ -235,22 +235,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
                                     {/* CTAs based on Device/Browser */}
                                     <SmartCTA className="text-black" deviceInfo={deviceInfo} showExtensionDownload />
-                                    <Link
-                                        href="/how-it-works"
-                                        className="inline-flex items-center justify-center gap-2 text-sm font-bold text-black underline decoration-2 underline-offset-4 hover:text-brand-navy sm:justify-start"
-                                    >
-                                        See how it works <ArrowRight className="h-4 w-4" />
-                                    </Link>
                                 </div>
-                                <p className="text-sm font-bold text-black">
-                                    Featured on Chrome Web Store · 4.8 ★ from 33 reviews · 5,364 verified trees planted
-                                </p>
-                                <p className="text-sm text-neutral-800">
-                                    Paid bandwidth tasks fund planting through our partners.{' '}
-                                    <Link href="/transparency" className="font-bold underline underline-offset-4">
-                                        See the verified planting records
-                                    </Link>.
-                                </p>
                                 <HeroTrustSignals />
                             </div>
                             {/* HERO ART PLACEHOLDER */}
@@ -292,7 +277,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 <article
                                     key={partner.id}
                                     id={partner.id}
-                                    className="flex min-w-0 flex-col overflow-hidden rounded-lg border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                                    className="flex min-w-0 flex-col overflow-hidden rounded-lg border-2 border-black bg-white shadow-none"
                                 >
                                     <div className="relative aspect-[16/10] overflow-hidden border-b-2 border-black bg-brand-navy">
                                         {partner.videoSrc ? (
@@ -316,7 +301,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                                 className="object-cover"
                                             />
                                         )}
-                                        <div className="absolute left-4 top-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                        <div className="absolute left-4 top-4 inline-flex max-w-[calc(100%-2rem)] items-center gap-3 border-2 border-black bg-white px-3 py-2 shadow-none">
                                             <span className="flex h-9 w-9 flex-none items-center justify-center overflow-hidden rounded-sm bg-brand-navy p-1">
                                                 <Image src={partner.logoSrc} alt={partner.logoAlt} width={36} height={36} className="h-full w-full object-contain" />
                                             </span>
@@ -359,7 +344,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         <div className="mt-auto flex flex-col gap-3 pt-6 sm:flex-row">
                                             <Link
                                                 href={partner.href}
-                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
+                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold text-black shadow-none transition-all hover:bg-white hover:shadow-none"
                                             >
                                                 {partner.cta} <ArrowRight className="h-4 w-4 flex-none" />
                                             </Link>
@@ -367,7 +352,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                                 href={partner.externalHref}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-sm font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-brand-yellow hover:shadow-none"
+                                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-sm font-bold text-black shadow-none transition-all hover:bg-brand-yellow hover:shadow-none"
                                             >
                                                 {partner.externalCta} <ArrowRight className="h-4 w-4 flex-none" />
                                             </a>
@@ -470,7 +455,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         <div className="mt-14 text-center">
                             <Link
                                 href="/how-it-works"
-                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-black hover:shadow-none"
+                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-none transition-all hover:bg-black hover:shadow-none"
                             >
                                 See how it works in detail →
                             </Link>
@@ -495,7 +480,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             {comparisonProducts.map((product) => (
                                 <article
                                     key={product.name}
-                                    className={`relative flex min-w-0 flex-col border-2 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${product.featured
+                                    className={`relative flex min-w-0 flex-col border-2 border-black p-5 shadow-none ${product.featured
                                         ? "bg-brand-navy text-brand-yellow"
                                         : "bg-white text-black"
                                         }`}
@@ -533,13 +518,13 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         </div>
 
                         <div className="mt-6 grid gap-4 md:grid-cols-2">
-                            <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="border-2 border-black bg-brand-yellow p-5 text-black shadow-none">
                                 <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-black/70">Stack your impact</p>
                                 <p className="mt-2 text-sm font-semibold leading-6">
                                     You can use Ecosia, support Mossy Earth, donate directly, and still add IdleForest in the background.
                                 </p>
                             </div>
-                            <div className="border-2 border-black bg-white p-5 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                            <div className="border-2 border-black bg-white p-5 text-black shadow-none">
                                 <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-neutral-500">Different strengths</p>
                                 <p className="mt-2 text-sm font-semibold leading-6">
                                     Search tools are great for daily habits. Rewilding memberships fund expert field teams. IdleForest adds passive funding without replacing either.
@@ -583,7 +568,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </h2>
                                 <Link
                                     href="/how-it-works"
-                                    className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(224,241,70,0.35)] transition-all hover:bg-white"
+                                    className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white"
                                 >
                                     Read the full technical explanation <ArrowRight className="h-4 w-4" />
                                 </Link>
@@ -736,7 +721,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         <div className="mt-10 text-center">
                             <Link
                                 href="/transparency"
-                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:shadow-none"
+                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white hover:shadow-none"
                             >
                                 Read our full transparency report →
                             </Link>

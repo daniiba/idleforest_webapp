@@ -9,7 +9,7 @@ interface InventoryShelfProps {
 
 export function InventoryShelf({ state, finalAutoBreakdown, finalAutoProduction }: InventoryShelfProps) {
     return (
-        <div className="bg-neutral-100 border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div className="bg-neutral-100 border-2 border-black p-6 shadow-none">
             <h3 className="text-xl font-bold font-candu mb-4 uppercase border-b-2 border-black pb-2 inline-block">Your Forest <span className="text-neutral-400 text-sm ml-2 font-mono">Inventory</span></h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {state.upgrades.filter(u => u.level > 0 && u.type === 'auto').map(upgrade => {

@@ -107,7 +107,7 @@ export default function MacDownloadPage() {
                 <MacCtas />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
                 <div className="grid gap-4">
                   <Signal icon={<Apple className="h-5 w-5" />} label="Runs on macOS 11+" />
                   <Signal icon={<Wifi className="h-5 w-5" />} label="Uses spare bandwidth" />

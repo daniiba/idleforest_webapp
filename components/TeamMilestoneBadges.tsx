@@ -22,7 +22,7 @@ function MilestoneBadge({ milestone }: { milestone: TeamMilestoneProgress }) {
     const Icon = milestone.hasPrize ? PawPrint : iconMap[milestone.metric]
 
     return (
-        <div className="flex items-start gap-3 border-2 border-black bg-white p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex items-start gap-3 border-2 border-black bg-white p-4 shadow-none">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-black bg-brand-yellow">
                 <Icon className="h-5 w-5 text-black" />
             </div>
@@ -84,7 +84,7 @@ export function TeamMilestoneBadges({ metrics }: { metrics: TeamMilestoneMetrics
     if (visibleEarned.length === 0 && !next) return null
 
     return (
-        <section className="mb-8 bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="mb-8 bg-white border-2 border-black p-6 shadow-none">
             <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <div className="mb-2 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-black">
@@ -132,7 +132,7 @@ export function TeamMilestoneList({ metrics }: { metrics: TeamMilestoneMetrics }
         .sort((a, b) => metricPriority[a.metric] - metricPriority[b.metric] || a.threshold - b.threshold)
 
     return (
-        <section className="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <section className="bg-white border-2 border-black p-6 shadow-none">
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <div className="mb-2 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-black">

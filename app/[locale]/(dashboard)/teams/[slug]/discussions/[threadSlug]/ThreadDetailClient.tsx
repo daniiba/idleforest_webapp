@@ -162,7 +162,7 @@ export default function ThreadDetailClient({
                 </Link>
 
                 {/* Thread Header */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 mb-8">
+                <div className="bg-white border-2 border-black shadow-none p-6 mb-8">
                     <div className="flex gap-6">
                         {/* Upvote Section */}
                         <div className="flex flex-col items-center flex-shrink-0">
@@ -196,7 +196,7 @@ export default function ThreadDetailClient({
                 </div>
 
                 {/* Comments Section */}
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 mb-8">
+                <div className="bg-white border-2 border-black shadow-none p-6 mb-8">
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5" />
                         {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
@@ -243,7 +243,7 @@ export default function ThreadDetailClient({
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !newComment.trim()}
-                                    className="px-6 py-2 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]"
+                                    className="px-6 py-2 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                                 >
                                     {isSubmitting ? 'Posting...' : 'Post Comment'}
                                 </button>

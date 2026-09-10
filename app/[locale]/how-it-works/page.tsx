@@ -136,7 +136,7 @@ export default function HowItWorksPage() {
                 <CtaGroup deviceInfo={deviceInfo} />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-[8px_8px_0px_0px_rgba(11,16,31,1)]">
+              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
                 <div className="grid gap-4">
                   <Signal icon={<Wifi className="h-5 w-5" />} label="Spare bandwidth" />
                   <Signal icon={<ShieldCheck className="h-5 w-5" />} label="Sessionless data tasks" />

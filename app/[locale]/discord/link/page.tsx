@@ -188,7 +188,7 @@ function DiscordLinkContent() {
     if (status === 'unauthenticated') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
+                <div className="bg-white border-2 border-black shadow-none p-8 w-full">
                     <div className="bg-brand-yellow w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
                         <AlertCircle className="w-8 h-8 text-black" />
                     </div>
@@ -200,7 +200,7 @@ function DiscordLinkContent() {
                     </p>
                     <button
                         onClick={handleLoginWithDiscord}
-                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                     >
                         Login with Discord
                     </button>
@@ -220,7 +220,7 @@ function DiscordLinkContent() {
     if (status === 'linking_required') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
+                <div className="bg-white border-2 border-black shadow-none p-8 w-full">
                     <div className="bg-brand-yellow w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
                         <AlertCircle className="w-8 h-8 text-black" />
                     </div>
@@ -240,7 +240,7 @@ function DiscordLinkContent() {
 
                     <button
                         onClick={handleConnectDiscord}
-                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all mb-4"
+                        className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all mb-4"
                     >
                         Connect Discord Account
                     </button>
@@ -268,7 +268,7 @@ function DiscordLinkContent() {
     if (status === 'error') {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full">
+                <div className="bg-white border-2 border-black shadow-none p-8 w-full">
                     <div className="bg-red-100 w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
                         <AlertCircle className="w-8 h-8 text-red-600" />
                     </div>
@@ -296,7 +296,7 @@ function DiscordLinkContent() {
 
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
-                <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 w-full reveal-animation">
+                <div className="bg-white border-2 border-black shadow-none p-8 w-full reveal-animation">
                     <div className="bg-green-100 w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
                         <CheckCircle2 className="w-8 h-8 text-green-600" />
                     </div>
@@ -310,14 +310,14 @@ function DiscordLinkContent() {
                     <div className="space-y-4">
                         <Link
                             href="/profile"
-                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-brand-yellow text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-brand-yellow text-black border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                         >
                             Go to Profile <ArrowRight className="w-4 h-4" />
                         </Link>
 
                         <button
                             onClick={handleCloseTab}
-                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
                         >
                             Return to Discord
                         </button>

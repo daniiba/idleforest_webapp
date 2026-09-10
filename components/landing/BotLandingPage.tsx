@@ -117,13 +117,13 @@ export default function BotLandingPage() {
                                     {t('hero_desc')}
                                 </p>
                                 <div className="flex flex-wrap gap-4 pt-4">
-                                    <Button asChild size="lg" className="bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-black font-bold h-16 px-8 rounded-full shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all text-xl">
+                                    <Button asChild size="lg" className="bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-black font-bold h-16 px-8 rounded-full shadow-none hover:shadow-none transition-all text-xl">
                                         <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
                                             <MessageSquare className="w-6 h-6 mr-2" />
                                             {t('add_bot')}
                                         </Link>
                                     </Button>
-                                    <Button asChild variant="outline" size="lg" className="bg-white hover:bg-neutral-50 text-black border-2 border-black font-bold h-16 px-8 rounded-full shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all text-xl">
+                                    <Button asChild variant="outline" size="lg" className="bg-white hover:bg-neutral-50 text-black border-2 border-black font-bold h-16 px-8 rounded-full shadow-none hover:shadow-none transition-all text-xl">
                                         <Link href="#features">
                                             Explore Features
                                         </Link>
@@ -156,7 +156,7 @@ export default function BotLandingPage() {
                             </div>
 
                             <div className="relative lg:h-[600px] flex items-center justify-center animate-in fade-in zoom-in duration-1000 delay-300">
-                                <div className="relative w-full max-w-md aspect-square bg-brand-yellow rounded-3xl border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                                <div className="relative w-full max-w-md aspect-square bg-brand-yellow rounded-3xl border-4 border-black shadow-none overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
                                     <div className="p-8 h-full flex flex-col justify-between relative z-10">
                                         <div className="flex items-center justify-between">
@@ -171,7 +171,7 @@ export default function BotLandingPage() {
                                         </div>
 
                                         <div className="space-y-4">
-                                            <div className="bg-white/80 backdrop-blur-sm border-2 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                            <div className="bg-white/80 backdrop-blur-sm border-2 border-black p-4 rounded-xl shadow-none">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="font-bold text-black text-sm uppercase">Server Ranking</span>
                                                     <Trophy className="w-4 h-4 text-brand-yellow fill-brand-yellow stroke-black" />
@@ -179,7 +179,7 @@ export default function BotLandingPage() {
                                                 <div className="text-2xl font-black text-brand-navy">#1 WORLDWIDE</div>
                                             </div>
 
-                                            <div className="bg-brand-navy p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white">
+                                            <div className="bg-brand-navy p-4 rounded-xl border-2 border-black shadow-none text-white">
                                                 <div className="text-xs uppercase font-bold text-brand-yellow mb-1">Impact Level</div>
                                                 <div className="flex items-end justify-between">
                                                     <div className="text-3xl font-black">{stats.treesPlanted}</div>
@@ -285,7 +285,7 @@ export default function BotLandingPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 items-center">
                             <div className="relative group animate-in fade-in slide-in-from-bottom duration-700">
                                 <div className="absolute -inset-2 bg-brand-yellow rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
                                     <Image
                                         src="/landing/discord/screenshot1.png"
                                         alt="Discord Bot Interface 1"
@@ -297,7 +297,7 @@ export default function BotLandingPage() {
                             </div>
                             <div className="relative group animate-in fade-in slide-in-from-bottom duration-700 delay-100">
                                 <div className="absolute -inset-2 bg-brand-navy rounded-3xl blur opacity-10 group-hover:opacity-30 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
                                     <Image
                                         src="/landing/discord/screenshot2.png"
                                         alt="Discord Bot Interface 2"
@@ -309,7 +309,7 @@ export default function BotLandingPage() {
                             </div>
                             <div className="relative group animate-in fade-in slide-in-from-bottom duration-700 delay-200">
                                 <div className="absolute -inset-2 bg-brand-yellow rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
                                     <Image
                                         src="/landing/discord/screenshot3.png"
                                         alt="Discord Bot Interface 3"
@@ -372,13 +372,13 @@ export default function BotLandingPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <Button asChild size="lg" className="w-full sm:w-auto bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-none transition-all text-xl">
+                            <Button asChild size="lg" className="w-full sm:w-auto bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-none hover:shadow-none transition-all text-xl">
                                 <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
                                     <MessageSquare className="w-6 h-6 mr-2" />
                                     {t('add_bot')}
                                 </Link>
                             </Button>
-                            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none transition-all text-xl">
+                            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-none hover:shadow-none transition-all text-xl">
                                 <Link href="/">
                                     Learn About IdleForest
                                 </Link>
@@ -398,8 +398,8 @@ export default function BotLandingPage() {
 
 function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNode, title: string, description: string, delay: number }) {
     return (
-        <Card className="p-8 bg-neutral-50 border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-            <div className="w-16 h-16 bg-brand-yellow border-2 border-black rounded-xl flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <Card className="p-8 bg-neutral-50 border-2 border-black rounded-2xl shadow-none hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+            <div className="w-16 h-16 bg-brand-yellow border-2 border-black rounded-xl flex items-center justify-center mb-6 shadow-none">
                 {icon}
             </div>
             <h3 className="font-candu text-2xl font-extrabold uppercase mb-4">{title}</h3>

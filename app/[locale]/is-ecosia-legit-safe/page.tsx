@@ -173,7 +173,7 @@ export default function IsEcosiaLegitSafePage() {
             </div>
           </div>
 
-          <div className="border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+          <div className="border-2 border-black bg-white p-6 shadow-none">
             <h2 className="font-rethink-sans text-2xl font-extrabold">Quick verdict</h2>
             <div className="mt-5 space-y-5">
               <div className="flex gap-4">
@@ -201,7 +201,7 @@ export default function IsEcosiaLegitSafePage() {
           </p>
         </div>
 
-        <div className="overflow-x-auto border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="overflow-x-auto border-2 border-black bg-white shadow-none">
           <table className="w-full min-w-[860px] text-left">
             <thead className="bg-brand-navy text-brand-yellow">
               <tr>
@@ -260,7 +260,7 @@ export default function IsEcosiaLegitSafePage() {
               </Button>
             </div>
           </div>
-          <div className="border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div className="border-2 border-black bg-white p-6 shadow-none">
             <h3 className="font-rethink-sans text-2xl font-extrabold">Use Ecosia plus IdleForest</h3>
             <ul className="mt-4 space-y-3 text-neutral-700">
               <li><strong>Ecosia:</strong> tree funding when you search.</li>
@@ -284,7 +284,7 @@ export default function IsEcosiaLegitSafePage() {
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {sourceLinks.map((item) => (
-              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="group border-2 border-black bg-brand-gray p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1">
+              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="group border-2 border-black bg-brand-gray p-5 shadow-none transition-transform hover:-translate-y-1">
                 <span className="inline-flex items-center gap-2 font-bold group-hover:underline">
                   {item.label} <ExternalLink className="h-4 w-4" />
                 </span>

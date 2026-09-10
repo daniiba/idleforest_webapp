@@ -819,7 +819,7 @@ body {
   border: 1px solid var(--color-wfp-line);
   border-radius: var(--radius-wfp-card);
   background: var(--color-wfp-bg);
-  box-shadow: 0.35rem 0.35rem 0 color-mix(in oklch, var(--color-wfp-bg) 45%, transparent);
+  box-shadow: none;
 }
 
 .wfp-art-box {
@@ -1133,7 +1133,7 @@ body {
   border: 2px solid var(--color-wfp-text);
   border-radius: 1rem 1rem 0.3rem 0.3rem;
   background: var(--color-wfp-bg);
-  box-shadow: 0.2rem 0.2rem 0 color-mix(in oklch, var(--color-wfp-bg) 45%, transparent);
+  box-shadow: none;
 }
 
 .wfp-art-bottles span::before {

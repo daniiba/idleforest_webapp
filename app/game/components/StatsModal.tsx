@@ -51,7 +51,7 @@ export function StatsModal({ isOpen, onClose, stats, lifetimeTrees, unlockedAchi
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                    className="w-full max-w-sm bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative z-10"
+                    className="w-full max-w-sm bg-white border-2 border-black shadow-none relative z-10"
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between p-6 border-b-2 border-black bg-neutral-100">

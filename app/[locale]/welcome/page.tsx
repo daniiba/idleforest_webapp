@@ -185,8 +185,8 @@ export default function WelcomePage() {
             />
 
             <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-6">
-                <section className="bg-white border-2 border-black p-8 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                    <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center border-2 border-black bg-brand-yellow shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <section className="bg-white border-2 border-black p-8 text-center shadow-none">
+                    <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center border-2 border-black bg-brand-yellow shadow-none">
                         <Sparkles className="h-10 w-10" />
                     </div>
                     <h1 className="font-candu text-4xl font-extrabold uppercase leading-tight md:text-6xl">
@@ -200,12 +200,12 @@ export default function WelcomePage() {
                 </section>
 
                 {authState === 'loading' ? (
-                    <section className="bg-white border-2 border-black p-6 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <section className="bg-white border-2 border-black p-6 text-center shadow-none">
                         <Loader2 className="mx-auto h-6 w-6 animate-spin" />
                         <p className="mt-3 font-bold text-neutral-700">Checking your account...</p>
                     </section>
                 ) : authState === 'unauthenticated' ? (
-                    <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <section className="bg-white border-2 border-black p-6 shadow-none">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <h2 className="font-candu text-2xl font-extrabold uppercase">
@@ -217,14 +217,14 @@ export default function WelcomePage() {
                             </div>
                             <Link
                                 href="/auth/user/login?redirect=/welcome"
-                                className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-bold uppercase shadow-none transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                             >
                                 Sign In <ArrowRight className="h-4 w-4" />
                             </Link>
                         </div>
                     </section>
                 ) : nodeStatus?.hasDesktopNode ? (
-                    <section className="bg-white border-2 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <section className="bg-white border-2 border-black p-8 shadow-none">
                         <div className="flex flex-col items-center text-center">
                             <div className="mb-5 flex h-16 w-16 items-center justify-center border-2 border-black bg-green-500">
                                 <CheckCircle2 className="h-9 w-9 text-white" />
@@ -257,7 +257,7 @@ export default function WelcomePage() {
                                         </p>
                                         <button
                                             onClick={claimDesktopReward}
-                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase shadow-none"
                                         >
                                             Try Again
                                         </button>
@@ -267,7 +267,7 @@ export default function WelcomePage() {
 
                             <Link
                                 href="/"
-                                className="mt-6 inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-4 font-bold uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(224,241,70,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(224,241,70,1)]"
+                                className="mt-6 inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-4 font-bold uppercase tracking-wider text-white shadow-none transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                             >
                                 Continue <ArrowRight className="h-5 w-5" />
                             </Link>
@@ -275,7 +275,7 @@ export default function WelcomePage() {
                     </section>
                 ) : (
                     <>
-                        <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <section className="bg-white border-2 border-black p-6 shadow-none">
                             <h2 className="mb-4 font-candu text-2xl font-extrabold uppercase">
                                 Desktop Bonus Checklist
                             </h2>
@@ -304,7 +304,7 @@ export default function WelcomePage() {
                             </div>
                         </section>
 
-                        <section className="bg-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <section className="bg-white border-2 border-black p-6 shadow-none">
                             <h2 className="mb-4 flex items-center gap-2 font-candu text-2xl font-extrabold uppercase">
                                 <Download className="h-6 w-6" />
                                 Get the Desktop App
@@ -324,7 +324,7 @@ export default function WelcomePage() {
                                         metadata: { platform: detectedPlatform }
                                     })
                                 }}
-                                className="flex items-center gap-4 border-2 border-black bg-brand-navy p-4 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                className="flex items-center gap-4 border-2 border-black bg-brand-navy p-4 text-white shadow-none transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
                             >
                                 <div className="border-2 border-black bg-brand-yellow p-3 text-black">
                                     <Monitor className="h-7 w-7" />

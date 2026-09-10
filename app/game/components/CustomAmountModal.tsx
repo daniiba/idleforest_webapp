@@ -29,7 +29,7 @@ export function CustomAmountModal({ open, onClose, onConfirm, baseAmount, inputV
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
-                    className="bg-white border-4 border-black text-black p-6 max-w-sm w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative"
+                    className="bg-white border-4 border-black text-black p-6 max-w-sm w-full shadow-none relative"
                 >
                     <h2 className="text-xl font-candu uppercase tracking-widest mb-4">Set Buy Amount</h2>
 

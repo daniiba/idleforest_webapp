@@ -152,7 +152,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             prose-code:text-brand-yellow prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
             prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4
             prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl
-            prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-[3px_3px_0_0_#000] prose-a:box-decoration-clone visited:prose-a:bg-brand-navy visited:prose-a:text-brand-yellow hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline
+            prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-none prose-a:box-decoration-clone visited:prose-a:bg-brand-navy visited:prose-a:text-brand-yellow hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline
             prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-1
             prose-ul:my-6 prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
             prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4
@@ -174,7 +174,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </div>
 
           {params.slug === "does-ecosia-actually-plant-trees" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
                 Checking IdleForest's own planting records?
               </h2>
@@ -192,7 +192,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "best-chrome-extensions-for-climate-change-and-environmental-impact-2025-guide" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
                 Want a passive extension that plants verified trees?
               </h2>
@@ -210,7 +210,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "ecosias-ai-user-backlash-and-environmental-impact" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
                 Already using Ecosia, but want more verified planting?
               </h2>
@@ -228,7 +228,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
                 Comparing free tree-planting tools too?
               </h2>
@@ -246,7 +246,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
               <h2 className="font-rethink-sans text-2xl font-extrabold">
                 Want the sustainable search setup that does not require a switch?
               </h2>

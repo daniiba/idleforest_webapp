@@ -37,10 +37,10 @@ export const WelcomeBackModal = ({ open, onClose, timeAway, treesEarned }: Welco
                         initial={{ scale: 0.9, opacity: 0, y: 20 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                        className="relative w-full max-w-md bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6"
+                        className="relative w-full max-w-md bg-white border-2 border-black shadow-none p-6"
                     >
                         {/* Header */}
-                        <div className="bg-brand-green border-2 border-black p-4 mb-6 -mx-2 -mt-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div className="bg-brand-green border-2 border-black p-4 mb-6 -mx-2 -mt-2 shadow-none">
                             <h2 className="text-2xl font-black uppercase text-center flex items-center justify-center gap-2">
                                 <span className="text-3xl">👋</span> Welcome Back!
                             </h2>
@@ -83,7 +83,7 @@ export const WelcomeBackModal = ({ open, onClose, timeAway, treesEarned }: Welco
                             {/* Action Button */}
                             <button
                                 onClick={onClose}
-                                className="w-full bg-black text-white py-4 font-black uppercase tracking-wider text-lg border-2 border-black hover:bg-gray-900 active:translate-y-1 active:shadow-none transition-all shadow-[4px_4px_0px_0px_rgba(100,100,100,1)]"
+                                className="w-full bg-black text-white py-4 font-black uppercase tracking-wider text-lg border-2 border-black hover:bg-gray-900 active:translate-y-1 active:shadow-none transition-all shadow-none"
                             >
                                 Collect Trees
                             </button>

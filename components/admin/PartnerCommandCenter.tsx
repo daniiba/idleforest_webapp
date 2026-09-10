@@ -557,7 +557,7 @@ export default function PartnerCommandCenter({
 
     return (
         <div className="space-y-5 text-black">
-            <section className="bg-brand-navy text-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(224,241,70,1)] p-5 md:p-7 overflow-hidden relative">
+            <section className="bg-brand-navy text-white border-2 border-black shadow-none p-5 md:p-7 overflow-hidden relative">
                 <div className="absolute -right-10 -top-12 h-44 w-44 rounded-full border-[28px] border-brand-yellow/20" />
                 <div className="relative grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-end">
                     <div>
@@ -573,7 +573,7 @@ export default function PartnerCommandCenter({
                                 : 'Qualify conservation organizations, capture the evidence, and move each relationship from research to follow-up.'}
                         </p>
                     </div>
-                    <div className="bg-white text-black border-2 border-black p-3 shadow-[4px_4px_0px_0px_rgba(224,241,70,1)]">
+                    <div className="bg-white text-black border-2 border-black p-3 shadow-none">
                         <div className="mb-3 grid grid-cols-2 border-2 border-black bg-neutral-100 p-0.5">
                             <button
                                 type="button"
@@ -617,7 +617,7 @@ export default function PartnerCommandCenter({
                                         type="button"
                                         onClick={() => void discoverPartners(discoveryCandidates.length > 0)}
                                         disabled={isDiscovering || isAnalyzing}
-                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-60"
                                     >
                                         {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
                                         {isDiscovering ? 'Searching…' : discoveryCandidates.length > 0 ? 'Find 6 more' : `Find ${entityLabelPlural}`}
@@ -643,7 +643,7 @@ export default function PartnerCommandCenter({
                                         type="button"
                                         onClick={analyzeUrls}
                                         disabled={isAnalyzing || isDiscovering}
-                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000] disabled:opacity-60"
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-60"
                                     >
                                         {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                                         {isAnalyzing ? 'Researching…' : 'Analyze'}
@@ -664,7 +664,7 @@ export default function PartnerCommandCenter({
             )}
 
             {discoveryCandidates.length > 0 && (
-                <section className="border-2 border-black bg-[#f5f7ec] p-4 shadow-[4px_4px_0_#000] md:p-5">
+                <section className="border-2 border-black bg-[#f5f7ec] p-4 shadow-none md:p-5">
                     <div className="flex flex-col gap-3 border-b-2 border-black pb-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
@@ -703,7 +703,7 @@ export default function PartnerCommandCenter({
                                 type="button"
                                 onClick={() => void researchTopCandidates()}
                                 disabled={isAnalyzing || researchingCandidateUrl !== null}
-                                className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase shadow-[2px_2px_0_#000] disabled:opacity-50"
+                                className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase shadow-none disabled:opacity-50"
                             >
                                 {researchingCandidateUrl === 'batch' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                                 Research top {Math.min(3, discoveryCandidates.length)}
@@ -794,7 +794,7 @@ export default function PartnerCommandCenter({
             )}
 
             {isArchiveOpen && (
-                <section className="border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] md:p-5">
+                <section className="border-2 border-black bg-white p-4 shadow-none md:p-5">
                     <div className="flex flex-col gap-3 border-b-2 border-black pb-4 md:flex-row md:items-end md:justify-between">
                         <div>
                             <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Archive className="h-4 w-4" /> Saved discoveries</div>
@@ -889,7 +889,7 @@ export default function PartnerCommandCenter({
                     { label: 'Contacted', value: stats.contacted, icon: Send, tone: 'bg-blue-100' },
                     { label: 'Follow-ups due', value: stats.due, icon: Bell, tone: stats.due ? 'bg-brand-yellow' : 'bg-white' },
                 ].map(item => (
-                    <div key={item.label} className={`${item.tone} border-2 border-black p-4 shadow-[3px_3px_0_#000]`}>
+                    <div key={item.label} className={`${item.tone} border-2 border-black p-4 shadow-none`}>
                         <div className="flex items-center justify-between">
                             <span className="text-[11px] font-black uppercase tracking-wider text-neutral-600">{item.label}</span>
                             <item.icon className="h-4 w-4" />
@@ -899,7 +899,7 @@ export default function PartnerCommandCenter({
                 ))}
             </section>
 
-            <section className="grid min-h-[720px] border-2 border-black bg-white shadow-[6px_6px_0_#000] lg:grid-cols-[350px_minmax(0,1fr)]">
+            <section className="grid min-h-[720px] border-2 border-black bg-white shadow-none lg:grid-cols-[350px_minmax(0,1fr)]">
                 <aside className="border-b-2 border-black lg:border-b-0 lg:border-r-2">
                     <div className="space-y-3 border-b-2 border-black bg-neutral-50 p-3">
                         <div className="relative">
@@ -1016,7 +1016,7 @@ export default function PartnerCommandCenter({
                                         >
                                             {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Refresh research
                                         </button>
-                                        <button type="button" onClick={() => reachOut(selected)} className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-[3px_3px_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0_#000]">
+                                        <button type="button" onClick={() => reachOut(selected)} className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none">
                                             <Mail className="h-4 w-4" /> Reach out
                                         </button>
                                         <button
@@ -1247,7 +1247,7 @@ export default function PartnerCommandCenter({
                                 </div>
 
                                 <aside className="space-y-5 bg-neutral-50 p-5">
-                                    <section className="border-2 border-black bg-brand-yellow p-4 shadow-[3px_3px_0_#000]">
+                                    <section className="border-2 border-black bg-brand-yellow p-4 shadow-none">
                                         <p className="text-[10px] font-black uppercase tracking-wider">Next best action</p>
                                         <p className="mt-2 text-sm font-bold leading-snug">{getNextBestAction(selected, researchTrack)}</p>
                                     </section>

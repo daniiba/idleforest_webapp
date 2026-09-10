@@ -38,7 +38,7 @@ export function AchievementsList({ unlockedAchievements }: AchievementsListProps
                             key={ach.id}
                             className={cn(
                                 "flex items-center gap-3 p-3 border-2 border-black rounded-lg transition-all",
-                                isUnlocked ? "bg-white shadow-[4px_4px_0px_rgba(0,0,0,0.1)]" : "bg-gray-200 opacity-60 grayscale"
+                                isUnlocked ? "bg-white shadow-none" : "bg-gray-200 opacity-60 grayscale"
                             )}
                         >
                             <div className="text-3xl select-none">

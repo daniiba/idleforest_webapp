@@ -115,7 +115,7 @@ export default function ReportPage() {
               )}
 
               {activeTab === 'analytics' && (
-                <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8">
+                <div className="bg-white border-2 border-black shadow-none p-6 sm:p-8">
                   {loading ? (
                     <div className="h-[240px] w-full flex items-center justify-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
@@ -134,7 +134,7 @@ export default function ReportPage() {
 
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-none">
               <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
                 {t('about_title')}
               </h3>

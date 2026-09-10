@@ -68,7 +68,7 @@ export function GameControls({ state, stats, buyUpgrade, buyTech, openPrestigeMo
 
 
     return (
-        <div className="sticky top-8 bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col max-h-[calc(100vh-100px)]">
+        <div className="sticky top-8 bg-white border-2 border-black shadow-none flex flex-col max-h-[calc(100vh-100px)]">
 
             {/* PRESTIGE TEASER */}
             {(() => {
@@ -161,7 +161,7 @@ export function GameControls({ state, stats, buyUpgrade, buyTech, openPrestigeMo
                                             setBuyAmount(amt);
                                         }}
                                         className={`px-3 py-1 text-sm font-bold border-2 transition-all ${baseBuyAmount === amt
-                                            ? "bg-brand-yellow border-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5"
+                                            ? "bg-brand-yellow border-black text-black shadow-none -translate-y-0.5"
                                             : "bg-white border-neutral-300 text-neutral-400 hover:border-neutral-500 hover:text-neutral-600"
                                             }`}
                                     >
@@ -170,7 +170,7 @@ export function GameControls({ state, stats, buyUpgrade, buyTech, openPrestigeMo
                                 ))}
                                 {![1, 10, 100].includes(baseBuyAmount) && (
                                     <button
-                                        className="px-3 py-1 text-sm font-bold border-2 bg-brand-yellow border-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5 ml-2"
+                                        className="px-3 py-1 text-sm font-bold border-2 bg-brand-yellow border-black text-black shadow-none -translate-y-0.5 ml-2"
                                         onClick={openCustomAmountModal}
                                     >
                                         {baseBuyAmount}x (Custom)
