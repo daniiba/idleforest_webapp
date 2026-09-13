@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
 import { trackOnboardingEvent } from '@/lib/onboarding-events';
-import { getCanonicalCompanySlug } from '@/lib/company-partners';
+import { getCanonicalCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface InviteInfo {
@@ -34,7 +34,7 @@ function SignupForm() {
     }
   }, []);
 
-  const inviteCode = urlInviteCode || cookieInviteCode;
+  const inviteCode = urlInviteCode || (companySlug && isWastefreeCompanySlug(companySlug) ? null : cookieInviteCode);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -158,9 +158,10 @@ function SignupForm() {
         customData: { lead_type: 'User Signup Complete' },
       });
       trackOnboardingEvent('signup_created', {
-        source: inviteCode ? 'invite_signup' : 'direct_signup',
+        source: inviteCode ? 'invite_signup' : companySlug ? 'company_signup' : 'direct_signup',
         metadata: {
-          hasInvite: Boolean(inviteCode)
+          hasInvite: Boolean(inviteCode),
+          companySlug,
         }
       });
 
@@ -228,10 +229,10 @@ function SignupForm() {
         <div className="mb-6 p-4 bg-brand-navy text-white border-2 border-black">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-brand-yellow" />
-            <span className="text-xs uppercase tracking-wider text-gray-300">Joining Company Forest</span>
+            <span className="text-xs uppercase tracking-wider text-gray-300">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Joining the clean-ocean fund' : 'Joining Company Forest'}</span>
           </div>
           <p className="font-bold text-lg">{companyInfo.name}</p>
-          <p className="text-sm text-gray-400">No invite required</p>
+          <p className="text-sm text-gray-400">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Create your account, then set up your computer or email yourself a setup link.' : 'No invite required'}</p>
         </div>
       )}
 
@@ -338,7 +339,7 @@ function SignupForm() {
       <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-300 text-center space-y-4">
         <p className="text-sm text-neutral-600 font-bold">
           Already have an account?{' '}
-          <Link href="/auth/user/login" className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">
+          <Link href={companySlug ? `/auth/user/login?redirect=${encodeURIComponent(`/en/join/company/${companySlug}`)}` : "/auth/user/login"} className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">
             Log in here
           </Link>
         </p>

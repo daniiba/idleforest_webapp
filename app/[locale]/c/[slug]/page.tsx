@@ -22,6 +22,7 @@ import {
 import Navigation from '@/components/navigation'
 import CompanySettingsPanel from './CompanySettingsPanel'
 import WastefreeExplainer from './WastefreeExplainer'
+import WastefreeSetupCta from '@/components/partner/WastefreeSetupCta'
 import FishScrollReveal from './FishScrollReveal'
 import SilveiraPaintStrokes from './SilveiraPaintStrokes'
 import PhoneRepairGrowingTrees from '@/components/partner/PhoneRepairGrowingTree'
@@ -56,7 +57,7 @@ const plasticBankBottleEquivalentsPerKg = 50
 const poundsPerKg = 2.2046226218
 const wastefreePlanetMetaTitle = 'Remove Plastic for Free | Waste Free Planet x IdleForest'
 const wastefreePlanetMetaDescription =
-    'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the Chrome extension or Mac/Windows app; Plastic Bank handles cleanup through 1ClickImpact.'
+    'Join Waste Free Planet on IdleForest to fund ocean-bound plastic removal for free. Install the desktop app; Plastic Bank handles cleanup through 1ClickImpact.'
 const planetwildMetaTitle = 'Fund Rewilding for Free | Planet Wild x IdleForest'
 const planetwildMetaDescription =
     "Support Planet Wild for free with IdleForest background activity. This IdleForest-run support page and free app are separate from Planet Wild's own website and membership."
@@ -475,9 +476,9 @@ function WastefreePlanetPage({
             label: 'Funding mechanism',
             title: 'IdleForest',
             verb: 'funds.',
-            meta: 'Chrome · Mac · Windows',
+            meta: 'Mac · Windows · Linux',
             body:
-                'The free Chrome extension or Mac/Windows app turns background tasks into funding for the clean-ocean fund.',
+                'The free desktop app turns background tasks into funding for the clean-ocean fund.',
         },
         {
             number: '03',
@@ -499,7 +500,7 @@ function WastefreePlanetPage({
         {
             number: '02',
             title: 'Install once',
-            body: 'Add the free Chrome extension or Mac/Windows desktop app. Takes about a minute.',
+            body: 'Install the free desktop app on Windows, Mac, or Linux, then log in with the same account. On your phone? Email yourself a setup link after joining.',
             visual: 'install',
         },
         {
@@ -581,7 +582,7 @@ function WastefreePlanetPage({
                                 <span className="wfp-display__line">bottle equivalents funded — and counting.</span>
                             </h1>
                             <p className="wfp-lede">
-                                Install <strong>IdleForest</strong> for free and join <strong>Waste Free Planet</strong>. The Chrome extension or Mac/Windows app runs quietly in the background,
+                                Install <strong>IdleForest</strong> for free and join <strong>Waste Free Planet</strong>. The desktop app runs quietly in the background,
                                 turning unused capacity into funding for Plastic Bank ocean-bound plastic removal. <strong>100% of profits go to plastic removal.</strong>
                             </p>
                             <div className="wfp-actions">
@@ -590,13 +591,10 @@ function WastefreePlanetPage({
                                         Open portal
                                     </Link>
                                 ) : isValidInvite ? (
-                                    <Link href={joinHref} className="wfp-button">
-                                        Start Removing Plastic
-                                        <span aria-hidden="true">→</span>
-                                    </Link>
+                                    <WastefreeSetupCta href={joinHref} />
                                 ) : null}
                                 {companyWebsite ? (
-                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button">
+                                    <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button self-start">
                                         Visit Waste Free Planet
                                     </a>
                                 ) : null}
@@ -615,6 +613,30 @@ function WastefreePlanetPage({
                                 <span>{stat.label}</span>
                             </article>
                         ))}
+                    </div>
+                </section>
+
+                <section id="cleanup-certificate" className="wfp-band" aria-labelledby="cleanup-certificate-title">
+                    <div className="wfp-section">
+                            <div className="wfp-section-head">
+                                <p className="wfp-kicker">Cleanup certificate · September 13, 2026</p>
+                                <h2 id="cleanup-certificate-title" className="wfp-section-title">
+                                    5,750 bottle equivalents. <em>Funding certified.</em>
+                                </h2>
+                                <p className="wfp-section-copy">
+                                    IdleForest donated <strong>€115</strong> to fund plastic recovery. Plastic Bank’s certificate confirms that Idleforest Unipessoal Lda has funded the gathering of <strong>115 kg of plastic</strong> — equivalent to <strong>5,750 plastic bottles</strong>.
+                                </p>
+                                <a href="/partner/wastefree/certificates/plastic-bank-2026-09-13.jpg" target="_blank" rel="noopener noreferrer" className="wfp-button">
+                                    View full-size certificate <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+                                </a>
+                                <p className="mt-4 text-xs text-slate-600">Issued by Plastic Bank · Certificate IR-2026-09-U7PHTE</p>
+                            </div>
+                            <a href="/partner/wastefree/certificates/plastic-bank-2026-09-13.jpg" target="_blank" rel="noopener noreferrer" aria-label="Open Plastic Bank certificate for 5,750 bottle equivalents in full size">
+                                <Image src="/partner/wastefree/certificates/plastic-bank-2026-09-13.jpg"
+                                    alt="Plastic Bank certificate issued September 13, 2026 to Idleforest Unipessoal Lda for funding the gathering of 115 kg of plastic, equivalent to 5,750 bottles. Certificate IR-2026-09-U7PHTE."
+                                    width={2400} height={1612} sizes="(min-width: 1024px) 50vw, 100vw"
+                                    className="h-auto w-full rounded-lg border border-black/10" />
+                            </a>
                     </div>
                 </section>
 
@@ -716,7 +738,7 @@ function WastefreePlanetPage({
                             </Link>
                         ) : null}
                         {companyWebsite ? (
-                            <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button">
+                            <a href={companyWebsite.url} target="_blank" rel="noreferrer" className="wfp-link-button self-start">
                                 Visit Waste Free Planet
                             </a>
                         ) : null}

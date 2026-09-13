@@ -100,10 +100,14 @@ export default function JoinCompanyPage({ params }: { params: { locale: string; 
     )
 
     useEffect(() => {
-        if (!authLoading && user) {
+        if (authLoading) return
+        if (user) {
             joinCompany(false)
+        } else if (isWastefree) {
+            // Start account creation directly; its login link preserves this community.
+            router.replace(signupHref)
         }
-    }, [authLoading, joinCompany, user])
+    }, [authLoading, joinCompany, user, isWastefree, router, signupHref])
 
     const companyName = company?.name || 'this company'
     const joinLabel = isWastefree ? 'clean-ocean fund' : isPlanetwild || isMossyEarth ? 'rewilding fund' : 'company forest'
