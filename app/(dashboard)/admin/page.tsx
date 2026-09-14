@@ -17,6 +17,11 @@ import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor, PawPrint, ExternalLink } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
+const LazyStickerQrGenerator = dynamic(() => import('@/components/admin/StickerQrGenerator'), {
+    ssr: false,
+    loading: () => <AdminSectionLoader label="Loading QR sticker generator" />,
+})
+
 const LazyPartnerCommandCenter = dynamic(() => import('@/components/admin/PartnerCommandCenter'), {
     ssr: false,
     loading: () => <AdminSectionLoader label="Loading partner command center" />,
@@ -1700,13 +1705,14 @@ export default function AdminPage() {
                         }
                     }}
                     className="w-full" defaultValue={'partners'}                 >
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 bg-white border-2 border-black shadow-none rounded-none p-1 h-auto">
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white border-2 border-black shadow-none rounded-none p-1 h-auto">
                         <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
                         <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
                         <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
                         <TabsTrigger value="audiences" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📋 Lists</TabsTrigger>
                         <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
                         <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
+                        <TabsTrigger value="qr-stickers" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">QR stickers</TabsTrigger>
                         <TabsTrigger value="partners" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🌱 Partners</TabsTrigger>
                         <TabsTrigger value="cloudfund" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">☁️ CloudFund</TabsTrigger>
                         <TabsTrigger value="companies" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🏢 Companies</TabsTrigger>
@@ -2332,6 +2338,10 @@ export default function AdminPage() {
                                 </div>
                             )}
                         </section>
+                    </TabsContent>
+
+                    <TabsContent value="qr-stickers" className="mt-6">
+                        <LazyStickerQrGenerator />
                     </TabsContent>
 
                     <TabsContent value="partners" className="mt-6">
