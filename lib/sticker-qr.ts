@@ -1,17 +1,12 @@
 import QRCode from 'qrcode'
 
-export const MAX_STICKERS = 100
 export const DEFAULT_STICKER_CTA = 'Scan to grow your tree'
-export type StickerCorrection = 'M' | 'Q'
+export const STICKER_CORRECTION = 'Q'
 export type StickerDraft = {
+    destination: string
     campaign: string
-    mode: 'numbered' | 'custom'
-    prefix: string
-    start: number
-    count: number
-    customIds: string
+    content: string
     cta: string
-    correction: StickerCorrection
 }
 export type StickerLink = { campaign: string; content: string; url: string; filename: string }
 export type StickerAsset = StickerLink & { qrSvg: string; stickerSvg: string }
@@ -24,41 +19,30 @@ function trackingName(value: string, label: string) {
     return name
 }
 
-export function validateStickerDesign(cta: string, correction: StickerCorrection) {
+function validateCta(cta: string) {
     if (!cta.trim() || Array.from(cta.trim()).length > 48 || /[\u0000-\u001f\u007f-\u009f]/.test(cta)) {
         throw new Error('Enter a call to action of 1–48 characters on one line.')
     }
-    if (correction !== 'M' && correction !== 'Q') throw new Error('Choose error correction M or Q.')
 }
 
-export function buildStickerLinks(draft: StickerDraft): StickerLink[] {
+export function buildStickerLink(draft: StickerDraft): StickerLink {
     const campaign = trackingName(draft.campaign, 'Campaign')
-    validateStickerDesign(draft.cta, draft.correction)
-    let ids: string[]
-    if (draft.mode === 'numbered') {
-        const prefix = trackingName(draft.prefix, 'ID prefix')
-        if (!Number.isInteger(draft.count) || draft.count < 1 || draft.count > MAX_STICKERS) {
-            throw new Error(`Choose between 1 and ${MAX_STICKERS} codes per batch.`)
-        }
-        if (!Number.isInteger(draft.start) || draft.start < 1 || draft.start + draft.count - 1 > 999999) {
-            throw new Error('Start numbers must be positive, and the last ID cannot exceed 999999.')
-        }
-        ids = Array.from({ length: draft.count }, (_, index) => `${prefix}_${String(draft.start + index).padStart(2, '0')}`)
-    } else if (draft.mode === 'custom') {
-        ids = draft.customIds.split(/\r?\n/).map(id => id.trim()).filter(Boolean)
-        if (!ids.length || ids.length > MAX_STICKERS) throw new Error(`Enter 1–${MAX_STICKERS} IDs, one per line.`)
-    } else {
-        throw new Error('Choose numbered or custom IDs.')
+    const content = draft.content.trim() ? trackingName(draft.content, 'Distribution label') : ''
+    validateCta(draft.cta)
+    let url: URL
+    try { url = new URL(draft.destination.trim()) }
+    catch { throw new Error('Enter a complete destination URL starting with https:// or http://.') }
+    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) {
+        throw new Error('Use an http:// or https:// destination without a username or password.')
     }
-    ids = ids.map(id => trackingName(id, 'Batch / sticker ID'))
-    if (new Set(ids.map(id => id.toLowerCase())).size !== ids.length) {
-        throw new Error('Each ID must be unique in this batch (including capitalization).')
-    }
-    return ids.map((content, index) => {
-        const url = new URL('https://idleforest.com/')
-        url.search = new URLSearchParams({ utm_source: 'sticker', utm_medium: 'offline', utm_campaign: campaign, utm_content: content }).toString()
-        return { campaign, content, url: url.toString(), filename: `${String(index + 1).padStart(3, '0')}_${campaign}_${content}` }
-    })
+    // Preserve the destination path, unrelated query parameters and fragment.
+    url.searchParams.set('utm_source', 'sticker')
+    url.searchParams.set('utm_medium', 'offline')
+    url.searchParams.set('utm_campaign', campaign)
+    if (content) url.searchParams.set('utm_content', content)
+    else url.searchParams.delete('utm_content')
+    if (url.toString().length > 500) throw new Error('Keep the destination and tracking parameters within 500 characters for a readable printed code.')
+    return { campaign, content, url: url.toString(), filename: content ? `${campaign}_${content}` : campaign }
 }
 
 function escapeXml(value: string) {
@@ -80,38 +64,36 @@ function wrapCta(value: string) {
     return lines
 }
 
-export async function generateSticker(link: StickerLink, cta: string, correction: StickerCorrection): Promise<StickerAsset> {
-    validateStickerDesign(cta, correction)
+export async function generateSticker(link: StickerLink, cta: string, logoDataUrl: string): Promise<StickerAsset> {
+    validateCta(cta)
+    if (!/^data:image\/png;base64,[a-zA-Z0-9+/]+=*$/.test(logoDataUrl)) {
+        throw new Error('The IdleForest logo could not be loaded. Please try again.')
+    }
     const svg = await QRCode.toString(link.url, {
-        type: 'svg', errorCorrectionLevel: correction, margin: 4,
+        type: 'svg', errorCorrectionLevel: STICKER_CORRECTION, margin: 4,
         color: { dark: '#000000ff', light: '#ffffffff' },
     })
-    // Preserve the renderer's viewBox and quiet zone; dimensions are physical print sizes.
-    const qrSvg = svg.replace('<svg ', '<svg width="40mm" height="40mm" ')
-    const embeddedQr = svg.replace('<svg ', '<svg x="5" y="10" width="40" height="40" ')
+    const size = Number(svg.match(/viewBox="0 0 (\d+) (\d+)"/)?.[1])
+    if (!Number.isFinite(size)) throw new Error('The QR code could not be rendered.')
+    // A small, wide logo covers less than 5% of the symbol. The four-module quiet
+    // zone is untouched. Embed the PNG so downloaded SVGs need no network access.
+    const logoWidth = (size - 8) * 0.3
+    const logoHeight = logoWidth * 281 / 1024
+    const x = (size - logoWidth) / 2
+    const y = (size - logoHeight) / 2
+    const logo = `<g data-logo="idleforest"><rect x="${x - 1}" y="${y - 1}" width="${logoWidth + 2}" height="${logoHeight + 2}" rx="0.5" fill="#fff"/><image x="${x}" y="${y}" width="${logoWidth}" height="${logoHeight}" href="${logoDataUrl}"/></g>`
+    const brandedSvg = svg.replace('</svg>', `${logo}</svg>`)
+    const qrSvg = brandedSvg.replace('<svg ', '<svg width="40mm" height="40mm" ')
+    const embeddedQr = brandedSvg.replace('<svg ', '<svg x="5" y="10" width="40" height="40" ')
+    const host = new URL(link.url).hostname
     const lines = wrapCta(cta)
     const stickerSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="50mm" height="70mm" viewBox="0 0 50 70">
-<title>${escapeXml(cta)} — ${escapeXml(link.content)}</title>
+<title>${escapeXml(cta)} — ${escapeXml(link.campaign)}</title>
 <rect width="50" height="70" fill="#fff"/>
 <g fill="#000" font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
-<text x="25" y="6.5" font-size="3.3" font-weight="700">idleforest.com</text>
+<text x="25" y="6.5" font-size="${Math.min(3.3, 68 / host.length)}" font-weight="700">${escapeXml(host)}</text>
 ${embeddedQr}
 ${lines.map((line, index) => `<text x="25" y="${55 + index * 4.4}" font-size="3.1" font-weight="700">${escapeXml(line)}</text>`).join('\n')}
-<text x="25" y="67.5" font-size="${Math.min(1.8, 68 / link.content.length)}">${escapeXml(link.content)}</text>
 </g></svg>`
     return { ...link, qrSvg, stickerSvg }
-}
-
-export function stickerManifest(links: StickerLink[], cta: string, correction: StickerCorrection) {
-    // Quote every field and neutralize spreadsheet formulas in user-entered copy.
-    const cell = (value: string) => `"${(/^[=+\-@\t\r]/.test(value) ? "'" + value : value).replace(/"/g, '""')}"`
-    const header = ['qr_file', 'sticker_file', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'url', 'cta', 'error_correction']
-    const rows = links.map(link => [`qr/${link.filename}.svg`, `stickers/${link.filename}.svg`, 'sticker', 'offline', link.campaign, link.content, link.url, cta.trim(), correction])
-    return [header, ...rows].map(row => row.map(cell).join(',')).join('\r\n') + '\r\n'
-}
-
-export function stickerPrintSheet(assets: StickerAsset[]) {
-    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>IdleForest QR stickers</title>
-<style>@page{size:A4;margin:10mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#000;background:#fff}.instructions{margin:0 0 8mm;max-width:180mm;font-size:14px}.sheet{display:grid;grid-template-columns:repeat(3,50mm);gap:5mm;align-items:start}.sticker{width:50mm;height:70mm;outline:0.2mm dashed #aaa;break-inside:avoid;page-break-inside:avoid}.sticker svg{display:block;width:50mm;height:70mm}@media print{.instructions{display:none}.sheet{display:block}.sticker{display:inline-block;vertical-align:top;margin:0 5mm 5mm 0}}</style></head>
-<body><p class="instructions">Print on A4 at 100% / actual size. Disable browser headers and footers. Each sticker is 50 × 70 mm. Cut along the guides. Scan a printed sample before printing the full batch.</p><main class="sheet">${assets.map(asset => `<div class="sticker">${asset.stickerSvg}</div>`).join('')}</main></body></html>`
 }

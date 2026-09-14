@@ -1,93 +1,90 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { Resvg } from '@resvg/resvg-js'
 import jsQR from 'jsqr'
 import QRCode from 'qrcode'
-import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate'
-import { buildStickerLinks, generateSticker, stickerManifest, stickerPrintSheet, type StickerDraft } from '../lib/sticker-qr'
+import { buildStickerLink, generateSticker, STICKER_CORRECTION, type StickerDraft } from '../lib/sticker-qr'
 
+const logo = `data:image/png;base64,${readFileSync(new URL('../public/logo.png', import.meta.url)).toString('base64')}`
 const draft: StickerDraft = {
-    campaign: 'campus_launch', mode: 'numbered', prefix: 'pack', start: 1, count: 3,
-    customIds: '', cta: 'Scan to grow your tree', correction: 'Q',
+    destination: 'https://idleforest.com/', campaign: 'campus_launch', content: '', cta: 'Scan to grow your tree',
 }
 
-function decodeSvg(svg: string) {
-    const rendered = new Resvg(svg, { fitTo: { mode: 'width', value: 1000 } }).render()
+function decodeSvg(svg: string, width = 1000) {
+    const rendered = new Resvg(svg, { fitTo: { mode: 'width', value: width } }).render()
     return jsQR(new Uint8ClampedArray(rendered.pixels), rendered.width, rendered.height)?.data
 }
 
-test('numbered codes embed exact first-party URLs and unique tracking parameters', () => {
-    const links = buildStickerLinks(draft)
-    assert.equal(links.length, 3)
-    assert.equal(links[0].url, 'https://idleforest.com/?utm_source=sticker&utm_medium=offline&utm_campaign=campus_launch&utm_content=pack_01')
-    assert.equal(links[2].content, 'pack_03')
-    assert.equal(new Set(links.map(link => link.url)).size, 3)
-    assert.equal(buildStickerLinks({ ...draft, start: 99 })[2].content, 'pack_101')
+test('one creation returns one reusable QR link without a per-sticker ID', () => {
+    const link = buildStickerLink(draft)
+    assert.equal(Array.isArray(link), false)
+    assert.equal(link.url, 'https://idleforest.com/?utm_source=sticker&utm_medium=offline&utm_campaign=campus_launch')
+    assert.equal(link.content, '')
+    assert.equal(link.filename, 'campus_launch')
+    assert.deepEqual(buildStickerLink(draft), link)
 })
 
-test('custom batches preserve trimmed IDs and ignore blank lines', () => {
-    const links = buildStickerLinks({ ...draft, mode: 'custom', campaign: 'cafe_drop', customIds: ' batch_a\r\n\r\nbatch_b ' })
-    assert.deepEqual(links.map(link => link.content), ['batch_a', 'batch_b'])
-    assert.equal(new URL(links[1].url).searchParams.get('utm_campaign'), 'cafe_drop')
+test('editable destinations preserve paths, existing parameters and fragments', () => {
+    const link = buildStickerLink({ ...draft, destination: 'https://example.com/grow?lang=pt&utm_campaign=old&utm_source=old&utm_source=duplicate&utm_content=old#start', content: ' cafe_drop ' })
+    const url = new URL(link.url)
+    assert.equal(url.origin, 'https://example.com')
+    assert.equal(url.pathname, '/grow')
+    assert.equal(url.hash, '#start')
+    assert.equal(url.searchParams.get('lang'), 'pt')
+    assert.equal(url.searchParams.get('utm_campaign'), 'campus_launch')
+    assert.deepEqual(url.searchParams.getAll('utm_source'), ['sticker'])
+    assert.equal(url.searchParams.get('utm_content'), 'cafe_drop')
+    assert.equal(new URL(buildStickerLink({ ...draft, destination: link.url }).url).searchParams.has('utm_content'), false)
+    assert.notEqual(buildStickerLink({ ...draft, destination: 'https://example.com/another' }).url, link.url)
 })
 
-test('reject invalid names, duplicate IDs, invalid ranges and unsafe or missing CTA', () => {
+test('reject invalid destinations, oversized codes and invalid tracking or CTA', () => {
     for (const change of [
+        { destination: '' }, { destination: '/relative' }, { destination: 'javascript:alert(1)' },
+        { destination: 'ftp://example.com' }, { destination: 'https://user:secret@example.com' },
+        { destination: `https://example.com/${'x'.repeat(500)}` },
         { campaign: '' }, { campaign: '../escape' }, { campaign: 'launch&other=bad' },
-        { count: 0 }, { count: 101 }, { count: 1.5 }, { count: NaN },
-        { start: 0 }, { start: 999999 }, { prefix: 'a'.repeat(80) },
-        { mode: 'custom', customIds: 'one\nONE' }, { mode: 'custom', customIds: '' },
-        { mode: 'custom', customIds: 'café' }, { cta: ' ' }, { cta: 'a'.repeat(49) },
-        { cta: 'Scan\nnow' }, { correction: 'L' },
-    ]) assert.throws(() => buildStickerLinks({ ...draft, ...change } as StickerDraft), JSON.stringify(change))
+        { campaign: 'c'.repeat(81) }, { content: '../escape' },
+        { cta: ' ' }, { cta: 'a'.repeat(49) }, { cta: 'Scan\nnow' },
+    ]) assert.throws(() => buildStickerLink({ ...draft, ...change }), JSON.stringify(change))
 })
 
-for (const correction of ['M', 'Q'] as const) {
-    test(`${correction} QR and sticker SVGs independently decode to the original URL`, async () => {
-        const links = buildStickerLinks({ ...draft, correction })
-        for (const link of links) {
-            const asset = await generateSticker(link, draft.cta, correction)
-            assert.equal(decodeSvg(asset.qrSvg), link.url)
-            assert.equal(decodeSvg(asset.stickerSvg), link.url)
-            assert.match(asset.qrSvg, /width="40mm" height="40mm"/)
-            assert.match(asset.stickerSvg, /width="50mm" height="70mm"/)
-            const modules = QRCode.create(link.url, { errorCorrectionLevel: correction }).modules.size
-            assert.ok(asset.qrSvg.includes(`viewBox="0 0 ${modules + 8} ${modules + 8}"`), 'four-module quiet zone on every side')
-        }
-    })
-}
-
-test('longest accepted tracking values remain decodable', async () => {
-    const [link] = buildStickerLinks({ ...draft, campaign: 'c'.repeat(80), mode: 'custom', customIds: 'i'.repeat(80) })
-    const asset = await generateSticker(link, 'A'.repeat(48), 'Q')
-    assert.equal(decodeSvg(asset.stickerSvg), link.url)
+test('QR and sticker exports embed the actual centered logo and decode at print resolution', async () => {
+    const link = buildStickerLink(draft)
+    const asset = await generateSticker(link, draft.cta, logo)
+    for (const svg of [asset.qrSvg, asset.stickerSvg]) {
+        assert.ok(svg.includes(`href="${logo}"`), 'the actual logo is embedded, without external requests')
+        assert.ok(svg.includes('data-logo="idleforest"'))
+        assert.equal(decodeSvg(svg), link.url)
+    }
+    assert.equal(decodeSvg(asset.qrSvg, 473), link.url, '40 mm QR at 300 DPI')
+    assert.equal(decodeSvg(asset.stickerSvg, 591), link.url, '50 mm sticker at 300 DPI')
+    assert.match(asset.qrSvg, /width="40mm" height="40mm"/)
+    assert.match(asset.stickerSvg, /width="50mm" height="70mm"/)
+    const size = QRCode.create(link.url, { errorCorrectionLevel: STICKER_CORRECTION }).modules.size + 8
+    assert.ok(asset.qrSvg.includes(`viewBox="0 0 ${size} ${size}"`), 'quiet zone remains four modules')
+    const image = asset.qrSvg.match(/<image x="([^"]+)" y="([^"]+)" width="([^"]+)" height="([^"]+)"/)
+    assert.ok(image)
+    assert.ok(Math.abs(Number(image[1]) + Number(image[3]) / 2 - size / 2) < 0.000001)
+    assert.ok(Math.abs(Number(image[2]) + Number(image[4]) / 2 - size / 2) < 0.000001)
 })
 
-test('CTA markup is escaped in SVG and HTML; CSV neutralizes formula copy', async () => {
-    const [link] = buildStickerLinks(draft)
-    const asset = await generateSticker(link, '<script>alert("x")</script> & scan', 'Q')
+test('logo remains scannable across different URLs, campaigns and QR sizes', async () => {
+    for (const length of [0, 10, 35, 80, 150, 250, 350, 400]) {
+        const link = buildStickerLink({ ...draft, destination: `https://example.com/${'x'.repeat(length)}`, campaign: `test_${length}` })
+        const asset = await generateSticker(link, draft.cta, logo)
+        assert.equal(decodeSvg(asset.qrSvg, 473), link.url, `300 DPI, path length ${length}`)
+        assert.equal(decodeSvg(asset.stickerSvg, 591), link.url, `sticker, path length ${length}`)
+    }
+})
+
+test('CTA markup is escaped and sticker heading reflects the chosen host', async () => {
+    const link = buildStickerLink({ ...draft, destination: 'https://example.com' })
+    const asset = await generateSticker(link, '<script>alert("x")</script> & scan', logo)
     assert.ok(!asset.stickerSvg.includes('<script>'))
     assert.ok(asset.stickerSvg.includes('&lt;script&gt;'))
-    assert.ok(!stickerPrintSheet([asset]).includes('<script>'))
-    const csv = stickerManifest([link], '=HYPERLINK("bad")', 'Q')
-    assert.ok(csv.includes('"\'=HYPERLINK(""bad"")"'))
-    assert.ok(csv.includes(`"${link.url}"`))
-})
-
-test('bulk archive round-trips every SVG, manifest entry and print sheet', async () => {
-    const assets = await Promise.all(buildStickerLinks(draft).map(link => generateSticker(link, draft.cta, draft.correction)))
-    const files: Record<string, Uint8Array> = {}
-    for (const asset of assets) {
-        files[`qr/${asset.filename}.svg`] = strToU8(asset.qrSvg)
-        files[`stickers/${asset.filename}.svg`] = strToU8(asset.stickerSvg)
-    }
-    files['tracking.csv'] = strToU8(stickerManifest(assets, draft.cta, draft.correction))
-    files['print-stickers.html'] = strToU8(stickerPrintSheet(assets))
-    const unpacked = unzipSync(zipSync(files))
-    assert.equal(Object.keys(unpacked).length, assets.length * 2 + 2)
-    for (const asset of assets) {
-        assert.equal(strFromU8(unpacked[`qr/${asset.filename}.svg`]), asset.qrSvg)
-        assert.ok(strFromU8(unpacked['tracking.csv']).includes(asset.filename))
-    }
-    assert.equal((strFromU8(unpacked['print-stickers.html']).match(/class="sticker"/g) ?? []).length, 3)
+    assert.ok(asset.stickerSvg.includes('>example.com</text>'))
+    assert.ok(!asset.stickerSvg.includes('>idleforest.com</text>'))
+    await assert.rejects(() => generateSticker(link, draft.cta, 'https://example.com/logo.png'))
 })
