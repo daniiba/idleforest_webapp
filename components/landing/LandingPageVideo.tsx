@@ -4,7 +4,7 @@ import { Link } from "@/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Leaf, Chrome, Wifi, TreePine, PlayCircle, Shield, BadgeCheck, BarChart3, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
+import { ArrowRight, Leaf, Chrome, TreePine, PlayCircle, Shield, BadgeCheck, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { useEffect, useState } from "react";
 
@@ -265,29 +265,64 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* IDLE BANDWIDTH */}
-                <section id="idle-bandwidth" className="relative bg-brand-navy text-brand-yellow scroll-mt-24">
-                    <div className="container mx-auto px-6 py-20 md:py-24">
-                        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-yellow/70">
-                                    Background impact
-                                </p>
-                                <h2 className="mt-3 font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                                    How Idle Bandwidth Funds Trees
-                                </h2>
-                                <Link
-                                    href="/how-it-works"
-                                    className="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white"
-                                >
-                                    Read the full technical explanation <ArrowRight className="h-4 w-4" />
-                                </Link>
-                            </div>
-                            <div className="space-y-5 text-base leading-8 text-brand-yellow/90 md:text-lg">
-                                <p>Idle bandwidth is the part of your internet connection you are not using. Most of the time, your connection sits at a small fraction of its capacity. The rest is wasted.</p>
-                                <p>IdleForest puts that unused capacity to work. The app routes small data tasks through your connection, like checking website uptime or running market research queries. These tasks are sessionless: they do not carry personal data, cookies, or browsing history.</p>
-                                <p>Clients pay for those tasks. We take that revenue and send it to our reforestation partners. The result: you plant trees with bandwidth you were not using anyway. The cost to you is zero.</p>
-                                <p>This model is why IdleForest is free. We do not need your money, your search history, or your email. We just need the gigabytes you would have wasted.</p>
-                            </div>
+                <section id="idle-bandwidth" className="relative overflow-hidden bg-brand-gray text-brand-navy scroll-mt-24">
+                    <Image
+                        src="/Vector (Stroke).svg"
+                        alt=""
+                        fill
+                        sizes="150vw"
+                        className="pointer-events-none absolute inset-0 select-none object-cover"
+                    />
+                    <div className="container relative mx-auto px-6 py-20 md:py-24">
+                        <div className="mx-auto max-w-5xl text-center">
+                            <h2 className="font-rethink-sans text-[40px] font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+                                How Idle Bandwidth Funds Trees
+                            </h2>
+                        </div>
+
+                        <div className="relative mx-auto mt-8 aspect-[2036/772] w-full max-w-6xl" aria-hidden="true">
+                            <Image
+                                src="/landing/idle-bandwidth-flow-v3.png"
+                                alt=""
+                                fill
+                                sizes="(min-width: 1280px) 1152px, 100vw"
+                                className="object-contain"
+                            />
+                        </div>
+
+                        <ol className="mx-auto mt-2 grid max-w-5xl gap-4 md:grid-cols-3">
+                            {[
+                                "Spare bandwidth",
+                                "Client pays for public data",
+                                "Trees are funded",
+                            ].map((step, index) => {
+                                return (
+                                    <li
+                                        key={step}
+                                        className="flex min-h-[104px] items-end justify-between gap-5 rounded-xl border border-brand-navy/15 bg-brand-gray p-5 text-left shadow-[0_12px_30px_rgba(11,16,31,0.08)]"
+                                    >
+                                        <h3 className="max-w-[14rem] text-2xl font-extrabold leading-[1.05] tracking-[-0.025em] text-brand-navy">
+                                            {step}
+                                        </h3>
+                                        <span className="font-mono text-xs font-bold tracking-[0.16em] text-brand-navy/40">
+                                            {String(index + 1).padStart(2, "0")}
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+
+                        <div className="mx-auto mt-7 flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
+                            <p className="flex items-center gap-2 text-center text-sm text-brand-navy/60 sm:text-left">
+                                <ShieldCheck className="h-4 w-4 shrink-0 text-brand-navy/70" aria-hidden="true" />
+                                No browsing data shared.
+                            </p>
+                            <Link
+                                href="/how-it-works"
+                                className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-brand-navy underline decoration-brand-navy/25 underline-offset-4 transition-colors hover:text-black"
+                            >
+                                Technical details <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                            </Link>
                         </div>
                     </div>
                 </section>
