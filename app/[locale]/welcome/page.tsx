@@ -77,14 +77,14 @@ export default function WelcomePage() {
 
     const downloadUrl = useMemo(() => {
         if (detectedPlatform === 'mac') {
-            return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip'
+            return '/download/mac/installer'
         }
 
         if (detectedPlatform === 'linux') {
             return '/download/linux/installer'
         }
 
-        return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
+        return '/download/windows/installer'
     }, [detectedPlatform])
 
     const platformLabel = detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'windows' ? 'Windows' : detectedPlatform === 'linux' ? 'Linux' : 'Desktop'
