@@ -318,7 +318,7 @@ export default function TeamWelcomePage() {
                     <div className="space-y-4">
                         <Link
                             href={detectedPlatform === 'mac'
-                                ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
+                                ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip'
                                 : detectedPlatform === 'windows'
                                     ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
                                     : detectedPlatform === 'linux'

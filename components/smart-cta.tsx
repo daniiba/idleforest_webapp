@@ -97,7 +97,7 @@ export function SmartCTA({
                                 rel="noopener noreferrer"
                                 onClick={() => trackLead(
                                     isMac
-                                        ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip"
+                                        ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip"
                                         : isLinux
                                             ? "https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/linux/x64/idle-forest.deb"
                                             : "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe",

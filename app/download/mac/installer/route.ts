@@ -13,5 +13,5 @@ export async function GET(request: Request) {
       userAgent: request.headers.get('user-agent'),
     });
   }
-  return NextResponse.redirect("https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip", 302);
+  return NextResponse.redirect("https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip", 302);
 }

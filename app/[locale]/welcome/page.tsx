@@ -77,7 +77,7 @@ export default function WelcomePage() {
 
     const downloadUrl = useMemo(() => {
         if (detectedPlatform === 'mac') {
-            return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
+            return 'https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip'
         }
 
         if (detectedPlatform === 'linux') {

@@ -238,7 +238,7 @@ export default function CompanyWelcomePage() {
     const isMobile = detectedPlatform === 'mobile'
     const isWastefree = isWastefreeCompanySlug(company.slug)
     const downloadHref = detectedPlatform === 'mac'
-        ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip'
+        ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip'
         : detectedPlatform === 'windows'
             ? 'https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/idle-forest.exe'
             : detectedPlatform === 'linux' ? '/download/linux/installer' : '/downloads#desktop-apps'

@@ -426,7 +426,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         rel="noopener noreferrer"
                                         onClick={() => trackPinterestEvent({
                                             eventName: "lead",
-                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/desktop-app/mac.zip",
+                                            eventSourceUrl: "https://idleforest-updates.s3.us-east-1.amazonaws.com/updates/darwin/arm64/IdleForest-darwin-arm64-1.0.7.zip",
                                             customData: { lead_type: 'Desktop Download - Mac' }
                                         })}
                                     >
