@@ -17,6 +17,9 @@ const ATTRIBUTION_KEYS = [
     'device',
     'network',
     'matchtype',
+    // Google Ads appends this when auto-tagging is enabled. It is the only
+    // campaign identifier available if a campaign-level URL suffix is absent.
+    'gad_campaignid',
 ]
 
 export default function GoogleAdsAttribution() {

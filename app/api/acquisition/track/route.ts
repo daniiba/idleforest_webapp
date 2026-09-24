@@ -24,18 +24,23 @@ export async function POST(request: Request) {
         const userAgent = requestHeaders.get('user-agent') || ''
         const now = new Date().toISOString()
 
+        const hasGoogleClickId = Boolean(body.gclid || body.gbraid || body.wbraid)
+        const campaignId = cleanAttributionValue(body.campaignid || body.gad_campaignid, 80)
+
         const row = {
             id: attributionId,
             user_id: user?.id || null,
             gclid: cleanAttributionValue(body.gclid, 250),
             gbraid: cleanAttributionValue(body.gbraid, 250),
             wbraid: cleanAttributionValue(body.wbraid, 250),
-            utm_source: cleanAttributionValue(body.utm_source, 120),
-            utm_medium: cleanAttributionValue(body.utm_medium, 120),
+            // Preserve explicit UTMs, but make auto-tagged Google traffic
+            // reportable when a campaign URL suffix was not applied.
+            utm_source: cleanAttributionValue(body.utm_source, 120) || (hasGoogleClickId ? 'google' : null),
+            utm_medium: cleanAttributionValue(body.utm_medium, 120) || (hasGoogleClickId ? 'cpc' : null),
             utm_campaign: cleanAttributionValue(body.utm_campaign, 250),
             utm_term: cleanAttributionValue(body.utm_term, 250),
             utm_content: cleanAttributionValue(body.utm_content, 250),
-            campaign_id: cleanAttributionValue(body.campaignid, 80),
+            campaign_id: campaignId,
             ad_group_id: cleanAttributionValue(body.adgroupid, 80),
             creative_id: cleanAttributionValue(body.creative, 80),
             device: cleanAttributionValue(body.device, 30),

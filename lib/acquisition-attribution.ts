@@ -23,6 +23,31 @@ export type DesktopNodeForAttribution = {
     opt_in?: boolean | null
 }
 
+export async function associateAcquisitionWithUser({
+    attributionId,
+    userId,
+}: {
+    attributionId: string
+    userId: string
+}) {
+    const normalizedId = normalizeAttributionId(attributionId)
+    if (!normalizedId || !userId) return { associated: false, reason: 'invalid-attribution-or-user' } as const
+
+    const admin = createAdminClient()
+    const { error } = await admin
+        .from('acquisition_attributions')
+        .update({ user_id: userId, updated_at: new Date().toISOString() })
+        .eq('id', normalizedId)
+        .is('user_id', null)
+
+    if (error) {
+        console.error('Failed to associate acquisition attribution with user', error)
+        return { associated: false, reason: 'association-failed' } as const
+    }
+
+    return { associated: true } as const
+}
+
 export async function claimDesktopNodeForAttribution({
     attributionId,
     node,

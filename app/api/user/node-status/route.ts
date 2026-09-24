@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import {
     ACQUISITION_COOKIE,
+    associateAcquisitionWithUser,
     claimDesktopNodeForAttribution,
     normalizeAttributionId,
 } from '@/lib/acquisition-attribution'
@@ -81,6 +82,14 @@ export async function GET() {
         const eligibleDesktopNode = nodes
             ?.filter(node => ['win32', 'darwin', 'linux'].includes(node.platform || ''))
             .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())[0]
+
+        // The landing-page attribution is initially anonymous. Bind it as
+        // soon as the visitor has an authenticated profile, even before the
+        // desktop app reports a node. This keeps profile and later activation
+        // conversion measurement connected through the same acquisition row.
+        if (attributionId) {
+            await associateAcquisitionWithUser({ attributionId, userId: user.id })
+        }
 
         if (attributionId && eligibleDesktopNode) {
             await claimDesktopNodeForAttribution({

@@ -70,7 +70,9 @@ export default async function RootLayout({
     const locale = await getLocale();
     const messages = await getMessages();
     const pinterestTagId = process.env.PINTEREST_TAG_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID;
-    const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+    // Keep the Ads destination live in every deployment. The environment
+    // variable remains an override for a future account migration.
+    const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-18399554489';
     const pathname = headers().get('x-pathname') || '/';
     const normalizedPathname = pathWithoutLocale(pathname);
     const shouldRenderChromeDownloadSchemas = normalizedPathname === '/download/chrome';
