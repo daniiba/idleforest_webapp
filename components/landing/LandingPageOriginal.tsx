@@ -237,6 +237,7 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                 >
                                     <Link
                                         href="/download/windows/installer"
+                                        prefetch={false}
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -269,6 +270,7 @@ export default function LandingPageOriginal({ deviceInfo }: { deviceInfo?: Devic
                                 >
                                     <Link
                                         href="/download/mac/installer"
+                                        prefetch={false}
                                         className="flex items-center gap-2"
                                         target="_blank"
                                         rel="noopener noreferrer"

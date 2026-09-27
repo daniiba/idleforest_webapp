@@ -92,6 +92,7 @@ export function SmartCTA({
                                             ? "/download/linux/installer"
                                             : "/download/windows/installer"
                                 }
+                                prefetch={false}
                                 className="flex items-center justify-center gap-2 w-full sm:w-auto"
                                 target="_blank"
                                 rel="noopener noreferrer"
