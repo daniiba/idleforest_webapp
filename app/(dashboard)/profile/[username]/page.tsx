@@ -7,7 +7,7 @@ import { Building2, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Monitor, Sh
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
-import { PointsHistoryChart } from "@/components/PointsHistoryChart"
+import PointsCard from "@/components/profile/PointsCard"
 import type { PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
 import ProfileJoinCta from '@/components/referrals/ProfileJoinCta'
 import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
@@ -23,22 +23,6 @@ interface Profile {
     company_id: string | null
     company_joined_at: string | null
     company_points_baseline: number | null
-}
-
-interface ReferralStats {
-    user_id: string
-    total_referrals: number
-    total_earnings: number
-    donated_amount: number
-    total_requests: number
-    updated_at: string
-}
-
-interface BadgeTier {
-    id: string
-    name: string
-    threshold: number
-    badge_type_id: string
 }
 
 interface UserTeam {
@@ -110,16 +94,7 @@ function getCompanyLogoUrl(company: CompanyForest) {
 
 export default function PublicProfilePage() {
     const [profile, setProfile] = useState<Profile | null>(null)
-    const [referralStats, setReferralStats] = useState<ReferralStats>({
-        user_id: '',
-        total_referrals: 0,
-        total_earnings: 0,
-        donated_amount: 0,
-        total_requests: 0,
-        updated_at: ''
-    })
     const [publicReferralImpact, setPublicReferralImpact] = useState<PublicReferralImpactData | null>(null)
-    const [treesPlanted, setTreesPlanted] = useState<number>(0)
     const [userTeam, setUserTeam] = useState<UserTeam | null>(null)
     const [companyForest, setCompanyForest] = useState<CompanyForest | null>(null)
     const [platforms, setPlatforms] = useState<string[]>([])
@@ -171,19 +146,6 @@ export default function PublicProfilePage() {
                     setPublicReferralImpact(publicImpact)
                 }
 
-                // Fetch referral stats
-                const { data: referralStats, error: referralError } = await supabase
-                    .from('referral_stats')
-                    .select('*')
-                    .eq('user_id', profile.user_id)
-                    .single()
-
-                if (!referralError && referralStats) {
-                    setReferralStats({
-                        ...referralStats
-                    })
-                }
-
                 if (profile.company_id) {
                     const { data: company } = await supabase
                         .from('companies')
@@ -195,44 +157,6 @@ export default function PublicProfilePage() {
                         setCompanyForest(company as CompanyForest)
                     }
                 }
-
-                // Fetch Tree badge progress for "Trees Planted" stat
-                let plantedFromBadges = 0
-                // First, get the Tree badge type and its tiers
-                const { data: treeBadgeType, error: treeBadgeError } = await supabase
-                    .from('badge_types')
-                    .select(`
-                        id,
-                        name,
-                        badge_tiers (*)
-                    `)
-                    .eq('name', 'Tree')
-                    .single()
-
-                if (!treeBadgeError && treeBadgeType) {
-                    // Get the tier IDs for the Tree badge
-                    const tierIds = (treeBadgeType.badge_tiers as BadgeTier[]).map((tier: BadgeTier) => tier.id)
-
-                    // Fetch the user's progress for this badge (don't use .single() as it may fail)
-                    const { data: treeProgress, error: progressError } = await supabase
-                        .from('badge_progress')
-                        .select('current_value')
-                        .eq('user_id', profile.user_id)
-                        .in('badge_tier_id', tierIds)
-
-                    if (!progressError && treeProgress && treeProgress.length > 0) {
-                        plantedFromBadges = treeProgress[0].current_value || 0
-                    }
-                }
-
-                const { data: treeRewards } = await supabase
-                    .from('user_rewards')
-                    .select('trees_awarded')
-                    .eq('user_id', profile.user_id)
-                    .eq('status', 'awarded')
-
-                const plantedFromRewards = treeRewards?.reduce((sum, reward) => sum + (reward.trees_awarded || 0), 0) ?? 0
-                setTreesPlanted(plantedFromBadges + plantedFromRewards)
 
                 // Fetch user's team
                 const { data: teamMembership } = await supabase
@@ -418,10 +342,7 @@ export default function PublicProfilePage() {
     if (loading) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
-                    <p className="mt-4 text-neutral-600 font-bold">Loading profile...</p>
-                </div>
+                <Loader2 className="h-8 w-8 animate-spin text-black" aria-label="Loading profile" />
             </main>
         )
     }
@@ -429,7 +350,7 @@ export default function PublicProfilePage() {
     if (!profile) {
         return (
             <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8">
+                <div className="w-full max-w-lg border-2 border-black bg-brand-gray p-8">
                     <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Profile Not Found</h2>
                     <p className="text-neutral-600 mb-6">The profile you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                     <Link
@@ -444,112 +365,98 @@ export default function PublicProfilePage() {
     }
 
     return (
-        <main className="min-h-screen bg-brand-gray px-4 pb-16 pt-10 font-rethink-sans sm:pt-14">
+        <main className="min-h-screen bg-brand-gray px-4 pb-16 pt-8 font-rethink-sans sm:pt-12">
             <div className="w-full max-w-6xl mx-auto space-y-6">
-                {/* Header */}
-                <section className="border-2 border-black bg-brand-gray p-6 sm:p-8">
-                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="min-w-0">
-                            <h1 className="break-words font-candu text-4xl font-extrabold uppercase leading-none text-brand-navy sm:text-5xl">
-                                {profile.display_name}
-                            </h1>
+                <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="min-w-0">
+                        <h1 className="break-words font-candu text-5xl font-extrabold uppercase leading-none text-brand-navy sm:text-6xl">
+                            {profile.display_name}
+                        </h1>
 
-                            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-neutral-700">
-                                <span>Member since {new Date(profile.created_at).toLocaleDateString('en', { month: 'short', year: 'numeric' })}</span>
-                                {platforms.map(platform => {
-                                    const meta = PLATFORM_META[platform]
-                                    if (!meta) return null
-                                    const Icon = meta.icon
-                                    return (
-                                        <span key={platform} className="inline-flex items-center gap-1 border border-black/40 px-1.5 py-0.5 text-xs font-bold text-neutral-700">
-                                            <Icon className="h-3 w-3" aria-hidden="true" />
-                                            {meta.label}
+                        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-bold text-neutral-600">
+                            {userTeam ? (
+                                <Link
+                                    href={`/teams/${userTeam.slug}`}
+                                    className="inline-flex items-center gap-1.5 border-2 border-black bg-brand-navy px-2 py-1 font-black text-white hover:text-brand-yellow"
+                                >
+                                    <Users className="h-3.5 w-3.5 text-brand-yellow" aria-hidden="true" />
+                                    {userTeam.name}
+                                </Link>
+                            ) : null}
+
+                            {companyForest ? (
+                                <span className="inline-flex items-center gap-1.5 border-2 border-black px-1.5 py-1">
+                                    <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-1.5" title={getCompanyImpactDescription(companyForest)}>
+                                        <span className="flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden bg-black">
+                                            {getCompanyLogoUrl(companyForest) ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={getCompanyLogoUrl(companyForest)!} alt="" className="h-full w-full object-contain p-px" />
+                                            ) : (
+                                                <Building2 className="h-3 w-3 text-brand-yellow" />
+                                            )}
                                         </span>
-                                    )
-                                })}
-                            </div>
-
-                            <div className="mt-5 flex flex-wrap items-center gap-2">
-                                {userTeam ? (
-                                    <Link
-                                        href={`/teams/${userTeam.slug}`}
-                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-navy px-3 py-2 text-sm font-black text-white"
-                                    >
-                                        <Users className="h-4 w-4 text-brand-yellow" aria-hidden="true" />
-                                        {userTeam.name}
+                                        <span className="truncate font-black text-black">{companyForest.name}</span>
                                     </Link>
-                                ) : null}
+                                    {isOwnProfile && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowLeaveCompanyModal(true)}
+                                            className="text-black/50 hover:text-black"
+                                            title="Return to IdleForest"
+                                            aria-label="Return to IdleForest"
+                                        >
+                                            <LogOut className="h-3.5 w-3.5" />
+                                        </button>
+                                    )}
+                                </span>
+                            ) : null}
 
-                                {companyForest ? (
-                                    <span className="inline-flex items-center gap-2 border-2 border-black bg-brand-gray px-2 py-1.5">
-                                        <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-2" title={getCompanyImpactDescription(companyForest)}>
-                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
-                                                {getCompanyLogoUrl(companyForest) ? (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={getCompanyLogoUrl(companyForest)!} alt="" className="h-full w-full object-contain p-0.5" />
-                                                ) : (
-                                                    <Building2 className="h-3.5 w-3.5 text-brand-yellow" />
-                                                )}
+                            <span>Since {new Date(profile.created_at).toLocaleDateString('en', { month: 'short', year: 'numeric' })}</span>
+
+                            {platforms.length > 0 ? (
+                                <span className="inline-flex items-center gap-2 text-black/70">
+                                    {platforms.map(platform => {
+                                        const meta = PLATFORM_META[platform]
+                                        if (!meta) return null
+                                        const Icon = meta.icon
+                                        return (
+                                            <span key={platform} title={meta.label}>
+                                                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                                                <span className="sr-only">{meta.label}</span>
                                             </span>
-                                            <span className="truncate text-sm font-black">{companyForest.name}</span>
-                                        </Link>
-                                        {isOwnProfile && (
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowLeaveCompanyModal(true)}
-                                                className="flex h-6 w-6 shrink-0 items-center justify-center border border-black bg-black text-white hover:bg-neutral-800"
-                                                title="Return to IdleForest"
-                                                aria-label="Return to IdleForest"
-                                            >
-                                                <LogOut className="h-3 w-3" />
-                                            </button>
-                                        )}
-                                    </span>
-                                ) : null}
-
-                                {isOwnProfile && !userTeam && (
-                                    <button
-                                        onClick={() => setShowCreateTeamModal(true)}
-                                        className="inline-flex items-center gap-2 border-2 border-black px-3 py-2 text-sm font-black hover:bg-black/5"
-                                    >
-                                        <Plus className="h-4 w-4" aria-hidden="true" />
-                                        Create team
-                                    </button>
-                                )}
-
-                                {isOwnProfile && (
-                                    <Link
-                                        href={`/share/user/${profile.display_name}`}
-                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-sm font-black text-black"
-                                    >
-                                        <Share2 className="h-4 w-4" aria-hidden="true" />
-                                        Share profile
-                                    </Link>
-                                )}
-                            </div>
+                                        )
+                                    })}
+                                </span>
+                            ) : null}
                         </div>
-
-                        <dl className="grid shrink-0 grid-cols-3 gap-2 sm:w-[26rem] [&>div]:min-w-0">
-                            <div className="border-2 border-black bg-brand-yellow p-3">
-                                <dt className="text-[10px] font-black uppercase tracking-wider">Trees planted</dt>
-                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{treesPlanted.toLocaleString('en')}</dd>
-                            </div>
-                            <div className="border-2 border-black p-3">
-                                <dt className="text-[10px] font-black uppercase tracking-wider text-neutral-600">Points</dt>
-                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{(profile.total_points || 0).toLocaleString('en')}</dd>
-                            </div>
-                            <div className="border-2 border-black p-3">
-                                <dt className="text-[10px] font-black uppercase tracking-wider text-neutral-600">Invited</dt>
-                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{(publicReferralImpact?.referrals ?? referralStats.total_referrals).toLocaleString('en')}</dd>
-                            </div>
-                        </dl>
                     </div>
-                </section>
+
+                    {isOwnProfile ? (
+                        <div className="flex shrink-0 gap-2">
+                            {!userTeam ? (
+                                <button
+                                    onClick={() => setShowCreateTeamModal(true)}
+                                    className="inline-flex items-center gap-1.5 border-2 border-black px-3 py-2 text-xs font-black uppercase hover:bg-black/5"
+                                >
+                                    <Plus className="h-4 w-4" aria-hidden="true" />
+                                    Team
+                                </button>
+                            ) : null}
+                            <Link
+                                href={`/share/user/${profile.display_name}`}
+                                className="inline-flex items-center gap-1.5 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase text-black"
+                            >
+                                <Share2 className="h-4 w-4" aria-hidden="true" />
+                                Share
+                            </Link>
+                        </div>
+                    ) : null}
+                </header>
 
                 {/* Create Team Modal */}
                 {showCreateTeamModal && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
+                        <div className="w-full max-w-md border-2 border-black bg-brand-gray p-8">
                             <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Create a Team</h2>
                             <p className="text-neutral-600 mb-6">Give your team a name to get started.</p>
 
@@ -590,7 +497,7 @@ export default function PublicProfilePage() {
                                         </button>
                                     </div>
                                 ) : (
-                                    <label className="flex items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-gray-400 cursor-pointer hover:border-brand-yellow hover:bg-gray-50 transition-colors">
+                                    <label className="flex items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-gray-400 cursor-pointer hover:border-black transition-colors">
                                         <Upload className="w-5 h-5 text-gray-500" />
                                         <span className="text-gray-500 text-sm">Click to upload image (max 2MB)</span>
                                         <input
@@ -618,7 +525,7 @@ export default function PublicProfilePage() {
                                         setImagePreview(null)
                                         setCreateError('')
                                     }}
-                                    className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                    className="flex-1 py-3 font-bold uppercase tracking-wider bg-transparent border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
                                 >
                                     Cancel
                                 </button>
@@ -640,7 +547,7 @@ export default function PublicProfilePage() {
 
                 {showLeaveCompanyModal && companyForest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                        <div className="w-full max-w-md border-2 border-black bg-white p-8 shadow-none">
+                        <div className="w-full max-w-md border-2 border-black bg-brand-gray p-8">
                             <h2 className="mb-4 text-2xl font-extrabold font-candu uppercase">Return to IdleForest?</h2>
                             <p className="mb-4 text-sm font-semibold leading-6 text-neutral-700">
                                 This will stop routing your future activity to {companyForest.name} and move you back to IdleForest&apos;s general reforestation impact.
@@ -661,7 +568,7 @@ export default function PublicProfilePage() {
                                         setLeaveCompanyError('')
                                     }}
                                     disabled={leavingCompany}
-                                    className="flex-1 border-2 border-black bg-gray-100 py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
+                                    className="flex-1 border-2 border-black bg-transparent py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
                                 >
                                     Keep Fund
                                 </button>
@@ -687,17 +594,13 @@ export default function PublicProfilePage() {
 
                 <ForestImpactPanel mode="public" displayName={profile.display_name} />
 
-                {historicalData.length > 0 && (
-                    <PointsHistoryChart
-                        data={historicalData}
-                        title="Points History"
-                        surfaceClassName="bg-brand-gray"
-                    />
-                )}
-
-                <section className="border-2 border-black bg-brand-gray p-6 sm:p-8">
-                    <BadgeDisplay userId={profile.user_id} variant="light" />
-                </section>
+                <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+                    <PointsCard totalPoints={profile.total_points || 0} history={historicalData} />
+                    <section aria-labelledby="badges-heading">
+                        <h2 id="badges-heading" className="mb-2 text-[11px] font-black uppercase tracking-wider text-neutral-600">Badges</h2>
+                        <BadgeDisplay userId={profile.user_id} variant="light" />
+                    </section>
+                </div>
             </div>
         </main>
     )

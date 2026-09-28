@@ -1,4 +1,4 @@
-import { ArrowRight, TreePine } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 type ProfileJoinCtaProps = {
     displayName: string
@@ -12,30 +12,17 @@ export default function ProfileJoinCta({ displayName, invitePath }: ProfileJoinC
     const href = invitePath || '/auth/user/signup'
 
     return (
-        <section
-            className="flex flex-col gap-4 border-2 border-black bg-brand-yellow p-6 sm:flex-row sm:items-center sm:justify-between"
-            aria-labelledby="profile-join-heading"
+        <a
+            href={href}
+            className="group flex items-center justify-between gap-4 border-2 border-black bg-brand-yellow px-5 py-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
-            <div className="flex items-center gap-4">
-                <span className="hidden h-12 w-12 shrink-0 items-center justify-center border-2 border-black bg-white sm:flex" aria-hidden="true">
-                    <TreePine className="h-6 w-6" />
-                </span>
-                <div>
-                    <h2 id="profile-join-heading" className="font-candu text-2xl font-extrabold uppercase leading-none text-brand-navy">
-                        Grow a forest with {displayName}
-                    </h2>
-                    <p className="mt-1 text-sm font-semibold text-neutral-800">
-                        IdleForest turns bandwidth your computer isn&apos;t using into real trees. Free, and set up in two minutes.
-                    </p>
-                </div>
-            </div>
-            <a
-                href={href}
-                className="inline-flex shrink-0 items-center justify-center gap-2 border-2 border-black bg-brand-navy px-5 py-3 text-sm font-black uppercase text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-                Join {displayName}
-                <ArrowRight className="h-4 w-4 text-brand-yellow" aria-hidden="true" />
-            </a>
-        </section>
+            <span className="font-candu text-lg font-extrabold uppercase leading-none text-brand-navy sm:text-2xl">
+                Grow a forest with {displayName}
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-2 border-2 border-black bg-brand-navy px-4 py-2 text-xs font-black uppercase text-white">
+                Join free
+                <ArrowRight className="h-4 w-4 text-brand-yellow transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </span>
+        </a>
     )
 }

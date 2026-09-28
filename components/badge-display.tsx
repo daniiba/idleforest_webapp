@@ -458,16 +458,16 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
   };
 
   if (loading) {
-    return <div className={variant === 'light' ? 'text-neutral-600 font-bold' : 'text-brand-yellow'}>Loading badges...</div>;
+    if (variant === 'light') return null;
+    return <div className="text-brand-yellow">Loading badges...</div>;
   }
 
-  const cardClass = variant === 'light'
-    ? "p-0 bg-transparent border-0 shadow-none"
-    : "p-4 sm:p-6 lg:p-8 bg-brand-navy border-2 border-brand-yellow/50";
+  if (variant === 'light') {
+    return <CompactBadgeList badges={badges} />;
+  }
 
-  const titleClass = variant === 'light'
-    ? "text-2xl font-extrabold font-candu uppercase text-black mb-6 flex items-center gap-2"
-    : "text-2xl font-bold text-brand-yellow mb-6 flex items-center gap-2";
+  const cardClass = "p-4 sm:p-6 lg:p-8 bg-brand-navy border-2 border-brand-yellow/50";
+  const titleClass = "text-2xl font-bold text-brand-yellow mb-6 flex items-center gap-2";
 
   return (
     <Card className={cardClass}>
@@ -489,3 +489,79 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
 };
 
 export default BadgeDisplay;
+
+const BADGE_LABELS: Record<string, string> = {
+  'Referral': 'Invites',
+  'Early Adopter': 'Early adopter',
+  'Request': 'Requests',
+  'Activity': 'Active days',
+  'Referral Requests': "Friends' requests",
+  'Tree': 'Trees',
+};
+
+const COMPACT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  'Referral': Users,
+  'Early Adopter': Crown,
+  'Request': Computer,
+  'Activity': Timer,
+  'Referral Requests': Network,
+  'Tree': Trees,
+};
+
+function tierLabel(badge: ProcessedBadge) {
+  if (badge.tier === 'locked') return 'Locked';
+  if (badge.isEarlyAdopter) {
+    return badge.tier === 'master' ? 'Pioneer' : badge.tier === 'expert' ? 'Early Bird' : 'Trendsetter';
+  }
+  return badge.tier.charAt(0).toUpperCase() + badge.tier.slice(1);
+}
+
+function progressPercent(badge: ProcessedBadge) {
+  if (!badge.isEarlyAdopter) return Math.min((badge.progress / Math.max(1, badge.threshold)) * 100, 100);
+  if (badge.tier === 'master') return 100;
+  if (badge.tier === 'expert') return 100 - ((badge.progress - 10) / 90) * 100;
+  if (badge.tier === 'apprentice') return 100 - ((badge.progress - 100) / 900) * 100;
+  return 0;
+}
+
+// Brand-styled badge list for the public profile: one row per badge, with
+// the tier as a colored tile and a thin progress bar.
+function CompactBadgeList({ badges }: { badges: ProcessedBadge[] }) {
+  if (badges.length === 0) return null;
+
+  return (
+    <ul className="grid gap-2 sm:grid-cols-2">
+      {badges.map(badge => {
+        const Icon = COMPACT_ICONS[badge.badgeType] || Shield;
+        const locked = badge.tier === 'locked';
+        const tile = locked
+          ? 'bg-transparent text-black/35 border-black/30'
+          : badge.tier === 'master' || badge.tier === 'expert'
+            ? 'bg-brand-yellow text-black border-black'
+            : 'bg-brand-navy text-brand-yellow border-black';
+
+        return (
+          <li key={badge.id} className={`flex items-center gap-3 border-2 p-3 ${locked ? 'border-black/25' : 'border-black'}`} title={badge.description}>
+            <span className={`flex h-10 w-10 shrink-0 items-center justify-center border-2 ${tile}`} aria-hidden="true">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline justify-between gap-2">
+                <p className={`truncate text-sm font-black ${locked ? 'text-black/45' : ''}`}>{BADGE_LABELS[badge.badgeType] || badge.badgeType}</p>
+                <p className={`shrink-0 text-[11px] font-black uppercase tracking-wider ${locked ? 'text-black/35' : 'text-neutral-600'}`}>{tierLabel(badge)}</p>
+              </div>
+              <div className="mt-1.5 h-1.5 w-full bg-black/10">
+                <div className={`h-full ${locked ? 'bg-black/25' : 'bg-brand-navy'}`} style={{ width: `${progressPercent(badge)}%` }} />
+              </div>
+              <p className="mt-1 font-mono text-[11px] font-bold tabular-nums text-neutral-600">
+                {badge.isEarlyAdopter
+                  ? `#${badge.progress.toLocaleString('en')}`
+                  : `${badge.progress.toLocaleString('en')} / ${badge.threshold.toLocaleString('en')}`}
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
