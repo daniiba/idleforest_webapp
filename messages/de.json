@@ -1038,7 +1038,7 @@
         "forest_title": "Der Wald von {name} bisher",
         "forest_people": "{count, plural, one {Person ist beigetreten} other {Personen sind beigetreten}}",
         "forest_requests": "gemeinsam ermöglichte Anfragen",
-        "forest_trees": "{count, plural, one {Baum} other {Bäume}} in Bewegung gesetzt",
+        "forest_trees": "{count, plural, one {Baum} other {Bäume}} in diesem Wald",
         "own_title": "Das ist dein Einladungslink",
         "own_body": "Genau das sehen andere, wenn du ihn teilst. Wer beitritt, siehst du auf deiner Einladungsseite.",
         "own_cta": "Meine Einladungen öffnen",

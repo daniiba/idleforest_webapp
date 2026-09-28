@@ -1038,7 +1038,7 @@
         "forest_title": "La forêt de {name} jusqu'ici",
         "forest_people": "{count, plural, one {personne a rejoint} other {personnes ont rejoint}}",
         "forest_requests": "requêtes alimentées ensemble",
-        "forest_trees": "{count, plural, one {arbre} other {arbres}} mis en mouvement",
+        "forest_trees": "{count, plural, one {arbre} other {arbres}} dans cette forêt",
         "own_title": "Voici votre lien d'invitation",
         "own_body": "C'est exactement ce que voient les personnes avec qui vous le partagez. Suivez qui rejoint sur votre page d'invitations.",
         "own_cta": "Ouvrir mes invitations",

@@ -1038,7 +1038,7 @@
         "forest_title": "A floresta de {name} até agora",
         "forest_people": "{count, plural, one {pessoa entrou} other {pessoas entraram}}",
         "forest_requests": "requisições geradas juntos",
-        "forest_trees": "{count, plural, one {árvore} other {árvores}} em movimento",
+        "forest_trees": "{count, plural, one {árvore} other {árvores}} nesta floresta",
         "own_title": "Este é o seu link de convite",
         "own_body": "É exatamente isso que as pessoas veem quando você compartilha. Acompanhe quem entrou na sua página de convites.",
         "own_cta": "Abrir meus convites",

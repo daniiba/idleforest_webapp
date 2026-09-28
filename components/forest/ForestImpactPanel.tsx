@@ -59,8 +59,8 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
         const url = new URL(data.invitePath, window.location.origin)
         url.searchParams.set('channel', 'forest_share')
         const text = data.reward
-            ? `I've set ${formatTrees(data.totalTrees)} in motion with IdleForest. It runs quietly on my computer and turns unused bandwidth into real trees. Join me and we'll each get ${formatTrees(data.reward.treesPerPerson)} planted:`
-            : `I've set ${formatTrees(data.totalTrees)} in motion with IdleForest. It runs quietly on my computer and turns unused bandwidth into real trees. Join my forest:`
+            ? `My forest on IdleForest has grown to ${formatTrees(data.totalTrees)}. It runs quietly on my computer and turns unused bandwidth into real trees. Join me and we'll each get ${formatTrees(data.reward.treesPerPerson)} planted:`
+            : `My forest on IdleForest has grown to ${formatTrees(data.totalTrees)}. It runs quietly on my computer and turns unused bandwidth into real trees. Join my forest:`
 
         fetch('/api/referrals/event', {
             method: 'POST',
@@ -124,7 +124,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                     </p>
                     <h2 id="forest-heading" className="mt-2 font-candu text-3xl font-extrabold uppercase leading-none sm:text-5xl">
                         {data.totalTrees > 0
-                            ? `${formatTrees(data.totalTrees)} set in motion`
+                            ? `${formatTrees(data.totalTrees)} in ${isSelf ? 'your' : `${name}'s`} forest`
                             : isSelf ? 'Your forest starts here' : `${name}'s forest is just starting`}
                     </h2>
 
@@ -172,7 +172,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                             </div>
                         ))}
                         <div className="flex items-center justify-between gap-4 border-t-2 border-white/20 pt-3">
-                            <dt className="text-sm font-black uppercase tracking-wider">Forest set in motion</dt>
+                            <dt className="text-sm font-black uppercase tracking-wider">{isSelf ? 'Your whole forest' : 'Whole forest'}</dt>
                             <dd className="font-mono text-2xl font-black tabular-nums text-brand-yellow">{formatCount(data.totalTrees)}</dd>
                         </div>
                     </dl>

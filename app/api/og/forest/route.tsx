@@ -14,11 +14,11 @@ export const runtime = 'nodejs'
 //   ?code=ABCD2345&locale=  invite preview ("Anna invited you to grow a forest")
 
 const COPY = {
-    en: { invited: '{name} invited you to grow a forest', forest: "{name}'s forest", inMotion: 'trees set in motion', gift: 'Join and you both get {trees} planted', join: 'Free · Runs in the background · Plants real trees', demoTitle: 'Plant a tree with a friend' },
-    de: { invited: '{name} hat dich eingeladen, einen Wald wachsen zu lassen', forest: 'Der Wald von {name}', inMotion: 'Bäume in Bewegung gesetzt', gift: 'Mach mit und ihr bekommt beide {trees}', join: 'Kostenlos · Läuft im Hintergrund · Pflanzt echte Bäume', demoTitle: 'Pflanze einen Baum mit einem Freund' },
-    es: { invited: '{name} te ha invitado a hacer crecer un bosque', forest: 'El bosque de {name}', inMotion: 'árboles en marcha', gift: 'Únete y cada uno recibe {trees}', join: 'Gratis · En segundo plano · Planta árboles reales', demoTitle: 'Planta un árbol con un amigo' },
-    fr: { invited: '{name} vous invite à faire pousser une forêt', forest: 'La forêt de {name}', inMotion: 'arbres mis en mouvement', gift: 'Rejoignez-nous et chacun reçoit {trees}', join: 'Gratuit · En arrière-plan · Plante de vrais arbres', demoTitle: 'Plantez un arbre avec un ami' },
-    pt: { invited: '{name} convidou você para fazer uma floresta crescer', forest: 'A floresta de {name}', inMotion: 'árvores em movimento', gift: 'Entre e cada um ganha {trees}', join: 'Grátis · Em segundo plano · Planta árvores de verdade', demoTitle: 'Plante uma árvore com um amigo' },
+    en: { invited: '{name} invited you to grow a forest', forest: "{name}'s forest", inForest: 'trees in this forest', gift: 'Join and you both get {trees} planted', join: 'Free · Runs in the background · Plants real trees', demoTitle: 'Plant a tree with a friend' },
+    de: { invited: '{name} hat dich eingeladen, einen Wald wachsen zu lassen', forest: 'Der Wald von {name}', inForest: 'Bäume in diesem Wald', gift: 'Mach mit und ihr bekommt beide {trees}', join: 'Kostenlos · Läuft im Hintergrund · Pflanzt echte Bäume', demoTitle: 'Pflanze einen Baum mit einem Freund' },
+    es: { invited: '{name} te ha invitado a hacer crecer un bosque', forest: 'El bosque de {name}', inForest: 'árboles en este bosque', gift: 'Únete y cada uno recibe {trees}', join: 'Gratis · En segundo plano · Planta árboles reales', demoTitle: 'Planta un árbol con un amigo' },
+    fr: { invited: '{name} vous invite à faire pousser une forêt', forest: 'La forêt de {name}', inForest: 'arbres dans cette forêt', gift: 'Rejoignez-nous et chacun reçoit {trees}', join: 'Gratuit · En arrière-plan · Plante de vrais arbres', demoTitle: 'Plantez un arbre avec un ami' },
+    pt: { invited: '{name} convidou você para fazer uma floresta crescer', forest: 'A floresta de {name}', inForest: 'árvores nesta floresta', gift: 'Entre e cada um ganha {trees}', join: 'Grátis · Em segundo plano · Planta árvores de verdade', demoTitle: 'Plante uma árvore com um amigo' },
 } as const
 
 const TREE_WORDS = {
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
                         {forest.totalTrees > 0 ? (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div style={{ display: 'flex', fontSize: 72, fontWeight: 900, lineHeight: 1, color: '#E0F146' }}>{forest.totalTrees.toLocaleString('en')}</div>
-                                <div style={{ display: 'flex', marginTop: 6, fontSize: 24, fontWeight: 700, color: '#FFFFFF' }}>{copy.inMotion}</div>
+                                <div style={{ display: 'flex', marginTop: 6, fontSize: 24, fontWeight: 700, color: '#FFFFFF' }}>{copy.inForest}</div>
                             </div>
                         ) : null}
                         {rewardTrees > 0 ? (

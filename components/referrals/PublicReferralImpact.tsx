@@ -34,7 +34,7 @@ export default function PublicReferralImpact({ data, isOwnProfile }: PublicRefer
                         <div>
                             <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-yellow">Referral impact</p>
                             <h2 id="referral-impact-heading" className="mt-1 font-candu text-3xl font-extrabold uppercase leading-none sm:text-4xl">
-                                The forest {data.displayName} set in motion
+                                The forest {data.displayName} is growing
                             </h2>
                         </div>
                     </div>

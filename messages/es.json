@@ -1038,7 +1038,7 @@
         "forest_title": "El bosque de {name} hasta ahora",
         "forest_people": "{count, plural, one {persona se ha unido} other {personas se han unido}}",
         "forest_requests": "solicitudes impulsadas juntos",
-        "forest_trees": "{count, plural, one {árbol} other {árboles}} en marcha",
+        "forest_trees": "{count, plural, one {árbol} other {árboles}} en este bosque",
         "own_title": "Este es tu enlace de invitación",
         "own_body": "Esto es exactamente lo que ve la gente cuando lo compartes. Consulta quién se une en tu página de invitaciones.",
         "own_cta": "Abrir mis invitaciones",

@@ -93,6 +93,7 @@ const SHARE_CHANNELS: Array<{
 ]
 
 export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptProps) {
+    const isPage = variant === 'page'
     const [eligible, setEligible] = useState(false)
     const [summary, setSummary] = useState<ReferralSummary | null>(null)
     const [loading, setLoading] = useState(true)
@@ -152,14 +153,15 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
         }
     }, [])
 
-    // Every extra click before sharing loses people, so eligible members get
-    // their link as soon as the prompt loads instead of via a "create" button.
+    // Every extra click before sharing loses people, so members get their link
+    // as soon as the prompt loads instead of via a "create" button.
     useEffect(() => {
-        if (loading || !eligible || !summary || summary.url || autoCreateAttempted.current) return
+        if (loading || !summary || summary.url || autoCreateAttempted.current) return
+        if (!isPage && !eligible) return
 
         autoCreateAttempted.current = true
         createLink()
-    }, [createLink, eligible, loading, summary])
+    }, [createLink, eligible, isPage, loading, summary])
 
     const recordInteraction = useCallback((eventName: 'link_copied' | 'native_share_opened' | 'share_opened', channel: string) => {
         if (!summary?.code) return
@@ -224,7 +226,6 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
         }))
         : []
 
-    const isPage = variant === 'page'
     const impactMultiplier = summary && summary.ownRequests > 0
         ? summary.combinedRequests / summary.ownRequests
         : null
@@ -237,19 +238,10 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
         ) : null
     }
 
-    if (!eligible) {
-        return isPage ? (
-            <section className="border-2 border-black bg-white p-8 text-center sm:p-12">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center border-2 border-black bg-brand-yellow">
-                    <Sprout className="h-8 w-8" />
-                </div>
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-neutral-500">One step before sharing</p>
-                <h1 className="mt-2 font-candu text-4xl font-extrabold uppercase text-brand-navy">Let your node contribute first</h1>
-                <p className="mx-auto mt-4 max-w-xl font-semibold text-neutral-700">Personal invites unlock after IdleForest records real activity from one of your nodes. This keeps referrals tied to people who know the product and can recommend it honestly.</p>
-                <a href="/welcome" className="mt-7 inline-flex border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-black uppercase text-black">Connect IdleForest</a>
-            </section>
-        ) : null
-    }
+    // Anyone can invite from the referrals page; rewards already wait for the
+    // invited person's real activity. The banner on every dashboard page is
+    // kept for contributors, so new members focus on finishing setup first.
+    if (!eligible && !isPage) return null
 
     return (
         <section
@@ -410,7 +402,7 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                                 </div>
                                 <div className="hidden items-center px-3 font-mono text-2xl font-black text-brand-yellow sm:flex" aria-hidden="true">=</div>
                                 <div className="border-2 border-white bg-white p-4 text-black">
-                                    <p className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Forest set in motion</p>
+                                    <p className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Your whole forest</p>
                                     <p className="mt-2 font-mono text-2xl font-black tabular-nums sm:text-3xl">{summary.combinedRequests.toLocaleString()}</p>
                                     <p className="mt-1 text-xs font-bold text-neutral-600">combined requests</p>
                                 </div>

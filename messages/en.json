@@ -1093,7 +1093,7 @@
         "forest_title": "{name}'s forest so far",
         "forest_people": "{count, plural, one {person joined} other {people joined}}",
         "forest_requests": "requests powered together",
-        "forest_trees": "{count, plural, one {tree} other {trees}} set in motion",
+        "forest_trees": "{count, plural, one {tree} other {trees}} in this forest",
         "own_title": "This is your invite link",
         "own_body": "This is exactly what people see when you share it. See who joins on your referrals page.",
         "own_cta": "Open my referrals",
