@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { normalizeReferralCode } from '@/lib/referrals'
+import { getTreeTotals } from '@/lib/forest'
 import { INVITER_REWARD_TYPE, getReferralRewardSettings } from '@/lib/referral-reward-settings'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
@@ -58,6 +59,7 @@ async function getReferralSummary(userId: string) {
         { data: referredProfiles, error: referredProfilesError },
         { data: impactNodes, error: impactNodesError },
         { data: dailyImpactRows, error: dailyImpactError },
+        treeTotals,
     ] = await Promise.all([
         referredUserIds.length > 0
             ? admin
@@ -73,6 +75,7 @@ async function getReferralSummary(userId: string) {
             p_referrer_id: userId,
             p_days: 90,
         }),
+        getTreeTotals(admin, referredUserIds),
     ])
 
     if (referredProfilesError) throw referredProfilesError
@@ -95,8 +98,11 @@ async function getReferralSummary(userId: string) {
         .map(attribution => {
             const referredProfile = profilesByUserId.get(attribution.referred_user_id)
 
+            const totals = treeTotals.get(attribution.referred_user_id)
+
             return {
                 displayName: referredProfile?.display_name || 'IdleForest member',
+                trees: totals ? totals.badgeTrees + totals.rewardTrees + totals.referralRewardTrees : 0,
                 requests: requestsByUserId.get(attribution.referred_user_id) || 0,
                 activated: Boolean(attribution.activated_at),
                 rewarded: Boolean(attribution.rewarded_at),

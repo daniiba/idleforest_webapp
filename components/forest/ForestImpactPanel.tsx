@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowRight, Check, Loader2, Share2, TreePine } from 'lucide-react'
+import { ArrowRight, Check, Loader2, Share2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
 import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
 import { formatTrees } from '@/lib/referral-reward-settings'
@@ -19,7 +19,7 @@ export type ForestResponse = {
 }
 
 type ForestImpactPanelProps =
-    | { mode: 'self'; inviteAnchor?: string }
+    | { mode: 'self' }
     | { mode: 'public'; displayName: string; isSignedIn: boolean }
 
 function formatCount(value: number) {
@@ -177,34 +177,18 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                         </div>
                     </dl>
 
-                    <div className="mt-auto pt-6">
+                    <div className="pt-6">
                         {isSelf ? (
-                            <>
-                                {data.reward ? (
-                                    <p className="border-l-4 border-brand-yellow pl-3 text-sm font-bold leading-6">
-                                        Every friend who joins grows a new island here, and once they have contributed on {data.reward.minActiveDays} days, you each get {formatTrees(data.reward.treesPerPerson)} planted.
-                                    </p>
-                                ) : null}
-                                <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
-                                    <a
-                                        href={props.inviteAnchor || '#invite'}
-                                        className="inline-flex flex-1 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-3 text-sm font-black uppercase text-black"
-                                    >
-                                        <TreePine className="h-4 w-4" aria-hidden="true" />
-                                        Invite a friend
-                                    </a>
-                                    {data.invitePath ? (
-                                        <button
-                                            type="button"
-                                            onClick={shareForest}
-                                            className="inline-flex flex-1 items-center justify-center gap-2 border-2 border-white bg-transparent px-4 py-3 text-sm font-black uppercase text-white"
-                                        >
-                                            {shared ? <Check className="h-4 w-4 text-brand-yellow" /> : <Share2 className="h-4 w-4" />}
-                                            {shared ? 'Link copied' : 'Share my forest'}
-                                        </button>
-                                    ) : null}
-                                </div>
-                            </>
+                            data.invitePath ? (
+                                <button
+                                    type="button"
+                                    onClick={shareForest}
+                                    className="inline-flex w-full items-center justify-center gap-2 border-2 border-white bg-transparent px-4 py-3 text-sm font-black uppercase text-white hover:border-brand-yellow hover:text-brand-yellow"
+                                >
+                                    {shared ? <Check className="h-4 w-4 text-brand-yellow" /> : <Share2 className="h-4 w-4" />}
+                                    {shared ? 'Link copied' : 'Share my forest'}
+                                </button>
+                            ) : null
                         ) : !props.isSignedIn && data.invitePath ? (
                             <a
                                 href={data.invitePath}
