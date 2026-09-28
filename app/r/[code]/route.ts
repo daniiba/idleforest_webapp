@@ -8,6 +8,22 @@ import {
 
 const REFERRAL_COOKIE = 'idleforest_referral'
 const REFERRAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 30
+const LOCALES = ['en', 'es', 'de', 'pt', 'fr'] as const
+
+// Link-preview crawlers (WhatsApp, Slack, iMessage, ...) fetch every shared
+// link. They should get the preview card but not count as a visit.
+const PREVIEW_BOT_PATTERN = /bot|crawl|spider|slurp|facebookexternalhit|whatsapp|telegram|discord|slack|linkedin|embedly|preview|skype|vkshare|pinterest|redditbot|applebot|googleother|headless/i
+
+function pickLocale(request: NextRequest) {
+    const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value
+    if (cookieLocale && (LOCALES as readonly string[]).includes(cookieLocale)) return cookieLocale
+
+    const accepted = (request.headers.get('accept-language') || '')
+        .split(',')
+        .map(part => part.split(';')[0].trim().slice(0, 2).toLowerCase())
+
+    return accepted.find(language => (LOCALES as readonly string[]).includes(language)) || 'en'
+}
 
 export async function GET(
     request: NextRequest,
@@ -42,8 +58,14 @@ export async function GET(
             return NextResponse.redirect(signupUrl)
         }
 
-        signupUrl.searchParams.set('referral', owner.code)
-        const response = NextResponse.redirect(signupUrl)
+        // Send people to an invite landing page in their language instead of a
+        // bare signup form: they learn what IdleForest is and who invited them
+        // before being asked for an email and password.
+        const locale = pickLocale(request)
+        const landingPath = locale === 'en'
+            ? `/join/${encodeURIComponent(owner.code)}`
+            : `/${locale}/join/${encodeURIComponent(owner.code)}`
+        const response = NextResponse.redirect(new URL(landingPath, request.url))
 
         response.cookies.set({
             name: REFERRAL_COOKIE,
@@ -55,12 +77,14 @@ export async function GET(
             maxAge: REFERRAL_COOKIE_MAX_AGE,
         })
 
-        await recordReferralEvent(admin, {
-            eventName: 'landing_viewed',
-            referralCode: owner.code,
-            referrerId: owner.userId,
-            channel: (request.nextUrl.searchParams.get('channel') || 'shared_link').slice(0, 50),
-        })
+        if (!PREVIEW_BOT_PATTERN.test(request.headers.get('user-agent') || '')) {
+            await recordReferralEvent(admin, {
+                eventName: 'landing_viewed',
+                referralCode: owner.code,
+                referrerId: owner.userId,
+                channel: (request.nextUrl.searchParams.get('channel') || 'shared_link').slice(0, 50),
+            })
+        }
 
         return response
     } catch (error) {

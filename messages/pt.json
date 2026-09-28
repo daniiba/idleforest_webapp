@@ -1013,5 +1013,36 @@
             "kisumu": "Kisumu 7 - Awach, Quénia",
             "mkussu": "Replantação da floresta queimada de Mkussu"
         }
+    },
+    "ReferralInvite": {
+        "meta_title": "{name} convidou você para a IdleForest",
+        "meta_description": "Transforme a largura de banda de internet que seu computador não usa em árvores de verdade. Grátis, funciona em segundo plano e fica pronto em dois minutos.",
+        "eyebrow": "Convite pessoal",
+        "title": "{name} convidou você para fazer uma floresta crescer",
+        "lead": "A IdleForest transforma a largura de banda de internet que seu computador não está usando em recursos para plantar árvores de verdade. É grátis, funciona discretamente em segundo plano e leva cerca de dois minutos para configurar.",
+        "cta": "Aceitar convite",
+        "cta_note": "Grátis. Sem dados de pagamento.",
+        "login_prompt": "Já tem uma conta?",
+        "login": "Entrar",
+        "steps_title": "Como funciona",
+        "step1_title": "Crie sua conta grátis",
+        "step1_body": "Seu convite de {name} é aplicado automaticamente.",
+        "step2_title": "Instale o app para desktop",
+        "step2_body": "Ele usa apenas a largura de banda que você não está usando e sai do caminho assim que você precisa.",
+        "step3_title": "Façam a floresta crescer juntos",
+        "step3_body": "Sua atividade financia plantios de árvores verificados e se soma à floresta de {name}.",
+        "trust_free": "Sem custo, nunca",
+        "trust_privacy": "Sem histórico de navegação nem dados pessoais",
+        "trust_control": "Pause ou desinstale quando quiser",
+        "trust_rating": "Nota 4,8★ na Chrome Web Store",
+        "forest_title": "A floresta de {name} até agora",
+        "forest_people": "{count, plural, one {pessoa entrou} other {pessoas entraram}}",
+        "forest_requests": "requisições geradas juntos",
+        "own_title": "Este é o seu link de convite",
+        "own_body": "É exatamente isso que as pessoas veem quando você compartilha. Acompanhe quem entrou na sua página de convites.",
+        "own_cta": "Abrir meus convites",
+        "member_title": "Você já faz parte da IdleForest",
+        "member_body": "Convites são para contas novas. Você ainda pode ajudar a floresta de {name} a crescer convidando alguém.",
+        "member_cta": "Convidar alguém"
     }
 }

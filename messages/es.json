@@ -1013,5 +1013,36 @@
             "kisumu": "Kisumu 7 - Awach, Kenya",
             "mkussu": "Replanting the burnt Mkussu Forest"
         }
+    },
+    "ReferralInvite": {
+        "meta_title": "{name} te ha invitado a IdleForest",
+        "meta_description": "Convierte el ancho de banda de internet que tu ordenador no usa en árboles reales. Gratis, funciona en segundo plano y se configura en dos minutos.",
+        "eyebrow": "Invitación personal",
+        "title": "{name} te ha invitado a hacer crecer un bosque",
+        "lead": "IdleForest convierte el ancho de banda de internet que tu ordenador no está usando en financiación para plantar árboles reales. Es gratis, funciona en silencio en segundo plano y se configura en unos dos minutos.",
+        "cta": "Aceptar invitación",
+        "cta_note": "Gratis. Sin datos de pago.",
+        "login_prompt": "¿Ya tienes una cuenta?",
+        "login": "Iniciar sesión",
+        "steps_title": "Cómo funciona",
+        "step1_title": "Crea tu cuenta gratuita",
+        "step1_body": "Tu invitación de {name} se aplica automáticamente.",
+        "step2_title": "Instala la app de escritorio",
+        "step2_body": "Solo usa el ancho de banda que no estás usando y se aparta en cuanto lo necesitas.",
+        "step3_title": "Haced crecer el bosque juntos",
+        "step3_body": "Tu actividad financia plantaciones de árboles verificadas y se suma al bosque de {name}.",
+        "trust_free": "Sin coste, nunca",
+        "trust_privacy": "Sin historial de navegación ni datos personales",
+        "trust_control": "Pausa o desinstala cuando quieras",
+        "trust_rating": "Valorada con 4,8★ en Chrome Web Store",
+        "forest_title": "El bosque de {name} hasta ahora",
+        "forest_people": "{count, plural, one {persona se ha unido} other {personas se han unido}}",
+        "forest_requests": "solicitudes impulsadas juntos",
+        "own_title": "Este es tu enlace de invitación",
+        "own_body": "Esto es exactamente lo que ve la gente cuando lo compartes. Consulta quién se une en tu página de invitaciones.",
+        "own_cta": "Abrir mis invitaciones",
+        "member_title": "Ya formas parte de IdleForest",
+        "member_body": "Las invitaciones son para cuentas nuevas. Aun así, puedes hacer crecer el bosque de {name} invitando tú a alguien.",
+        "member_cta": "Invitar a alguien"
     }
 }

@@ -231,14 +231,17 @@ function SignupForm() {
         }
       });
 
-      if (referralInfo) {
-        await fetch('/api/referrals/complete', {
+      if (referralInfo && data.session) {
+        // Attribution itself is written by the signup database trigger; this
+        // call syncs the profile and emails the referrer. Don't hold the new
+        // user on the signup page for it: keepalive lets it finish after
+        // navigation, and it is retried from auth metadata on later visits.
+        fetch('/api/referrals/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ referralCode: referralInfo.code }),
-        }).catch(() => {
-          // Attribution is retried from auth metadata after the user logs in.
-        });
+          keepalive: true,
+        }).catch(() => {});
       }
 
       // If there's an invite code, join the team/company
@@ -318,7 +321,7 @@ function SignupForm() {
             <span className="text-xs font-black uppercase tracking-wider">Personal invite</span>
           </div>
           <p className="font-bold text-lg">{referralInfo.inviterName} invited you to grow IdleForest together.</p>
-          <p className="mt-1 text-sm font-semibold text-neutral-700">Your referral is counted after your node starts contributing real impact.</p>
+          <p className="mt-1 text-sm font-semibold text-neutral-700">Free, runs quietly in the background, and plants real trees. Create your account, then connect the desktop app to join {referralInfo.inviterName}&apos;s forest.</p>
         </div>
       )}
 

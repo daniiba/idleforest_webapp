@@ -6,6 +6,7 @@ import {
     recordReferralEvent,
     resolveReferralOwner,
 } from '@/lib/referrals'
+import { notifyReferrerSafely } from '@/lib/referral-notifications'
 
 export async function POST(request: NextRequest) {
     try {
@@ -75,12 +76,6 @@ export async function POST(request: NextRequest) {
         }
 
         if (insertedNow) {
-            await admin
-                .from('profiles')
-                .update({ referred_by: owner.userId })
-                .eq('user_id', user.id)
-                .is('referred_by', null)
-
             await recordReferralEvent(admin, {
                 eventName: 'signup_completed',
                 referralCode: owner.code,
@@ -90,9 +85,25 @@ export async function POST(request: NextRequest) {
             })
         }
 
+        const attributed = attribution?.referrer_id === owner.userId
+
+        if (attributed) {
+            // The signup trigger usually creates the attribution before this
+            // runs, so keep the legacy profile column in sync either way.
+            await admin
+                .from('profiles')
+                .update({ referred_by: owner.userId })
+                .eq('user_id', user.id)
+                .is('referred_by', null)
+
+            // First authenticated request after signup or email confirmation:
+            // tell the referrer while they can still nudge their friend.
+            await notifyReferrerSafely(owner.userId)
+        }
+
         return NextResponse.json({
             success: true,
-            attributed: attribution?.referrer_id === owner.userId,
+            attributed,
         })
     } catch (error) {
         console.error('Failed to complete referral attribution:', error)

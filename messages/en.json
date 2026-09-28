@@ -1068,5 +1068,36 @@
             "kisumu": "Kisumu 7 - Awach, Kenya",
             "mkussu": "Replanting the burnt Mkussu Forest"
         }
+    },
+    "ReferralInvite": {
+        "meta_title": "{name} invited you to IdleForest",
+        "meta_description": "Turn your computer's unused internet bandwidth into real trees. Free, runs in the background, set up in two minutes.",
+        "eyebrow": "Personal invite",
+        "title": "{name} invited you to grow a forest",
+        "lead": "IdleForest turns the internet bandwidth your computer isn't using into funding for real tree planting. It's free, runs quietly in the background, and takes about two minutes to set up.",
+        "cta": "Accept invite",
+        "cta_note": "Free. No payment details needed.",
+        "login_prompt": "Already have an account?",
+        "login": "Log in",
+        "steps_title": "How it works",
+        "step1_title": "Create your free account",
+        "step1_body": "Your invite from {name} is applied automatically.",
+        "step2_title": "Install the desktop app",
+        "step2_body": "It only uses bandwidth you're not using and steps aside the moment you need it.",
+        "step3_title": "Grow the forest together",
+        "step3_body": "Your activity funds verified tree planting and adds to {name}'s forest.",
+        "trust_free": "No cost, ever",
+        "trust_privacy": "No browsing history or personal data",
+        "trust_control": "Pause or uninstall anytime",
+        "trust_rating": "Rated 4.8★ on the Chrome Web Store",
+        "forest_title": "{name}'s forest so far",
+        "forest_people": "{count, plural, one {person joined} other {people joined}}",
+        "forest_requests": "requests powered together",
+        "own_title": "This is your invite link",
+        "own_body": "This is exactly what people see when you share it. See who joins on your referrals page.",
+        "own_cta": "Open my referrals",
+        "member_title": "You're already part of IdleForest",
+        "member_body": "Invites are for new accounts. You can still help {name}'s forest grow by inviting someone yourself.",
+        "member_cta": "Invite someone"
     }
 }

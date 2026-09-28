@@ -9,6 +9,7 @@ import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
 import { PointsHistoryChart } from "@/components/PointsHistoryChart"
 import PublicReferralImpact, { type PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
+import ProfileJoinCta from '@/components/referrals/ProfileJoinCta'
 import { isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 interface Profile {
@@ -108,6 +109,7 @@ export default function PublicProfilePage() {
     const [platforms, setPlatforms] = useState<string[]>([])
     const [loading, setLoading] = useState(true)
     const [isOwnProfile, setIsOwnProfile] = useState(false)
+    const [isSignedIn, setIsSignedIn] = useState(true)
     const [showCreateTeamModal, setShowCreateTeamModal] = useState(false)
     const [showLeaveCompanyModal, setShowLeaveCompanyModal] = useState(false)
     const [creatingTeam, setCreatingTeam] = useState(false)
@@ -252,6 +254,7 @@ export default function PublicProfilePage() {
 
                 // Check if current user is viewing their own profile
                 const { data: { user } } = await supabase.auth.getUser()
+                setIsSignedIn(Boolean(user))
                 if (user && user.id === profile.user_id) {
                     setIsOwnProfile(true)
                 }
@@ -673,6 +676,13 @@ export default function PublicProfilePage() {
                             </div>
                         </div>
                     </div>
+                )}
+
+                {!isSignedIn && (
+                    <ProfileJoinCta
+                        displayName={profile.display_name}
+                        invitePath={publicReferralImpact?.invitePath}
+                    />
                 )}
 
                 {/* Stats Cards */}

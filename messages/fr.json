@@ -1013,5 +1013,36 @@
             "kisumu": "Kisumu 7 - Awach, Kenya",
             "mkussu": "Replanting the burnt Mkussu Forest"
         }
+    },
+    "ReferralInvite": {
+        "meta_title": "{name} vous invite sur IdleForest",
+        "meta_description": "Transformez la bande passante internet inutilisée de votre ordinateur en vrais arbres. Gratuit, fonctionne en arrière-plan, prêt en deux minutes.",
+        "eyebrow": "Invitation personnelle",
+        "title": "{name} vous invite à faire pousser une forêt",
+        "lead": "IdleForest transforme la bande passante internet que votre ordinateur n'utilise pas en financement pour planter de vrais arbres. C'est gratuit, discret en arrière-plan et prêt en deux minutes environ.",
+        "cta": "Accepter l'invitation",
+        "cta_note": "Gratuit. Aucun moyen de paiement requis.",
+        "login_prompt": "Vous avez déjà un compte ?",
+        "login": "Se connecter",
+        "steps_title": "Comment ça marche",
+        "step1_title": "Créez votre compte gratuit",
+        "step1_body": "Votre invitation de {name} est appliquée automatiquement.",
+        "step2_title": "Installez l'application de bureau",
+        "step2_body": "Elle n'utilise que la bande passante dont vous ne vous servez pas et s'efface dès que vous en avez besoin.",
+        "step3_title": "Faites pousser la forêt ensemble",
+        "step3_body": "Votre activité finance des plantations d’arbres vérifiées et fait grandir la forêt de {name}.",
+        "trust_free": "Gratuit, pour toujours",
+        "trust_privacy": "Aucun historique de navigation ni donnée personnelle",
+        "trust_control": "Pause ou désinstallation à tout moment",
+        "trust_rating": "Noté 4,8★ sur le Chrome Web Store",
+        "forest_title": "La forêt de {name} jusqu'ici",
+        "forest_people": "{count, plural, one {personne a rejoint} other {personnes ont rejoint}}",
+        "forest_requests": "requêtes alimentées ensemble",
+        "own_title": "Voici votre lien d'invitation",
+        "own_body": "C'est exactement ce que voient les personnes avec qui vous le partagez. Suivez qui rejoint sur votre page d'invitations.",
+        "own_cta": "Ouvrir mes invitations",
+        "member_title": "Vous faites déjà partie d'IdleForest",
+        "member_body": "Les invitations sont réservées aux nouveaux comptes. Vous pouvez tout de même faire grandir la forêt de {name} en invitant quelqu'un vous-même.",
+        "member_cta": "Inviter quelqu'un"
     }
 }

@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-
-type DailyImpactRow = {
-    date: string
-    own_requests: number | string | null
-    referred_requests: number | string | null
-}
+import { getPublicReferralImpact, normalizeReferralCode } from '@/lib/referrals'
 
 function escapeIlike(value: string) {
     return value.replace(/[\\%_]/g, character => `\\${character}`)
@@ -22,7 +17,7 @@ export async function GET(request: NextRequest) {
         const admin = createAdminClient()
         const { data: profile, error: profileError } = await admin
             .from('profiles')
-            .select('user_id, display_name')
+            .select('user_id, display_name, referral_code')
             .ilike('display_name', escapeIlike(displayName))
             .maybeSingle()
 
@@ -31,71 +26,15 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
         }
 
-        const { data: attributions, error: attributionsError } = await admin
-            .from('referral_attributions')
-            .select('referred_user_id, activated_at')
-            .eq('referrer_id', profile.user_id)
-
-        if (attributionsError) throw attributionsError
-
-        const referredUserIds = Array.from(new Set(
-            attributions?.map(attribution => attribution.referred_user_id).filter(Boolean) || []
-        ))
-        const impactUserIds = [profile.user_id, ...referredUserIds]
-
-        const [
-            { data: nodes, error: nodesError },
-            { data: dailyImpactRows, error: dailyImpactError },
-        ] = await Promise.all([
-            admin
-                .from('nodes')
-                .select('user_id, total_requests')
-                .in('user_id', impactUserIds),
-            admin.rpc('get_referral_daily_impact', {
-                p_referrer_id: profile.user_id,
-                p_days: 90,
-            }),
-        ])
-
-        if (nodesError) throw nodesError
-        if (dailyImpactError) throw dailyImpactError
-
-        const requestsByUserId = new Map<string, number>()
-        for (const node of nodes || []) {
-            requestsByUserId.set(
-                node.user_id,
-                (requestsByUserId.get(node.user_id) || 0) + Math.max(0, Number(node.total_requests) || 0)
-            )
-        }
-
-        const ownRequests = requestsByUserId.get(profile.user_id) || 0
-        const referredRequests = referredUserIds.reduce(
-            (sum, userId) => sum + (requestsByUserId.get(userId) || 0),
-            0
-        )
-        const contributingReferrals = referredUserIds.filter(
-            userId => (requestsByUserId.get(userId) || 0) > 0
-        ).length
-        const dailyImpact = (dailyImpactRows || []).map((row: DailyImpactRow) => {
-            const ownDailyRequests = Math.max(0, Number(row.own_requests) || 0)
-            const referredDailyRequests = Math.max(0, Number(row.referred_requests) || 0)
-
-            return {
-                date: row.date,
-                ownRequests: ownDailyRequests,
-                referredRequests: referredDailyRequests,
-                combinedRequests: ownDailyRequests + referredDailyRequests,
-            }
-        })
+        const impact = await getPublicReferralImpact(admin, profile.user_id)
+        const inviteCode = normalizeReferralCode(profile.referral_code)
 
         return NextResponse.json({
             displayName: profile.display_name,
-            referrals: attributions?.length || 0,
-            activatedReferrals: contributingReferrals,
-            ownRequests,
-            referredRequests,
-            combinedRequests: ownRequests + referredRequests,
-            dailyImpact,
+            // Invite links are meant to be shared; exposing the code lets
+            // visitors of a public profile join through that member.
+            invitePath: inviteCode ? `/r/${inviteCode}?channel=profile` : null,
+            ...impact,
         })
     } catch (error) {
         console.error('Failed to load public referral impact:', error)

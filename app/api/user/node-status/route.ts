@@ -9,6 +9,7 @@ import {
 } from '@/lib/acquisition-attribution'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { recordReferralEvent } from '@/lib/referrals'
+import { notifyReferrerSafely } from '@/lib/referral-notifications'
 
 // Helper to create Supabase client for route handlers
 async function createSupabaseClient() {
@@ -127,6 +128,19 @@ export async function GET() {
                         channel: 'productive_node',
                     })
                 }
+
+                // Activation is normally recorded by the node-sync trigger.
+                // Tell the referrer as soon as we see the invited user again;
+                // the scheduled sweep covers people who never come back.
+                const { data: unannouncedActivation } = await admin
+                    .from('referral_attributions')
+                    .select('referrer_id')
+                    .eq('referred_user_id', user.id)
+                    .not('activated_at', 'is', null)
+                    .is('activated_notified_at', null)
+                    .maybeSingle()
+
+                await notifyReferrerSafely(unannouncedActivation?.referrer_id)
             } catch (referralError) {
                 // Referral analytics must never block the node-status response.
                 console.error('Failed to mark referral activation:', referralError)

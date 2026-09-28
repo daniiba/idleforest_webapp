@@ -172,7 +172,14 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
     if (successData) {
         const inviteCodeToUse = successData.inviteCode; // Use the one returned from API
-        const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${inviteCodeToUse || referralCode || 'idleforest'}`;
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+        // Team invites go through /invite; personal codes through /r, which
+        // lands on the personal invite page and records the referral.
+        const shareUrl = inviteCodeToUse
+            ? `${origin}/invite/${inviteCodeToUse}`
+            : referralCode
+                ? `${origin}/r/${encodeURIComponent(referralCode)}?channel=claim_tree`
+                : null;
         const justJoinedTeam = successData.trees === 2;
 
         return (
@@ -193,14 +200,18 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
                     <div className="h-0.5 bg-black w-full my-6 opacity-20" />
 
-                    {inviteCodeToUse && (
+                    {shareUrl && (
                         <div className="space-y-4 bg-brand-navy p-6 border-2 border-black">
                             <div className="flex items-center justify-center gap-2 text-brand-yellow mb-2">
                                 <Users className="w-6 h-6" />
-                                <h2 className="text-xl font-extrabold font-candu uppercase">Your Team Invite Link</h2>
+                                <h2 className="text-xl font-extrabold font-candu uppercase">
+                                    {inviteCodeToUse ? 'Your Team Invite Link' : 'Invite someone to plant with you'}
+                                </h2>
                             </div>
                             <p className="text-white text-sm">
-                                Share this link to grow your team. You get credit for their impact!
+                                {inviteCodeToUse
+                                    ? 'Share this link to grow your team. You get credit for their impact!'
+                                    : 'Know someone who would like this? Send them your personal invite. Their impact shows up in your forest.'}
                             </p>
 
                             <div className="flex gap-2 items-center bg-black/30 rounded-none p-2 border-2 border-brand-yellow/50">

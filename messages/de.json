@@ -1013,5 +1013,36 @@
             "kisumu": "Kisumu 7 - Awach, Kenya",
             "mkussu": "Replanting the burnt Mkussu Forest"
         }
+    },
+    "ReferralInvite": {
+        "meta_title": "{name} hat dich zu IdleForest eingeladen",
+        "meta_description": "Verwandle die ungenutzte Internet-Bandbreite deines Computers in echte Bäume. Kostenlos, läuft im Hintergrund, in zwei Minuten eingerichtet.",
+        "eyebrow": "Persönliche Einladung",
+        "title": "{name} hat dich eingeladen, einen Wald wachsen zu lassen",
+        "lead": "IdleForest verwandelt die Internet-Bandbreite, die dein Computer gerade nicht nutzt, in Geld für echte Baumpflanzungen. Es ist kostenlos, läuft leise im Hintergrund und ist in etwa zwei Minuten eingerichtet.",
+        "cta": "Einladung annehmen",
+        "cta_note": "Kostenlos. Keine Zahlungsdaten nötig.",
+        "login_prompt": "Du hast schon ein Konto?",
+        "login": "Anmelden",
+        "steps_title": "So funktioniert's",
+        "step1_title": "Kostenloses Konto erstellen",
+        "step1_body": "Deine Einladung von {name} wird automatisch übernommen.",
+        "step2_title": "Desktop-App installieren",
+        "step2_body": "Sie nutzt nur Bandbreite, die du gerade nicht brauchst, und tritt sofort zurück, wenn du sie brauchst.",
+        "step3_title": "Gemeinsam den Wald wachsen lassen",
+        "step3_body": "Deine Aktivität finanziert verifizierte Baumpflanzungen und lässt den Wald von {name} wachsen.",
+        "trust_free": "Für immer kostenlos",
+        "trust_privacy": "Kein Browserverlauf, keine persönlichen Daten",
+        "trust_control": "Jederzeit pausieren oder deinstallieren",
+        "trust_rating": "4,8★ im Chrome Web Store",
+        "forest_title": "Der Wald von {name} bisher",
+        "forest_people": "{count, plural, one {Person ist beigetreten} other {Personen sind beigetreten}}",
+        "forest_requests": "gemeinsam ermöglichte Anfragen",
+        "own_title": "Das ist dein Einladungslink",
+        "own_body": "Genau das sehen andere, wenn du ihn teilst. Wer beitritt, siehst du auf deiner Einladungsseite.",
+        "own_cta": "Meine Einladungen öffnen",
+        "member_title": "Du bist schon bei IdleForest",
+        "member_body": "Einladungen gelten für neue Konten. Du kannst den Wald von {name} trotzdem wachsen lassen, indem du selbst jemanden einlädst.",
+        "member_cta": "Jemanden einladen"
     }
 }

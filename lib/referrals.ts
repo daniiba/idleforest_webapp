@@ -75,6 +75,101 @@ export async function resolveReferralOwner(
     }
 }
 
+type DailyImpactRow = {
+    date: string
+    own_requests: number | string | null
+    referred_requests: number | string | null
+}
+
+export type PublicReferralImpact = {
+    referrals: number
+    activatedReferrals: number
+    ownRequests: number
+    referredRequests: number
+    combinedRequests: number
+    dailyImpact: Array<{
+        date: string
+        ownRequests: number
+        referredRequests: number
+        combinedRequests: number
+    }>
+}
+
+// Aggregate-only view of a member's referral impact. It never exposes who was
+// invited, so it is safe for public profiles and invite landing pages.
+export async function getPublicReferralImpact(
+    supabase: SupabaseLike & { rpc: (fn: string, args: Record<string, unknown>) => any },
+    userId: string,
+    options: { includeDaily?: boolean } = {}
+): Promise<PublicReferralImpact> {
+    const { data: attributions, error: attributionsError } = await supabase
+        .from('referral_attributions')
+        .select('referred_user_id')
+        .eq('referrer_id', userId)
+
+    if (attributionsError) throw attributionsError
+
+    const referredUserIds: string[] = Array.from(new Set(
+        (attributions || [])
+            .map((attribution: { referred_user_id: string | null }) => attribution.referred_user_id)
+            .filter(Boolean)
+    ))
+
+    const [
+        { data: nodes, error: nodesError },
+        { data: dailyImpactRows, error: dailyImpactError },
+    ] = await Promise.all([
+        supabase
+            .from('nodes')
+            .select('user_id, total_requests')
+            .in('user_id', [userId, ...referredUserIds]),
+        options.includeDaily === false
+            ? Promise.resolve({ data: [], error: null })
+            : supabase.rpc('get_referral_daily_impact', {
+                p_referrer_id: userId,
+                p_days: 90,
+            }),
+    ])
+
+    if (nodesError) throw nodesError
+    if (dailyImpactError) throw dailyImpactError
+
+    const requestsByUserId = new Map<string, number>()
+    for (const node of nodes || []) {
+        requestsByUserId.set(
+            node.user_id,
+            (requestsByUserId.get(node.user_id) || 0) + Math.max(0, Number(node.total_requests) || 0)
+        )
+    }
+
+    const ownRequests = requestsByUserId.get(userId) || 0
+    const referredRequests = referredUserIds.reduce(
+        (sum, referredUserId) => sum + (requestsByUserId.get(referredUserId) || 0),
+        0
+    )
+
+    return {
+        referrals: attributions?.length || 0,
+        activatedReferrals: referredUserIds.filter(
+            referredUserId => (requestsByUserId.get(referredUserId) || 0) > 0
+        ).length,
+        ownRequests,
+        referredRequests,
+        combinedRequests: ownRequests + referredRequests,
+        dailyImpact: (dailyImpactRows || []).map((row: DailyImpactRow) => {
+            const ownDailyRequests = Math.max(0, Number(row.own_requests) || 0)
+            const referredDailyRequests = Math.max(0, Number(row.referred_requests) || 0)
+
+            return {
+                date: row.date,
+                ownRequests: ownDailyRequests,
+                referredRequests: referredDailyRequests,
+                combinedRequests: ownDailyRequests + referredDailyRequests,
+            }
+        }),
+    }
+}
+
 export async function recordReferralEvent(
     supabase: SupabaseLike,
     input: {
@@ -83,6 +178,7 @@ export async function recordReferralEvent(
             | 'link_created'
             | 'link_copied'
             | 'native_share_opened'
+            | 'share_opened'
             | 'signup_completed'
             | 'activated'
             | 'rewarded'

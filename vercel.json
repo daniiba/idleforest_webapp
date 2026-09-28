@@ -16,6 +16,10 @@
     {
       "path": "/api/admin/acquisition-retention",
       "schedule": "15 2 * * *"
+    },
+    {
+      "path": "/api/cron/referral-notifications",
+      "schedule": "40 16 * * *"
     }
   ]
 }

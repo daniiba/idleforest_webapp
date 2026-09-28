@@ -6,6 +6,7 @@ import ReferralDailyBars, { type DailyReferralImpact } from '@/components/referr
 
 export type PublicReferralImpactData = {
     displayName: string
+    invitePath?: string | null
     referrals: number
     activatedReferrals: number
     ownRequests: number

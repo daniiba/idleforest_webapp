@@ -10,6 +10,7 @@ import {
 const TRACKABLE_EVENTS = new Set([
     'link_copied',
     'native_share_opened',
+    'share_opened',
 ])
 
 export async function POST(request: NextRequest) {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
         }
 
         await recordReferralEvent(admin, {
-            eventName: eventName as 'link_copied' | 'native_share_opened',
+            eventName: eventName as 'link_copied' | 'native_share_opened' | 'share_opened',
             referralCode: owner.code,
             referrerId: owner.userId,
             actorUserId: user.id,

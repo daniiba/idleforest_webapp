@@ -16,6 +16,8 @@ import {
     TreePine
 } from 'lucide-react'
 import { trackOnboardingEvent } from '@/lib/onboarding-events'
+import InviterNudge from '@/components/referrals/InviterNudge'
+import ReferralAttributionSync from '@/components/referrals/ReferralAttributionSync'
 
 interface NodeStatus {
     hasNode: boolean
@@ -184,7 +186,11 @@ export default function WelcomePage() {
                 className="absolute -bottom-20 -left-10 object-cover pointer-events-none select-none opacity-100"
             />
 
+            <ReferralAttributionSync />
+
             <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-6">
+                {isAuthenticated ? <InviterNudge connected={Boolean(nodeStatus?.hasDesktopNode)} /> : null}
+
                 <section className="bg-white border-2 border-black p-8 text-center shadow-none">
                     <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center border-2 border-black bg-brand-yellow shadow-none">
                         <Sparkles className="h-10 w-10" />
@@ -194,7 +200,7 @@ export default function WelcomePage() {
                     </h1>
                     <p className="mx-auto mt-4 max-w-xl text-lg text-neutral-700">
                         {isAuthenticated
-                            ? 'Download the IdleForest desktop app, log in with this account, and we&apos;ll automatically detect your connection.'
+                            ? 'Download the IdleForest desktop app, log in with this account, and we\'ll automatically detect your connection.'
                             : 'Sign in to your IdleForest account, then connect the desktop app to claim your bonus trees.'}
                     </p>
                 </section>

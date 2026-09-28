@@ -1,7 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Check, Copy, Loader2, Share2, Sprout, TreePine, Users } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Check, Copy, Linkedin, Loader2, Mail, MessageCircle, Share2, Sprout, TreePine, Twitter, Users } from 'lucide-react'
 import ReferralDailyBars, { type DailyReferralImpact } from '@/components/referrals/ReferralDailyBars'
 
 type ReferredUser = {
@@ -34,6 +34,57 @@ function withChannel(url: string, channel: string) {
     return parsed.toString()
 }
 
+// Personal, concrete copy converts better than a slogan: say what it is, that
+// it is free, and how little effort it takes.
+const SHARE_TEXT = "I've been using IdleForest: it runs quietly on my computer and turns internet bandwidth I'm not using into real trees. It's free and takes two minutes to set up. Join my forest:"
+const EMAIL_SUBJECT = 'Want to grow a forest with me?'
+
+function emailBody(url: string) {
+    return [
+        'Hi,',
+        '',
+        "I've been using IdleForest. It runs quietly on my computer and turns internet bandwidth I'm not using into funding for real tree planting. It's free and takes about two minutes to set up.",
+        '',
+        `Here's my personal invite: ${url}`,
+        '',
+        "I'd love to have you in my forest!",
+    ].join('\n')
+}
+
+type ShareChannel = 'whatsapp' | 'email' | 'x' | 'linkedin'
+
+const SHARE_CHANNELS: Array<{
+    channel: ShareChannel
+    label: string
+    icon: typeof Mail
+    href: (url: string) => string
+}> = [
+    {
+        channel: 'whatsapp',
+        label: 'WhatsApp',
+        icon: MessageCircle,
+        href: url => `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT} ${url}`)}`,
+    },
+    {
+        channel: 'email',
+        label: 'Email',
+        icon: Mail,
+        href: url => `mailto:?subject=${encodeURIComponent(EMAIL_SUBJECT)}&body=${encodeURIComponent(emailBody(url))}`,
+    },
+    {
+        channel: 'x',
+        label: 'X',
+        icon: Twitter,
+        href: url => `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(url)}`,
+    },
+    {
+        channel: 'linkedin',
+        label: 'LinkedIn',
+        icon: Linkedin,
+        href: url => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    },
+]
+
 export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptProps) {
     const [eligible, setEligible] = useState(false)
     const [summary, setSummary] = useState<ReferralSummary | null>(null)
@@ -41,6 +92,12 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
     const [creating, setCreating] = useState(false)
     const [copied, setCopied] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [canNativeShare, setCanNativeShare] = useState(false)
+    const autoCreateAttempted = useRef(false)
+
+    useEffect(() => {
+        setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
+    }, [])
 
     useEffect(() => {
         let cancelled = false
@@ -66,9 +123,7 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
         }
     }, [])
 
-    const shareText = useMemo(() => {
-        return 'I use IdleForest to turn unused internet bandwidth into real trees. Join me and grow the forest together.'
-    }, [])
+    const shareText = SHARE_TEXT
 
     const createLink = useCallback(async () => {
         setCreating(true)
@@ -90,7 +145,16 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
         }
     }, [])
 
-    const recordInteraction = useCallback((eventName: 'link_copied' | 'native_share_opened', channel: string) => {
+    // Every extra click before sharing loses people, so eligible members get
+    // their link as soon as the prompt loads instead of via a "create" button.
+    useEffect(() => {
+        if (loading || !eligible || !summary || summary.url || autoCreateAttempted.current) return
+
+        autoCreateAttempted.current = true
+        createLink()
+    }, [createLink, eligible, loading, summary])
+
+    const recordInteraction = useCallback((eventName: 'link_copied' | 'native_share_opened' | 'share_opened', channel: string) => {
         if (!summary?.code) return
 
         fetch('/api/referrals/event', {
@@ -145,6 +209,13 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
             setError('Could not open sharing. Please copy the invite instead.')
         }
     }, [recordInteraction, shareText, summary?.url])
+
+    const channelLinks = summary?.url
+        ? SHARE_CHANNELS.map(option => ({
+            ...option,
+            url: option.href(withChannel(summary.url as string, option.channel)),
+        }))
+        : []
 
     const isPage = variant === 'page'
     const impactMultiplier = summary && summary.ownRequests > 0
@@ -242,14 +313,40 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                                 {copied ? <Check className="h-4 w-4 text-brand-yellow" /> : <Copy className="h-4 w-4" />}
                                 {copied ? 'Copied' : 'Copy invite'}
                             </button>
-                            <button
-                                type="button"
-                                onClick={shareLink}
-                                className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-sm font-black uppercase text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            {canNativeShare ? (
+                                <button
+                                    type="button"
+                                    onClick={shareLink}
+                                    className="inline-flex items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-sm font-black uppercase text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                >
+                                    <Share2 className="h-4 w-4" />
+                                    Share
+                                </button>
+                            ) : null}
+                            <div
+                                className={isPage ? 'mt-3 grid grid-cols-2 gap-2' : 'flex gap-2'}
+                                aria-label="Share your invite"
                             >
-                                <Share2 className="h-4 w-4" />
-                                Share
-                            </button>
+                                {channelLinks
+                                    .filter(option => isPage || option.channel === 'whatsapp' || option.channel === 'email')
+                                    .map(option => {
+                                        const Icon = option.icon
+                                        return (
+                                            <a
+                                                key={option.channel}
+                                                href={option.url}
+                                                target={option.channel === 'email' ? undefined : '_blank'}
+                                                rel="noopener noreferrer"
+                                                onClick={() => recordInteraction('share_opened', option.channel)}
+                                                className="inline-flex items-center justify-center gap-2 border-2 border-black bg-white px-3 py-2 text-sm font-black uppercase text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                                aria-label={`Share your invite via ${option.label}`}
+                                            >
+                                                <Icon className="h-4 w-4" aria-hidden="true" />
+                                                <span className={isPage ? '' : 'sr-only sm:not-sr-only'}>{option.label}</span>
+                                            </a>
+                                        )
+                                    })}
+                            </div>
                         </>
                     ) : (
                         <button
