@@ -1,8 +1,7 @@
 'use client'
 
 import Navigation from "@/components/navigation"
-import DesktopUpgradeBanner from "@/components/DesktopUpgradeBanner"
-import ReferralPrompt from "@/components/referrals/ReferralPrompt"
+import DashboardNotice from "@/components/DashboardNotice"
 import ReferralAttributionSync from "@/components/referrals/ReferralAttributionSync"
 
 export default function DashboardLayout({
@@ -13,10 +12,9 @@ export default function DashboardLayout({
   return (
     <div className="flex flex-col min-h-screen">
 
-      <Navigation variant="dashboard" />
+      <Navigation variant="dashboard" hideBanner />
       <ReferralAttributionSync />
-      <DesktopUpgradeBanner />
-      <ReferralPrompt />
+      <DashboardNotice />
       {/* Main content */}
       <main className="flex-1 bg-brand-gray">
         {children}

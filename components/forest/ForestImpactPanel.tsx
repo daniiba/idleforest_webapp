@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Check, Loader2, Share2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
 import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
@@ -20,7 +20,7 @@ export type ForestResponse = {
 
 type ForestImpactPanelProps =
     | { mode: 'self' }
-    | { mode: 'public'; displayName: string }
+    | { mode: 'public'; displayName: string; onLoad?: (data: ForestResponse | null) => void }
 
 function formatCount(value: number) {
     return value.toLocaleString('en')
@@ -31,6 +31,8 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     const [loading, setLoading] = useState(true)
     const [shared, setShared] = useState(false)
     const publicName = props.mode === 'public' ? props.displayName : null
+    const onLoadRef = useRef(props.mode === 'public' ? props.onLoad : undefined)
+    onLoadRef.current = props.mode === 'public' ? props.onLoad : undefined
 
     useEffect(() => {
         let cancelled = false
@@ -39,7 +41,9 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
         fetch(url)
             .then(response => (response.ok ? response.json() : null))
             .then(body => {
-                if (!cancelled) setData(body)
+                if (cancelled) return
+                setData(body)
+                onLoadRef.current?.(body)
             })
             .catch(() => {
                 if (!cancelled) setData(null)
@@ -95,7 +99,6 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     }
 
     if (!data) return null
-    if (props.mode === 'public' && data.totalTrees === 0 && data.friends.length === 0) return null
 
     const isSelf = props.mode === 'self'
     const name = data.displayName || 'This member'
@@ -116,22 +119,26 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     if (!isSelf) {
         return (
             <section className="overflow-hidden border-2 border-black bg-[#0B101F] text-white" aria-labelledby="forest-heading">
-                <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
-                    <h2 id="forest-heading" className="font-candu text-2xl font-extrabold uppercase leading-none sm:text-3xl">
-                        {data.totalTrees > 0 ? <><span className="text-brand-yellow">{formatCount(data.totalTrees)}</span> {data.totalTrees === 1 ? 'tree' : 'trees'}</> : 'Just starting'}
+                <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-6">
+                    <h2 id="forest-heading" className="text-[11px] font-black uppercase tracking-wider text-white/60">
+                        {name}&apos;s forest
                     </h2>
-                    <dl className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-bold text-white/70">
-                        {segments.filter(segment => segment.value > 0).map(segment => (
-                            <div key={segment.key} className="flex items-center gap-1.5">
-                                <span className="h-2.5 w-2.5" style={{ backgroundColor: segment.color, opacity: segment.dim ? 0.6 : 1 }} aria-hidden="true" />
-                                <dt>{segment.label}</dt>
-                                <dd className="font-mono font-black tabular-nums text-white">{formatCount(segment.value)}</dd>
-                            </div>
-                        ))}
-                    </dl>
+                    {data.totalTrees > 0 ? (
+                        <dl className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-bold text-white/70">
+                            {segments.filter(segment => segment.value > 0).map(segment => (
+                                <div key={segment.key} className="flex items-center gap-1.5">
+                                    <span className="h-2.5 w-2.5" style={{ backgroundColor: segment.color, opacity: segment.dim ? 0.6 : 1 }} aria-hidden="true" />
+                                    <dt>{segment.label}</dt>
+                                    <dd className="font-black tabular-nums text-white">{formatCount(segment.value)}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    ) : (
+                        <p className="text-xs font-bold text-white/60">First trees on the way</p>
+                    )}
                 </div>
                 <Forest3D
-                    className="sm:!aspect-[2/1]"
+                    className={data.totalTrees === 0 && data.friends.length === 0 ? '!aspect-[2/1] sm:!aspect-[3/1]' : 'sm:!aspect-[2/1]'}
                     seed={data.seed}
                     ownTrees={data.ownTrees}
                     inviteTrees={data.inviteTrees}
@@ -191,12 +198,12 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                     <span className="h-3 w-3 shrink-0" style={{ backgroundColor: segment.color, opacity: segment.dim ? 0.6 : 1 }} aria-hidden="true" />
                                     {segment.label}
                                 </dt>
-                                <dd className="font-mono text-lg font-black tabular-nums">{formatCount(segment.value)}</dd>
+                                <dd className="text-lg font-black tabular-nums">{formatCount(segment.value)}</dd>
                             </div>
                         ))}
                         <div className="flex items-center justify-between gap-4 border-t-2 border-white/20 pt-3">
                             <dt className="text-sm font-black uppercase tracking-wider">Total</dt>
-                            <dd className="font-mono text-2xl font-black tabular-nums text-brand-yellow">{formatCount(data.totalTrees)}</dd>
+                            <dd className="text-2xl font-black tabular-nums text-brand-yellow">{formatCount(data.totalTrees)}</dd>
                         </div>
                     </dl>
 
