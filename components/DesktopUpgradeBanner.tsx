@@ -1,49 +1,53 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Monitor, TreePine } from 'lucide-react'
+import { ArrowRight, Monitor, X } from 'lucide-react'
 import { Link } from '@/navigation'
 
-interface NodeStatus {
-    hasNode: boolean
-    hasDesktopNode: boolean
-    platforms: string[]
+const DISMISS_KEY = 'idleforest:desktop-upgrade-dismissed-at'
+const DISMISS_FOR_MS = 14 * 24 * 60 * 60 * 1000
+
+export function desktopUpgradeDismissed() {
+    try {
+        const at = Number(window.localStorage.getItem(DISMISS_KEY))
+        return Boolean(at) && Date.now() - at < DISMISS_FOR_MS
+    } catch {
+        return false
+    }
 }
 
-export default function DesktopUpgradeBanner() {
-    const [status, setStatus] = useState<NodeStatus | null>(null)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        fetch('/api/user/node-status')
-            .then((response) => response.ok ? response.json() : null)
-            .then((data) => setStatus(data))
-            .catch(() => setStatus(null))
-            .finally(() => setLoading(false))
-    }, [])
-
-    if (loading || !status?.hasNode || status.hasDesktopNode) {
-        return null
+// One-line nudge for extension-only members to add the desktop app.
+export default function DesktopUpgradeBanner({ onDismiss }: { onDismiss: () => void }) {
+    const dismiss = () => {
+        try {
+            window.localStorage.setItem(DISMISS_KEY, String(Date.now()))
+        } catch {
+            // Storage unavailable: it just shows again next visit.
+        }
+        onDismiss()
     }
 
     return (
         <div className="border-b-2 border-black bg-brand-yellow text-black">
-            <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 text-sm font-bold sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="border-2 border-black bg-brand-navy p-2 text-brand-yellow">
-                        <Monitor className="h-5 w-5" />
-                    </div>
-                    <p>
-                        You&apos;re using the browser extension. Connect the desktop app to keep planting when your browser is closed and unlock 5 bonus trees.
-                    </p>
-                </div>
+            <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2">
+                <Monitor className="hidden h-4 w-4 shrink-0 sm:block" aria-hidden="true" />
+                <p className="min-w-0 flex-1 truncate text-sm font-bold">
+                    Get the desktop app <span className="hidden font-semibold sm:inline">and plant even with your browser closed</span> · +5 trees
+                </p>
                 <Link
                     href="/welcome"
-                    className="inline-flex items-center justify-center gap-2 border-2 border-black bg-black px-4 py-2 text-xs uppercase text-white shadow-none"
+                    className="inline-flex shrink-0 items-center gap-1.5 border-2 border-black bg-brand-navy px-3 py-1 text-xs font-black uppercase text-white"
                 >
-                    <TreePine className="h-4 w-4" />
-                    Unlock Bonus
+                    Get app
+                    <ArrowRight className="h-3.5 w-3.5 text-brand-yellow" aria-hidden="true" />
                 </Link>
+                <button
+                    type="button"
+                    onClick={dismiss}
+                    className="shrink-0 p-1 text-black/60 hover:text-black"
+                    aria-label="Hide for now"
+                >
+                    <X className="h-4 w-4" />
+                </button>
             </div>
         </div>
     )

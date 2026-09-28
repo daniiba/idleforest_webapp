@@ -121,9 +121,25 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     scene.fog = new THREE.Fog(PAGE_COLOR, extent * 2.4, extent * 5)
 
     const camera = new THREE.PerspectiveCamera(32, 1, 1, extent * 12)
-    // Aim slightly in front of the centre so front islands clear the bottom edge.
-    const homeTarget = new THREE.Vector3(0, 6, extent * 0.1)
+    // Home view: orbit around the main island's axis. fitHome() picks the
+    // height and distance so every island stays in frame as it rotates.
+    const homeTarget = new THREE.Vector3(0, 0, 0)
     let homeDistance = extent * 3
+
+    // Points that bound what has to stay in view: each island's base outline
+    // at its foot and at tree-top height.
+    const framePoints: THREE.Vector3[] = []
+    for (const island of world.islands) {
+        const base = island.terraces[0]
+        const top = island.terraces[island.terraces.length - 1]
+        const tallest = island.trees.reduce((max, tree) => Math.max(max, tree.size), 0)
+        const topZ = top.z + tallest * 2.9 + 1
+        const step = Math.max(1, Math.floor(base.outline.length / 24))
+        for (let i = 0; i < base.outline.length; i += step) {
+            const [x, y] = base.outline[i]
+            framePoints.push(toVector(x, y, base.z - island.levelHeight), toVector(x, y, topZ))
+        }
+    }
 
     const hemisphere = new THREE.HemisphereLight('#d6e0ff', '#1a2440', 1.6)
     scene.add(hemisphere)
@@ -422,12 +438,54 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
 
     // --- Camera fitting and fly-to ----------------------------------------
     const size = new THREE.Vector2()
+    const probe = new THREE.PerspectiveCamera(camera.fov, 1, 1, extent * 40)
+    const projected = new THREE.Vector3()
+    const FIT_AZIMUTHS = Array.from({ length: 8 }, (_, index) => (index / 8) * Math.PI * 2)
+    // Screen share the scene may fill, leaving room for the zoom buttons
+    // and the hint line.
+    const FILL_X = 0.86
+    const FILL_Y = 0.8
+
+    // Projected bounds (NDC) of the frame points, over a full turn of the
+    // auto-rotation.
+    const projectedBounds = (targetY: number, distance: number) => {
+        const bounds = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity }
+        for (const azimuth of FIT_AZIMUTHS) {
+            probe.position.set(
+                Math.sin(azimuth) * Math.cos(ELEVATION) * distance,
+                targetY + Math.sin(ELEVATION) * distance,
+                Math.cos(azimuth) * Math.cos(ELEVATION) * distance
+            )
+            probe.lookAt(0, targetY, 0)
+            probe.updateMatrixWorld()
+            for (const point of framePoints) {
+                projected.copy(point).project(probe)
+                bounds.minX = Math.min(bounds.minX, projected.x)
+                bounds.maxX = Math.max(bounds.maxX, projected.x)
+                bounds.minY = Math.min(bounds.minY, projected.y)
+                bounds.maxY = Math.max(bounds.maxY, projected.y)
+            }
+        }
+        return bounds
+    }
+
     const fitHome = () => {
-        const aspect = Math.max(0.5, size.x / Math.max(1, size.y))
-        const verticalFov = THREE.MathUtils.degToRad(camera.fov)
-        const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect)
-        const fov = Math.min(verticalFov, horizontalFov)
-        homeDistance = (extent * 0.74) / Math.sin(fov / 2)
+        probe.aspect = Math.max(0.5, size.x / Math.max(1, size.y))
+        probe.updateProjectionMatrix()
+        const halfTan = Math.tan(THREE.MathUtils.degToRad(probe.fov) / 2)
+
+        let targetY = 0
+        let distance = extent * 3
+        for (let i = 0; i < 8; i++) {
+            const bounds = projectedBounds(targetY, distance)
+            // Centre vertically, then scale the distance to fill the frame.
+            targetY += ((bounds.minY + bounds.maxY) / 2) * distance * halfTan / Math.cos(ELEVATION)
+            const scale = Math.max((bounds.maxX - bounds.minX) / (2 * FILL_X), (bounds.maxY - bounds.minY) / (2 * FILL_Y))
+            distance *= Math.min(2, Math.max(0.5, scale))
+        }
+
+        homeTarget.set(0, targetY, 0)
+        homeDistance = Math.max(distance, world.mainRadius * 0.9)
         controls.minDistance = world.mainRadius * 0.45
         controls.maxDistance = homeDistance * 1.6
     }
