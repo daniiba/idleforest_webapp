@@ -101,13 +101,11 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     const name = data.displayName || 'This member'
     const summary = forestSceneSummary(data)
     const segments = [
-        { key: 'own', label: isSelf ? 'You planted' : `${name} planted`, value: data.ownTrees, color: FOREST_COLORS.own },
-        { key: 'invite', label: 'Earned by inviting', value: data.inviteTrees, color: FOREST_COLORS.invite },
+        { key: 'own', label: isSelf ? 'By you' : `By ${name}`, value: data.ownTrees, color: FOREST_COLORS.own },
+        { key: 'invite', label: 'Invite rewards', value: data.inviteTrees, color: FOREST_COLORS.invite },
         {
             key: 'friends',
-            label: data.friends.length === 0
-                ? (isSelf ? 'Planted by people you invite' : 'Planted by people they invite')
-                : data.friends.length === 1 ? 'Planted by 1 invited person' : `Planted by ${data.friends.length} invited people`,
+            label: data.friends.length > 0 ? `By friends (${data.friends.length})` : 'By friends',
             value: data.friendTrees,
             color: FOREST_COLORS.friend,
             dim: true,
@@ -119,10 +117,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
         <section className="overflow-hidden border-2 border-black bg-[#0B101F] text-white" aria-labelledby="forest-heading">
             <div className="grid lg:grid-cols-[1.35fr_0.65fr]">
                 <div className="p-5 sm:p-8">
-                    <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-yellow">
-                        {isSelf ? 'Your forest' : `${name}'s forest`}
-                    </p>
-                    <h2 id="forest-heading" className="mt-2 font-candu text-3xl font-extrabold uppercase leading-none sm:text-5xl">
+                    <h2 id="forest-heading" className="font-candu text-3xl font-extrabold uppercase leading-none sm:text-5xl">
                         {data.totalTrees > 0
                             ? `${formatTrees(data.totalTrees)} in ${isSelf ? 'your' : `${name}'s`} forest`
                             : isSelf ? 'Your forest starts here' : `${name}'s forest is just starting`}
@@ -137,17 +132,16 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                         title={isSelf ? 'Your forest island' : `${name}'s forest island`}
                     />
 
-                    <p className="mt-2 text-center text-xs font-semibold text-white/50">
-                        {summary.treesPerMark > 1 ? `Each tree mark stands for ${summary.treesPerMark} trees. ` : ''}
-                        {data.friends.length > 0 ? 'Small islands are the forests of people invited. ' : ''}
-                        {summary.hiddenFriends > 0 ? `${summary.hiddenFriends} more not shown.` : ''}
-                    </p>
+                    {summary.treesPerMark > 1 || summary.hiddenFriends > 0 ? (
+                        <p className="mt-2 text-center text-xs font-semibold text-white/50">
+                            {summary.treesPerMark > 1 ? `1 tree mark = ${summary.treesPerMark} trees. ` : ''}
+                            {summary.hiddenFriends > 0 ? `+${summary.hiddenFriends} more friends.` : ''}
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="flex flex-col border-t-2 border-white/15 p-5 sm:p-8 lg:border-l-2 lg:border-t-0">
-                    <p className="text-[11px] font-black uppercase tracking-wider text-white/50">Where the trees come from</p>
-
-                    <div className="mt-4 flex h-4 w-full overflow-hidden border border-white/30 bg-white/5" role="img"
+                    <div className="flex h-4 w-full overflow-hidden border border-white/30 bg-white/5" role="img"
                         aria-label={segments.map(segment => `${segment.label}: ${formatCount(segment.value)}`).join(', ')}>
                         {segments.map(segment => segment.value > 0 ? (
                             <div
@@ -172,7 +166,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                             </div>
                         ))}
                         <div className="flex items-center justify-between gap-4 border-t-2 border-white/20 pt-3">
-                            <dt className="text-sm font-black uppercase tracking-wider">{isSelf ? 'Your whole forest' : 'Whole forest'}</dt>
+                            <dt className="text-sm font-black uppercase tracking-wider">Total</dt>
                             <dd className="font-mono text-2xl font-black tabular-nums text-brand-yellow">{formatCount(data.totalTrees)}</dd>
                         </div>
                     </dl>

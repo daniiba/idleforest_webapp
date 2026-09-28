@@ -135,11 +135,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                         </button>
                     ) : (
                         <p className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px] font-semibold text-white/45">
-                            {coarse
-                                ? 'Drag to rotate · pinch to zoom · tap an island to visit'
-                                : active
-                                    ? 'Drag to rotate · scroll to zoom · click an island to visit'
-                                    : 'Drag to rotate · click, then scroll to zoom'}
+                            {coarse ? 'Drag · pinch · tap an island' : active ? 'Drag · scroll · click an island' : 'Drag to explore'}
                         </p>
                     )}
                 </>
