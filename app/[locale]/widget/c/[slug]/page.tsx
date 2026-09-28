@@ -1,14 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import { TreePine, Users } from 'lucide-react'
+import { ArrowUpRight, TreePine, Users } from 'lucide-react'
 import { getCompanyGeneratedPointStats } from '@/lib/company-node-points'
-
-// Basic standalone Layout for Widget to override the root layout's header/footer if needed
-// Actually, since it's an app dir, we can rely on standard page layout, 
-// but we should make sure this page doesn't render standard navbars, or just accept the global layout 
-// We will just render a centered card.
+import { localePrefix } from '@/lib/i18n-routes'
 
 export default async function CompanyWidgetPage({
     params
@@ -36,83 +31,91 @@ export default async function CompanyWidgetPage({
     totalPoints = companyPointStats.generatedPoints
 
     const themeColor = company.theme_color || '#10B981'
-    const joinUrl = `/${params.locale}/c/${company.slug}?invite=${company.invite_code}`
+    const partnerPagePath = `${localePrefix(params.locale)}/c/${encodeURIComponent(company.slug)}`
+    const partnerPageUrl = company.invite_code
+        ? `${partnerPagePath}?invite=${encodeURIComponent(company.invite_code)}`
+        : partnerPagePath
 
     return (
-        <div className="min-h-screen bg-transparent flex items-center justify-center p-4 font-sans">
-            <div className="w-full max-w-sm bg-white border-4 border-black shadow-none rounded-xl overflow-hidden relative">
+        <main className="min-h-screen bg-transparent flex items-center justify-center p-4 font-sans">
+            <a
+                href={partnerPageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${company.name}'s IdleForest partner page`}
+                className="group block w-full max-w-sm rounded-xl outline-none focus-visible:ring-4 focus-visible:ring-brand-yellow focus-visible:ring-offset-4"
+            >
+                <article className="relative overflow-hidden rounded-xl border-4 border-black bg-white shadow-none transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1">
 
-                {/* Header Pattern */}
-                <div
-                    className="h-24 w-full opacity-20 absolute top-0 left-0 pointer-events-none"
-                    style={{
-                        backgroundImage: `radial-gradient(${themeColor} 2px, transparent 2px)`,
-                        backgroundSize: '16px 16px'
-                    }}
-                />
+                    <div
+                        className="h-24 w-full opacity-20 absolute top-0 left-0 pointer-events-none"
+                        style={{
+                            backgroundImage: `radial-gradient(${themeColor} 2px, transparent 2px)`,
+                            backgroundSize: '16px 16px'
+                        }}
+                    />
 
-                <div className="p-6 flex flex-col items-center text-center relative z-10 pt-10">
-                    <div className="relative mb-6">
-                        <div className="absolute inset-0 bg-brand-yellow rounded-full blur-md opacity-50 transform translate-y-2"></div>
-                        {company.logo_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                                src={company.logo_url}
-                                alt={`${company.name} Logo`}
-                                className="w-20 h-20 rounded-full border-4 border-black object-cover relative z-10 bg-white"
-                            />
-                        ) : (
-                            <div className="w-20 h-20 rounded-full border-4 border-black bg-white flex items-center justify-center relative z-10">
-                                <TreePine className="h-10 w-10 text-brand-navy" />
+                    <div className="p-6 flex flex-col items-center text-center relative z-10 pt-10">
+                        <div className="relative mb-6">
+                            <div className="absolute inset-0 bg-brand-yellow rounded-full blur-md opacity-50 transform translate-y-2"></div>
+                            {company.logo_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                    src={company.logo_url}
+                                    alt=""
+                                    className="w-20 h-20 rounded-full border-4 border-black object-cover relative z-10 bg-white"
+                                />
+                            ) : (
+                                <div className="w-20 h-20 rounded-full border-4 border-black bg-white flex items-center justify-center relative z-10">
+                                    <TreePine className="h-10 w-10 text-brand-navy" aria-hidden="true" />
+                                </div>
+                            )}
+                        </div>
+
+                        <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-neutral-500">
+                            IdleForest partner
+                        </p>
+                        <h1 className="text-2xl font-extrabold font-candu uppercase text-black mb-2">
+                            {company.name}
+                        </h1>
+
+                        <p className="mb-6 line-clamp-3 text-sm font-semibold text-neutral-600">
+                            {company.description || 'See how our community is creating real-world environmental impact with IdleForest.'}
+                        </p>
+
+                        {(memberCount > 0 || totalPoints > 0) && (
+                            <div className="flex w-full items-center justify-center gap-2 mb-6 divide-x-2 divide-neutral-200 bg-neutral-50 py-3 rounded-xl border-2 border-neutral-200">
+                                <div className="flex flex-col items-center px-4 w-1/2">
+                                    <Users className="h-5 w-5 text-brand-navy mb-1" aria-hidden="true" />
+                                    <span className="font-extrabold text-xl text-black leading-none mb-1">{memberCount.toLocaleString(params.locale)}</span>
+                                    <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Members</span>
+                                </div>
+                                <div className="flex flex-col items-center px-4 w-1/2">
+                                    <TreePine className="h-5 w-5 text-green-600 mb-1" aria-hidden="true" />
+                                    <span className="font-extrabold text-xl text-black leading-none mb-1">{totalPoints.toLocaleString(params.locale)}</span>
+                                    <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Tasks</span>
+                                </div>
                             </div>
                         )}
-                    </div>
 
-                    <h2 className="text-2xl font-extrabold font-candu uppercase text-black mb-2">
-                        {company.name}
-                    </h2>
+                        <span
+                            className="flex w-full items-center justify-center gap-2 rounded-xl border-4 border-black px-4 py-3 text-center font-extrabold uppercase tracking-wider text-black shadow-none transition-all group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none"
+                            style={{ backgroundColor: themeColor }}
+                        >
+                            View partner page
+                            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                        </span>
 
-                    <p className="text-sm font-semibold text-neutral-600 mb-6">
-                        {company.description || 'Join our company portal to start planting real trees together!'}
-                    </p>
-
-                    {(memberCount > 0 || totalPoints > 0) && (
-                        <div className="flex w-full items-center justify-center gap-2 mb-6 divide-x-2 divide-neutral-200 bg-neutral-50 py-3 rounded-xl border-2 border-neutral-200">
-                            <div className="flex flex-col items-center px-4 w-1/2">
-                                <Users className="h-5 w-5 text-brand-navy mb-1" />
-                                <span className="font-extrabold text-xl text-black leading-none mb-1">{memberCount}</span>
-                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Members</span>
-                            </div>
-                            <div className="flex flex-col items-center px-4 w-1/2">
-                                <TreePine className="h-5 w-5 text-green-600 mb-1" />
-                                <span className="font-extrabold text-xl text-black leading-none mb-1">{totalPoints.toLocaleString()}</span>
-                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Tasks</span>
-                            </div>
-                        </div>
-                    )}
-
-                    <a
-                        href={joinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-3 px-4 rounded-xl border-4 border-black font-extrabold uppercase tracking-wider text-black text-center transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
-                        style={{
-                            backgroundColor: themeColor,
-                            boxShadow: 'none'
-                        }}
-                    >
-                        Plant trees with {company.name}
-                    </a>
-
-                    <div className="mt-6 flex items-center justify-center gap-2 text-xs font-bold text-neutral-400">
-                        <span>Powered by</span>
-                        <div className="flex items-center gap-1 text-black">
-                            <TreePine className="h-3 w-3" />
-                            <span className="font-candu tracking-wide uppercase">IdleForest</span>
+                        <div className="mt-6 flex items-center justify-center gap-2 text-xs font-bold text-neutral-400">
+                            <span>Powered by</span>
+                            <span className="flex items-center gap-1 text-black">
+                                <TreePine className="h-3 w-3" aria-hidden="true" />
+                                <span className="font-candu tracking-wide uppercase">IdleForest</span>
+                            </span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div >
+                </article>
+            </a>
+        </main>
     )
 }

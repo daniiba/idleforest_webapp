@@ -81,6 +81,7 @@ export default async function RootLayout({
     const shouldRenderMacDownloadSchemas = normalizedPathname === '/download/mac';
     const shouldRenderWindowsDownloadSchemas = normalizedPathname === '/download/windows';
     const shouldHideGlobalFooter =
+        normalizedPathname.startsWith('/widget/') ||
         normalizedPathname.startsWith('/c/wastefree') ||
         normalizedPathname.startsWith('/c/planetwild') ||
         normalizedPathname.startsWith('/c/mossy-earth') ||

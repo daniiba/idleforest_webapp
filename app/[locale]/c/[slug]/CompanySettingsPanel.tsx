@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Settings, Save, RefreshCw, PanelRightClose, PanelRightOpen, Copy, Check } from 'lucide-react'
 import { updateCompany, type UpdateCompanyInput } from './actions'
 import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
 
 export default function CompanySettingsPanel({
     company,
@@ -20,6 +21,8 @@ export default function CompanySettingsPanel({
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
     const [copied, setCopied] = useState(false)
     const router = useRouter()
+    const locale = useLocale()
+    const localePath = locale === 'en' ? '' : `/${locale}`
 
     const [formData, setFormData] = useState<UpdateCompanyInput>({
         name: company.name || '',
@@ -52,8 +55,8 @@ export default function CompanySettingsPanel({
     }
 
     const copyEmbedCode = () => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://idleforest.io'
-        const code = `<iframe src="${origin}/en/widget/c/${company.slug}" width="350px" height="450px" style="border:none; border-radius:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" title="Plant trees with ${company.name}"></iframe>`
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.idleforest.com'
+        const code = `<iframe src="${origin}${localePath}/widget/c/${company.slug}" width="100%" height="480" loading="lazy" style="max-width:380px; border:0; border-radius:12px; overflow:hidden;" title="IdleForest partner impact"></iframe>`
         navigator.clipboard.writeText(code)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
@@ -218,8 +221,8 @@ export default function CompanySettingsPanel({
                     <div className="flex-1 relative bg-neutral-200 border-4 border-black rounded-2xl overflow-hidden flex items-center justify-center p-4">
                         <iframe
                             key={isSaving ? 'saving' : formData.slug} // Force reload on save if needed, but using live URL usually
-                            src={`/en/widget/c/${formData.slug}`}
-                            className="w-[318px] h-[450px] border-none bg-white rounded-xl shadow-lg"
+                            src={`${localePath}/widget/c/${formData.slug}`}
+                            className="w-[318px] h-[480px] border-none bg-white rounded-xl shadow-lg"
                             title={`Preview Widget for ${formData.name}`}
                         ></iframe>
                     </div>
@@ -230,7 +233,7 @@ export default function CompanySettingsPanel({
                             <textarea
                                 className="w-full h-24 p-2 text-xs font-mono bg-black text-green-400 border-2 border-black rounded-lg focus:outline-none resize-none"
                                 readOnly
-                                value={`<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://idleforest.io'}/en/widget/c/${formData.slug}" width="350px" height="450px" style="border:none; border-radius:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" title="Plant trees with ${formData.name}"></iframe>`}
+                                value={`<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://www.idleforest.com'}${localePath}/widget/c/${formData.slug}" width="100%" height="480" loading="lazy" style="max-width:380px; border:0; border-radius:12px; overflow:hidden;" title="IdleForest partner impact"></iframe>`}
                             />
                             <button
                                 onClick={copyEmbedCode}

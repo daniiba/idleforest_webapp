@@ -65,7 +65,7 @@ async function getReferralSummary(userId: string) {
             .in('user_id', impactUserIds),
         admin.rpc('get_referral_daily_impact', {
             p_referrer_id: userId,
-            p_days: 30,
+            p_days: 90,
         }),
     ])
 

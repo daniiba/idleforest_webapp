@@ -3595,8 +3595,8 @@ export default function AdminPage() {
                                                         <div className="flex items-center justify-end gap-2">
                                                             <button
                                                                 onClick={() => {
-                                                                    const url = `${window.location.origin}/en/widget/c/${company.slug}`
-                                                                    navigator.clipboard.writeText(`<iframe src="${url}" width="350px" height="450px" style="border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" allow="clipboard-write"></iframe>`)
+                                                                    const url = `${window.location.origin}/widget/c/${company.slug}`
+                                                                    navigator.clipboard.writeText(`<iframe src="${url}" width="100%" height="480" loading="lazy" style="max-width:380px; border:0; border-radius:12px; overflow:hidden;" title="IdleForest partner impact"></iframe>`)
                                                                     alert('Widget iframe code copied to clipboard!')
                                                                 }}
                                                                 className="text-neutral-500 hover:text-black p-2" title="Copy Widget Code">
@@ -3968,9 +3968,9 @@ export default function AdminPage() {
                         <div className="flex-1 p-8 bg-neutral-100 flex items-center justify-center min-h-[500px]">
                             {/* Iframe wrapper to simulate widget embed */}
                             <iframe
-                                src={`/en/widget/c/${previewCompany.slug}`}
+                                src={`/widget/c/${previewCompany.slug}`}
                                 width="350px"
-                                height="450px"
+                                height="480px"
                                 className="border-none rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] bg-white"
                                 title={`Preview Widget for ${previewCompany.name}`}
                             ></iframe>
@@ -3978,7 +3978,7 @@ export default function AdminPage() {
 
                         <div className="p-4 border-t-4 border-black bg-neutral-50 flex justify-between items-center text-xs text-neutral-500 font-medium">
                             <span>Width: 350px</span>
-                            <span>Height: 450px</span>
+                            <span>Height: 480px</span>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
 import { PointsHistoryChart } from "@/components/PointsHistoryChart"
+import PublicReferralImpact, { type PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
 import { isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 interface Profile {
@@ -100,6 +101,7 @@ export default function PublicProfilePage() {
         total_requests: 0,
         updated_at: ''
     })
+    const [publicReferralImpact, setPublicReferralImpact] = useState<PublicReferralImpactData | null>(null)
     const [treesPlanted, setTreesPlanted] = useState<number>(0)
     const [userTeam, setUserTeam] = useState<UserTeam | null>(null)
     const [companyForest, setCompanyForest] = useState<CompanyForest | null>(null)
@@ -133,6 +135,7 @@ export default function PublicProfilePage() {
             setUserTeam(null)
             setPlatforms([])
             setIsOwnProfile(false)
+            setPublicReferralImpact(null)
             setLeaveCompanyError('')
             const { data: profile, error } = await supabase
                 .from('profiles')
@@ -143,6 +146,13 @@ export default function PublicProfilePage() {
             if (error) throw error
             if (profile) {
                 setProfile(profile)
+
+                const publicImpactResponse = await fetch(`/api/referrals/profile?displayName=${encodeURIComponent(profile.display_name)}`)
+                if (publicImpactResponse.ok) {
+                    const publicImpact = await publicImpactResponse.json() as PublicReferralImpactData
+                    setPublicReferralImpact(publicImpact)
+                }
+
                 // Fetch referral stats
                 const { data: referralStats, error: referralError } = await supabase
                     .from('referral_stats')
@@ -691,18 +701,24 @@ export default function PublicProfilePage() {
                             <Users className="w-5 h-5 text-blue-500" />
                             <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Referrals</p>
                         </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">{referralStats.total_referrals}</p>
+                        <p className="text-3xl font-extrabold font-candu text-black">
+                            {publicReferralImpact?.referrals ?? referralStats.total_referrals}
+                        </p>
                     </div>
 
                     {/* Points from Referrals */}
                     <div className="bg-white border-2 border-black shadow-none p-6">
                         <div className="flex items-center gap-2 mb-2">
                             <Gift className="w-5 h-5 text-purple-500" />
-                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Referral Points</p>
+                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Impact from Invites</p>
                         </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">{referralStats.total_requests}</p>
+                        <p className="text-3xl font-extrabold font-candu text-black">
+                            {(publicReferralImpact?.referredRequests ?? referralStats.total_requests).toLocaleString()}
+                        </p>
                     </div>
                 </div>
+
+                <PublicReferralImpact data={publicReferralImpact} isOwnProfile={isOwnProfile} />
 
                 {/* Points History */}
                 {historicalData.length > 0 && (
