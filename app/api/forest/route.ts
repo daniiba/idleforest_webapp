@@ -43,7 +43,7 @@ async function authenticatedUserId(request: NextRequest, admin: ReturnType<typeo
 }
 
 // GET /api/forest                     -> your own forest (cookie or bearer token), with friends' names
-// GET /api/forest?displayName=Anna    -> Anna's public forest, friends anonymised
+// GET /api/forest?displayName=Anna    -> Anna's public forest, friends shown by their public display names
 export async function GET(request: NextRequest) {
     const displayName = request.nextUrl.searchParams.get('displayName')?.trim()
 
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
             if (!profile) return json({ error: 'Profile not found' }, { status: 404 })
 
-            const forest = await getForestData(admin, profile.user_id, { includeNames: false })
+            const forest = await getForestData(admin, profile.user_id, { includeNames: true })
             const code = normalizeReferralCode(profile.referral_code)
 
             return json({
