@@ -1043,6 +1043,8 @@
         "own_cta": "Abrir mis invitaciones",
         "member_title": "Ya formas parte de IdleForest",
         "member_body": "Las invitaciones son para cuentas nuevas. Aun así, puedes hacer crecer el bosque de {name} invitando tú a alguien.",
-        "member_cta": "Invitar a alguien"
+        "member_cta": "Invitar a alguien",
+        "reward_title": "Regalo de bienvenida: {trees} árboles para cada uno",
+        "reward_body": "Cuando tu ordenador haya contribuido en {days} días distintos, plantaremos {trees} árboles para ti y {trees} para {name}."
     }
 }

@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import { ArrowRight, BadgeCheck, Download, Lock, ShieldCheck, Star, TreePine, UserPlus } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Download, Gift, Lock, ShieldCheck, Star, TreePine, UserPlus } from 'lucide-react'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import {
@@ -47,7 +48,9 @@ const loadInvite = cache(async (rawCode: string) => {
         console.error('Failed to load inviter impact:', error)
     }
 
-    return { owner, impact }
+    const reward = await getReferralRewardSettings(admin)
+
+    return { owner, impact, reward }
 })
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -89,7 +92,7 @@ export default async function ReferralInvitePage({ params }: PageProps) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    const { owner, impact } = invite
+    const { owner, impact, reward } = invite
     const name = owner.displayName || FALLBACK_NAME[params.locale] || FALLBACK_NAME.en
     const isOwner = user?.id === owner.userId
     const isMember = Boolean(user) && !isOwner
@@ -151,6 +154,19 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                             </div>
                         ) : (
                             <div className="mt-8">
+                                {reward.enabled ? (
+                                    <div className="mb-5 flex items-start gap-3 border-2 border-black bg-brand-navy p-4 text-white">
+                                        <Gift className="mt-0.5 h-6 w-6 shrink-0 text-brand-yellow" aria-hidden="true" />
+                                        <div>
+                                            <p className="font-black uppercase text-brand-yellow">
+                                                {t('reward_title', { trees: reward.treesPerPerson })}
+                                            </p>
+                                            <p className="mt-1 text-sm font-semibold leading-6 text-neutral-200">
+                                                {t('reward_body', { trees: reward.treesPerPerson, days: reward.minActiveDays, name })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ) : null}
                                 <Link
                                     href={signupHref}
                                     className="inline-flex w-full items-center justify-center gap-3 border-2 border-black bg-brand-yellow px-8 py-4 text-lg font-black uppercase tracking-wider text-black transition-transform hover:translate-x-[2px] hover:translate-y-[2px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto"

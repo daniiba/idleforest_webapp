@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
-import {
-    generateReferralCode,
-    normalizeReferralCode,
-    recordReferralEvent,
-} from '@/lib/referrals'
+import { normalizeReferralCode } from '@/lib/referrals'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
+import { INVITER_REWARD_TYPE } from '@/lib/referral-rewards'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
 
@@ -38,6 +36,15 @@ async function getReferralSummary(userId: string) {
             .from('referral_attributions')
             .select('referred_user_id, signed_up_at, activated_at, rewarded_at')
             .eq('referrer_id', userId),
+    ])
+    const [rewardSettings, { data: inviterRewards }] = await Promise.all([
+        getReferralRewardSettings(admin),
+        admin
+            .from('user_rewards')
+            .select('trees_awarded')
+            .eq('user_id', userId)
+            .eq('reward_type', INVITER_REWARD_TYPE)
+            .eq('status', 'awarded'),
     ])
 
     if (profileError) throw profileError
@@ -93,6 +100,7 @@ async function getReferralSummary(userId: string) {
                 displayName: referredProfile?.display_name || 'IdleForest member',
                 requests: requestsByUserId.get(attribution.referred_user_id) || 0,
                 activated: Boolean(attribution.activated_at),
+                rewarded: Boolean(attribution.rewarded_at),
                 joinedAt: attribution.signed_up_at,
             }
         })
@@ -118,6 +126,13 @@ async function getReferralSummary(userId: string) {
         referrals: attributions?.length || 0,
         activatedReferrals: attributions?.filter(row => row.activated_at).length || 0,
         rewardedReferrals: attributions?.filter(row => row.rewarded_at).length || 0,
+        treesFromInvites: (inviterRewards || []).reduce(
+            (sum, reward) => sum + (Number(reward.trees_awarded) || 0),
+            0
+        ),
+        reward: rewardSettings.enabled
+            ? { treesPerPerson: rewardSettings.treesPerPerson, minActiveDays: rewardSettings.minActiveDays }
+            : null,
         ownRequests,
         referredRequests,
         combinedRequests: ownRequests + referredRequests,
@@ -147,87 +162,24 @@ export async function POST() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
+        // Shared with the desktop app: keeps an existing (profile, tree-claim
+        // or legacy app) code so links already shared keep working, otherwise
+        // generates one, and records link_created.
         const admin = createAdminClient()
-        const { data: profile, error: profileError } = await admin
-            .from('profiles')
-            .select('referral_code')
-            .eq('user_id', user.id)
-            .maybeSingle()
+        const { data: code, error } = await admin.rpc('ensure_referral_code', {
+            p_user_id: user.id,
+            p_channel: 'dashboard',
+        })
 
-        if (profileError || !profile) {
-            return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
-        }
-
-        let code = normalizeReferralCode(profile.referral_code)
-        let createdNow = false
-
-        if (!code) {
-            const { data: legacyClaim } = await admin
-                .from('pending_tree_claims')
-                .select('referral_code')
-                .eq('user_id', user.id)
-                .maybeSingle()
-
-            const legacyCode = normalizeReferralCode(legacyClaim?.referral_code)
-
-            if (legacyCode) {
-                const { data: updatedProfile, error: updateError } = await admin
-                    .from('profiles')
-                    .update({ referral_code: legacyCode })
-                    .eq('user_id', user.id)
-                    .is('referral_code', null)
-                    .select('referral_code')
-                    .maybeSingle()
-
-                if (updateError) throw updateError
-
-                code = normalizeReferralCode(updatedProfile?.referral_code)
-                createdNow = Boolean(code)
+        if (error) {
+            if (error.message?.includes('profile not found')) {
+                return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
             }
+            throw error
         }
 
-        for (let attempt = 0; !code && attempt < 6; attempt += 1) {
-            const candidate = generateReferralCode()
-            const { data: updatedProfile, error } = await admin
-                .from('profiles')
-                .update({ referral_code: candidate })
-                .eq('user_id', user.id)
-                .is('referral_code', null)
-                .select('referral_code')
-                .maybeSingle()
-
-            if (error?.code === '23505') continue
-            if (error) throw error
-
-            code = normalizeReferralCode(updatedProfile?.referral_code)
-            if (code) {
-                createdNow = true
-                break
-            }
-
-            // Another request may have won the race to assign this user's code.
-            const { data: currentProfile, error: refetchError } = await admin
-                .from('profiles')
-                .select('referral_code')
-                .eq('user_id', user.id)
-                .maybeSingle()
-
-            if (refetchError) throw refetchError
-            code = normalizeReferralCode(currentProfile?.referral_code)
-        }
-
-        if (!code) {
+        if (!normalizeReferralCode(code)) {
             return NextResponse.json({ error: 'Failed to create invite link' }, { status: 500 })
-        }
-
-        if (createdNow) {
-            await recordReferralEvent(admin, {
-                eventName: 'link_created',
-                referralCode: code,
-                referrerId: user.id,
-                actorUserId: user.id,
-                channel: 'dashboard',
-            })
         }
 
         return NextResponse.json(await getReferralSummary(user.id))

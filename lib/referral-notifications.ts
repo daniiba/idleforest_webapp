@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { generateUnsubscribeUrl, sendEmail } from '@/lib/resend'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 
 // Referrers hear back at the two moments that make them invite again: when a
 // friend joins (so they can nudge them through setup) and when that friend's
@@ -85,6 +86,73 @@ export function renderReferralTemplate(template: string, values: Record<string, 
         if (!(key in values)) return match
         return escape ? escapeHtml(values[key]) : values[key]
     })
+}
+
+export function referralsPageUrl(campaign: string) {
+    return `${APP_URL}/referrals?utm_source=resend&utm_medium=email&utm_campaign=${encodeURIComponent(campaign)}`
+}
+
+export function inviteUrlForCode(code: string | null | undefined, channel: string) {
+    return code ? `${APP_URL}/r/${encodeURIComponent(code)}?channel=${encodeURIComponent(channel)}` : null
+}
+
+/**
+ * Sends one email from a stored template to one member, honouring
+ * unsubscribes and logging to email_logs. Never throws.
+ */
+export async function sendTemplatedEmail(
+    admin: ReturnType<typeof createAdminClient>,
+    input: {
+        templateName: string
+        to: string
+        userId: string
+        segment: string
+        values: Record<string, string>
+    }
+): Promise<{ sent: boolean; reason?: 'unsubscribed' | 'missing_template' | 'failed' }> {
+    try {
+        const { data: unsubscribed } = await admin
+            .from('email_logs')
+            .select('id')
+            .eq('email', input.to)
+            .eq('status', 'unsubscribed')
+            .limit(1)
+
+        if (unsubscribed && unsubscribed.length > 0) return { sent: false, reason: 'unsubscribed' }
+
+        const { data: template } = await admin
+            .from('email_templates')
+            .select('id, name, subject, content, from_email')
+            .eq('name', input.templateName)
+            .maybeSingle()
+
+        if (!template) {
+            console.warn(`Referral email template missing: ${input.templateName}`)
+            return { sent: false, reason: 'missing_template' }
+        }
+
+        const values = { ...input.values, UNSUBSCRIBE_URL: await generateUnsubscribeUrl(input.to) }
+        const subject = renderReferralTemplate(template.subject, values, false).replace(/[\r\n]+/g, ' ')
+        const html = renderReferralTemplate(template.content, values, true)
+        const result = await sendEmail(input.to, subject, html, template.from_email || DEFAULT_FROM)
+
+        await admin.from('email_logs').insert({
+            user_id: input.userId,
+            email: input.to,
+            subject,
+            template_id: template.id,
+            email_type: 'transactional',
+            segment: input.segment,
+            resend_id: result.emailId || null,
+            status: result.success ? 'sent' : 'failed',
+        })
+
+        if (!result.success) console.error('Failed to send referral email:', result.error)
+        return result.success ? { sent: true } : { sent: false, reason: 'failed' }
+    } catch (error) {
+        console.error('Failed to send referral email:', error)
+        return { sent: false, reason: 'failed' }
+    }
 }
 
 async function loadTemplates(admin: ReturnType<typeof createAdminClient>) {
@@ -179,6 +247,7 @@ export async function sendReferralNotifications(options: {
     }
 
     const templates = await loadTemplates(admin)
+    const rewardSettings = await getReferralRewardSettings(admin)
     const referrerEmails = Array.from(new Set(pending.map(row => row.referrer_email)))
     const { data: unsubscribedRows } = await admin
         .from('email_logs')
@@ -219,10 +288,8 @@ export async function sendReferralNotifications(options: {
 
         const claimedRows = rows.filter(row => claimedIds.includes(row.attribution_id))
         const referrerCode = claimedRows.find(row => row.referrer_code)?.referrer_code
-        const referralsUrl = `${APP_URL}/referrals?utm_source=resend&utm_medium=email&utm_campaign=${notification.segment}`
-        const inviteUrl = referrerCode
-            ? `${APP_URL}/r/${encodeURIComponent(referrerCode)}?channel=email_${kind}`
-            : referralsUrl
+        const referralsUrl = referralsPageUrl(notification.segment)
+        const inviteUrl = inviteUrlForCode(referrerCode, `email_${kind}`) || referralsUrl
         const values = {
             REFERRER_NAME: rows[0].referrer_name || 'there',
             FRIEND_NAMES: formatFriendNames(
@@ -231,6 +298,8 @@ export async function sendReferralNotifications(options: {
             CONTRIBUTING_COUNT: String(Math.max(Number(rows[0].contributing_count) || 0, claimedRows.length)),
             INVITE_URL: inviteUrl,
             REFERRALS_URL: referralsUrl,
+            REWARD_TREES: String(rewardSettings.treesPerPerson),
+            MIN_DAYS: String(rewardSettings.minActiveDays),
             UNSUBSCRIBE_URL: await generateUnsubscribeUrl(email),
         }
 

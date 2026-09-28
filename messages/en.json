@@ -1098,6 +1098,8 @@
         "own_cta": "Open my referrals",
         "member_title": "You're already part of IdleForest",
         "member_body": "Invites are for new accounts. You can still help {name}'s forest grow by inviting someone yourself.",
-        "member_cta": "Invite someone"
+        "member_cta": "Invite someone",
+        "reward_title": "Welcome gift: {trees} trees for each of you",
+        "reward_body": "Once your computer has contributed on {days} different days, we plant {trees} trees for you and {trees} for {name}."
     }
 }

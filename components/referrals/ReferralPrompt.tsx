@@ -8,6 +8,7 @@ type ReferredUser = {
     displayName: string
     requests: number
     activated: boolean
+    rewarded?: boolean
     joinedAt: string
 }
 
@@ -17,6 +18,8 @@ type ReferralSummary = {
     referrals: number
     activatedReferrals: number
     rewardedReferrals: number
+    treesFromInvites?: number
+    reward?: { treesPerPerson: number; minActiveDays: number } | null
     ownRequests: number
     referredRequests: number
     combinedRequests: number
@@ -278,7 +281,9 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                             Grow the forest together
                         </h2>
                         <p className={`${isPage ? 'mt-5 max-w-xl text-lg' : 'mt-1 max-w-2xl text-sm'} font-semibold text-neutral-700`}>
-                            Invite one person who would genuinely use IdleForest. We count the referral when their node starts contributing—not when an empty account is created.
+                            {summary?.reward
+                                ? <>Invite someone who would genuinely use IdleForest. Once their computer has contributed on {summary.reward.minActiveDays} different days, <strong className="text-black">you both get {summary.reward.treesPerPerson} trees planted</strong>.</>
+                                : 'Invite one person who would genuinely use IdleForest. We count the referral when their node starts contributing, not when an empty account is created.'}
                         </p>
                     </div>
                 </div>
@@ -290,7 +295,7 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                     {summary?.url ? (
                         <>
                             {isPage ? (
-                                <div className="mb-5 grid grid-cols-2 gap-3">
+                                <div className="mb-5 grid grid-cols-3 gap-3">
                                     <div className="border-2 border-black bg-white p-4">
                                         <p className="text-3xl font-black">{summary.referrals}</p>
                                         <p className="text-xs font-black uppercase tracking-wider">Joined</p>
@@ -298,6 +303,10 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                                     <div className="border-2 border-black bg-brand-navy p-4 text-white">
                                         <p className="text-3xl font-black text-brand-yellow">{summary.activatedReferrals}</p>
                                         <p className="text-xs font-black uppercase tracking-wider">Contributing</p>
+                                    </div>
+                                    <div className="border-2 border-black bg-white p-4">
+                                        <p className="text-3xl font-black">{summary.treesFromInvites || 0}</p>
+                                        <p className="text-xs font-black uppercase tracking-wider">Trees earned</p>
                                     </div>
                                 </div>
                             ) : null}
@@ -430,7 +439,11 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                                             <div className="min-w-0">
                                                 <p className="truncate text-sm font-black">{referredUser.displayName}</p>
                                                 <p className={`text-[10px] font-black uppercase tracking-wider ${referredUser.activated ? 'text-green-700' : 'text-neutral-400'}`}>
-                                                    {referredUser.activated ? 'Contributing' : 'Joined'}
+                                                    {referredUser.rewarded
+                                                        ? 'Reward trees planted'
+                                                        : referredUser.activated
+                                                            ? 'Contributing'
+                                                            : 'Joined'}
                                                 </p>
                                             </div>
                                             <div className="text-right">

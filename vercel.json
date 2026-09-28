@@ -18,7 +18,7 @@
       "schedule": "15 2 * * *"
     },
     {
-      "path": "/api/cron/referral-notifications",
+      "path": "/api/cron/referrals",
       "schedule": "40 16 * * *"
     }
   ]

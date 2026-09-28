@@ -33,6 +33,9 @@ export async function GET(
     const signupUrl = new URL('/auth/user/signup', request.url)
 
     if (!code) {
+        if (request.nextUrl.searchParams.get('channel') === 'legacy_ref') {
+            return NextResponse.redirect(new URL('/', request.url))
+        }
         signupUrl.searchParams.set('referral_error', 'invalid')
         return NextResponse.redirect(signupUrl)
     }
@@ -52,6 +55,12 @@ export async function GET(
 
             if (teamInvite) {
                 return NextResponse.redirect(new URL(`/invite/${code}`, request.url))
+            }
+
+            // Homepage ?ref= values that aren't invite codes (campaign tags
+            // and the like) go back to the homepage, as they did before.
+            if (request.nextUrl.searchParams.get('channel') === 'legacy_ref') {
+                return NextResponse.redirect(new URL('/', request.url))
             }
 
             signupUrl.searchParams.set('referral_error', 'invalid')

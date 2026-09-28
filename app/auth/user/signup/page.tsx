@@ -18,6 +18,7 @@ interface InviteInfo {
 interface ReferralInfo {
   code: string;
   inviterName: string;
+  reward?: { treesPerPerson: number; minActiveDays: number } | null;
 }
 
 function SignupForm() {
@@ -155,6 +156,7 @@ function SignupForm() {
         setReferralInfo({
           code: data.code,
           inviterName: data.inviterName,
+          reward: data.reward || null,
         });
         setReferralValidationError(null);
       })
@@ -322,6 +324,11 @@ function SignupForm() {
           </div>
           <p className="font-bold text-lg">{referralInfo.inviterName} invited you to grow IdleForest together.</p>
           <p className="mt-1 text-sm font-semibold text-neutral-700">Free, runs quietly in the background, and plants real trees. Create your account, then connect the desktop app to join {referralInfo.inviterName}&apos;s forest.</p>
+          {referralInfo.reward && (
+            <p className="mt-2 border-t-2 border-black pt-2 text-sm font-black">
+              Welcome gift: once your computer has contributed on {referralInfo.reward.minActiveDays} days, you and {referralInfo.inviterName} each get {referralInfo.reward.treesPerPerson} trees planted.
+            </p>
+          )}
         </div>
       )}
 

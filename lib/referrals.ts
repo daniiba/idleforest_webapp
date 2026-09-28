@@ -1,8 +1,3 @@
-import crypto from 'crypto'
-
-const REFERRAL_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
-const REFERRAL_CODE_LENGTH = 8
-
 type SupabaseLike = {
     from: (table: string) => any
 }
@@ -18,17 +13,6 @@ export function normalizeReferralCode(value: unknown) {
 
     const code = value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')
     return code.length > 64 ? '' : code
-}
-
-export function generateReferralCode() {
-    const bytes = crypto.randomBytes(REFERRAL_CODE_LENGTH)
-    let code = ''
-
-    for (let index = 0; index < bytes.length; index += 1) {
-        code += REFERRAL_CODE_ALPHABET[bytes[index] % REFERRAL_CODE_ALPHABET.length]
-    }
-
-    return code
 }
 
 export async function resolveReferralOwner(
@@ -60,16 +44,31 @@ export async function resolveReferralOwner(
         .ilike('referral_code', code)
         .maybeSingle()
 
-    if (!legacyClaim?.user_id) return null
+    let legacyUserId: string | null = legacyClaim?.user_id || null
+
+    if (!legacyUserId) {
+        // Codes created by the desktop app and browser extension, which
+        // shared https://www.idleforest.com/?ref=CODE links.
+        const { data: legacyAppCode, error: legacyAppCodeError } = await supabase
+            .from('referral_codes')
+            .select('user_id')
+            .ilike('code', code)
+            .limit(1)
+            .maybeSingle()
+
+        if (!legacyAppCodeError) legacyUserId = legacyAppCode?.user_id || null
+    }
+
+    if (!legacyUserId) return null
 
     const { data: legacyProfile } = await supabase
         .from('profiles')
         .select('display_name')
-        .eq('user_id', legacyClaim.user_id)
+        .eq('user_id', legacyUserId)
         .maybeSingle()
 
     return {
-        userId: legacyClaim.user_id,
+        userId: legacyUserId,
         code,
         displayName: legacyProfile?.display_name || null,
     }

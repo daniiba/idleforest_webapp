@@ -1,5 +1,6 @@
 import ReferralPrompt from '@/components/referrals/ReferralPrompt'
 import { createClient } from '@/lib/supabase/server'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { redirect } from 'next/navigation'
 
 export default async function ReferralsPage() {
@@ -9,6 +10,8 @@ export default async function ReferralsPage() {
     if (!user) {
         redirect(`/auth/user/login?redirect=${encodeURIComponent('/referrals')}`)
     }
+
+    const reward = await getReferralRewardSettings(supabase)
 
     return (
         <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-16">
@@ -27,8 +30,17 @@ export default async function ReferralsPage() {
                 </div>
                 <div className="p-6">
                     <p className="font-mono text-xs font-bold text-brand-yellow">03 / GROW</p>
-                    <h2 className="mt-2 text-xl font-black uppercase">We verify real impact</h2>
-                    <p className="mt-2 text-sm text-neutral-300">The referral becomes active after their node contributes, keeping the forest focused on real participation.</p>
+                    {reward.enabled ? (
+                        <>
+                            <h2 className="mt-2 text-xl font-black uppercase">You both get {reward.treesPerPerson} trees</h2>
+                            <p className="mt-2 text-sm text-neutral-300">Once their computer has contributed on {reward.minActiveDays} different days, we plant {reward.treesPerPerson} trees for you and {reward.treesPerPerson} for them.</p>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="mt-2 text-xl font-black uppercase">We verify real impact</h2>
+                            <p className="mt-2 text-sm text-neutral-300">The referral becomes active after their node contributes, keeping the forest focused on real participation.</p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

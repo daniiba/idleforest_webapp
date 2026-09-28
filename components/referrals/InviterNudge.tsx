@@ -15,6 +15,7 @@ export default function InviterNudge({ connected = false }: InviterNudgeProps) {
     const { user, loading } = useAuth()
     const referralCode = user?.user_metadata?.referral_code
     const [inviterName, setInviterName] = useState<string | null>(null)
+    const [reward, setReward] = useState<{ treesPerPerson: number; minActiveDays: number } | null>(null)
 
     useEffect(() => {
         if (loading || typeof referralCode !== 'string' || !referralCode.trim()) return
@@ -23,7 +24,9 @@ export default function InviterNudge({ connected = false }: InviterNudgeProps) {
         fetch(`/api/referrals/resolve?code=${encodeURIComponent(referralCode)}`)
             .then(response => response.ok ? response.json() : null)
             .then(data => {
-                if (!cancelled && data?.valid && data.inviterName) setInviterName(data.inviterName)
+                if (cancelled || !data?.valid || !data.inviterName) return
+                setInviterName(data.inviterName)
+                setReward(data.reward || null)
             })
             .catch(() => {})
 
@@ -46,6 +49,11 @@ export default function InviterNudge({ connected = false }: InviterNudgeProps) {
                         ? `You're connected. Your activity now grows the forest you and ${inviterName} share.`
                         : `Connect the desktop app below to start growing the forest with ${inviterName}. We'll let them know once you're contributing.`}
                 </p>
+                {reward ? (
+                    <p className="mt-2 text-sm font-semibold text-neutral-800">
+                        Once your computer has contributed on {reward.minActiveDays} different days, you and {inviterName} each get {reward.treesPerPerson} trees planted.
+                    </p>
+                ) : null}
             </div>
         </section>
     )

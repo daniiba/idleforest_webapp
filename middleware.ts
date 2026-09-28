@@ -114,6 +114,18 @@ export async function middleware(request: NextRequest) {
 
   const homepagePaths = ['/', '/es', '/de', '/pt', '/fr'];
   if (homepagePaths.includes(pathname) && request.nextUrl.searchParams.has('ref')) {
+    // The desktop app and browser extension share https://www.idleforest.com/?ref=CODE.
+    // Route anything that looks like an invite code through the referral
+    // landing flow (it falls back to the homepage for unknown codes).
+    const ref = request.nextUrl.searchParams.get('ref') || '';
+    if (/^[A-Za-z0-9-]{4,32}$/.test(ref)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/r/${encodeURIComponent(ref)}`;
+      url.search = '';
+      url.searchParams.set('channel', 'legacy_ref');
+      return NextResponse.redirect(url, 307);
+    }
+
     const url = request.nextUrl.clone();
     url.searchParams.delete('ref');
     return NextResponse.redirect(url, 308);
