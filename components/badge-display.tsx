@@ -137,17 +137,17 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
     }
   };
 
-  // Neobrutalist light theme - matches landing page design with brand-yellow and brand-navy
+  // Neobrutalist light theme on the brand gray (no white cards), with brand-yellow and brand-navy
   const lightTiers = {
     locked: {
       style: {
-        cardBg: '#F5F5F5',
+        cardBg: '#CFCFCF',
         iconGradient: '#9CA3AF',
         borderColor: '#000000',
         glowColor: 'transparent',
         shadowColor: 'rgba(0, 0, 0, 1)',
         progressGradient: '#9CA3AF',
-        progressBg: '#E5E7EB',
+        progressBg: '#BDBDBD',
         titleStyle: { color: '#6B7280' },
         textColor: '#374151',
         subTextColor: '#6B7280'
@@ -155,13 +155,13 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
     },
     apprentice: {
       style: {
-        cardBg: '#FFFFFF',
+        cardBg: '#D9D9D9',
         iconGradient: '#0B101F',
         borderColor: '#000000',
         glowColor: 'transparent',
         shadowColor: 'rgba(0, 0, 0, 1)',
         progressGradient: '#0B101F',
-        progressBg: '#E5E7EB',
+        progressBg: '#BDBDBD',
         titleStyle: { color: '#0B101F' },
         textColor: '#1F2937',
         subTextColor: '#6B7280'
@@ -169,13 +169,13 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
     },
     specialist: {
       style: {
-        cardBg: '#FFFFFF',
+        cardBg: '#D9D9D9',
         iconGradient: '#0B101F',
         borderColor: '#000000',
         glowColor: 'transparent',
         shadowColor: 'rgba(0, 0, 0, 1)',
         progressGradient: 'linear-gradient(90deg, #0B101F 0%, #E0F146 100%)',
-        progressBg: '#E5E7EB',
+        progressBg: '#BDBDBD',
         titleStyle: { color: '#0B101F' },
         textColor: '#1F2937',
         subTextColor: '#6B7280'
@@ -183,13 +183,13 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
     },
     expert: {
       style: {
-        cardBg: '#FFFFFF',
+        cardBg: '#D9D9D9',
         iconGradient: '#E0F146',
         borderColor: '#000000',
         glowColor: 'transparent',
         shadowColor: 'rgba(0, 0, 0, 1)',
         progressGradient: 'linear-gradient(90deg, #0B101F 0%, #E0F146 100%)',
-        progressBg: '#E5E7EB',
+        progressBg: '#BDBDBD',
         titleStyle: { color: '#0B101F' },
         textColor: '#1F2937',
         subTextColor: '#6B7280'

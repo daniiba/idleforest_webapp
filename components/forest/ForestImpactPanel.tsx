@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowRight, Check, Loader2, Share2 } from 'lucide-react'
+import { Check, Loader2, Share2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
 import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
 import { formatTrees } from '@/lib/referral-reward-settings'
@@ -20,7 +20,7 @@ export type ForestResponse = {
 
 type ForestImpactPanelProps =
     | { mode: 'self' }
-    | { mode: 'public'; displayName: string; isSignedIn: boolean }
+    | { mode: 'public'; displayName: string }
 
 function formatCount(value: number) {
     return value.toLocaleString('en')
@@ -183,14 +183,6 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                     {shared ? 'Link copied' : 'Share my forest'}
                                 </button>
                             ) : null
-                        ) : !props.isSignedIn && data.invitePath ? (
-                            <a
-                                href={data.invitePath}
-                                className="inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-3 text-sm font-black uppercase text-black"
-                            >
-                                Grow your island next to {name}
-                                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                            </a>
                         ) : null}
                     </div>
                 </div>

@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react"
 import { createClient } from '@/lib/supabase/client'
 import { useParams } from 'next/navigation'
-import { Building2, Gift, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Monitor, Share2, Trophy, Users } from 'lucide-react'
+import { Building2, Loader2, LogOut, Plus, Upload, X, Apple, Chrome, Monitor, Share2, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BadgeDisplay from "@/components/badge-display"
 import { PointsHistoryChart } from "@/components/PointsHistoryChart"
-import PublicReferralImpact, { type PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
+import type { PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
 import ProfileJoinCta from '@/components/referrals/ProfileJoinCta'
 import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
 import { isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
@@ -61,6 +61,21 @@ interface CompanyForest {
 
 // Create client once outside component
 const supabase = createClient()
+
+function WindowsIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+        </svg>
+    )
+}
+
+const PLATFORM_META: Record<string, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
+    windows: { label: 'Windows', icon: WindowsIcon },
+    mac: { label: 'Mac', icon: Apple },
+    linux: { label: 'Linux', icon: Monitor },
+    extension: { label: 'Extension', icon: Chrome },
+}
 
 function getCompanyImpactDescription(company: CompanyForest) {
     if (isWastefreeCompanySlug(company.slug)) {
@@ -429,123 +444,107 @@ export default function PublicProfilePage() {
     }
 
     return (
-        <main className="min-h-screen bg-brand-gray p-4 py-32 font-rethink-sans">
+        <main className="min-h-screen bg-brand-gray px-4 pb-16 pt-10 font-rethink-sans sm:pt-14">
             <div className="w-full max-w-6xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="relative bg-white border-2 border-black shadow-none p-8 sm:pr-72">
-                    {companyForest ? (
-                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-none sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[250px]">
-                            <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-2" title={getCompanyImpactDescription(companyForest)}>
-                                <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
-                                    {getCompanyLogoUrl(companyForest) ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                            src={getCompanyLogoUrl(companyForest)!}
-                                            alt=""
-                                            className="h-full w-full object-contain p-1"
-                                        />
-                                    ) : (
-                                        <Building2 className="h-4 w-4 text-brand-yellow" />
-                                    )}
-                                </span>
-                                <span className="min-w-0">
-                                    <span className="block text-[0.58rem] font-black uppercase leading-none tracking-wider text-neutral-500">Contributing</span>
-                                    <span className="mt-0.5 block truncate text-xs font-black leading-tight text-black">{companyForest.name}</span>
-                                </span>
-                            </Link>
-                            {isOwnProfile && (
-                                <button
-                                    type="button"
-                                    onClick={() => setShowLeaveCompanyModal(true)}
-                                    className="flex h-8 w-8 shrink-0 items-center justify-center border border-black bg-black text-white transition-colors hover:bg-neutral-800"
-                                    title="Return to IdleForest"
-                                    aria-label="Return to IdleForest"
-                                >
-                                    <LogOut className="h-3.5 w-3.5" />
-                                </button>
-                            )}
-                        </div>
-                    ) : isOwnProfile ? (
-                        <div className="mb-5 flex w-fit max-w-full items-center gap-2 border-2 border-black bg-white p-1.5 shadow-none sm:absolute sm:right-4 sm:top-4 sm:mb-0 sm:max-w-[230px]">
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src="/logo_bg.png" alt="" className="h-full w-full object-cover" />
-                            </span>
-                            <span className="min-w-0">
-                                <span className="block text-[0.58rem] font-black uppercase leading-none tracking-wider text-neutral-500">Contributing</span>
-                                <span className="mt-0.5 block truncate text-xs font-black leading-tight text-black">IdleForest</span>
-                            </span>
-                        </div>
-                    ) : null}
+                <section className="border-2 border-black bg-brand-gray p-6 sm:p-8">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                            <h1 className="break-words font-candu text-4xl font-extrabold uppercase leading-none text-brand-navy sm:text-5xl">
+                                {profile.display_name}
+                            </h1>
 
-                    <div className="flex items-center gap-4 mb-2">
-                        <h1 className="text-4xl font-extrabold font-candu uppercase">
-                            {profile.display_name}
-                        </h1>
-                        {/* Platform Icons */}
-                        {platforms.length > 0 && (
-                            <div className="flex items-center gap-2">
-                                {platforms.includes('windows') && (
-                                    <div className="bg-blue-100 p-2 rounded border-2 border-black" title="Windows">
-                                        <svg className="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
-                                        </svg>
-                                    </div>
+                            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-neutral-700">
+                                <span>Member since {new Date(profile.created_at).toLocaleDateString('en', { month: 'short', year: 'numeric' })}</span>
+                                {platforms.map(platform => {
+                                    const meta = PLATFORM_META[platform]
+                                    if (!meta) return null
+                                    const Icon = meta.icon
+                                    return (
+                                        <span key={platform} className="inline-flex items-center gap-1 border border-black/40 px-1.5 py-0.5 text-xs font-bold text-neutral-700">
+                                            <Icon className="h-3 w-3" aria-hidden="true" />
+                                            {meta.label}
+                                        </span>
+                                    )
+                                })}
+                            </div>
+
+                            <div className="mt-5 flex flex-wrap items-center gap-2">
+                                {userTeam ? (
+                                    <Link
+                                        href={`/teams/${userTeam.slug}`}
+                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-navy px-3 py-2 text-sm font-black text-white"
+                                    >
+                                        <Users className="h-4 w-4 text-brand-yellow" aria-hidden="true" />
+                                        {userTeam.name}
+                                    </Link>
+                                ) : null}
+
+                                {companyForest ? (
+                                    <span className="inline-flex items-center gap-2 border-2 border-black bg-brand-gray px-2 py-1.5">
+                                        <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-2" title={getCompanyImpactDescription(companyForest)}>
+                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden border border-black bg-black">
+                                                {getCompanyLogoUrl(companyForest) ? (
+                                                    // eslint-disable-next-line @next/next/no-img-element
+                                                    <img src={getCompanyLogoUrl(companyForest)!} alt="" className="h-full w-full object-contain p-0.5" />
+                                                ) : (
+                                                    <Building2 className="h-3.5 w-3.5 text-brand-yellow" />
+                                                )}
+                                            </span>
+                                            <span className="truncate text-sm font-black">{companyForest.name}</span>
+                                        </Link>
+                                        {isOwnProfile && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowLeaveCompanyModal(true)}
+                                                className="flex h-6 w-6 shrink-0 items-center justify-center border border-black bg-black text-white hover:bg-neutral-800"
+                                                title="Return to IdleForest"
+                                                aria-label="Return to IdleForest"
+                                            >
+                                                <LogOut className="h-3 w-3" />
+                                            </button>
+                                        )}
+                                    </span>
+                                ) : null}
+
+                                {isOwnProfile && !userTeam && (
+                                    <button
+                                        onClick={() => setShowCreateTeamModal(true)}
+                                        className="inline-flex items-center gap-2 border-2 border-black px-3 py-2 text-sm font-black hover:bg-black/5"
+                                    >
+                                        <Plus className="h-4 w-4" aria-hidden="true" />
+                                        Create team
+                                    </button>
                                 )}
-                                {platforms.includes('mac') && (
-                                    <div className="bg-gray-100 p-2 rounded border-2 border-black" title="Mac">
-                                        <Apple className="w-4 h-4 text-gray-700" />
-                                    </div>
-                                )}
-                                {platforms.includes('linux') && (
-                                    <div className="bg-amber-100 p-2 rounded border-2 border-black" title="Linux">
-                                        <Monitor className="w-4 h-4 text-amber-700" />
-                                    </div>
-                                )}
-                                {platforms.includes('extension') && (
-                                    <div className="bg-green-100 p-2 rounded border-2 border-black" title="Browser Extension">
-                                        <Chrome className="w-4 h-4 text-green-600" />
-                                    </div>
+
+                                {isOwnProfile && (
+                                    <Link
+                                        href={`/share/user/${profile.display_name}`}
+                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-sm font-black text-black"
+                                    >
+                                        <Share2 className="h-4 w-4" aria-hidden="true" />
+                                        Share profile
+                                    </Link>
                                 )}
                             </div>
-                        )}
+                        </div>
+
+                        <dl className="grid shrink-0 grid-cols-3 gap-2 sm:w-[26rem] [&>div]:min-w-0">
+                            <div className="border-2 border-black bg-brand-yellow p-3">
+                                <dt className="text-[10px] font-black uppercase tracking-wider">Trees planted</dt>
+                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{treesPlanted.toLocaleString('en')}</dd>
+                            </div>
+                            <div className="border-2 border-black p-3">
+                                <dt className="text-[10px] font-black uppercase tracking-wider text-neutral-600">Points</dt>
+                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{(profile.total_points || 0).toLocaleString('en')}</dd>
+                            </div>
+                            <div className="border-2 border-black p-3">
+                                <dt className="text-[10px] font-black uppercase tracking-wider text-neutral-600">Invited</dt>
+                                <dd className="mt-1 truncate font-candu text-xl font-extrabold leading-none sm:text-3xl">{(publicReferralImpact?.referrals ?? referralStats.total_referrals).toLocaleString('en')}</dd>
+                            </div>
+                        </dl>
                     </div>
-                    <p className="text-sm text-neutral-600">Member since {new Date(profile.created_at).toLocaleDateString()}</p>
-
-                    {/* Team Badge */}
-                    {userTeam && (
-                        <Link
-                            href={`/teams/${userTeam.slug}`}
-                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-navy text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
-                        >
-                            <Users className="w-4 h-4 text-brand-yellow" />
-                            <span className="font-bold">{userTeam.name}</span>
-                            <span className="text-xs text-gray-400">• {userTeam.total_points.toLocaleString()} pts</span>
-                        </Link>
-                    )}
-
-                    {/* Create Team Button - shown when viewing own profile with no team */}
-                    {isOwnProfile && !userTeam && (
-                        <button
-                            onClick={() => setShowCreateTeamModal(true)}
-                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-brand-yellow text-black border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all font-bold"
-                        >
-                            <Plus className="w-4 h-4" />
-                            <span>Create Team</span>
-                        </button>
-                    )}
-
-                    {/* Share My Stats Button - shown for own profile */}
-                    {isOwnProfile && (
-                        <Link
-                            href={`/share/user/${profile.display_name}`}
-                            className="inline-flex items-center gap-2 mt-4 ml-2 px-4 py-2 bg-purple-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all font-bold"
-                        >
-                            <Share2 className="w-4 h-4" />
-                            <span>Share My Stats</span>
-                        </Link>
-                    )}
-                </div>
+                </section>
 
                 {/* Create Team Modal */}
                 {showCreateTeamModal && (
@@ -686,75 +685,19 @@ export default function PublicProfilePage() {
                     />
                 )}
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {/* Total Points */}
-                    <div className="bg-white border-2 border-black shadow-none p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Trophy className="w-5 h-5 text-brand-yellow" />
-                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Points</p>
-                        </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">{profile.total_points?.toLocaleString() || '0'}</p>
-                    </div>
+                <ForestImpactPanel mode="public" displayName={profile.display_name} />
 
-                    {/* Trees Planted */}
-                    <div className="bg-white border-2 border-black shadow-none p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="text-green-500 text-lg">🌳</span>
-                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Trees Planted</p>
-                        </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">{treesPlanted}</p>
-                    </div>
-
-                    {/* Total Referrals */}
-                    <div className="bg-white border-2 border-black shadow-none p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Users className="w-5 h-5 text-blue-500" />
-                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Referrals</p>
-                        </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">
-                            {publicReferralImpact?.referrals ?? referralStats.total_referrals}
-                        </p>
-                    </div>
-
-                    {/* Points from Referrals */}
-                    <div className="bg-white border-2 border-black shadow-none p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Gift className="w-5 h-5 text-purple-500" />
-                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Impact from Invites</p>
-                        </div>
-                        <p className="text-3xl font-extrabold font-candu text-black">
-                            {(publicReferralImpact?.referredRequests ?? referralStats.total_requests).toLocaleString()}
-                        </p>
-                    </div>
-                </div>
-
-                <ForestImpactPanel
-                    mode="public"
-                    displayName={profile.display_name}
-                    isSignedIn={isSignedIn}
-                />
-
-                <PublicReferralImpact data={publicReferralImpact} isOwnProfile={isOwnProfile} />
-
-                {/* Points History */}
                 {historicalData.length > 0 && (
                     <PointsHistoryChart
                         data={historicalData}
                         title="Points History"
+                        surfaceClassName="bg-brand-gray"
                     />
                 )}
 
-                {/* Badges Section */}
-                <div className="bg-white border-2 border-black shadow-none p-8">
+                <section className="border-2 border-black bg-brand-gray p-6 sm:p-8">
                     <BadgeDisplay userId={profile.user_id} variant="light" />
-                </div>
-
-                <div className="text-center">
-                    <Link href="/" className="text-sm font-bold text-neutral-600 underline decoration-1 hover:text-black hover:decoration-brand-yellow hover:decoration-2 transition-all">
-                        ← Back to Home
-                    </Link>
-                </div>
+                </section>
             </div>
         </main>
     )

@@ -15,12 +15,14 @@ interface PointsHistoryChartProps {
     data: PointsHistoryData[]
     title?: string
     showMemberCount?: boolean
+    surfaceClassName?: string
 }
 
 export function PointsHistoryChart({
     data,
     title = "Points History",
-    showMemberCount = false
+    showMemberCount = false,
+    surfaceClassName = 'bg-white',
 }: PointsHistoryChartProps) {
     const [showDailyGain, setShowDailyGain] = useState(false)
 
@@ -72,7 +74,7 @@ export function PointsHistoryChart({
     }
 
     return (
-        <div className="bg-white border-2 border-black shadow-none p-6">
+        <div className={`${surfaceClassName} border-2 border-black shadow-none p-6`}>
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-brand-yellow" />
