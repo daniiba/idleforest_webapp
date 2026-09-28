@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowRight, Check, Loader2, Share2, TreePine } from 'lucide-react'
-import ForestIsland from '@/components/forest/ForestIsland'
+import Forest3D from '@/components/forest/Forest3D'
 import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
 import { formatTrees } from '@/lib/referral-reward-settings'
 
@@ -128,8 +128,8 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                             : isSelf ? 'Your forest starts here' : `${name}'s forest is just starting`}
                     </h2>
 
-                    <ForestIsland
-                        className="mx-auto mt-4 max-w-3xl"
+                    <Forest3D
+                        className="mt-4"
                         seed={data.seed}
                         ownTrees={data.ownTrees}
                         inviteTrees={data.inviteTrees}
