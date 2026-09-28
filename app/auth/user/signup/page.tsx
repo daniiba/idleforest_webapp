@@ -15,11 +15,18 @@ interface InviteInfo {
   inviterName: string;
 }
 
+interface ReferralInfo {
+  code: string;
+  inviterName: string;
+}
+
 function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const turnstileRef = useRef<TurnstileInstance>();
   const urlInviteCode = searchParams.get('invite');
+  const urlReferralCode = searchParams.get('referral');
+  const referralErrorParam = searchParams.get('referral_error');
   const companySlugParam = searchParams.get('company');
   const companySlug = companySlugParam ? getCanonicalCompanySlug(companySlugParam) : null;
 
@@ -39,7 +46,13 @@ function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [referralCode, setReferralCode] = useState('');
+  const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null);
+  // Resolve both explicit referral links and the 30-day referral cookie before
+  // allowing a direct signup, so a fast submission cannot lose attribution.
+  const [validatingReferral, setValidatingReferral] = useState(!urlInviteCode && !companySlug);
+  const [referralValidationError, setReferralValidationError] = useState<string | null>(
+    referralErrorParam ? 'That invite link is no longer valid. You can still create an account.' : null
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -114,6 +127,52 @@ function SignupForm() {
     }
   }, [companySlug, inviteCode, fetchCompanyInfo]);
 
+  useEffect(() => {
+    if (inviteCode || companySlug) {
+      setValidatingReferral(false);
+      return;
+    }
+
+    let cancelled = false;
+    const hasExplicitReferral = Boolean(urlReferralCode);
+    const referralQuery = urlReferralCode
+      ? `?code=${encodeURIComponent(urlReferralCode)}`
+      : '';
+
+    fetch(`/api/referrals/resolve${referralQuery}`)
+      .then(async response => {
+        if (!response.ok) throw new Error('Invalid referral code');
+        return response.json();
+      })
+      .then(data => {
+        if (cancelled) return;
+        if (!data.valid) {
+          if (hasExplicitReferral) {
+            setReferralValidationError('That invite link is no longer valid. You can still create an account.');
+          }
+          return;
+        }
+        setReferralInfo({
+          code: data.code,
+          inviterName: data.inviterName,
+        });
+        setReferralValidationError(null);
+      })
+      .catch(() => {
+        if (!cancelled && hasExplicitReferral) {
+          setReferralInfo(null);
+          setReferralValidationError('That invite link is no longer valid. You can still create an account.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setValidatingReferral(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [companySlug, inviteCode, urlReferralCode]);
+
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -133,8 +192,8 @@ function SignupForm() {
         captchaToken: turnstileToken,
         data: {
           display_name: displayName,
-          // Only set referral_code for non-invite signups (team invites tracked separately via invite_code)
-          referral_code: inviteCode || companySlug ? undefined : (referralCode || undefined),
+          // Referral links are validated server-side before the code reaches auth metadata.
+          referral_code: inviteCode || companySlug ? undefined : (referralInfo?.code || undefined),
           invite_code: inviteCode || undefined,
           company_slug: inviteCode ? undefined : companySlug || undefined,
         },
@@ -158,12 +217,29 @@ function SignupForm() {
         customData: { lead_type: 'User Signup Complete' },
       });
       trackOnboardingEvent('signup_created', {
-        source: inviteCode ? 'invite_signup' : companySlug ? 'company_signup' : 'direct_signup',
+        source: inviteCode
+          ? 'invite_signup'
+          : companySlug
+            ? 'company_signup'
+            : referralInfo
+              ? 'referral_signup'
+              : 'direct_signup',
         metadata: {
           hasInvite: Boolean(inviteCode),
+          hasReferral: Boolean(referralInfo),
           companySlug,
         }
       });
+
+      if (referralInfo) {
+        await fetch('/api/referrals/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ referralCode: referralInfo.code }),
+        }).catch(() => {
+          // Attribution is retried from auth metadata after the user logs in.
+        });
+      }
 
       // If there's an invite code, join the team/company
       if (inviteCode || companySlug) {
@@ -199,9 +275,8 @@ function SignupForm() {
       // Redirect to desktop-first onboarding so new users connect the app before landing in profile.
       router.push('/en/welcome');
     } else if (data.user && !data.session) {
-      // User created but no session - email confirmation might be required
-      // or there was an issue establishing the session
-      setError('Account created but login failed. Please try logging in manually.');
+      // This is the normal response when email confirmation is enabled.
+      setMessage('Account created. Check your email to confirm your address, then log in to continue.');
       resetTurnstile();
     } else {
       setError('Signup failed. Please try again or contact support.');
@@ -233,6 +308,30 @@ function SignupForm() {
           </div>
           <p className="font-bold text-lg">{companyInfo.name}</p>
           <p className="text-sm text-gray-400">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Create your account, then set up your computer or email yourself a setup link.' : 'No invite required'}</p>
+        </div>
+      )}
+
+      {referralInfo && !inviteInfo && !companyInfo && (
+        <div className="mb-6 border-2 border-black bg-brand-yellow p-4 text-black">
+          <div className="mb-1 flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span className="text-xs font-black uppercase tracking-wider">Personal invite</span>
+          </div>
+          <p className="font-bold text-lg">{referralInfo.inviterName} invited you to grow IdleForest together.</p>
+          <p className="mt-1 text-sm font-semibold text-neutral-700">Your referral is counted after your node starts contributing real impact.</p>
+        </div>
+      )}
+
+      {validatingReferral && !inviteInfo && !companyInfo && (
+        <div className="mb-6 flex items-center gap-2 border-2 border-black bg-neutral-100 p-4 text-sm font-bold">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Checking your invite…
+        </div>
+      )}
+
+      {referralValidationError && !validatingReferral && (
+        <div className="mb-6 border-2 border-amber-500 bg-amber-50 p-3 text-sm font-bold text-amber-900">
+          {referralValidationError}
         </div>
       )}
 
@@ -288,24 +387,6 @@ function SignupForm() {
             placeholder="••••••••"
           />
         </div>
-        {/* Only show referral input when not signing up via invite */}
-        {!inviteCode && !companySlug && (
-          <div>
-            <label htmlFor="referralCode" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
-              Referral Code <span className="text-neutral-400 font-normal normal-case">(Optional)</span>
-            </label>
-            <input
-              id="referralCode"
-              name="referralCode"
-              type="text"
-              value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
-              placeholder="Enter code"
-            />
-          </div>
-        )}
-
         {error && <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold text-sm text-center">{error}</div>}
         {message && <div className="p-3 bg-green-100 border-2 border-green-500 text-green-700 font-bold text-sm text-center">{message}</div>}
 
@@ -324,7 +405,7 @@ function SignupForm() {
         <div className="pt-2">
           <button
             type="submit"
-            disabled={loading || !turnstileToken}
+            disabled={loading || validatingReferral || !turnstileToken}
             className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (

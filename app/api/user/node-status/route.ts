@@ -7,6 +7,8 @@ import {
     claimDesktopNodeForAttribution,
     normalizeAttributionId,
 } from '@/lib/acquisition-attribution'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { recordReferralEvent } from '@/lib/referrals'
 
 // Helper to create Supabase client for route handlers
 async function createSupabaseClient() {
@@ -76,6 +78,9 @@ export async function GET() {
 
         const hasDesktopNode = platforms.includes('windows') || platforms.includes('mac') || platforms.includes('linux')
         const desktopNodeCount = nodes?.filter(n => ['win32', 'darwin', 'linux'].includes(n.platform || '')).length || 0
+        const hasProductiveNode = Boolean(nodes?.some(node =>
+            node.opt_in !== false && Number(node.total_requests || 0) > 0
+        ))
 
         const cookieStore = await cookies()
         const attributionId = normalizeAttributionId(cookieStore.get(ACQUISITION_COOKIE)?.value)
@@ -99,9 +104,39 @@ export async function GET() {
             })
         }
 
+        // A referral becomes valuable only after the new user reaches the core
+        // product outcome. Mark that milestone once; rewards can be layered on
+        // later without paying for empty or fraudulent accounts.
+        if (hasProductiveNode) {
+            try {
+                const admin = createAdminClient()
+                const { data: activatedReferral } = await admin
+                    .from('referral_attributions')
+                    .update({ activated_at: new Date().toISOString() })
+                    .eq('referred_user_id', user.id)
+                    .is('activated_at', null)
+                    .select('referrer_id, referral_code')
+                    .maybeSingle()
+
+                if (activatedReferral) {
+                    await recordReferralEvent(admin, {
+                        eventName: 'activated',
+                        referralCode: activatedReferral.referral_code,
+                        referrerId: activatedReferral.referrer_id,
+                        actorUserId: user.id,
+                        channel: 'productive_node',
+                    })
+                }
+            } catch (referralError) {
+                // Referral analytics must never block the node-status response.
+                console.error('Failed to mark referral activation:', referralError)
+            }
+        }
+
         return NextResponse.json({
             hasNode,
             hasDesktopNode,
+            hasProductiveNode,
             nodeCount,
             desktopNodeCount,
             platforms
