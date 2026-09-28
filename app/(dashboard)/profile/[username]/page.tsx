@@ -114,6 +114,7 @@ export default function PublicProfilePage() {
     const [createError, setCreateError] = useState('')
     const [leaveCompanyError, setLeaveCompanyError] = useState('')
     const [historicalData, setHistoricalData] = useState<any[]>([])
+    const [forestTrees, setForestTrees] = useState<number | null>(null)
     const params = useParams()
     const router = useRouter()
 
@@ -367,7 +368,7 @@ export default function PublicProfilePage() {
     return (
         <main className="min-h-screen bg-brand-gray px-4 pb-16 pt-8 font-rethink-sans sm:pt-12">
             <div className="w-full max-w-6xl mx-auto space-y-6">
-                <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                     <div className="min-w-0">
                         <h1 className="break-words font-candu text-5xl font-extrabold uppercase leading-none text-brand-navy sm:text-6xl">
                             {profile.display_name}
@@ -428,29 +429,43 @@ export default function PublicProfilePage() {
                                     })}
                                 </span>
                             ) : null}
-                        </div>
-                    </div>
-
-                    {isOwnProfile ? (
-                        <div className="flex shrink-0 gap-2">
-                            {!userTeam ? (
+                            {isOwnProfile && !userTeam ? (
                                 <button
                                     onClick={() => setShowCreateTeamModal(true)}
-                                    className="inline-flex items-center gap-1.5 border-2 border-black px-3 py-2 text-xs font-black uppercase hover:bg-black/5"
+                                    className="inline-flex items-center gap-1 border-2 border-black px-2 py-1 font-black uppercase text-black hover:bg-black/5"
                                 >
-                                    <Plus className="h-4 w-4" aria-hidden="true" />
+                                    <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                                     Team
                                 </button>
                             ) : null}
-                            <Link
-                                href={`/share/user/${profile.display_name}`}
-                                className="inline-flex items-center gap-1.5 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase text-black"
-                            >
-                                <Share2 className="h-4 w-4" aria-hidden="true" />
-                                Share
-                            </Link>
+                            {isOwnProfile ? (
+                                <Link
+                                    href={`/share/user/${profile.display_name}`}
+                                    className="inline-flex items-center gap-1 border-2 border-black bg-brand-yellow px-2 py-1 font-black uppercase text-black"
+                                >
+                                    <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Share
+                                </Link>
+                            ) : null}
                         </div>
-                    ) : null}
+                    </div>
+
+                    <dl className="flex shrink-0 items-end gap-8">
+                        {forestTrees ? (
+                        <div className="flex flex-col-reverse">
+                            <dt className="mt-1 text-[11px] font-black uppercase tracking-wider text-neutral-600">Trees</dt>
+                            <dd className="font-candu text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">
+                                <span className="bg-brand-yellow px-1.5">{forestTrees.toLocaleString('en')}</span>
+                            </dd>
+                        </div>
+                        ) : null}
+                        {profile.total_points > 0 ? (
+                            <div className="flex flex-col-reverse">
+                                <dt className="mt-1 text-[11px] font-black uppercase tracking-wider text-neutral-600">Points</dt>
+                                <dd className="font-candu text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">{profile.total_points.toLocaleString('en')}</dd>
+                            </div>
+                        ) : null}
+                    </dl>
                 </header>
 
                 {/* Create Team Modal */}
@@ -592,10 +607,14 @@ export default function PublicProfilePage() {
                     />
                 )}
 
-                <ForestImpactPanel mode="public" displayName={profile.display_name} />
+                <ForestImpactPanel
+                    mode="public"
+                    displayName={profile.display_name}
+                    onLoad={data => setForestTrees(data?.totalTrees ?? 0)}
+                />
 
-                <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-                    <PointsCard totalPoints={profile.total_points || 0} history={historicalData} />
+                <div className={`grid gap-6 ${historicalData.length > 1 ? 'lg:grid-cols-[0.8fr_1.2fr]' : ''}`}>
+                    {historicalData.length > 1 ? <PointsCard history={historicalData} /> : null}
                     <section aria-labelledby="badges-heading">
                         <h2 id="badges-heading" className="mb-2 text-[11px] font-black uppercase tracking-wider text-neutral-600">Badges</h2>
                         <BadgeDisplay userId={profile.user_id} variant="light" />

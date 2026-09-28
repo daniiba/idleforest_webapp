@@ -524,40 +524,38 @@ function progressPercent(badge: ProcessedBadge) {
   return 0;
 }
 
-// Brand-styled badge list for the public profile: one row per badge, with
-// the tier as a colored tile and a thin progress bar.
+// Brand-styled badge chips for the public profile: icon, name, level and a
+// thin progress bar towards the next level.
 function CompactBadgeList({ badges }: { badges: ProcessedBadge[] }) {
   if (badges.length === 0) return null;
 
   return (
-    <ul className="grid gap-2 sm:grid-cols-2">
+    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
       {badges.map(badge => {
         const Icon = COMPACT_ICONS[badge.badgeType] || Shield;
         const locked = badge.tier === 'locked';
         const tile = locked
-          ? 'bg-transparent text-black/35 border-black/30'
+          ? 'border-black/25 text-black/35'
           : badge.tier === 'master' || badge.tier === 'expert'
-            ? 'bg-brand-yellow text-black border-black'
-            : 'bg-brand-navy text-brand-yellow border-black';
+            ? 'border-black bg-brand-yellow text-black'
+            : 'border-black bg-brand-navy text-brand-yellow';
+        const detail = badge.isEarlyAdopter
+          ? `Member #${badge.progress.toLocaleString('en')}`
+          : `${badge.progress.toLocaleString('en')} of ${badge.threshold.toLocaleString('en')}`;
 
         return (
-          <li key={badge.id} className={`flex items-center gap-3 border-2 p-3 ${locked ? 'border-black/25' : 'border-black'}`} title={badge.description}>
-            <span className={`flex h-10 w-10 shrink-0 items-center justify-center border-2 ${tile}`} aria-hidden="true">
-              <Icon className="h-5 w-5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <p className={`truncate text-sm font-black ${locked ? 'text-black/45' : ''}`}>{BADGE_LABELS[badge.badgeType] || badge.badgeType}</p>
-                <p className={`shrink-0 text-[11px] font-black uppercase tracking-wider ${locked ? 'text-black/35' : 'text-neutral-600'}`}>{tierLabel(badge)}</p>
+          <li key={badge.id} className={`border-2 p-3 ${locked ? 'border-black/20' : 'border-black'}`} title={`${badge.description || ''} ${detail}`.trim()}>
+            <div className="flex items-center gap-2.5">
+              <span className={`flex h-8 w-8 shrink-0 items-center justify-center border-2 ${tile}`} aria-hidden="true">
+                <Icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className={`truncate text-sm font-black leading-tight ${locked ? 'text-black/40' : ''}`}>{BADGE_LABELS[badge.badgeType] || badge.badgeType}</p>
+                <p className={`truncate text-[11px] font-bold uppercase tracking-wider ${locked ? 'text-black/35' : 'text-neutral-600'}`}>{tierLabel(badge)}</p>
               </div>
-              <div className="mt-1.5 h-1.5 w-full bg-black/10">
-                <div className={`h-full ${locked ? 'bg-black/25' : 'bg-brand-navy'}`} style={{ width: `${progressPercent(badge)}%` }} />
-              </div>
-              <p className="mt-1 font-mono text-[11px] font-bold tabular-nums text-neutral-600">
-                {badge.isEarlyAdopter
-                  ? `#${badge.progress.toLocaleString('en')}`
-                  : `${badge.progress.toLocaleString('en')} / ${badge.threshold.toLocaleString('en')}`}
-              </p>
+            </div>
+            <div className="mt-3 h-1 w-full bg-black/10" role="progressbar" aria-label={detail} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progressPercent(badge))}>
+              <div className={`h-full ${locked ? 'bg-black/25' : 'bg-brand-navy'}`} style={{ width: `${progressPercent(badge)}%` }} />
             </div>
           </li>
         );
