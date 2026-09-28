@@ -51,6 +51,10 @@ const config: Config = {
 					gray: '#D9D9D9',
 					navy: '#0B101F',
 				},
+				// Daylight ground behind the storybook forest (FOREST_PALETTE.ground)
+				forest: {
+					ground: '#DCE2CF',
+				},
 				chart: {
 					'1': 'hsl(var(--chart-1))',
 					'2': 'hsl(var(--chart-2))',

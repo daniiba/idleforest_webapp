@@ -1,10 +1,10 @@
-// Isometric "forest island" visualisation of a member's impact.
+// "Storybook" forest visualisation of a member's impact.
 //
-// The main island is the member's own forest, built from stacked contour
-// terraces. Every mark on it is a tree: green for trees they planted, yellow
-// (with a pulsing ring) for trees earned through invites. Each person they
-// invited gets a satellite island, sized by that person's trees and linked
-// to the main island by an animated root.
+// Seen from above in daylight: the member's own grove sits in the middle,
+// each person they invited has a smaller grove linked to it by a path, and
+// empty plots invite them to add the next friend. Every tree mark is a tree:
+// greens for trees they planted, bright yellow for trees earned through
+// invites, blue-greens in friends' groves.
 //
 // Dependency-free and deterministic (seeded by member id), so the same code
 // renders the web page, the desktop app and server-side share images, and a
@@ -24,59 +24,91 @@ export type ForestSceneInput = {
 }
 
 type TreeKind = 'own' | 'invite' | 'friend'
+export type TreeShape = 'round' | 'drop' | 'cone' | 'column'
+type IslandKind = 'main' | 'friend' | 'plot'
 
 type TreeMark = {
     x: number
     y: number
     kind: TreeKind
+    shape: TreeShape
+    color: string
     size: number
     delay: number
 }
 
-type Layer = {
-    points: string
-    shadowPoints: string
-    fill: string
-    stroke: string
+type BushMark = {
+    x: number
+    y: number
+    size: number
+    color: string
 }
 
 type Island = {
-    kind: 'main' | 'friend'
+    kind: IslandKind
     depth: number
-    layers: Layer[]
+    outline: string
     trees: TreeMark[]
+    bushes: BushMark[]
     title: string
     label: { text: string; x: number; y: number } | null
     sprout: { x: number; y: number } | null
+    center: { x: number; y: number }
 }
 
 export type ForestScene = {
     viewBox: { x: number; y: number; width: number; height: number }
     islands: Island[]
-    links: string[]
-    glow: { cx: number; cy: number; rx: number; ry: number }
+    links: Array<{ d: string; planned: boolean }>
     treesPerMark: number
     hiddenFriends: number
 }
 
-const TILT = 0.56
-const MAIN_RADIUS = 120
-const MAIN_LEVELS = 7
-const MAIN_LEVEL_HEIGHT = 9
+const TILT = 0.62
 const MAX_MAIN_MARKS = 180
 const MAX_FRIEND_MARKS = 26
 const MAX_FRIEND_ISLANDS = 12
+// Empty plots shown for friends not invited yet, so there is always a
+// visible place for the next one.
+const TARGET_GROVES = 3
 
+/** Legend colours (one per kind), used by the UI next to the forest. */
 export const FOREST_COLORS = {
-    own: '#7BE0A0',
-    ownShade: '#3FA56B',
+    own: '#3F8A45',
     invite: '#E0F146',
-    inviteShade: '#A9B82A',
-    friend: '#A7E8C0',
-    friendShade: '#5CA67C',
-    contour: '#E0F146',
-    link: '#E0F146',
-    label: '#F4F7DC',
+    friend: '#4E9C8E',
+}
+
+/** Full daylight palette shared by the SVG and 3D renderers. */
+export const FOREST_PALETTE = {
+    ground: '#DCE2CF',
+    clearing: '#BFCB9C',
+    friendClearing: '#C4D0A7',
+    plotEdge: '#8E9C72',
+    path: '#F3EBCF',
+    pathEdge: '#D8C99A',
+    trunk: '#6B3F2A',
+    ink: '#0B101F',
+    own: ['#1F5A33', '#2E6B3A', '#3F8A45', '#5FA34A', '#86B94A', '#A3C74B', '#2F7A5C', '#246B52', '#4E9C6E', '#1B4A2E'],
+    friend: ['#2F7A6E', '#3E9384', '#5AAE8F', '#78C1A0', '#276458', '#4E9C8E'],
+    invite: '#E0F146',
+    sprout: '#5FA34A',
+}
+
+/** Crown width/height and stem height of a tree mark, in world units. */
+export function treeDimensions(shape: TreeShape, size: number) {
+    switch (shape) {
+        case 'cone': return { width: size * 2.5, height: size * 4.2, stem: size * 0.6 }
+        case 'drop': return { width: size * 2.7, height: size * 3.7, stem: size * 0.7 }
+        case 'column': return { width: size * 1.9, height: size * 4.6, stem: size * 0.6 }
+        default: return { width: size * 3.3, height: size * 2.9, stem: size * 0.9 }
+    }
+}
+
+export function treeColor(kind: TreeKind, tone: number) {
+    if (kind === 'invite') return FOREST_PALETTE.invite
+    const colors = kind === 'friend' ? FOREST_PALETTE.friend : FOREST_PALETTE.own
+    return colors[Math.min(colors.length - 1, Math.floor(tone * colors.length))]
 }
 
 // ---------------------------------------------------------------------------
@@ -125,13 +157,6 @@ function project(x: number, y: number, z: number) {
     return { x, y: y * TILT - z }
 }
 
-function lerpColor(from: string, to: string, t: number) {
-    const a = parseInt(from.slice(1), 16)
-    const b = parseInt(to.slice(1), 16)
-    const channel = (shift: number) => Math.round(((a >> shift) & 255) + (((b >> shift) & 255) - ((a >> shift) & 255)) * t)
-    return `#${((1 << 24) | (channel(16) << 16) | (channel(8) << 8) | channel(0)).toString(16).slice(1)}`
-}
-
 type Terrace = {
     cx: number
     cy: number
@@ -145,53 +170,25 @@ function terraceRadius(terrace: Terrace, theta: number) {
     return terrace.radius * (1 + waveAt(terrace.sharedWaves, theta) + waveAt(terrace.waves, theta))
 }
 
-function buildTerraces(options: {
-    random: () => number
-    cx: number
-    cy: number
-    radius: number
-    levels: number
-    levelHeight: number
-    topScale: number
-    roughness: number
-}): Terrace[] {
-    const { random, cx, cy, radius, levels, levelHeight, topScale, roughness } = options
-    const sharedWaves = makeWaves(random, roughness)
-    const driftAngle = random() * Math.PI * 2
-    const terraces: Terrace[] = []
-    let centerX = cx
-    let centerY = cy
-
-    for (let level = 0; level < levels; level += 1) {
-        const t = levels === 1 ? 0 : level / (levels - 1)
-        const scale = 1 - t * (1 - topScale)
-        if (level > 0) {
-            // Drift each terrace a little so the peak sits off-centre, like real terrain.
-            const angle = driftAngle + (random() - 0.5) * 1.4
-            const step = radius * (0.02 + random() * 0.035)
-            centerX += Math.cos(angle) * step
-            centerY += Math.sin(angle) * step
-        }
-        terraces.push({
-            cx: centerX,
-            cy: centerY,
-            z: level * levelHeight,
-            radius: radius * scale,
-            waves: makeWaves(random, roughness * 0.45),
-            sharedWaves,
-        })
+function buildClearing(random: () => number, cx: number, cy: number, radius: number, roughness: number): Terrace {
+    return {
+        cx,
+        cy,
+        z: 0,
+        radius,
+        waves: makeWaves(random, roughness * 0.45),
+        sharedWaves: makeWaves(random, roughness),
     }
-
-    return terraces
 }
 
 // ---------------------------------------------------------------------------
 // World model, shared by the SVG projection and the 3D renderer
 // ---------------------------------------------------------------------------
-// World units: x/y are horizontal, z is height. The main island has a radius
-// of about MAIN_RADIUS; each terrace is `levelHeight` thick below its top z.
+// World units: x/y are horizontal, z is height. Groves are flat clearings
+// (z = 0) of `levelHeight` thickness; the main grove grows with its trees.
 
 const OUTLINE_SAMPLES = 72
+const CLEARING_THICKNESS = 2
 
 export type WorldTerrace = {
     cx: number
@@ -205,16 +202,25 @@ export type WorldTree = {
     y: number
     z: number
     kind: TreeKind
+    shape: TreeShape
+    tone: number
     size: number
 }
 
+export type WorldBush = {
+    x: number
+    y: number
+    z: number
+    size: number
+    tone: number
+}
+
 export type WorldIsland = {
-    kind: 'main' | 'friend'
+    kind: IslandKind
     terraces: WorldTerrace[]
     levelHeight: number
-    palette: { bottom: string; top: string }
-    contourOpacity: number
     trees: WorldTree[]
+    bushes: WorldBush[]
     title: string
     label: string | null
     sprout: { x: number; y: number; z: number } | null
@@ -226,6 +232,7 @@ export type WorldRoot = {
     start: [number, number]
     control: [number, number]
     end: [number, number]
+    planned: boolean
 }
 
 export type ForestWorld = {
@@ -236,55 +243,72 @@ export type ForestWorld = {
     mainRadius: number
 }
 
-function worldTerraces(terraces: Terrace[]): WorldTerrace[] {
-    return terraces.map(terrace => {
-        const outline: Array<[number, number]> = []
-        for (let index = 0; index < OUTLINE_SAMPLES; index += 1) {
-            const theta = (index / OUTLINE_SAMPLES) * Math.PI * 2
-            const r = terraceRadius(terrace, theta)
-            outline.push([terrace.cx + Math.cos(theta) * r, terrace.cy + Math.sin(theta) * r])
-        }
-        return { cx: terrace.cx, cy: terrace.cy, z: terrace.z, outline }
-    })
-}
-
-function topTerraceAt(terraces: Terrace[], x: number, y: number) {
-    for (let level = terraces.length - 1; level >= 0; level -= 1) {
-        const terrace = terraces[level]
-        const dx = x - terrace.cx
-        const dy = y - terrace.cy
-        const theta = Math.atan2(dy, dx)
-        if (Math.hypot(dx, dy) <= terraceRadius(terrace, theta) * 0.9) return terrace
+function worldOutline(terrace: Terrace): WorldTerrace {
+    const outline: Array<[number, number]> = []
+    for (let index = 0; index < OUTLINE_SAMPLES; index += 1) {
+        const theta = (index / OUTLINE_SAMPLES) * Math.PI * 2
+        const r = terraceRadius(terrace, theta)
+        outline.push([terrace.cx + Math.cos(theta) * r, terrace.cy + Math.sin(theta) * r])
     }
-    return null
+    return { cx: terrace.cx, cy: terrace.cy, z: terrace.z, outline }
 }
 
+function pickShape(random: () => number): TreeShape {
+    const roll = random()
+    if (roll < 0.42) return 'round'
+    if (roll < 0.67) return 'drop'
+    if (roll < 0.86) return 'cone'
+    return 'column'
+}
+
+// Scatter marks inside a clearing, keeping a minimum spacing so crowns
+// overlap a little but stay readable.
 function placeTrees(options: {
-    terraces: Terrace[]
+    clearing: Terrace
     count: number
     kind: TreeKind
     size: number
     seed: string
     spread: number
+    avoid?: WorldTree[]
 }): WorldTree[] {
-    const { terraces, count, kind, size, seed, spread } = options
+    const { clearing, count, kind, size, seed, spread } = options
     const random = rng(seed)
-    const base = terraces[0]
     const trees: WorldTree[] = []
+    const others = options.avoid || []
+    const area = Math.PI * (clearing.radius * spread) ** 2
+    let spacing = Math.sqrt(area / Math.max(1, count + others.length)) * 0.8
     let attempts = 0
 
-    while (trees.length < count && attempts < count * 20) {
+    while (trees.length < count && attempts < count * 60) {
         attempts += 1
+        // Relax the spacing if the clearing is getting full.
+        if (attempts % (count * 15) === 0) spacing *= 0.85
         const theta = random() * Math.PI * 2
         const rho = Math.sqrt(random()) * spread
-        const x = base.cx + Math.cos(theta) * terraceRadius(base, theta) * rho
-        const y = base.cy + Math.sin(theta) * terraceRadius(base, theta) * rho
-        const terrace = topTerraceAt(terraces, x, y)
-        if (!terrace) continue
-        trees.push({ x, y, z: terrace.z, kind, size })
+        const x = clearing.cx + Math.cos(theta) * terraceRadius(clearing, theta) * rho
+        const y = clearing.cy + Math.sin(theta) * terraceRadius(clearing, theta) * rho
+        if ([...trees, ...others].some(tree => Math.hypot(tree.x - x, tree.y - y) < spacing)) continue
+        const shape = kind === 'invite' ? 'round' : pickShape(random)
+        trees.push({ x, y, z: clearing.z, kind, shape, tone: random(), size: size * (0.85 + random() * 0.3) })
     }
 
     return trees
+}
+
+function placeBushes(clearing: Terrace, count: number, seed: string, size: number): WorldBush[] {
+    const random = rng(seed)
+    return Array.from({ length: count }, () => {
+        const theta = random() * Math.PI * 2
+        const rho = 0.35 + Math.sqrt(random()) * 0.6
+        return {
+            x: clearing.cx + Math.cos(theta) * terraceRadius(clearing, theta) * rho,
+            y: clearing.cy + Math.sin(theta) * terraceRadius(clearing, theta) * rho,
+            z: clearing.z,
+            size: size * (0.7 + random() * 0.6),
+            tone: random(),
+        }
+    })
 }
 
 /** What the legend needs to explain: how many trees one mark stands for, and friends not drawn. */
@@ -305,104 +329,100 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
     const { treesPerMark } = forestSceneSummary(input)
     const ownMarks = ownTrees > 0 ? Math.max(1, Math.round(ownTrees / treesPerMark)) : 0
     const inviteMarks = inviteTrees > 0 ? Math.max(1, Math.round(inviteTrees / treesPerMark)) : 0
+    const marks = ownMarks + inviteMarks
 
-    const mainTerraces = buildTerraces({
-        random,
-        cx: 0,
-        cy: 0,
-        radius: MAIN_RADIUS,
-        levels: MAIN_LEVELS,
-        levelHeight: MAIN_LEVEL_HEIGHT,
-        topScale: 0.3,
-        roughness: 0.16,
-    })
-    const mainTop = mainTerraces[mainTerraces.length - 1]
+    // The grove grows with the forest, so density stays about the same.
+    const mainRadius = Math.min(165, 48 + Math.sqrt(marks) * 11)
+    const main = buildClearing(random, 0, 0, mainRadius, 0.14)
+    const invite = placeTrees({ clearing: main, count: inviteMarks, kind: 'invite', size: 7.2, seed: `${input.seed}:invite`, spread: 0.75 })
+    const own = placeTrees({ clearing: main, count: ownMarks, kind: 'own', size: 6.2, seed: `${input.seed}:own`, spread: 0.9, avoid: invite })
 
     const islands: WorldIsland[] = [{
         kind: 'main',
-        terraces: worldTerraces(mainTerraces),
-        levelHeight: MAIN_LEVEL_HEIGHT,
-        palette: { bottom: '#131c33', top: '#4b5b80' },
-        contourOpacity: 0.9,
-        trees: [
-            ...placeTrees({ terraces: mainTerraces, count: ownMarks, kind: 'own', size: 6.5, seed: `${input.seed}:own`, spread: 0.93 }),
-            ...placeTrees({ terraces: mainTerraces, count: inviteMarks, kind: 'invite', size: 7.5, seed: `${input.seed}:invite`, spread: 0.93 }),
-        ],
+        terraces: [worldOutline(main)],
+        levelHeight: CLEARING_THICKNESS,
+        trees: [...own, ...invite],
+        bushes: placeBushes(main, Math.round(Math.min(10 + mainRadius * 0.35, marks * 1.2)), `${input.seed}:bushes`, 3.4),
         title: 'Your forest',
         label: null,
-        sprout: ownMarks + inviteMarks === 0 ? { x: mainTop.cx, y: mainTop.cy, z: mainTop.z } : null,
+        sprout: marks === 0 ? { x: main.cx, y: main.cy, z: 0 } : null,
         center: { x: 0, y: 0 },
-        radius: MAIN_RADIUS,
+        radius: mainRadius,
     }]
 
     const friends = [...input.friends]
         .map(friend => ({ ...friend, trees: Math.max(0, Math.floor(friend.trees || 0)) }))
         .sort((a, b) => b.trees - a.trees)
     const shownFriends = friends.slice(0, MAX_FRIEND_ISLANDS)
+    const plots = shownFriends.length < TARGET_GROVES ? TARGET_GROVES - shownFriends.length : shownFriends.length < MAX_FRIEND_ISLANDS ? 1 : 0
+    const slots = shownFriends.length + plots
     const roots: WorldRoot[] = []
     const angleOffset = random() * Math.PI * 2
 
-    shownFriends.forEach((friend, index) => {
+    for (let index = 0; index < slots; index += 1) {
+        const friend = shownFriends[index] as (typeof shownFriends)[number] | undefined
         const friendRandom = rng(`${input.seed}:friend:${index}`)
-        const angle = angleOffset + (index / shownFriends.length) * Math.PI * 2 + (friendRandom() - 0.5) * 0.35
-        const radius = friend.trees > 0 ? Math.min(44, 16 + Math.sqrt(friend.trees) * 2.4) : 11
-        // Measure from the main island's actual shore in this direction, and
-        // stagger alternate islands outwards so neighbours and labels don't collide.
-        const shore = terraceRadius(mainTerraces[0], angle)
-        const stagger = shownFriends.length > 6 && index % 2 === 1 ? 46 : 0
-        const distance = shore + radius + 34 + stagger + friendRandom() * 16
-        const cx = Math.cos(angle) * distance
-        const cy = Math.sin(angle) * distance
-        const levels = friend.trees > 0 ? 2 + Math.min(3, Math.floor(Math.log10(friend.trees + 1) * 1.6)) : 1
-
-        const terraces = buildTerraces({
-            random: friendRandom,
-            cx,
-            cy,
-            radius,
-            levels,
-            levelHeight: 5,
-            topScale: 0.45,
-            roughness: 0.14,
-        })
-
-        const marks = friend.trees > 0
+        const angle = angleOffset + (index / slots) * Math.PI * 2 + (friendRandom() - 0.5) * 0.3
+        const friendMarks = friend && friend.trees > 0
             ? Math.min(MAX_FRIEND_MARKS, Math.max(1, Math.round(friend.trees / treesPerMark)))
             : 0
-        const top = terraces[terraces.length - 1]
+        const radius = friend ? (friendMarks > 0 ? Math.min(58, 18 + Math.sqrt(friendMarks) * 7.5) : 15) : 17
+        // Measure from the main grove's actual edge in this direction, and
+        // stagger alternate groves outwards so neighbours don't collide.
+        const shore = terraceRadius(main, angle)
+        const stagger = slots > 6 && index % 2 === 1 ? 50 : 0
+        const distance = shore + radius + 42 + stagger + friendRandom() * 18
+        const cx = Math.cos(angle) * distance
+        const cy = Math.sin(angle) * distance
+        const clearing = buildClearing(friendRandom, cx, cy, radius, 0.12)
 
-        islands.push({
-            kind: 'friend',
-            terraces: worldTerraces(terraces),
-            levelHeight: 5,
-            palette: { bottom: '#111a30', top: '#34436a' },
-            contourOpacity: friend.trees > 0 ? 0.7 : 0.4,
-            trees: placeTrees({ terraces, count: marks, kind: 'friend', size: 5, seed: `${input.seed}:friend-trees:${index}`, spread: 0.85 }),
-            title: `${friend.label || 'Someone you invited'}: ${friend.trees.toLocaleString('en')} ${friend.trees === 1 ? 'tree' : 'trees'}${friend.contributing === false ? ' (joined, not contributing yet)' : ''}`,
-            label: friend.label ? friend.label.slice(0, 18) : null,
-            sprout: marks === 0 ? { x: top.cx, y: top.cy, z: top.z } : null,
-            center: { x: cx, y: cy },
-            radius,
-        })
+        if (friend) {
+            islands.push({
+                kind: 'friend',
+                terraces: [worldOutline(clearing)],
+                levelHeight: CLEARING_THICKNESS,
+                trees: placeTrees({ clearing, count: friendMarks, kind: 'friend', size: 5.2, seed: `${input.seed}:friend-trees:${index}`, spread: 0.85 }),
+                bushes: placeBushes(clearing, Math.round(Math.min(3 + radius * 0.2, friendMarks)), `${input.seed}:friend-bushes:${index}`, 2.8),
+                title: `${friend.label || 'Someone you invited'}: ${friend.trees.toLocaleString('en')} ${friend.trees === 1 ? 'tree' : 'trees'}${friend.contributing === false ? ' (joined, not contributing yet)' : ''}`,
+                label: friend.label ? friend.label.slice(0, 18) : null,
+                sprout: friendMarks === 0 ? { x: cx, y: cy, z: 0 } : null,
+                center: { x: cx, y: cy },
+                radius,
+            })
+        } else {
+            islands.push({
+                kind: 'plot',
+                terraces: [worldOutline(clearing)],
+                levelHeight: 0.6,
+                trees: [],
+                bushes: [],
+                title: 'Invite a friend to plant here',
+                label: null,
+                sprout: null,
+                center: { x: cx, y: cy },
+                radius,
+            })
+        }
 
-        // Root from the main island's shore to the friend's island.
+        // Path from the main grove's edge to the friend's grove.
         const bend = (friendRandom() - 0.5) * 60
         roots.push({
-            start: [Math.cos(angle) * shore * 0.98, Math.sin(angle) * shore * 0.98],
+            start: [Math.cos(angle) * shore * 0.94, Math.sin(angle) * shore * 0.94],
             control: [
                 (Math.cos(angle) * shore + cx) / 2 - Math.sin(angle) * bend,
                 (Math.sin(angle) * shore + cy) / 2 + Math.cos(angle) * bend,
             ],
-            end: [cx - Math.cos(angle) * radius * 0.9, cy - Math.sin(angle) * radius * 0.9],
+            end: [cx - Math.cos(angle) * radius * 0.8, cy - Math.sin(angle) * radius * 0.8],
+            planned: !friend,
         })
-    })
+    }
 
     return {
         islands,
         roots,
         treesPerMark,
         hiddenFriends: Math.max(0, friends.length - shownFriends.length),
-        mainRadius: MAIN_RADIUS,
+        mainRadius,
     }
 }
 
@@ -410,23 +430,11 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
 // 2D projection (SVG)
 // ---------------------------------------------------------------------------
 
-function terraceLayers(terraces: WorldTerrace[], thickness: number, palette: { bottom: string; top: string }, contourOpacity: number): Layer[] {
-    return terraces.map((terrace, level) => {
-        const top: string[] = []
-        const shadow: string[] = []
-        for (const [x, y] of terrace.outline) {
-            const point = project(x, y, terrace.z)
-            top.push(`${point.x.toFixed(1)},${point.y.toFixed(1)}`)
-            shadow.push(`${point.x.toFixed(1)},${(point.y + thickness).toFixed(1)}`)
-        }
-        const t = terraces.length === 1 ? 1 : level / (terraces.length - 1)
-        return {
-            points: top.join(' '),
-            shadowPoints: shadow.join(' '),
-            fill: lerpColor(palette.bottom, palette.top, t),
-            stroke: `rgba(224,241,70,${(contourOpacity * (0.55 + 0.45 * t)).toFixed(2)})`,
-        }
-    })
+function pointsOf(outline: Array<[number, number]>, z: number) {
+    return outline.map(([x, y]) => {
+        const point = project(x, y, z)
+        return `${point.x.toFixed(1)},${point.y.toFixed(1)}`
+    }).join(' ')
 }
 
 export function buildForestScene(input: ForestSceneInput): ForestScene {
@@ -434,19 +442,24 @@ export function buildForestScene(input: ForestSceneInput): ForestScene {
 
     const islands: Island[] = world.islands.map(island => {
         const base = island.terraces[0]
-        const top = island.terraces[island.terraces.length - 1]
-        const topPoint = project(top.cx, top.cy, top.z)
+        const center = project(island.center.x, island.center.y, 0)
+        const tallest = island.trees.reduce((max, tree) => Math.max(max, treeDimensions(tree.shape, tree.size).height), 0)
         return {
             kind: island.kind,
-            depth: project(base.cx, base.cy, 0).y,
-            layers: terraceLayers(island.terraces, island.kind === 'main' ? 6 : 4, island.palette, island.contourOpacity),
+            depth: center.y,
+            outline: pointsOf(base.outline, base.z),
             trees: island.trees.map(tree => {
                 const point = project(tree.x, tree.y, tree.z)
-                return { x: point.x, y: point.y, kind: tree.kind, size: tree.size, delay: 0 }
+                return { x: point.x, y: point.y, kind: tree.kind, shape: tree.shape, color: treeColor(tree.kind, tree.tone), size: tree.size, delay: 0 }
+            }),
+            bushes: island.bushes.map(bush => {
+                const point = project(bush.x, bush.y, bush.z)
+                return { x: point.x, y: point.y, size: bush.size, color: treeColor(island.kind === 'main' ? 'own' : 'friend', bush.tone) }
             }),
             title: island.title,
-            label: island.label ? { text: island.label, x: topPoint.x, y: topPoint.y - (island.trees.length > 0 ? 22 : 12) } : null,
+            label: island.label ? { text: island.label, x: center.x, y: center.y - island.radius * TILT - Math.min(tallest, 20) - 4 } : null,
             sprout: island.sprout ? project(island.sprout.x, island.sprout.y, island.sprout.z) : null,
+            center,
         }
     })
 
@@ -454,19 +467,16 @@ export function buildForestScene(input: ForestSceneInput): ForestScene {
         const start = project(root.start[0], root.start[1], 0)
         const control = project(root.control[0], root.control[1], 0)
         const end = project(root.end[0], root.end[1], 0)
-        return `M${start.x.toFixed(1)},${start.y.toFixed(1)} Q${control.x.toFixed(1)},${control.y.toFixed(1)} ${end.x.toFixed(1)},${end.y.toFixed(1)}`
+        return { d: `M${start.x.toFixed(1)},${start.y.toFixed(1)} Q${control.x.toFixed(1)},${control.y.toFixed(1)} ${end.x.toFixed(1)},${end.y.toFixed(1)}`, planned: root.planned }
     })
 
-    // Painter's order: islands and trees further back are drawn first.
+    // Painter's order: groves and trees further back are drawn first.
     islands.sort((a, b) => a.depth - b.depth)
     for (const island of islands) {
         island.trees.sort((a, b) => a.y - b.y)
-        const center = island.trees.length
-            ? island.trees.reduce((sum, mark) => ({ x: sum.x + mark.x, y: sum.y + mark.y }), { x: 0, y: 0 })
-            : { x: 0, y: 0 }
-        const cx = island.trees.length ? center.x / island.trees.length : 0
-        const cy = island.trees.length ? center.y / island.trees.length : 0
-        // Trees grow in from the island's heart outwards.
+        const cx = island.center.x
+        const cy = island.center.y
+        // Trees grow in from the grove's heart outwards.
         const byDistance = [...island.trees].sort((a, b) => Math.hypot(a.x - cx, a.y - cy) - Math.hypot(b.x - cx, b.y - cy))
         byDistance.forEach((mark, order) => {
             mark.delay = Math.min(1400, order * (island.kind === 'main' ? 9 : 30) + (island.kind === 'main' ? 0 : 500))
@@ -478,30 +488,29 @@ export function buildForestScene(input: ForestSceneInput): ForestScene {
     let minY = Infinity
     let maxX = -Infinity
     let maxY = -Infinity
+    const include = (x: number, y: number) => {
+        minX = Math.min(minX, x)
+        maxX = Math.max(maxX, x)
+        minY = Math.min(minY, y)
+        maxY = Math.max(maxY, y)
+    }
     for (const island of islands) {
-        for (const layer of island.layers) {
-            for (const pair of layer.shadowPoints.split(' ').concat(layer.points.split(' '))) {
-                const [px, py] = pair.split(',').map(Number)
-                minX = Math.min(minX, px)
-                maxX = Math.max(maxX, px)
-                minY = Math.min(minY, py)
-                maxY = Math.max(maxY, py)
-            }
+        for (const pair of island.outline.split(' ')) {
+            const [px, py] = pair.split(',').map(Number)
+            include(px, py)
+            include(px, py + CLEARING_THICKNESS + 2)
+        }
+        for (const mark of island.trees) {
+            const { width, height, stem } = treeDimensions(mark.shape, mark.size)
+            include(mark.x - width / 2, mark.y - stem - height)
+            include(mark.x + width / 2, mark.y)
         }
         if (island.label) {
-            minY = Math.min(minY, island.label.y - 14)
-            minX = Math.min(minX, island.label.x - 40)
-            maxX = Math.max(maxX, island.label.x + 40)
+            include(island.label.x - 40, island.label.y - 14)
+            include(island.label.x + 40, island.label.y)
         }
-        for (const mark of island.trees) minY = Math.min(minY, mark.y - mark.size * 2.6)
     }
-    const padding = 18
-    // Keep the soft glow under the main island inside the frame.
-    const glow = { cx: 0, cy: 10, rx: MAIN_RADIUS * 1.3, ry: MAIN_RADIUS * 1.3 * TILT }
-    minX = Math.min(minX, glow.cx - glow.rx)
-    maxX = Math.max(maxX, glow.cx + glow.rx)
-    minY = Math.min(minY, glow.cy - glow.ry)
-    maxY = Math.max(maxY, glow.cy + glow.ry)
+    const padding = 16
 
     return {
         viewBox: {
@@ -512,7 +521,6 @@ export function buildForestScene(input: ForestSceneInput): ForestScene {
         },
         islands,
         links,
-        glow,
         treesPerMark: world.treesPerMark,
         hiddenFriends: world.hiddenFriends,
     }
@@ -531,23 +539,44 @@ function escapeXml(value: string) {
         .replace(/'/g, '&apos;')
 }
 
+const f = (value: number) => value.toFixed(1)
+
+function crownPath(shape: TreeShape, cx: number, cy: number, w: number, h: number) {
+    switch (shape) {
+        case 'cone':
+            return `M${f(cx)},${f(cy - h / 2)} Q${f(cx + w * 0.62)},${f(cy + h * 0.2)} ${f(cx + w * 0.48)},${f(cy + h / 2)} L${f(cx - w * 0.48)},${f(cy + h / 2)} Q${f(cx - w * 0.62)},${f(cy + h * 0.2)} ${f(cx)},${f(cy - h / 2)}Z`
+        case 'drop':
+            return `M${f(cx)},${f(cy - h / 2)} C${f(cx + w * 0.72)},${f(cy - h * 0.12)} ${f(cx + w * 0.58)},${f(cy + h / 2)} ${f(cx)},${f(cy + h / 2)} C${f(cx - w * 0.58)},${f(cy + h / 2)} ${f(cx - w * 0.72)},${f(cy - h * 0.12)} ${f(cx)},${f(cy - h / 2)}Z`
+        default: {
+            const rx = w / 2
+            const ry = h / 2
+            return `M${f(cx - rx)},${f(cy)} A${f(rx)},${f(ry)} 0 1 1 ${f(cx + rx)},${f(cy)} A${f(rx)},${f(ry)} 0 1 1 ${f(cx - rx)},${f(cy)}Z`
+        }
+    }
+}
+
 function treeSvg(mark: TreeMark, prefix: string, animated: boolean) {
-    const { x, y, size: s } = mark
-    const light = mark.kind === 'invite' ? FOREST_COLORS.invite : mark.kind === 'own' ? FOREST_COLORS.own : FOREST_COLORS.friend
-    const dark = mark.kind === 'invite' ? FOREST_COLORS.inviteShade : mark.kind === 'own' ? FOREST_COLORS.ownShade : FOREST_COLORS.friendShade
-    const top = `${x.toFixed(1)},${(y - s * 2.3).toFixed(1)}`
-    const left = `${(x - s * 0.72).toFixed(1)},${(y - s * 0.25).toFixed(1)}`
-    const right = `${(x + s * 0.72).toFixed(1)},${(y - s * 0.25).toFixed(1)}`
-    const bottom = `${x.toFixed(1)},${(y + s * 0.05).toFixed(1)}`
+    const { x, y } = mark
+    const { width: w, height: h, stem } = treeDimensions(mark.shape, mark.size)
+    const cy = y - stem - h / 2
+    const crown = crownPath(mark.shape, x, cy, w, h)
     const style = animated ? ` class="${prefix}-tree" style="animation-delay:${mark.delay}ms"` : ''
     const ring = mark.kind === 'invite'
-        ? `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s * 2.1).toFixed(1)}" ry="${(s * 0.95).toFixed(1)}" fill="none" stroke="${FOREST_COLORS.invite}" stroke-width="1.1" opacity="0.55"${animated ? ` class="${prefix}-pulse" style="animation-delay:${(mark.delay * 3) % 2800}ms"` : ''}/>`
+        ? `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(w * 0.9)}" ry="${f(w * 0.9 * TILT)}" fill="none" stroke="${FOREST_PALETTE.invite}" stroke-width="1.6" opacity="0.8"${animated ? ` class="${prefix}-pulse" style="animation-delay:${(mark.delay * 3) % 2800}ms"` : ''}/>`
         : ''
-    const glow = mark.kind === 'invite'
-        ? `<circle cx="${x.toFixed(1)}" cy="${(y - s * 1.1).toFixed(1)}" r="${(s * 1.9).toFixed(1)}" fill="${FOREST_COLORS.invite}" opacity="0.14"/>`
-        : ''
+    const branches = `M${f(x)},${f(cy + h * 0.45)} L${f(x)},${f(cy - h * 0.25)} M${f(x)},${f(cy + h * 0.12)} L${f(x - w * 0.22)},${f(cy - h * 0.02)} M${f(x)},${f(cy + h * 0.12)} L${f(x + w * 0.22)},${f(cy - h * 0.02)}`
 
-    return `<g${style}>${ring}${glow}<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s * 0.8).toFixed(1)}" ry="${(s * 0.32).toFixed(1)}" fill="#050912" opacity="0.45"/><polygon points="${top} ${left} ${bottom}" fill="${light}"/><polygon points="${top} ${bottom} ${right}" fill="${dark}"/></g>`
+    return `<g${style}>${ring}<ellipse cx="${f(x + w * 0.22)}" cy="${f(y + 0.6)}" rx="${f(w * 0.52)}" ry="${f(w * 0.17)}" fill="#1c3018" opacity="0.2"/>`
+        + `<line x1="${f(x)}" y1="${f(y)}" x2="${f(x)}" y2="${f(cy + h * 0.3)}" stroke="${FOREST_PALETTE.trunk}" stroke-width="${f(Math.max(1.1, w * 0.07))}" stroke-linecap="round"/>`
+        + `<path d="${crown}" fill="${mark.color}"/><path d="${crown}" fill="url(#${prefix}-shade)"/>`
+        + `<path d="${branches}" stroke="${FOREST_PALETTE.trunk}" stroke-width="${f(Math.max(0.7, w / 36))}" stroke-linecap="round" opacity="0.45" fill="none"/></g>`
+}
+
+function sproutSvg(x: number, y: number) {
+    const leaf = FOREST_PALETTE.sprout
+    return `<g><line x1="${f(x)}" y1="${f(y)}" x2="${f(x)}" y2="${f(y - 10)}" stroke="${leaf}" stroke-width="1.8" stroke-linecap="round"/>`
+        + `<ellipse cx="${f(x - 3.6)}" cy="${f(y - 9)}" rx="3.8" ry="1.9" fill="${leaf}" transform="rotate(-25 ${f(x - 3.6)} ${f(y - 9)})"/>`
+        + `<ellipse cx="${f(x + 3.6)}" cy="${f(y - 10.5)}" rx="3.8" ry="1.9" fill="${leaf}" transform="rotate(25 ${f(x + 3.6)} ${f(y - 10.5)})"/></g>`
 }
 
 export function renderForestSvg(scene: ForestScene, options: {
@@ -565,41 +594,54 @@ export function renderForestSvg(scene: ForestScene, options: {
         ? `width="${Math.round(options.size.width)}" height="${Math.round(options.size.height)}"`
         : 'style="width:100%;height:auto;display:block;overflow:visible"'
 
-    parts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox.x.toFixed(1)} ${viewBox.y.toFixed(1)} ${viewBox.width.toFixed(1)} ${viewBox.height.toFixed(1)}" role="img" aria-label="${escapeXml(options.title || 'Forest island')}" ${sizing}>`)
+    parts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f(viewBox.x)} ${f(viewBox.y)} ${f(viewBox.width)} ${f(viewBox.height)}" role="img" aria-label="${escapeXml(options.title || 'Forest')}" ${sizing}>`)
+    parts.push(`<defs><linearGradient id="${prefix}-shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="0.45" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.55" stop-color="#0b1a10" stop-opacity="0"/><stop offset="1" stop-color="#0b1a10" stop-opacity="0.22"/></linearGradient></defs>`)
 
     if (animated) {
         parts.push(`<style>
 .${prefix}-tree{transform-box:fill-box;transform-origin:50% 100%;animation:${prefix}-grow .7s cubic-bezier(.2,.8,.2,1) both}
 .${prefix}-pulse{transform-box:fill-box;transform-origin:center;animation:${prefix}-pulse 2.8s ease-out infinite}
-.${prefix}-flow{animation:${prefix}-flow 1.4s linear infinite}
-.${prefix}-float{animation:${prefix}-float 7s ease-in-out infinite}
+.${prefix}-plot{animation:${prefix}-dash 1.6s linear infinite}
 @keyframes ${prefix}-grow{from{transform:scale(0);opacity:0}}
-@keyframes ${prefix}-pulse{0%{transform:scale(.45);opacity:.9}80%,100%{transform:scale(1.5);opacity:0}}
-@keyframes ${prefix}-flow{to{stroke-dashoffset:-18}}
-@keyframes ${prefix}-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-@media (prefers-reduced-motion:reduce){.${prefix}-tree,.${prefix}-pulse,.${prefix}-flow,.${prefix}-float{animation:none}}
+@keyframes ${prefix}-pulse{0%{transform:scale(.5);opacity:.9}80%,100%{transform:scale(1.4);opacity:0}}
+@keyframes ${prefix}-dash{to{stroke-dashoffset:-16}}
+@media (prefers-reduced-motion:reduce){.${prefix}-tree,.${prefix}-pulse,.${prefix}-plot{animation:none}}
 </style>`)
     }
 
-    parts.push(`<ellipse cx="${scene.glow.cx}" cy="${scene.glow.cy}" rx="${scene.glow.rx.toFixed(1)}" ry="${scene.glow.ry.toFixed(1)}" fill="#1b2a4d" opacity="0.35"/>`)
-
     for (const link of scene.links) {
-        parts.push(`<path d="${link}" fill="none" stroke="${FOREST_COLORS.link}" stroke-width="1.4" stroke-dasharray="3 6" stroke-linecap="round" opacity="0.6"${animated ? ` class="${prefix}-flow"` : ''}/>`)
+        if (link.planned) {
+            parts.push(`<path d="${link.d}" fill="none" stroke="${FOREST_PALETTE.pathEdge}" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`)
+        } else {
+            parts.push(`<path d="${link.d}" fill="none" stroke="${FOREST_PALETTE.pathEdge}" stroke-width="9" stroke-linecap="round"/>`)
+            parts.push(`<path d="${link.d}" fill="none" stroke="${FOREST_PALETTE.path}" stroke-width="6.5" stroke-linecap="round"/>`)
+        }
     }
 
     for (const island of scene.islands) {
-        parts.push(`<g${animated && island.kind === 'main' ? ` class="${prefix}-float"` : ''}><title>${escapeXml(island.title)}</title>`)
-        for (const layer of island.layers) {
-            parts.push(`<polygon points="${layer.shadowPoints}" fill="#060a16" opacity="0.85"/>`)
-            parts.push(`<polygon points="${layer.points}" fill="${layer.fill}" stroke="${layer.stroke}" stroke-width="${island.kind === 'main' ? 1.3 : 1}" stroke-linejoin="round"/>`)
-        }
-        for (const mark of island.trees) parts.push(treeSvg(mark, prefix, animated))
-        if (island.sprout) {
-            const { x, y } = island.sprout
-            parts.push(`<g opacity="0.8"><line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${x.toFixed(1)}" y2="${(y - 9).toFixed(1)}" stroke="${FOREST_COLORS.friend}" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="${(x - 3.2).toFixed(1)}" cy="${(y - 8).toFixed(1)}" rx="3.4" ry="1.7" fill="${FOREST_COLORS.friend}" transform="rotate(-25 ${(x - 3.2).toFixed(1)} ${(y - 8).toFixed(1)})"/><ellipse cx="${(x + 3.2).toFixed(1)}" cy="${(y - 9.5).toFixed(1)}" rx="3.4" ry="1.7" fill="${FOREST_COLORS.friend}" transform="rotate(25 ${(x + 3.2).toFixed(1)} ${(y - 9.5).toFixed(1)})"/></g>`)
+        parts.push(`<g><title>${escapeXml(island.title)}</title>`)
+        if (island.kind === 'plot') {
+            const { x, y } = island.center
+            parts.push(`<polygon points="${island.outline}" fill="#ffffff" fill-opacity="0.25" stroke="${FOREST_PALETTE.plotEdge}" stroke-width="1.4" stroke-dasharray="4 4"${animated ? ` class="${prefix}-plot"` : ''}/>`)
+            parts.push(`<circle cx="${f(x)}" cy="${f(y)}" r="6.5" fill="${FOREST_PALETTE.invite}" stroke="${FOREST_PALETTE.ink}" stroke-width="1.2"/><path d="M${f(x - 3)},${f(y)} H${f(x + 3)} M${f(x)},${f(y - 3)} V${f(y + 3)}" stroke="${FOREST_PALETTE.ink}" stroke-width="1.5" stroke-linecap="round"/>`)
+        } else {
+            const thickness = CLEARING_THICKNESS + 1.5
+            const shifted = island.outline.split(' ').map(pair => {
+                const [px, py] = pair.split(',').map(Number)
+                return `${f(px)},${f(py + thickness)}`
+            }).join(' ')
+            const fill = island.kind === 'main' ? FOREST_PALETTE.clearing : FOREST_PALETTE.friendClearing
+            parts.push(`<polygon points="${shifted}" fill="#a3b07e"/>`)
+            parts.push(`<polygon points="${island.outline}" fill="${fill}"/>`)
+            const marks = [
+                ...island.bushes.map(bush => ({ y: bush.y, svg: `<ellipse cx="${f(bush.x)}" cy="${f(bush.y - bush.size * 0.5)}" rx="${f(bush.size * 1.3)}" ry="${f(bush.size * 0.85)}" fill="${bush.color}"/>` })),
+                ...island.trees.map(mark => ({ y: mark.y, svg: treeSvg(mark, prefix, animated) })),
+            ].sort((a, b) => a.y - b.y)
+            for (const mark of marks) parts.push(mark.svg)
+            if (island.sprout) parts.push(sproutSvg(island.sprout.x, island.sprout.y))
         }
         if (island.label) {
-            parts.push(`<text x="${island.label.x.toFixed(1)}" y="${island.label.y.toFixed(1)}" text-anchor="middle" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif" font-size="9" font-weight="700" fill="${FOREST_COLORS.label}" opacity="0.85">${escapeXml(island.label.text)}</text>`)
+            parts.push(`<text x="${f(island.label.x)}" y="${f(island.label.y)}" text-anchor="middle" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif" font-size="9" font-weight="800" fill="${FOREST_PALETTE.ink}" opacity="0.8">${escapeXml(island.label.text)}</text>`)
         }
         parts.push('</g>')
     }

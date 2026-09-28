@@ -13,16 +13,19 @@ type Forest3DProps = {
     friends: ForestFriend[]
     title?: string
     className?: string
+    /** Empty plots become clickable when set (invite a friend / join). */
+    onPlotClick?: () => void
+    plotLabel?: string
 }
 
 type Status = 'idle' | 'loading' | 'ready' | 'fallback'
 
-const buttonClass = 'flex h-9 w-9 items-center justify-center border-2 border-white/40 bg-[#0B101F]/80 text-white backdrop-blur hover:border-brand-yellow hover:text-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow'
+const buttonClass = 'flex h-9 w-9 items-center justify-center border-2 border-black bg-brand-gray/85 text-black backdrop-blur hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black'
 
 // Interactive 3D forest. Shows the SVG island immediately (and keeps it for
 // devices without WebGL); three.js is only downloaded once the forest is
 // about to scroll into view.
-export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className }: Forest3DProps) {
+export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className, onPlotClick, plotLabel }: Forest3DProps) {
     const frameRef = useRef<HTMLDivElement>(null)
     const mountRef = useRef<HTMLDivElement>(null)
     const handleRef = useRef<Forest3DHandle | null>(null)
@@ -31,6 +34,10 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
     const [active, setActive] = useState(false)
     const [focused, setFocused] = useState<string | null>(null)
     const [coarse, setCoarse] = useState(false)
+    // Latest click handler without re-mounting the scene when it changes.
+    const plotClickRef = useRef(onPlotClick)
+    plotClickRef.current = onPlotClick
+    const hasPlotClick = Boolean(onPlotClick)
 
     useEffect(() => {
         setCoarse(window.matchMedia?.('(pointer: coarse)').matches ?? false)
@@ -63,6 +70,8 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                     reducedMotion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
                     onActiveChange: setActive,
                     onFocusChange: setFocused,
+                    onPlotClick: hasPlotClick ? () => plotClickRef.current?.() : undefined,
+                    plotLabel,
                 })
                 setStatus('ready')
             })
@@ -76,7 +85,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
             handleRef.current?.dispose()
             handleRef.current = null
         }
-    }, [friends, inviteTrees, nearViewport, ownTrees, seed])
+    }, [friends, hasPlotClick, inviteTrees, nearViewport, ownTrees, plotLabel, seed])
 
     const ready = status === 'ready'
 
@@ -118,7 +127,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                         <button
                             type="button"
                             onClick={() => handleRef.current?.reset()}
-                            className="absolute left-2 top-2 border-2 border-brand-yellow bg-[#0B101F]/85 px-3 py-1.5 text-xs font-black uppercase text-brand-yellow backdrop-blur"
+                            className="absolute left-2 top-2 border-2 border-black bg-brand-yellow px-3 py-1.5 text-xs font-black uppercase text-black"
                         >
                             ← Back · {focused.split(':')[0]}
                         </button>
@@ -128,14 +137,14 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                         <button
                             type="button"
                             onClick={() => handleRef.current?.setActive(true)}
-                            className="absolute inset-x-0 bottom-3 mx-auto flex w-fit items-center gap-2 border-2 border-white/40 bg-[#0B101F]/85 px-3 py-1.5 text-xs font-bold text-white backdrop-blur"
+                            className="absolute inset-x-0 bottom-3 mx-auto flex w-fit items-center gap-2 border-2 border-black bg-brand-gray/90 px-3 py-1.5 text-xs font-bold text-black backdrop-blur"
                         >
                             <Hand className="h-3.5 w-3.5" aria-hidden="true" />
                             Tap to explore in 3D
                         </button>
                     ) : (
-                        <p className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px] font-semibold text-white/45">
-                            {coarse ? 'Drag · pinch · tap an island' : active ? 'Drag · scroll · click an island' : 'Drag to explore'}
+                        <p className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px] font-semibold text-black/45">
+                            {coarse ? 'Drag · pinch · tap a grove' : active ? 'Drag · scroll · click a grove' : 'Drag to explore'}
                         </p>
                     )}
                 </>

@@ -106,33 +106,33 @@ export async function GET(request: NextRequest) {
                     width: '100%',
                     height: '100%',
                     display: 'flex',
-                    backgroundColor: '#0B101F',
+                    backgroundColor: '#DCE2CF',
                     borderBottom: '18px solid #E0F146',
                     fontFamily: 'sans-serif',
                 }}
             >
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: 480, padding: '56px 0 48px 64px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ display: 'flex', fontSize: 22, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#E0F146' }}>
+                        <div style={{ display: 'flex', fontSize: 22, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#0B101F' }}>
                             IdleForest
                         </div>
-                        <div style={{ display: 'flex', marginTop: 20, fontSize: title.length > 40 ? 46 : 56, fontWeight: 900, lineHeight: 1.04, color: '#FFFFFF', textTransform: 'uppercase' }}>
+                        <div style={{ display: 'flex', marginTop: 20, fontSize: title.length > 40 ? 46 : 56, fontWeight: 900, lineHeight: 1.04, color: '#0B101F', textTransform: 'uppercase' }}>
                             {title}
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         {forest.totalTrees > 0 ? (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', fontSize: 72, fontWeight: 900, lineHeight: 1, color: '#E0F146' }}>{forest.totalTrees.toLocaleString('en')}</div>
-                                <div style={{ display: 'flex', marginTop: 6, fontSize: 24, fontWeight: 700, color: '#FFFFFF' }}>{copy.inForest}</div>
+                                <div style={{ display: 'flex', alignSelf: 'flex-start', fontSize: 72, fontWeight: 900, lineHeight: 1, color: '#0B101F', backgroundColor: '#E0F146', padding: '4px 12px' }}>{forest.totalTrees.toLocaleString('en')}</div>
+                                <div style={{ display: 'flex', marginTop: 8, fontSize: 24, fontWeight: 700, color: '#0B101F' }}>{copy.inForest}</div>
                             </div>
                         ) : null}
                         {rewardTrees > 0 ? (
-                            <div style={{ display: 'flex', marginTop: 12, alignSelf: 'flex-start', backgroundColor: '#E0F146', color: '#0B101F', padding: '10px 18px', fontSize: 24, fontWeight: 800 }}>
+                            <div style={{ display: 'flex', marginTop: 12, alignSelf: 'flex-start', backgroundColor: '#0B101F', color: '#E0F146', padding: '10px 18px', fontSize: 24, fontWeight: 800 }}>
                                 {copy.gift.replace('{trees}', giftTrees)}
                             </div>
                         ) : null}
-                        <div style={{ display: 'flex', marginTop: 16, fontSize: 20, fontWeight: 600, color: '#9AA3B8' }}>{copy.join}</div>
+                        <div style={{ display: 'flex', marginTop: 16, fontSize: 20, fontWeight: 600, color: '#4A5240' }}>{copy.join}</div>
                     </div>
                 </div>
                 <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 24 }}>

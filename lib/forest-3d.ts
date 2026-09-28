@@ -1,25 +1,38 @@
-// Interactive 3D version of the forest island (three.js).
+// Interactive 3D version of the storybook forest (three.js).
 //
 // Uses the same world model as the SVG renderer (buildForestWorld), so both
-// show the same island, trees and friends. Framework-agnostic: call
-// mountForest3D(container, input) and keep the returned handle to control or
-// dispose it. Loaded lazily by the UI, so three.js only ships to pages that
-// show a forest.
+// show the same groves, trees, friends and empty plots. Framework-agnostic:
+// call mountForest3D(container, input) and keep the returned handle to
+// control or dispose it. Loaded lazily by the UI, so three.js only ships to
+// pages that show a forest.
 //
 // Interaction model (kept friendly to page scrolling):
 //   * mouse: drag rotates at any time; the wheel only zooms after the scene
 //     has been clicked (until the pointer leaves it)
 //   * touch: one tap "activates" the scene; until then touches scroll the page
-//   * clicking a friend's island flies the camera to it; reset() flies back
+//   * clicking a friend's grove flies the camera to it; reset() flies back
+//   * clicking an empty plot calls options.onPlotClick (invite / join)
 
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { FOREST_COLORS, buildForestWorld, type ForestSceneInput, type WorldIsland } from './forest-scene'
+import {
+    FOREST_PALETTE,
+    buildForestWorld,
+    treeColor,
+    treeDimensions,
+    type ForestSceneInput,
+    type TreeShape,
+    type WorldIsland,
+} from './forest-scene'
 
 export type Forest3DOptions = {
     reducedMotion?: boolean
     onActiveChange?: (active: boolean) => void
     onFocusChange?: (focusedIsland: string | null) => void
+    /** Called when an empty plot is clicked; plots are only interactive when set. */
+    onPlotClick?: () => void
+    /** Text on empty plots, e.g. "Invite a friend" or "Join Anna". */
+    plotLabel?: string
 }
 
 export type Forest3DHandle = {
@@ -29,10 +42,10 @@ export type Forest3DHandle = {
     dispose: () => void
 }
 
-const WATER_COLOR = '#2a4180'
-const PAGE_COLOR = '#0B101F'
-const TRUNK_COLOR = '#5b4636'
-const ELEVATION = Math.asin(0.56) // matches the SVG projection's tilt
+// Camera tilt above the ground: looking down at the forest, low enough to
+// see trunks and crown shapes.
+const ELEVATION = 0.66
+const TREE_SHAPES: TreeShape[] = ['round', 'drop', 'cone', 'column']
 
 export function isWebGLAvailable() {
     try {
@@ -43,31 +56,10 @@ export function isWebGLAvailable() {
     }
 }
 
-function lerpHex(from: string, to: string, t: number) {
-    return new THREE.Color(from).lerp(new THREE.Color(to), t)
-}
-
 // Deterministic per-instance jitter without another RNG stream.
 function jitter(index: number, salt: number) {
     const value = Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453
     return value - Math.floor(value)
-}
-
-function glowTexture() {
-    const size = 64
-    const canvas = document.createElement('canvas')
-    canvas.width = size
-    canvas.height = size
-    const context = canvas.getContext('2d')!
-    const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
-    gradient.addColorStop(0, 'rgba(255,255,255,1)')
-    gradient.addColorStop(0.35, 'rgba(255,255,255,0.45)')
-    gradient.addColorStop(1, 'rgba(255,255,255,0)')
-    context.fillStyle = gradient
-    context.fillRect(0, 0, size, size)
-    const texture = new THREE.CanvasTexture(canvas)
-    texture.colorSpace = THREE.SRGBColorSpace
-    return texture
 }
 
 // World (x, y horizontal, z up) -> three.js (y up).
@@ -75,12 +67,98 @@ function toVector(x: number, y: number, z: number) {
     return new THREE.Vector3(x, z, y)
 }
 
+// Hand-drawn leaf strokes, multiplied with each crown's colour.
+function foliageTexture() {
+    const size = 256
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const context = canvas.getContext('2d')!
+    context.fillStyle = '#ededed'
+    context.fillRect(0, 0, size, size)
+    context.lineCap = 'round'
+    let seed = 7
+    const random = () => {
+        seed = (seed * 16807) % 2147483647
+        return seed / 2147483647
+    }
+    for (let i = 0; i < 1400; i++) {
+        const x = random() * size
+        const y = random() * size
+        const angle = -Math.PI / 2 + (random() - 0.5) * 1.1
+        const length = 3 + random() * 5
+        context.strokeStyle = random() < 0.55 ? 'rgba(255,255,255,0.9)' : 'rgba(120,120,120,0.55)'
+        context.lineWidth = 1.4 + random() * 1.2
+        context.beginPath()
+        context.moveTo(x, y)
+        context.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length)
+        context.stroke()
+    }
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(2, 2)
+    texture.anisotropy = 4
+    return texture
+}
+
+function plusTexture() {
+    const size = 128
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const context = canvas.getContext('2d')!
+    context.fillStyle = FOREST_PALETTE.invite
+    context.strokeStyle = FOREST_PALETTE.ink
+    context.lineWidth = 8
+    context.beginPath()
+    context.arc(size / 2, size / 2, size / 2 - 6, 0, Math.PI * 2)
+    context.fill()
+    context.stroke()
+    context.lineWidth = 10
+    context.lineCap = 'round'
+    context.beginPath()
+    context.moveTo(size * 0.3, size / 2)
+    context.lineTo(size * 0.7, size / 2)
+    context.moveTo(size / 2, size * 0.3)
+    context.lineTo(size / 2, size * 0.7)
+    context.stroke()
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    return texture
+}
+
+// Unit crowns (1 wide, 1 tall, centred on the origin), scaled per tree.
+function crownGeometry(shape: TreeShape) {
+    switch (shape) {
+        case 'cone':
+            return new THREE.ConeGeometry(0.5, 1, 12)
+        case 'column': {
+            const geometry = new THREE.CapsuleGeometry(0.5, 1.2, 6, 14)
+            geometry.scale(1, 1 / 2.2, 1)
+            return geometry
+        }
+        case 'drop': {
+            const profile: THREE.Vector2[] = []
+            for (let i = 0; i <= 16; i++) {
+                const u = i / 16
+                const radius = 0.54 * Math.sqrt(Math.sin(Math.PI * u)) * (1 - 0.55 * u * u)
+                profile.push(new THREE.Vector2(Math.max(0.001, radius), u - 0.5))
+            }
+            return new THREE.LatheGeometry(profile, 16)
+        }
+        default:
+            return new THREE.SphereGeometry(0.5, 18, 12)
+    }
+}
+
 type GrowingInstance = {
     mesh: THREE.InstancedMesh
     index: number
     position: THREE.Vector3
     quaternion: THREE.Quaternion
-    scale: number
+    scale: THREE.Vector3
     delay: number
 }
 
@@ -88,12 +166,14 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const world = buildForestWorld(input)
     const reducedMotion = Boolean(options.reducedMotion)
     const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false
+    const plotsInteractive = Boolean(options.onPlotClick)
 
     // --- Renderer, scene, camera ------------------------------------------
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    renderer.setClearColor(0x000000, 0)
     renderer.outputColorSpace = THREE.SRGBColorSpace
-    // No tone mapping: keep the brand colours as flat and bright as the 2D view.
+    // No tone mapping: keep the palette as flat and bright as the 2D view.
     renderer.toneMapping = THREE.NoToneMapping
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -109,7 +189,7 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     container.appendChild(overlay)
 
     const tooltip = document.createElement('div')
-    tooltip.style.cssText = 'position:absolute;left:0;top:0;padding:4px 8px;background:rgba(11,16,31,.92);border:1px solid rgba(224,241,70,.6);color:#fff;font:700 12px/1.3 ui-sans-serif,system-ui,sans-serif;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .12s'
+    tooltip.style.cssText = `position:absolute;left:0;top:0;padding:4px 8px;background:#fff;border:2px solid ${FOREST_PALETTE.ink};color:${FOREST_PALETTE.ink};font:700 12px/1.3 ui-sans-serif,system-ui,sans-serif;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .12s`
     overlay.appendChild(tooltip)
 
     const scene = new THREE.Scene()
@@ -118,47 +198,44 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         extent = Math.max(extent, Math.hypot(island.center.x, island.center.y) + island.radius * 1.25)
     }
     extent = Math.max(extent, world.mainRadius * 1.35)
-    scene.fog = new THREE.Fog(PAGE_COLOR, extent * 2.4, extent * 5)
 
-    const camera = new THREE.PerspectiveCamera(32, 1, 1, extent * 12)
-    // Home view: orbit around the main island's axis. fitHome() picks the
-    // height and distance so every island stays in frame as it rotates.
+    const camera = new THREE.PerspectiveCamera(32, 1, 1, extent * 14)
+    // Home view: orbit around the main grove's axis. fitHome() picks the
+    // height and distance so every grove stays in frame as it rotates.
     const homeTarget = new THREE.Vector3(0, 0, 0)
     let homeDistance = extent * 3
 
-    // Points that bound what has to stay in view: each island's base outline
-    // at its foot and at tree-top height.
+    // Points that bound what has to stay in view: each grove's outline at
+    // ground level and at tree-top height.
     const framePoints: THREE.Vector3[] = []
     for (const island of world.islands) {
         const base = island.terraces[0]
-        const top = island.terraces[island.terraces.length - 1]
-        const tallest = island.trees.reduce((max, tree) => Math.max(max, tree.size), 0)
-        const topZ = top.z + tallest * 2.9 + 1
+        const tallest = island.trees.reduce((max, tree) => {
+            const { height, stem } = treeDimensions(tree.shape, tree.size)
+            return Math.max(max, height + stem)
+        }, 0)
         const step = Math.max(1, Math.floor(base.outline.length / 24))
         for (let i = 0; i < base.outline.length; i += step) {
             const [x, y] = base.outline[i]
-            framePoints.push(toVector(x, y, base.z - island.levelHeight), toVector(x, y, topZ))
+            framePoints.push(toVector(x, y, -island.levelHeight), toVector(x, y, tallest + 1))
         }
     }
 
-    const hemisphere = new THREE.HemisphereLight('#d6e0ff', '#1a2440', 1.6)
-    scene.add(hemisphere)
-    const sun = new THREE.DirectionalLight('#fff6e0', 1.9)
-    sun.position.set(-extent * 0.9, extent * 1.6, extent * 1.1)
+    // Daylight: soft sky fill plus a warm sun casting gentle shadows.
+    scene.add(new THREE.HemisphereLight('#ffffff', '#b3c28e', 1.75))
+    const sun = new THREE.DirectionalLight('#fff3d6', 1.5)
+    sun.position.set(-extent * 0.7, extent * 1.8, extent * 0.9)
     sun.castShadow = true
     sun.shadow.mapSize.set(2048, 2048)
-    sun.shadow.camera.left = -extent
-    sun.shadow.camera.right = extent
-    sun.shadow.camera.top = extent
-    sun.shadow.camera.bottom = -extent
+    sun.shadow.camera.left = -extent * 1.2
+    sun.shadow.camera.right = extent * 1.2
+    sun.shadow.camera.top = extent * 1.2
+    sun.shadow.camera.bottom = -extent * 1.2
     sun.shadow.camera.near = 1
     sun.shadow.camera.far = extent * 5
-    sun.shadow.bias = -0.0008
-    sun.shadow.normalBias = 0.6
+    sun.shadow.bias = -0.0006
+    sun.shadow.normalBias = 0.5
     scene.add(sun)
-    const rim = new THREE.DirectionalLight('#e0f146', 0.35)
-    rim.position.set(extent, extent * 0.4, -extent)
-    scene.add(rim)
 
     const disposables: Array<{ dispose: () => void }> = []
     const track = <T extends { dispose: () => void }>(item: T) => {
@@ -166,234 +243,296 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         return item
     }
 
-    // --- Water and glow ---------------------------------------------------
-    // The "water" is invisible except for the shadows it catches and a soft
-    // glow under the islands, so the scene blends into the page background.
-    const waterLevel = -world.islands[0].levelHeight - 0.5
-    const water = new THREE.Mesh(
-        track(new THREE.PlaneGeometry(extent * 6, extent * 6)),
-        track(new THREE.ShadowMaterial({ color: '#000000', opacity: 0.45 }))
+    // --- Ground -------------------------------------------------------------
+    // Invisible except for the shadows it catches, so the scene sits on the
+    // page's own background colour.
+    const groundLevel = -2
+    const ground = new THREE.Mesh(
+        track(new THREE.PlaneGeometry(extent * 8, extent * 8)),
+        track(new THREE.ShadowMaterial({ color: '#233018', opacity: 0.2 }))
     )
-    water.rotation.x = -Math.PI / 2
-    water.position.y = waterLevel
-    water.receiveShadow = true
-    scene.add(water)
+    ground.rotation.x = -Math.PI / 2
+    ground.position.y = groundLevel - 0.02
+    ground.receiveShadow = true
+    scene.add(ground)
 
-    const glowMap = track(glowTexture())
-    const pool = new THREE.Mesh(
-        track(new THREE.PlaneGeometry(extent * 2.6, extent * 2.6)),
-        track(new THREE.MeshBasicMaterial({ map: glowMap, color: WATER_COLOR, transparent: true, opacity: 0.9, depthWrite: false }))
-    )
-    pool.rotation.x = -Math.PI / 2
-    pool.position.y = waterLevel - 0.05
-    pool.renderOrder = -1
-    scene.add(pool)
+    // --- Shared materials and geometry -----------------------------------------
+    const foliageMap = track(foliageTexture())
+    const foliageMaterial = track(new THREE.MeshStandardMaterial({ color: '#ffffff', map: foliageMap, roughness: 0.9 }))
+    const inviteMaterial = track(new THREE.MeshStandardMaterial({
+        color: '#ffffff',
+        map: foliageMap,
+        roughness: 0.7,
+        emissive: FOREST_PALETTE.invite,
+        emissiveIntensity: 0.22,
+    }))
+    const trunkMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.trunk, roughness: 1 }))
+    const crowns = new Map(TREE_SHAPES.map(shape => [shape, track(crownGeometry(shape))]))
+    const trunkGeometry = track(new THREE.CylinderGeometry(0.5, 0.65, 1, 7))
+    trunkGeometry.translate(0, 0.5, 0)
+    const bushGeometry = track(new THREE.SphereGeometry(0.5, 12, 8))
+    const ringGeometry = track(new THREE.RingGeometry(1, 1.16, 48))
+    ringGeometry.rotateX(-Math.PI / 2)
+    const plusMap = track(plusTexture())
 
-    // --- Islands ----------------------------------------------------------
     const pickables: THREE.Mesh[] = []
     const growing: GrowingInstance[] = []
     const pulses: Array<{ mesh: THREE.Mesh; phase: number }> = []
-    const glows: Array<{ sprite: THREE.Sprite; phase: number }> = []
+    const bobs: Array<{ sprite: THREE.Sprite; base: number; phase: number }> = []
     const labels: Array<{ element: HTMLDivElement; anchor: THREE.Vector3 }> = []
     const matrix = new THREE.Matrix4()
+    const color = new THREE.Color()
+    const upAxis = new THREE.Vector3(0, 1, 0)
 
-    const coneGeometries = new Map<number, THREE.ConeGeometry>()
-    const trunkGeometries = new Map<number, THREE.CylinderGeometry>()
-    const cone = (size: number) => {
-        if (!coneGeometries.has(size)) {
-            const geometry = new THREE.ConeGeometry(size * 0.72, size * 2.3, 7)
-            geometry.translate(0, size * 1.15 + size * 0.35, 0)
-            coneGeometries.set(size, track(geometry))
-        }
-        return coneGeometries.get(size)!
+    const addLabel = (text: string, anchor: THREE.Vector3, highlight: boolean) => {
+        const element = document.createElement('div')
+        element.textContent = text
+        element.style.cssText = `position:absolute;left:0;top:0;transform:translate(-50%,-100%);padding:2px 7px;background:${highlight ? FOREST_PALETTE.invite : 'rgba(255,255,255,.88)'};border:1.5px solid ${FOREST_PALETTE.ink};color:${FOREST_PALETTE.ink};font:800 11px/1.3 ui-sans-serif,system-ui,sans-serif;white-space:nowrap;will-change:transform`
+        overlay.appendChild(element)
+        labels.push({ element, anchor })
     }
-    const trunk = (size: number) => {
-        if (!trunkGeometries.has(size)) {
-            const geometry = new THREE.CylinderGeometry(size * 0.12, size * 0.16, size * 0.45, 6)
-            geometry.translate(0, size * 0.22, 0)
-            trunkGeometries.set(size, track(geometry))
-        }
-        return trunkGeometries.get(size)!
-    }
-    const trunkMaterial = track(new THREE.MeshStandardMaterial({ color: TRUNK_COLOR, roughness: 1 }))
-    const treeMaterials = {
-        own: track(new THREE.MeshStandardMaterial({ color: FOREST_COLORS.own, roughness: 0.7, flatShading: true })),
-        friend: track(new THREE.MeshStandardMaterial({ color: FOREST_COLORS.friend, roughness: 0.7, flatShading: true })),
-        invite: track(new THREE.MeshStandardMaterial({
-            color: FOREST_COLORS.invite,
-            emissive: FOREST_COLORS.invite,
-            emissiveIntensity: 0.45,
-            roughness: 0.5,
-            flatShading: true,
-        })),
-    }
-    const ringGeometry = track(new THREE.RingGeometry(1, 1.14, 40))
-    ringGeometry.rotateX(-Math.PI / 2)
 
-    const addIsland = (island: WorldIsland, islandIndex: number) => {
+    const clearingShape = (island: WorldIsland) =>
+        new THREE.Shape(island.terraces[0].outline.map(([x, y]) => new THREE.Vector2(x, -y)))
+
+    let plotLabelShown = false
+    const addGrove = (island: WorldIsland, islandIndex: number) => {
         const group = new THREE.Group()
-        group.userData = { islandIndex, title: island.title, kind: island.kind }
-        const levels = island.terraces.length
 
-        island.terraces.forEach((terrace, level) => {
-            const shape = new THREE.Shape(terrace.outline.map(([x, y]) => new THREE.Vector2(x, -y)))
-            const geometry = track(new THREE.ExtrudeGeometry(shape, {
-                depth: island.levelHeight,
-                bevelEnabled: true,
-                bevelThickness: 0.5,
-                bevelSize: 0.5,
-                bevelSegments: 1,
-                curveSegments: 1,
-            }))
+        if (island.kind === 'plot') {
+            // An empty, dashed plot waiting for the next friend.
+            const geometry = track(new THREE.ShapeGeometry(clearingShape(island)))
             geometry.rotateX(-Math.PI / 2)
-            geometry.translate(0, terrace.z - island.levelHeight, 0)
+            const plot = new THREE.Mesh(geometry, track(new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.28, depthWrite: false })))
+            plot.position.y = groundLevel + 0.05
+            plot.userData = { islandIndex }
+            pickables.push(plot)
+            group.add(plot)
 
-            const t = levels === 1 ? 1 : level / (levels - 1)
-            const material = track(new THREE.MeshStandardMaterial({
-                color: lerpHex(island.palette.bottom, island.palette.top, t),
-                roughness: 0.92,
-                metalness: 0.02,
-            }))
-            const mesh = new THREE.Mesh(geometry, material)
+            const edge = new THREE.LineLoop(
+                track(new THREE.BufferGeometry().setFromPoints(island.terraces[0].outline.map(([x, y]) => toVector(x, y, groundLevel + 0.1)))),
+                track(new THREE.LineDashedMaterial({ color: FOREST_PALETTE.plotEdge, dashSize: 3, gapSize: 3 }))
+            )
+            edge.computeLineDistances()
+            group.add(edge)
+
+            const plus = new THREE.Sprite(track(new THREE.SpriteMaterial({ map: plusMap, depthWrite: false })))
+            const base = groundLevel + 7
+            plus.position.copy(toVector(island.center.x, island.center.y, base))
+            plus.scale.setScalar(11)
+            group.add(plus)
+            bobs.push({ sprite: plus, base, phase: jitter(islandIndex, 9) * Math.PI * 2 })
+
+            if (plotsInteractive && options.plotLabel && !plotLabelShown) {
+                plotLabelShown = true
+                addLabel(options.plotLabel, toVector(island.center.x, island.center.y, base + 7), true)
+            }
+            scene.add(group)
+            return
+        }
+
+        // A raised meadow clearing for the grove.
+        const geometry = track(new THREE.ExtrudeGeometry(clearingShape(island), {
+            depth: island.levelHeight,
+            bevelEnabled: true,
+            bevelThickness: 0.6,
+            bevelSize: 0.8,
+            bevelSegments: 2,
+            curveSegments: 1,
+        }))
+        geometry.rotateX(-Math.PI / 2)
+        geometry.translate(0, groundLevel, 0)
+        const clearing = new THREE.Mesh(geometry, track(new THREE.MeshStandardMaterial({
+            color: island.kind === 'main' ? FOREST_PALETTE.clearing : FOREST_PALETTE.friendClearing,
+            roughness: 1,
+        })))
+        clearing.receiveShadow = true
+        clearing.userData = { islandIndex }
+        pickables.push(clearing)
+        group.add(clearing)
+
+        const top = groundLevel + island.levelHeight + 0.6
+        const centre = island.center
+
+        // Trees, one instanced mesh per crown shape (and one for invite trees).
+        const buckets = new Map<string, typeof island.trees>()
+        for (const tree of island.trees) {
+            const key = tree.kind === 'invite' ? 'invite' : tree.shape
+            buckets.set(key, [...(buckets.get(key) || []), tree])
+        }
+        const trunks = new THREE.InstancedMesh(trunkGeometry, trunkMaterial, Math.max(1, island.trees.length))
+        trunks.count = island.trees.length
+        trunks.castShadow = true
+        let trunkIndex = 0
+
+        buckets.forEach((trees, key) => {
+            const shape: TreeShape = key === 'invite' ? 'round' : (key as TreeShape)
+            const mesh = new THREE.InstancedMesh(crowns.get(shape)!, key === 'invite' ? inviteMaterial : foliageMaterial, trees.length)
             mesh.castShadow = true
             mesh.receiveShadow = true
-            mesh.userData = { islandIndex }
-            group.add(mesh)
-            pickables.push(mesh)
-
-            // Glowing contour line along the terrace edge, as in the 2D view.
-            const contourPoints = terrace.outline.map(([x, y]) => toVector(x, y, terrace.z + 0.55))
-            const contour = new THREE.LineLoop(
-                track(new THREE.BufferGeometry().setFromPoints(contourPoints)),
-                track(new THREE.LineBasicMaterial({
-                    color: FOREST_COLORS.contour,
-                    transparent: true,
-                    opacity: Math.min(1, island.contourOpacity * (0.75 + 0.35 * t)),
-                    toneMapped: false,
-                }))
-            )
-            group.add(contour)
-        })
-
-        // Trees, one instanced mesh per kind.
-        const byKind = new Map<string, typeof island.trees>()
-        for (const tree of island.trees) byKind.set(tree.kind, [...(byKind.get(tree.kind) || []), tree])
-
-        byKind.forEach((trees, kind) => {
-            const size = trees[0].size
-            const material = treeMaterials[kind as keyof typeof treeMaterials]
-            const crowns = new THREE.InstancedMesh(cone(size), material, trees.length)
-            const trunks = new THREE.InstancedMesh(trunk(size), trunkMaterial, trees.length)
-            crowns.castShadow = true
-            crowns.receiveShadow = true
-            trunks.castShadow = true
-            const center = trees.reduce((sum, tree) => ({ x: sum.x + tree.x, y: sum.y + tree.y }), { x: 0, y: 0 })
-            center.x /= trees.length
-            center.y /= trees.length
-
             trees.forEach((tree, index) => {
-                const position = toVector(tree.x, tree.y, tree.z)
-                const quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), jitter(index, islandIndex) * Math.PI * 2)
-                const scale = 0.82 + jitter(index, islandIndex + 7) * 0.36
-                // Trees grow in from the island's heart outwards.
-                const delay = Math.min(1.6, Math.hypot(tree.x - center.x, tree.y - center.y) / (island.radius * 1.4) + (island.kind === 'main' ? 0 : 0.5))
-                for (const mesh of [crowns, trunks]) {
-                    growing.push({ mesh, index, position, quaternion, scale, delay })
-                    matrix.compose(position, quaternion, new THREE.Vector3(scale, scale, scale))
-                    mesh.setMatrixAt(index, matrix)
-                }
+                const { width, height, stem } = treeDimensions(tree.shape, tree.size)
+                const spin = new THREE.Quaternion().setFromAxisAngle(upAxis, jitter(index, islandIndex + 3) * Math.PI * 2)
+                const position = toVector(tree.x, tree.y, top + stem + height / 2)
+                const scale = new THREE.Vector3(width, height, width)
+                // Trees grow in from the grove's heart outwards.
+                const delay = Math.min(1.6, Math.hypot(tree.x - centre.x, tree.y - centre.y) / (island.radius * 1.4) + (island.kind === 'main' ? 0 : 0.5))
+                matrix.compose(position, spin, scale)
+                mesh.setMatrixAt(index, matrix)
+                mesh.setColorAt(index, color.set(treeColor(tree.kind, tree.tone)))
+                growing.push({ mesh, index, position, quaternion: spin, scale, delay })
 
-                if (kind === 'invite') {
+                const trunkHeight = stem + height * 0.35
+                const trunkPosition = toVector(tree.x, tree.y, top - 0.2)
+                const trunkScale = new THREE.Vector3(Math.max(0.9, width * 0.12), trunkHeight, Math.max(0.9, width * 0.12))
+                matrix.compose(trunkPosition, spin, trunkScale)
+                trunks.setMatrixAt(trunkIndex, matrix)
+                growing.push({ mesh: trunks, index: trunkIndex, position: trunkPosition, quaternion: spin, scale: trunkScale, delay })
+                trunkIndex += 1
+
+                if (tree.kind === 'invite') {
                     const ring = new THREE.Mesh(ringGeometry, track(new THREE.MeshBasicMaterial({
-                        color: FOREST_COLORS.invite,
+                        color: FOREST_PALETTE.invite,
                         transparent: true,
-                        opacity: 0.6,
+                        opacity: 0.8,
                         depthWrite: false,
-                        blending: THREE.AdditiveBlending,
                     })))
-                    ring.position.copy(position).add(new THREE.Vector3(0, 0.4, 0))
-                    ring.scale.setScalar(size * 2)
+                    ring.position.copy(toVector(tree.x, tree.y, top + 0.15))
+                    ring.scale.setScalar(width * 0.85)
                     group.add(ring)
                     pulses.push({ mesh: ring, phase: jitter(index, 3) })
-
-                    const glow = new THREE.Sprite(track(new THREE.SpriteMaterial({
-                        map: glowMap,
-                        color: FOREST_COLORS.invite,
-                        transparent: true,
-                        opacity: 0.45,
-                        depthWrite: false,
-                        blending: THREE.AdditiveBlending,
-                    })))
-                    glow.position.copy(position).add(new THREE.Vector3(0, size * 1.4, 0))
-                    glow.scale.setScalar(size * 4.5)
-                    group.add(glow)
-                    glows.push({ sprite: glow, phase: jitter(index, 5) })
                 }
             })
-            crowns.instanceMatrix.needsUpdate = true
-            trunks.instanceMatrix.needsUpdate = true
-            group.add(crowns, trunks)
+            mesh.instanceMatrix.needsUpdate = true
+            if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+            group.add(mesh)
         })
+        if (island.trees.length > 0) {
+            trunks.instanceMatrix.needsUpdate = true
+            group.add(trunks)
+        }
 
-        // A sapling marks an island that is waiting for its first tree.
+        // Low bushes filling the grove between trees.
+        if (island.bushes.length > 0) {
+            const bushes = new THREE.InstancedMesh(bushGeometry, foliageMaterial, island.bushes.length)
+            bushes.castShadow = true
+            bushes.receiveShadow = true
+            island.bushes.forEach((bush, index) => {
+                const position = toVector(bush.x, bush.y, top + bush.size * 0.45)
+                const scale = new THREE.Vector3(bush.size * 2.6, bush.size * 1.7, bush.size * 2.6)
+                const spin = new THREE.Quaternion().setFromAxisAngle(upAxis, jitter(index, 17) * Math.PI)
+                matrix.compose(position, spin, scale)
+                bushes.setMatrixAt(index, matrix)
+                bushes.setColorAt(index, color.set(treeColor(island.kind === 'main' ? 'own' : 'friend', bush.tone)))
+                growing.push({ mesh: bushes, index, position, quaternion: spin, scale, delay: 0.2 + jitter(index, 21) * 0.8 })
+            })
+            bushes.instanceMatrix.needsUpdate = true
+            if (bushes.instanceColor) bushes.instanceColor.needsUpdate = true
+            group.add(bushes)
+        }
+
+        // A sapling marks a grove that is waiting for its first tree.
         if (island.sprout) {
-            const stemMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_COLORS.friend, roughness: 0.6 }))
+            const stemMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.sprout, roughness: 0.6 }))
             const stem = new THREE.Mesh(track(new THREE.CylinderGeometry(0.35, 0.45, 7, 6)), stemMaterial)
-            const base = toVector(island.sprout.x, island.sprout.y, island.sprout.z)
+            const base = toVector(island.sprout.x, island.sprout.y, top)
             stem.position.copy(base).add(new THREE.Vector3(0, 3.5, 0))
+            stem.castShadow = true
+            group.add(stem)
             const leafGeometry = track(new THREE.SphereGeometry(1, 12, 8))
             for (const side of [-1, 1]) {
                 const leaf = new THREE.Mesh(leafGeometry, stemMaterial)
                 leaf.scale.set(2.6, 0.7, 1.3)
                 leaf.position.copy(base).add(new THREE.Vector3(side * 2.4, 6.8 + (side > 0 ? 0.8 : 0), 0))
                 leaf.rotation.z = side * -0.45
+                leaf.castShadow = true
                 group.add(leaf)
             }
-            stem.castShadow = true
-            group.add(stem)
         }
 
         if (island.label) {
-            const element = document.createElement('div')
-            element.textContent = island.label
-            element.style.cssText = 'position:absolute;left:0;top:0;transform:translate(-50%,-100%);padding:2px 7px;background:rgba(11,16,31,.72);border:1px solid rgba(224,241,70,.35);color:#F4F7DC;font:700 11px/1.3 ui-sans-serif,system-ui,sans-serif;white-space:nowrap;will-change:transform'
-            overlay.appendChild(element)
-            const top = island.terraces[island.terraces.length - 1]
-            labels.push({ element, anchor: toVector(top.cx, top.cy, top.z + (island.trees.length ? 20 : 12)) })
+            const tallest = island.trees.reduce((max, tree) => {
+                const { height, stem } = treeDimensions(tree.shape, tree.size)
+                return Math.max(max, height + stem)
+            }, 8)
+            addLabel(island.label, toVector(centre.x, centre.y, top + tallest + 4), false)
         }
 
         scene.add(group)
     }
 
-    world.islands.forEach(addIsland)
+    world.islands.forEach(addGrove)
 
-    // --- Roots between islands, with light flowing along them -------------
-    const saps: Array<{ sprite: THREE.Sprite; curve: THREE.QuadraticBezierCurve3; offset: number }> = []
-    const rootHeight = waterLevel + 1.2
-    const rootMaterial = track(new THREE.LineDashedMaterial({ color: FOREST_COLORS.link, dashSize: 3, gapSize: 5, transparent: true, opacity: 0.7 }))
+    // --- Paths between groves -----------------------------------------------
+    const ribbon = (points: THREE.Vector3[], width: number, y: number) => {
+        const positions: number[] = []
+        const indices: number[] = []
+        points.forEach((point, index) => {
+            const previous = points[Math.max(0, index - 1)]
+            const next = points[Math.min(points.length - 1, index + 1)]
+            const dx = next.x - previous.x
+            const dz = next.z - previous.z
+            const length = Math.hypot(dx, dz) || 1
+            const nx = (-dz / length) * (width / 2)
+            const nz = (dx / length) * (width / 2)
+            positions.push(point.x + nx, y, point.z + nz, point.x - nx, y, point.z - nz)
+            if (index > 0) {
+                const a = (index - 1) * 2
+                indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+            }
+        })
+        const geometry = new THREE.BufferGeometry()
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+        geometry.setIndex(indices)
+        geometry.computeVertexNormals()
+        return track(geometry)
+    }
+    const pathMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.path, roughness: 1, side: THREE.DoubleSide }))
+    const pathEdgeMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.pathEdge, roughness: 1, side: THREE.DoubleSide }))
+    const walkers: Array<{ group: THREE.Group; curve: THREE.QuadraticBezierCurve3; offset: number; speed: number }> = []
+    const walkerBody = track(new THREE.CapsuleGeometry(0.9, 2.2, 4, 8))
+    const walkerHead = track(new THREE.SphereGeometry(1, 10, 8))
+    const walkerBodyMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.ink, roughness: 0.8 }))
+    const walkerHeadMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.invite, roughness: 0.6 }))
+
     world.roots.forEach((root, rootIndex) => {
         const curve = new THREE.QuadraticBezierCurve3(
-            toVector(root.start[0], root.start[1], rootHeight),
-            toVector(root.control[0], root.control[1], rootHeight),
-            toVector(root.end[0], root.end[1], rootHeight)
+            toVector(root.start[0], root.start[1], 0),
+            toVector(root.control[0], root.control[1], 0),
+            toVector(root.end[0], root.end[1], 0)
         )
-        const line = new THREE.Line(track(new THREE.BufferGeometry().setFromPoints(curve.getPoints(48))), rootMaterial)
-        line.computeLineDistances()
-        scene.add(line)
-
-        for (let k = 0; k < 2; k += 1) {
-            const sprite = new THREE.Sprite(track(new THREE.SpriteMaterial({
-                map: glowMap,
-                color: FOREST_COLORS.invite,
-                transparent: true,
-                opacity: 0.9,
-                depthWrite: false,
-                blending: THREE.AdditiveBlending,
-            })))
-            sprite.scale.setScalar(6)
-            scene.add(sprite)
-            saps.push({ sprite, curve, offset: k / 2 + jitter(rootIndex, 11) * 0.3 })
+        const points = curve.getPoints(40)
+        if (root.planned) {
+            // Stepping stones towards an empty plot.
+            const stone = track(new THREE.CircleGeometry(1, 10))
+            stone.rotateX(-Math.PI / 2)
+            for (let i = 2; i < points.length - 1; i += 3) {
+                const mesh = new THREE.Mesh(stone, pathEdgeMaterial)
+                mesh.position.set(points[i].x, groundLevel + 0.04, points[i].z)
+                mesh.scale.setScalar(1.3)
+                scene.add(mesh)
+            }
+            return
         }
+        const edge = new THREE.Mesh(ribbon(points, 11, groundLevel + 0.03), pathEdgeMaterial)
+        const path = new THREE.Mesh(ribbon(points, 8, groundLevel + 0.06), pathMaterial)
+        edge.receiveShadow = true
+        path.receiveShadow = true
+        scene.add(edge, path)
+
+        // A tiny visitor walking between the groves.
+        const walker = new THREE.Group()
+        const body = new THREE.Mesh(walkerBody, walkerBodyMaterial)
+        body.position.y = 2
+        const head = new THREE.Mesh(walkerHead, walkerHeadMaterial)
+        head.position.y = 4.6
+        body.castShadow = true
+        head.castShadow = true
+        walker.add(body, head)
+        walker.scale.setScalar(1.5)
+        walker.position.y = groundLevel
+        scene.add(walker)
+        walkers.push({ group: walker, curve, offset: jitter(rootIndex, 13), speed: 0.035 + jitter(rootIndex, 29) * 0.02 })
     })
 
     // --- Controls ---------------------------------------------------------
@@ -405,9 +544,10 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     controls.rotateSpeed = 0.6
     controls.zoomSpeed = 0.8
     controls.minPolarAngle = 0.12
-    controls.maxPolarAngle = Math.PI * 0.46
-    controls.autoRotate = !reducedMotion
-    controls.autoRotateSpeed = 0.35
+    controls.maxPolarAngle = Math.PI * 0.42
+    // No auto-rotation: the camera stays framed on the forest; walkers and
+    // pulsing invite rings keep it alive.
+    controls.autoRotate = false
     if (coarsePointer) controls.enabled = false
     // OrbitControls sets touch-action:none; keep page scrolling on touch until activated.
     renderer.domElement.style.touchAction = coarsePointer ? 'pan-y' : 'none'
@@ -424,30 +564,19 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         options.onActiveChange?.(next)
     }
 
-    let resumeTimer: number | undefined
-    const pauseAutoRotate = () => {
-        controls.autoRotate = false
-        window.clearTimeout(resumeTimer)
-        if (!reducedMotion) {
-            resumeTimer = window.setTimeout(() => {
-                if (!focused) controls.autoRotate = true
-            }, 9000)
-        }
-    }
-    controls.addEventListener('start', pauseAutoRotate)
 
     // --- Camera fitting and fly-to ----------------------------------------
     const size = new THREE.Vector2()
     const probe = new THREE.PerspectiveCamera(camera.fov, 1, 1, extent * 40)
     const projected = new THREE.Vector3()
-    const FIT_AZIMUTHS = Array.from({ length: 8 }, (_, index) => (index / 8) * Math.PI * 2)
+    // The home view faces one way; allow a little turning without clipping.
+    const FIT_AZIMUTHS = [-0.25, 0, 0.25]
     // Screen share the scene may fill, leaving room for the zoom buttons
     // and the hint line.
-    const FILL_X = 0.86
-    const FILL_Y = 0.8
+    const FILL_X = 0.88
+    const FILL_Y = 0.84
 
-    // Projected bounds (NDC) of the frame points, over a full turn of the
-    // auto-rotation.
+    // Projected bounds (NDC) of the frame points around the home direction.
     const projectedBounds = (targetY: number, distance: number) => {
         const bounds = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity }
         for (const azimuth of FIT_AZIMUTHS) {
@@ -485,8 +614,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         }
 
         homeTarget.set(0, targetY, 0)
-        homeDistance = Math.max(distance, world.mainRadius * 0.9)
-        controls.minDistance = world.mainRadius * 0.45
+        homeDistance = Math.max(distance, world.mainRadius * 1.2)
+        controls.minDistance = world.mainRadius * 0.5
         controls.maxDistance = homeDistance * 1.6
     }
 
@@ -517,19 +646,21 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const focusIsland = (islandIndex: number) => {
         const island = world.islands[islandIndex]
         if (!island) return
+        if (island.kind === 'plot') {
+            if (plotsInteractive) options.onPlotClick?.()
+            return
+        }
         if (island.kind === 'main') {
             reset()
             return
         }
-        const top = island.terraces[island.terraces.length - 1]
-        const target = toVector(island.center.x, island.center.y, top.z * 0.6)
+        const target = toVector(island.center.x, island.center.y, groundLevel + 4)
         const outward = new THREE.Vector3(island.center.x, 0, island.center.y).normalize()
-        const distance = Math.max(island.radius * 5.5, 90)
+        const distance = Math.max(island.radius * 5, 110)
         const position = target.clone()
-            .add(outward.multiplyScalar(distance * Math.cos(ELEVATION + 0.15)))
-            .add(new THREE.Vector3(0, distance * Math.sin(ELEVATION + 0.15), 0))
+            .add(outward.multiplyScalar(distance * Math.cos(ELEVATION - 0.2)))
+            .add(new THREE.Vector3(0, distance * Math.sin(ELEVATION - 0.2), 0))
         focused = island.title
-        controls.autoRotate = false
         options.onFocusChange?.(focused)
         flyTo(position, target)
     }
@@ -538,13 +669,11 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         focused = null
         options.onFocusChange?.(null)
         flyTo(homePosition(), homeTarget.clone())
-        if (!reducedMotion) controls.autoRotate = true
     }
 
     const zoomBy = (factor: number) => {
         const offset = camera.position.clone().sub(controls.target)
         const length = THREE.MathUtils.clamp(offset.length() * factor, controls.minDistance, controls.maxDistance)
-        pauseAutoRotate()
         flyTo(controls.target.clone().add(offset.setLength(length)), controls.target.clone())
     }
 
@@ -573,10 +702,12 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         const island = world.islands[islandIndex]
         tooltip.textContent = island.kind === 'main'
             ? (focused ? 'Your forest · click to go back' : 'Your forest')
-            : focused === island.title ? island.title : `${island.title} · click to visit`
+            : island.kind === 'plot'
+                ? (plotsInteractive ? `${options.plotLabel || 'Invite a friend'} · click` : 'Room for the next friend')
+                : focused === island.title ? island.title : `${island.title} · click to visit`
         tooltip.style.transform = `translate(${event.clientX - rect.left + 14}px, ${event.clientY - rect.top + 14}px)`
         tooltip.style.opacity = '1'
-        renderer.domElement.style.cursor = island.kind === 'friend' ? 'pointer' : 'grab'
+        renderer.domElement.style.cursor = island.kind === 'friend' || (island.kind === 'plot' && plotsInteractive) ? 'pointer' : 'grab'
     }
 
     const onPointerDown = (event: PointerEvent) => {
@@ -649,6 +780,7 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const clock = new THREE.Clock()
     const scratchScale = new THREE.Vector3()
     const labelPosition = new THREE.Vector3()
+    const walkerNext = new THREE.Vector3()
     let growthDone = reducedMotion
     let frame = 0
     let disposed = false
@@ -665,6 +797,17 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const easeOutBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2)
     const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
+    const placeWalker = (walker: (typeof walkers)[number], elapsed: number) => {
+        // Walk out and back along the path.
+        const cycle = (elapsed * walker.speed + walker.offset) % 2
+        const t = 0.08 + 0.84 * (cycle < 1 ? cycle : 2 - cycle)
+        const point = walker.curve.getPoint(t)
+        walker.curve.getPoint(Math.min(1, Math.max(0, t + (cycle < 1 ? 0.01 : -0.01))), walkerNext)
+        walker.group.position.set(point.x, groundLevel + Math.abs(Math.sin(elapsed * 9 + walker.offset * 10)) * 0.5, point.z)
+        walker.group.rotation.y = Math.atan2(walkerNext.x - point.x, walkerNext.z - point.z)
+    }
+    walkers.forEach(walker => placeWalker(walker, 0))
+
     const render = () => {
         frame = 0
         if (disposed || !visible || document.hidden) return
@@ -676,8 +819,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             for (const item of growing) {
                 const t = THREE.MathUtils.clamp((elapsed - item.delay) / 0.7, 0, 1)
                 if (t < 1) pending = true
-                const s = Math.max(0.0001, item.scale * easeOutBack(t))
-                matrix.compose(item.position, item.quaternion, scratchScale.set(s, s, s))
+                const k = Math.max(0.0001, easeOutBack(t))
+                matrix.compose(item.position, item.quaternion, scratchScale.copy(item.scale).multiplyScalar(k))
                 item.mesh.setMatrixAt(item.index, matrix)
                 touched.add(item.mesh)
             }
@@ -689,15 +832,13 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             for (const pulse of pulses) {
                 const t = (elapsed / 2.8 + pulse.phase) % 1
                 const base = pulse.mesh.userData.baseScale ?? (pulse.mesh.userData.baseScale = pulse.mesh.scale.x)
-                pulse.mesh.scale.setScalar(base * (0.45 + t * 1.1))
-                ;(pulse.mesh.material as THREE.MeshBasicMaterial).opacity = 0.75 * (1 - t)
+                pulse.mesh.scale.setScalar(base * (0.6 + t * 0.9))
+                ;(pulse.mesh.material as THREE.MeshBasicMaterial).opacity = 0.85 * (1 - t)
             }
-            for (const glow of glows) {
-                ;(glow.sprite.material as THREE.SpriteMaterial).opacity = 0.3 + 0.2 * Math.sin((elapsed + glow.phase * 6) * 2.2)
+            for (const bob of bobs) {
+                bob.sprite.position.y = bob.base + Math.sin(elapsed * 2 + bob.phase) * 1.2
             }
-            for (const sap of saps) {
-                sap.sprite.position.copy(sap.curve.getPoint((elapsed * 0.22 + sap.offset) % 1))
-            }
+            for (const walker of walkers) placeWalker(walker, elapsed)
         }
 
         if (flight) {
@@ -732,7 +873,6 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         if (disposed) return
         disposed = true
         cancelAnimationFrame(frame)
-        window.clearTimeout(resumeTimer)
         resizeObserver.disconnect()
         intersectionObserver.disconnect()
         document.removeEventListener('visibilitychange', onVisibility)

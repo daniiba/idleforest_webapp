@@ -619,6 +619,7 @@ export default function PublicProfilePage() {
                     mode="public"
                     displayName={profile.display_name}
                     onLoad={setForest}
+                    joinable={!isSignedIn}
                 />
 
                 {!isSignedIn && (

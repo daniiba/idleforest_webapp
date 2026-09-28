@@ -118,7 +118,7 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                     <Image src="/logo.png" alt="IdleForest" width={140} height={32} className="h-8 w-auto" priority />
                 </Link>
 
-                <section className="grid overflow-hidden border-2 border-black bg-white lg:grid-cols-[1.15fr_0.85fr]" aria-labelledby="invite-heading">
+                <section className="grid overflow-hidden border-2 border-black bg-brand-gray lg:grid-cols-[1.15fr_0.85fr]" aria-labelledby="invite-heading">
                     <div className="p-6 sm:p-10">
                         <p className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-black uppercase tracking-[0.2em]">
                             <UserPlus className="h-4 w-4" aria-hidden="true" />
@@ -218,8 +218,8 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                         </ol>
 
                         {forest && (forest.totalTrees > 0 || forest.friends.length > 0) ? (
-                            <div className="mt-6 border-2 border-white/30 bg-[#0B101F] p-5">
-                                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-brand-yellow">{t('forest_title', { name })}</p>
+                            <div className="mt-6 border-2 border-black bg-forest-ground p-5 text-brand-navy">
+                                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-black/60">{t('forest_title', { name })}</p>
                                 <ForestIsland
                                     className="mt-2"
                                     seed={forest.seed}
@@ -232,13 +232,13 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                                     {forest.totalTrees > 0 ? (
                                         <div>
                                             <p className="font-candu text-4xl font-extrabold">{forest.totalTrees.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-300">{t('forest_trees', { count: forest.totalTrees })}</p>
+                                            <p className="text-xs font-black uppercase tracking-wider text-black/60">{t('forest_trees', { count: forest.totalTrees })}</p>
                                         </div>
                                     ) : null}
                                     {forest.friends.length > 0 ? (
                                         <div>
                                             <p className="font-candu text-4xl font-extrabold">{forest.friends.length.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-300">{t('forest_people', { count: forest.friends.length })}</p>
+                                            <p className="text-xs font-black uppercase tracking-wider text-black/60">{t('forest_people', { count: forest.friends.length })}</p>
                                         </div>
                                     ) : null}
                                 </div>
