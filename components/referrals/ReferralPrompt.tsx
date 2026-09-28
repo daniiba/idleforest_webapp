@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Check, Copy, Linkedin, Loader2, Mail, MessageCircle, Share2, Sprout, TreePine, Twitter, Users } from 'lucide-react'
 import ReferralDailyBars, { type DailyReferralImpact } from '@/components/referrals/ReferralDailyBars'
+import { formatTrees } from '@/lib/referral-reward-settings'
 
 type ReferredUser = {
     displayName: string
@@ -41,6 +42,9 @@ function withChannel(url: string, channel: string) {
 // it is free, and how little effort it takes.
 const SHARE_TEXT = "I've been using IdleForest: it runs quietly on my computer and turns internet bandwidth I'm not using into real trees. It's free and takes two minutes to set up. Join my forest:"
 const EMAIL_SUBJECT = 'Want to grow a forest with me?'
+
+// Marks the double-sided reward as new during the launch weeks.
+const LAUNCH_BADGE_UNTIL = Date.parse('2026-11-15T00:00:00Z')
 
 function emailBody(url: string) {
     return [
@@ -271,8 +275,11 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                     </div>
 
                     <div>
-                        <p className="mb-1 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
-                            Your next tree starts with a person
+                        <p className="mb-1 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                            {summary?.reward && Date.now() < LAUNCH_BADGE_UNTIL ? (
+                                <span className="border-2 border-black bg-brand-yellow px-1.5 py-0.5 text-[10px] tracking-wider text-black">New</span>
+                            ) : null}
+                            {summary?.reward ? 'Plant a tree with a friend' : 'Your next tree starts with a person'}
                         </p>
                         <h2
                             id={`referral-heading-${variant}`}
@@ -282,7 +289,7 @@ export default function ReferralPrompt({ variant = 'banner' }: ReferralPromptPro
                         </h2>
                         <p className={`${isPage ? 'mt-5 max-w-xl text-lg' : 'mt-1 max-w-2xl text-sm'} font-semibold text-neutral-700`}>
                             {summary?.reward
-                                ? <>Invite someone who would genuinely use IdleForest. Once their computer has contributed on {summary.reward.minActiveDays} different days, <strong className="text-black">you both get {summary.reward.treesPerPerson} trees planted</strong>.</>
+                                ? <>Invite someone who would genuinely use IdleForest. Once their computer has contributed on {summary.reward.minActiveDays} different days, <strong className="text-black">you both get {formatTrees(summary.reward.treesPerPerson)} planted</strong>.</>
                                 : 'Invite one person who would genuinely use IdleForest. We count the referral when their node starts contributing, not when an empty account is created.'}
                         </p>
                     </div>

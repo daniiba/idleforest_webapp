@@ -8,6 +8,7 @@ import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
 import { trackOnboardingEvent } from '@/lib/onboarding-events';
 import { getCanonicalCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners';
+import { formatTrees } from '@/lib/referral-reward-settings';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface InviteInfo {
@@ -326,7 +327,7 @@ function SignupForm() {
           <p className="mt-1 text-sm font-semibold text-neutral-700">Free, runs quietly in the background, and plants real trees. Create your account, then connect the desktop app to join {referralInfo.inviterName}&apos;s forest.</p>
           {referralInfo.reward && (
             <p className="mt-2 border-t-2 border-black pt-2 text-sm font-black">
-              Welcome gift: once your computer has contributed on {referralInfo.reward.minActiveDays} days, you and {referralInfo.inviterName} each get {referralInfo.reward.treesPerPerson} trees planted.
+              Welcome gift: once your computer has contributed on {referralInfo.reward.minActiveDays} days, you and {referralInfo.inviterName} each get {formatTrees(referralInfo.reward.treesPerPerson)} planted.
             </p>
           )}
         </div>

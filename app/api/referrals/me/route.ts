@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { normalizeReferralCode } from '@/lib/referrals'
-import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
-import { INVITER_REWARD_TYPE } from '@/lib/referral-rewards'
+import { INVITER_REWARD_TYPE, getReferralRewardSettings } from '@/lib/referral-reward-settings'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
 

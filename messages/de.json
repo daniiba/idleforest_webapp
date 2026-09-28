@@ -1038,13 +1038,14 @@
         "forest_title": "Der Wald von {name} bisher",
         "forest_people": "{count, plural, one {Person ist beigetreten} other {Personen sind beigetreten}}",
         "forest_requests": "gemeinsam ermöglichte Anfragen",
+        "forest_trees": "{count, plural, one {Baum} other {Bäume}} in Bewegung gesetzt",
         "own_title": "Das ist dein Einladungslink",
         "own_body": "Genau das sehen andere, wenn du ihn teilst. Wer beitritt, siehst du auf deiner Einladungsseite.",
         "own_cta": "Meine Einladungen öffnen",
         "member_title": "Du bist schon bei IdleForest",
         "member_body": "Einladungen gelten für neue Konten. Du kannst den Wald von {name} trotzdem wachsen lassen, indem du selbst jemanden einlädst.",
         "member_cta": "Jemanden einladen",
-        "reward_title": "Willkommensgeschenk: {trees} Bäume für jeden von euch",
-        "reward_body": "Sobald dein Computer an {days} verschiedenen Tagen beigetragen hat, pflanzen wir {trees} Bäume für dich und {trees} für {name}."
+        "reward_title": "Willkommensgeschenk: {trees, plural, one {ein Baum} other {# Bäume}} für jeden von euch",
+        "reward_body": "Sobald dein Computer an {days} verschiedenen Tagen beigetragen hat, pflanzen wir {trees, plural, one {einen Baum} other {# Bäume}} für dich und {trees, plural, one {einen} other {#}} für {name}."
     }
 }

@@ -1,6 +1,7 @@
+import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
 import ReferralPrompt from '@/components/referrals/ReferralPrompt'
 import { createClient } from '@/lib/supabase/server'
-import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
+import { formatTrees, getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { redirect } from 'next/navigation'
 
 export default async function ReferralsPage() {
@@ -15,7 +16,13 @@ export default async function ReferralsPage() {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-16">
-            <ReferralPrompt variant="page" />
+            <div className="mb-6">
+                <ForestImpactPanel mode="self" inviteAnchor="#invite" />
+            </div>
+
+            <div id="invite" className="scroll-mt-24">
+                <ReferralPrompt variant="page" />
+            </div>
 
             <div className="grid border-x-2 border-b-2 border-black bg-brand-navy text-white md:grid-cols-3">
                 <div className="border-b-2 border-white/20 p-6 md:border-b-0 md:border-r-2">
@@ -32,8 +39,8 @@ export default async function ReferralsPage() {
                     <p className="font-mono text-xs font-bold text-brand-yellow">03 / GROW</p>
                     {reward.enabled ? (
                         <>
-                            <h2 className="mt-2 text-xl font-black uppercase">You both get {reward.treesPerPerson} trees</h2>
-                            <p className="mt-2 text-sm text-neutral-300">Once their computer has contributed on {reward.minActiveDays} different days, we plant {reward.treesPerPerson} trees for you and {reward.treesPerPerson} for them.</p>
+                            <h2 className="mt-2 text-xl font-black uppercase">You both get {formatTrees(reward.treesPerPerson)}</h2>
+                            <p className="mt-2 text-sm text-neutral-300">Once their computer has contributed on {reward.minActiveDays} different days, we plant {formatTrees(reward.treesPerPerson)} for you and {formatTrees(reward.treesPerPerson)} for them.</p>
                         </>
                     ) : (
                         <>

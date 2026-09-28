@@ -1093,13 +1093,14 @@
         "forest_title": "{name}'s forest so far",
         "forest_people": "{count, plural, one {person joined} other {people joined}}",
         "forest_requests": "requests powered together",
+        "forest_trees": "{count, plural, one {tree} other {trees}} set in motion",
         "own_title": "This is your invite link",
         "own_body": "This is exactly what people see when you share it. See who joins on your referrals page.",
         "own_cta": "Open my referrals",
         "member_title": "You're already part of IdleForest",
         "member_body": "Invites are for new accounts. You can still help {name}'s forest grow by inviting someone yourself.",
         "member_cta": "Invite someone",
-        "reward_title": "Welcome gift: {trees} trees for each of you",
-        "reward_body": "Once your computer has contributed on {days} different days, we plant {trees} trees for you and {trees} for {name}."
+        "reward_title": "Welcome gift: {trees, plural, one {a tree} other {# trees}} for each of you",
+        "reward_body": "Once your computer has contributed on {days} different days, we plant {trees, plural, one {a tree} other {# trees}} for you and {trees, plural, one {one} other {#}} for {name}."
     }
 }

@@ -8,12 +8,9 @@ import { ArrowRight, BadgeCheck, Download, Gift, Lock, ShieldCheck, Star, TreePi
 import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
-import {
-    getPublicReferralImpact,
-    normalizeReferralCode,
-    resolveReferralOwner,
-    type PublicReferralImpact,
-} from '@/lib/referrals'
+import { normalizeReferralCode, resolveReferralOwner } from '@/lib/referrals'
+import { forestSeed, getForestData, type ForestData } from '@/lib/forest'
+import ForestIsland from '@/components/forest/ForestIsland'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,17 +37,17 @@ const loadInvite = cache(async (rawCode: string) => {
     const owner = await resolveReferralOwner(admin, code)
     if (!owner) return null
 
-    let impact: PublicReferralImpact | null = null
+    let forest: (ForestData & { seed: string }) | null = null
     try {
-        impact = await getPublicReferralImpact(admin, owner.userId, { includeDaily: false })
+        forest = { seed: forestSeed(owner.userId), ...(await getForestData(admin, owner.userId, { includeNames: false })) }
     } catch (error) {
-        // The invite still works without the inviter's stats.
-        console.error('Failed to load inviter impact:', error)
+        // The invite still works without the inviter's forest.
+        console.error('Failed to load inviter forest:', error)
     }
 
     const reward = await getReferralRewardSettings(admin)
 
-    return { owner, impact, reward }
+    return { owner, forest, reward }
 })
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -59,7 +56,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const name = invite?.owner.displayName || FALLBACK_NAME[params.locale] || FALLBACK_NAME.en
     const title = t('meta_title', { name })
     const description = t('meta_description')
-    const image = `${APP_URL}/api/og/invite?${new URLSearchParams({ name, locale: params.locale }).toString()}`
+    // Link previews show the inviter's forest island.
+    const image = invite
+        ? `${APP_URL}/api/og/forest?${new URLSearchParams({ code: invite.owner.code, locale: params.locale }).toString()}`
+        : `${APP_URL}/api/og/invite?${new URLSearchParams({ name, locale: params.locale }).toString()}`
 
     return {
         title,
@@ -92,13 +92,12 @@ export default async function ReferralInvitePage({ params }: PageProps) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    const { owner, impact, reward } = invite
+    const { owner, forest, reward } = invite
     const name = owner.displayName || FALLBACK_NAME[params.locale] || FALLBACK_NAME.en
     const isOwner = user?.id === owner.userId
     const isMember = Boolean(user) && !isOwner
     const signupHref = `/auth/user/signup?referral=${encodeURIComponent(owner.code)}`
     const loginHref = `/auth/user/login?redirect=${encodeURIComponent('/referrals')}`
-    const showForest = Boolean(impact && (impact.referrals > 0 || impact.combinedRequests > 0))
 
     const steps = [
         { icon: UserPlus, title: t('step1_title'), body: t('step1_body', { name }) },
@@ -218,20 +217,28 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                             })}
                         </ol>
 
-                        {showForest && impact ? (
-                            <div className="mt-6 border-2 border-white bg-white p-5 text-black">
-                                <p className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{t('forest_title', { name })}</p>
+                        {forest && (forest.totalTrees > 0 || forest.friends.length > 0) ? (
+                            <div className="mt-6 border-2 border-white/30 bg-[#0B101F] p-5">
+                                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-brand-yellow">{t('forest_title', { name })}</p>
+                                <ForestIsland
+                                    className="mt-2"
+                                    seed={forest.seed}
+                                    ownTrees={forest.ownTrees}
+                                    inviteTrees={forest.inviteTrees}
+                                    friends={forest.friends}
+                                    title={t('forest_title', { name })}
+                                />
                                 <div className="mt-3 grid grid-cols-2 gap-3">
-                                    {impact.referrals > 0 ? (
+                                    {forest.totalTrees > 0 ? (
                                         <div>
-                                            <p className="font-candu text-4xl font-extrabold">{impact.referrals.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-600">{t('forest_people', { count: impact.referrals })}</p>
+                                            <p className="font-candu text-4xl font-extrabold">{forest.totalTrees.toLocaleString(params.locale)}</p>
+                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-300">{t('forest_trees', { count: forest.totalTrees })}</p>
                                         </div>
                                     ) : null}
-                                    {impact.combinedRequests > 0 ? (
+                                    {forest.friends.length > 0 ? (
                                         <div>
-                                            <p className="font-candu text-4xl font-extrabold">{impact.combinedRequests.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-600">{t('forest_requests')}</p>
+                                            <p className="font-candu text-4xl font-extrabold">{forest.friends.length.toLocaleString(params.locale)}</p>
+                                            <p className="text-xs font-black uppercase tracking-wider text-neutral-300">{t('forest_people', { count: forest.friends.length })}</p>
                                         </div>
                                     ) : null}
                                 </div>

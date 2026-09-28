@@ -10,6 +10,7 @@ import BadgeDisplay from "@/components/badge-display"
 import { PointsHistoryChart } from "@/components/PointsHistoryChart"
 import PublicReferralImpact, { type PublicReferralImpactData } from '@/components/referrals/PublicReferralImpact'
 import ProfileJoinCta from '@/components/referrals/ProfileJoinCta'
+import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
 import { isMossyEarthCompanySlug, isPlanetwildCompanySlug, isWastefreeCompanySlug } from '@/lib/company-partners'
 
 interface Profile {
@@ -727,6 +728,12 @@ export default function PublicProfilePage() {
                         </p>
                     </div>
                 </div>
+
+                <ForestImpactPanel
+                    mode="public"
+                    displayName={profile.display_name}
+                    isSignedIn={isSignedIn}
+                />
 
                 <PublicReferralImpact data={publicReferralImpact} isOwnProfile={isOwnProfile} />
 

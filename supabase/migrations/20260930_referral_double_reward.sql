@@ -19,7 +19,7 @@
 CREATE TABLE IF NOT EXISTS public.referral_reward_settings (
     id BOOLEAN PRIMARY KEY DEFAULT TRUE CHECK (id),
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    trees_per_person INTEGER NOT NULL DEFAULT 3 CHECK (trees_per_person BETWEEN 1 AND 50),
+    trees_per_person INTEGER NOT NULL DEFAULT 1 CHECK (trees_per_person BETWEEN 1 AND 50),
     min_active_days INTEGER NOT NULL DEFAULT 3 CHECK (min_active_days BETWEEN 1 AND 60),
     inviter_monthly_cap INTEGER NOT NULL DEFAULT 10 CHECK (inviter_monthly_cap >= 0),
     -- Only people who sign up after launch were promised the reward; this

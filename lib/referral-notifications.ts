@@ -1,6 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { generateUnsubscribeUrl, sendEmail } from '@/lib/resend'
-import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
+import { formatTrees, getReferralRewardSettings } from '@/lib/referral-reward-settings'
 
 // Referrers hear back at the two moments that make them invite again: when a
 // friend joins (so they can nudge them through setup) and when that friend's
@@ -10,10 +10,10 @@ import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
 const DEFAULT_FROM = 'Daniel from IdleForest <daniel@idleforest.com>'
 
-// Immediate sends are skipped while a referrer has had a referral email this
-// recently. The daily sweep then batches everything that piled up into one
+// A referrer gets at most one joined/contributing email per window. Anything
+// that arrives meanwhile stays queued and a later sweep batches it into one
 // email per referrer, so a popular link never floods an inbox.
-const IMMEDIATE_THROTTLE_MS = 3 * 60 * 60 * 1000
+const THROTTLE_WINDOW_MS = 3 * 60 * 60 * 1000
 
 type NotificationKind = 'joined' | 'activated'
 
@@ -231,19 +231,19 @@ export async function sendReferralNotifications(options: {
     const pending = (pendingRows || []) as PendingNotification[]
     if (pending.length === 0) return result
 
-    if (options.throttle && options.referrerId) {
+    // Referrers who had a referral email recently wait; their pending rows
+    // stay queued and go out together in a later run.
+    const recentlyEmailed = new Set<string>()
+    if (options.throttle) {
+        const referrerIds = Array.from(new Set(pending.map(row => row.referrer_id)))
         const { data: recent } = await admin
             .from('email_logs')
-            .select('id')
-            .eq('user_id', options.referrerId)
+            .select('user_id')
+            .in('user_id', referrerIds)
             .in('segment', REFERRAL_SEGMENTS)
-            .gte('created_at', new Date(Date.now() - IMMEDIATE_THROTTLE_MS).toISOString())
-            .limit(1)
+            .gte('created_at', new Date(Date.now() - THROTTLE_WINDOW_MS).toISOString())
 
-        if (recent && recent.length > 0) {
-            result.skipped += pending.length
-            return result
-        }
+        for (const row of recent || []) recentlyEmailed.add(String(row.user_id))
     }
 
     const templates = await loadTemplates(admin)
@@ -266,6 +266,11 @@ export async function sendReferralNotifications(options: {
         const { kind, referrer_id: referrerId, referrer_email: email } = rows[0]
         const notification = NOTIFICATIONS[kind]
         const template = templates.get(notification.templateName)
+
+        if (recentlyEmailed.has(referrerId)) {
+            result.skipped += rows.length
+            continue
+        }
 
         if (!template) {
             // Leave rows pending so they go out once the template is seeded.
@@ -299,6 +304,7 @@ export async function sendReferralNotifications(options: {
             INVITE_URL: inviteUrl,
             REFERRALS_URL: referralsUrl,
             REWARD_TREES: String(rewardSettings.treesPerPerson),
+            REWARD_TREES_TEXT: formatTrees(rewardSettings.treesPerPerson),
             MIN_DAYS: String(rewardSettings.minActiveDays),
             UNSUBSCRIBE_URL: await generateUnsubscribeUrl(email),
         }

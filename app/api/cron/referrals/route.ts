@@ -14,12 +14,17 @@ function isAuthorized(request: NextRequest) {
     return Boolean(secret && request.headers.get('authorization') === `Bearer ${secret}`)
 }
 
-// Daily referral housekeeping:
+// Hourly referral housekeeping, triggered by Supabase pg_cron through
+// public.run_referral_cron() (see 20261001_referral_one_tree_and_supabase_cron.sql):
 // 1. plant the double-sided reward for invitees who became sustained
 //    contributors (and email both people), then
 // 2. send any "joined" / "started contributing" emails that were not sent
 //    from a request path, mainly activations recorded by the node-sync
 //    trigger for people who never reopen the website.
+export async function POST(request: NextRequest) {
+    return GET(request)
+}
+
 export async function GET(request: NextRequest) {
     if (!isAuthorized(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -42,7 +47,7 @@ export async function GET(request: NextRequest) {
     const notifications = { sent: 0, skipped: 0, failed: 0 }
     try {
         for (let batch = 0; batch < MAX_NOTIFICATION_BATCHES; batch += 1) {
-            const result = await sendReferralNotifications({ limit: 200 })
+            const result = await sendReferralNotifications({ limit: 200, throttle: true })
             notifications.sent += result.sent
             notifications.skipped += result.skipped
             notifications.failed += result.failed

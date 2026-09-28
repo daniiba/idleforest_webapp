@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Users } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { formatTrees } from '@/lib/referral-reward-settings'
 
 type InviterNudgeProps = {
     connected?: boolean
@@ -51,7 +52,7 @@ export default function InviterNudge({ connected = false }: InviterNudgeProps) {
                 </p>
                 {reward ? (
                     <p className="mt-2 text-sm font-semibold text-neutral-800">
-                        Once your computer has contributed on {reward.minActiveDays} different days, you and {inviterName} each get {reward.treesPerPerson} trees planted.
+                        Once your computer has contributed on {reward.minActiveDays} different days, you and {inviterName} each get {formatTrees(reward.treesPerPerson)} planted.
                     </p>
                 ) : null}
             </div>

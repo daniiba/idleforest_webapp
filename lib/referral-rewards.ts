@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { plantTreesWithOneClickImpact } from '@/lib/one-click-impact'
 import { recordReferralEvent } from '@/lib/referrals'
+import { INVITEE_REWARD_TYPE, INVITER_REWARD_TYPE, formatTrees } from '@/lib/referral-reward-settings'
 import {
     inviteUrlForCode,
     referralsPageUrl,
@@ -16,8 +17,7 @@ import {
 // "trees planted" everywhere awarded rewards are summed and (b) acts as the
 // lock that prevents planting twice for the same person.
 
-export const INVITER_REWARD_TYPE = 'referral_inviter'
-export const INVITEE_REWARD_TYPE = 'referral_invitee'
+export { INVITER_REWARD_TYPE, INVITEE_REWARD_TYPE }
 
 type AdminClient = ReturnType<typeof createAdminClient>
 
@@ -255,7 +255,9 @@ export async function processReferralRewards(options: {
         const inviteeName = row.referred_name || 'there'
         const sharedValues = {
             REWARD_TREES: String(trees),
+            REWARD_TREES_TEXT: formatTrees(trees),
             TOTAL_TREES: String(inviterCapped ? trees : trees * 2),
+            TOTAL_TREES_TEXT: formatTrees(inviterCapped ? trees : trees * 2),
             MIN_DAYS: String(row.min_active_days),
         }
 

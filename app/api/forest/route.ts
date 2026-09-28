@@ -1,0 +1,100 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
+import { forestSeed, getForestData } from '@/lib/forest'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
+import { normalizeReferralCode } from '@/lib/referrals'
+
+export const dynamic = 'force-dynamic'
+
+// The desktop app calls this with a bearer token from its own origin, so
+// allow cross-origin reads. Cookies are never sent cross-origin with "*".
+const CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+}
+
+function escapeIlike(value: string) {
+    return value.replace(/[\\%_]/g, character => `\\${character}`)
+}
+
+function json(body: unknown, init: { status?: number; cache?: string } = {}) {
+    return NextResponse.json(body, {
+        status: init.status || 200,
+        headers: { ...CORS_HEADERS, 'Cache-Control': init.cache || 'private, no-store' },
+    })
+}
+
+export function OPTIONS() {
+    return new NextResponse(null, { status: 204, headers: CORS_HEADERS })
+}
+
+async function authenticatedUserId(request: NextRequest, admin: ReturnType<typeof createAdminClient>) {
+    const authorization = request.headers.get('authorization') || ''
+    if (authorization.toLowerCase().startsWith('bearer ')) {
+        const { data } = await admin.auth.getUser(authorization.slice(7).trim())
+        return data.user?.id || null
+    }
+
+    const supabase = await createClient()
+    const { data } = await supabase.auth.getUser()
+    return data.user?.id || null
+}
+
+// GET /api/forest                     -> your own forest (cookie or bearer token), with friends' names
+// GET /api/forest?displayName=Anna    -> Anna's public forest, friends anonymised
+export async function GET(request: NextRequest) {
+    const displayName = request.nextUrl.searchParams.get('displayName')?.trim()
+
+    try {
+        const admin = createAdminClient()
+        const reward = await getReferralRewardSettings(admin)
+        const program = reward.enabled
+            ? { treesPerPerson: reward.treesPerPerson, minActiveDays: reward.minActiveDays }
+            : null
+
+        if (displayName) {
+            if (displayName.length > 100) return json({ error: 'Invalid profile name' }, { status: 400 })
+
+            const { data: profile } = await admin
+                .from('profiles')
+                .select('user_id, display_name, referral_code')
+                .ilike('display_name', escapeIlike(displayName))
+                .maybeSingle()
+
+            if (!profile) return json({ error: 'Profile not found' }, { status: 404 })
+
+            const forest = await getForestData(admin, profile.user_id, { includeNames: false })
+            const code = normalizeReferralCode(profile.referral_code)
+
+            return json({
+                seed: forestSeed(profile.user_id),
+                displayName: profile.display_name,
+                invitePath: code ? `/r/${code}?channel=forest` : null,
+                reward: program,
+                ...forest,
+            }, { cache: 'public, s-maxage=300, stale-while-revalidate=600' })
+        }
+
+        const userId = await authenticatedUserId(request, admin)
+        if (!userId) return json({ error: 'Unauthorized' }, { status: 401 })
+
+        const [{ data: profile }, forest] = await Promise.all([
+            admin.from('profiles').select('display_name, referral_code').eq('user_id', userId).maybeSingle(),
+            getForestData(admin, userId, { includeNames: true }),
+        ])
+        const code = normalizeReferralCode(profile?.referral_code)
+
+        return json({
+            seed: forestSeed(userId),
+            displayName: profile?.display_name || null,
+            invitePath: code ? `/r/${code}?channel=forest` : null,
+            reward: program,
+            ...forest,
+        })
+    } catch (error) {
+        console.error('Failed to load forest:', error)
+        return json({ error: 'Failed to load forest' }, { status: 500 })
+    }
+}

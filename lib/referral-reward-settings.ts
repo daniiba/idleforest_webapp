@@ -2,6 +2,9 @@ type SupabaseLike = {
     from: (table: string) => any
 }
 
+export const INVITER_REWARD_TYPE = 'referral_inviter'
+export const INVITEE_REWARD_TYPE = 'referral_invitee'
+
 export type ReferralRewardSettings = {
     enabled: boolean
     treesPerPerson: number
@@ -13,9 +16,14 @@ export type ReferralRewardSettings = {
 // copy stays sensible, but no reward is promised.
 export const DEFAULT_REFERRAL_REWARD_SETTINGS: ReferralRewardSettings = {
     enabled: false,
-    treesPerPerson: 3,
+    treesPerPerson: 1,
     minActiveDays: 3,
     inviterMonthlyCap: 10,
+}
+
+/** "1 tree", "3 trees" */
+export function formatTrees(count: number) {
+    return `${count.toLocaleString('en')} ${count === 1 ? 'tree' : 'trees'}`
 }
 
 export async function getReferralRewardSettings(supabase: SupabaseLike): Promise<ReferralRewardSettings> {

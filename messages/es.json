@@ -1038,13 +1038,14 @@
         "forest_title": "El bosque de {name} hasta ahora",
         "forest_people": "{count, plural, one {persona se ha unido} other {personas se han unido}}",
         "forest_requests": "solicitudes impulsadas juntos",
+        "forest_trees": "{count, plural, one {árbol} other {árboles}} en marcha",
         "own_title": "Este es tu enlace de invitación",
         "own_body": "Esto es exactamente lo que ve la gente cuando lo compartes. Consulta quién se une en tu página de invitaciones.",
         "own_cta": "Abrir mis invitaciones",
         "member_title": "Ya formas parte de IdleForest",
         "member_body": "Las invitaciones son para cuentas nuevas. Aun así, puedes hacer crecer el bosque de {name} invitando tú a alguien.",
         "member_cta": "Invitar a alguien",
-        "reward_title": "Regalo de bienvenida: {trees} árboles para cada uno",
-        "reward_body": "Cuando tu ordenador haya contribuido en {days} días distintos, plantaremos {trees} árboles para ti y {trees} para {name}."
+        "reward_title": "Regalo de bienvenida: {trees, plural, one {un árbol} other {# árboles}} para cada uno",
+        "reward_body": "Cuando tu ordenador haya contribuido en {days} días distintos, plantaremos {trees, plural, one {un árbol} other {# árboles}} para ti y {trees, plural, one {otro} other {#}} para {name}."
     }
 }

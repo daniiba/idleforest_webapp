@@ -19,6 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
         const displayName = profile?.display_name || username
         const points = profile?.total_points || 0
+        // The share preview shows the member's forest island.
+        const image = `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'}/api/og/forest?${new URLSearchParams({ displayName }).toString()}`
 
         return {
             title: `${displayName}'s Stats | IdleForest`,
@@ -27,11 +29,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                 title: `🌲 ${displayName} - Forest Guardian Stats`,
                 description: `${points.toLocaleString()} points • Planting trees by sharing unused bandwidth!`,
                 type: 'website',
+                images: [{ url: image, width: 1200, height: 630, alt: `${displayName}'s forest` }],
             },
             twitter: {
                 card: 'summary_large_image',
                 title: `🌲 ${displayName} - Forest Guardian Stats`,
                 description: `${points.toLocaleString()} points on IdleForest`,
+                images: [image],
             },
         }
     } catch {
