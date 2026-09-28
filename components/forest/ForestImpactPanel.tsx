@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowRight, Check, Loader2, Share2 } from 'lucide-react'
+import { Check, Loader2, Share2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
 import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
 import { formatTrees } from '@/lib/referral-reward-settings'
@@ -20,7 +20,7 @@ export type ForestResponse = {
 
 type ForestImpactPanelProps =
     | { mode: 'self' }
-    | { mode: 'public'; displayName: string; isSignedIn: boolean }
+    | { mode: 'public'; displayName: string }
 
 function formatCount(value: number) {
     return value.toLocaleString('en')
@@ -113,6 +113,35 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     ]
     const barTotal = Math.max(1, data.totalTrees)
 
+    if (!isSelf) {
+        return (
+            <section className="overflow-hidden border-2 border-black bg-[#0B101F] text-white" aria-labelledby="forest-heading">
+                <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+                    <h2 id="forest-heading" className="font-candu text-2xl font-extrabold uppercase leading-none sm:text-3xl">
+                        {data.totalTrees > 0 ? <><span className="text-brand-yellow">{formatCount(data.totalTrees)}</span> {data.totalTrees === 1 ? 'tree' : 'trees'}</> : 'Just starting'}
+                    </h2>
+                    <dl className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-bold text-white/70">
+                        {segments.filter(segment => segment.value > 0).map(segment => (
+                            <div key={segment.key} className="flex items-center gap-1.5">
+                                <span className="h-2.5 w-2.5" style={{ backgroundColor: segment.color, opacity: segment.dim ? 0.6 : 1 }} aria-hidden="true" />
+                                <dt>{segment.label}</dt>
+                                <dd className="font-mono font-black tabular-nums text-white">{formatCount(segment.value)}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </div>
+                <Forest3D
+                    className="sm:!aspect-[2/1]"
+                    seed={data.seed}
+                    ownTrees={data.ownTrees}
+                    inviteTrees={data.inviteTrees}
+                    friends={data.friends}
+                    title={`${name}'s forest island`}
+                />
+            </section>
+        )
+    }
+
     return (
         <section className="overflow-hidden border-2 border-black bg-[#0B101F] text-white" aria-labelledby="forest-heading">
             <div className="grid lg:grid-cols-[1.35fr_0.65fr]">
@@ -183,14 +212,6 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                     {shared ? 'Link copied' : 'Share my forest'}
                                 </button>
                             ) : null
-                        ) : !props.isSignedIn && data.invitePath ? (
-                            <a
-                                href={data.invitePath}
-                                className="inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-3 text-sm font-black uppercase text-black"
-                            >
-                                Grow your island next to {name}
-                                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                            </a>
                         ) : null}
                     </div>
                 </div>
