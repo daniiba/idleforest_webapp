@@ -19,12 +19,12 @@ export function inviteMessage(url: string, reward: Reward | null) {
 }
 
 export function reminderMessage(friendName: string | null, reward: Reward | null) {
-    const greeting = friendName ? `Hi ${friendName}!` : 'Hi!'
+    const greeting = friendName ? `Hey ${friendName}!` : 'Hey!'
     const setupUrl = `${APP_URL}/welcome?utm_source=referral_reminder`
     const gift = reward && reward.enabled !== false
-        ? ` Once it has run for ${reward.minActiveDays} days, we both get ${giftWords(reward)} planted.`
+        ? ` Once it runs for ${reward.minActiveDays} days, we both get ${giftWords(reward)} planted.`
         : ''
-    return `${greeting} You joined IdleForest, but it is not running on your computer yet. Setting it up takes about 2 minutes.${gift} Here is the link: ${setupUrl}`
+    return `${greeting} Did you get IdleForest running?${gift} Here is the link in case you need it: ${setupUrl}`
 }
 
 export function whatsappUrl(text: string) {

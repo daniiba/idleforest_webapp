@@ -147,3 +147,57 @@ export async function getForestData(
         friends,
     }
 }
+
+export type TeamForestData = ForestData & { memberCount: number }
+
+/**
+ * A team's forest: the centre grove holds every tree the team has planted,
+ * and each member gets their own named grove around it.
+ */
+export async function getTeamForestData(supabase: SupabaseLike, teamId: string): Promise<TeamForestData> {
+    const { data: members, error } = await supabase
+        .from('team_members')
+        .select('user_id, joined_at')
+        .eq('team_id', teamId)
+        .order('joined_at', { ascending: true })
+
+    if (error) throw error
+
+    const memberIds: string[] = Array.from(new Set(
+        (members || []).map((row: { user_id: string }) => row.user_id).filter(Boolean)
+    ))
+    const totals = await getTreeTotals(supabase, memberIds)
+
+    const names = new Map<string, string>()
+    const planting = new Set<string>()
+    for (const ids of chunk(memberIds, BATCH_SIZE)) {
+        const [{ data: profiles }, { data: nodes }] = await Promise.all([
+            supabase.from('profiles').select('user_id, display_name').in('user_id', ids),
+            supabase.from('nodes').select('user_id, opt_in, total_requests').in('user_id', ids).gt('total_requests', 0),
+        ])
+        for (const profile of profiles || []) {
+            if (profile.display_name) names.set(profile.user_id, profile.display_name)
+        }
+        for (const node of nodes || []) {
+            if (node.opt_in !== false) planting.add(node.user_id)
+        }
+    }
+
+    const friends = memberIds.map(userId => {
+        const memberTotals = totals.get(userId)
+        const trees = memberTotals
+            ? memberTotals.badgeTrees + memberTotals.rewardTrees + memberTotals.referralRewardTrees
+            : 0
+        return { label: names.get(userId) || null, trees, contributing: planting.has(userId) || trees > 0 }
+    })
+    const totalTrees = friends.reduce((sum, friend) => sum + friend.trees, 0)
+
+    return {
+        ownTrees: totalTrees,
+        inviteTrees: 0,
+        friendTrees: 0,
+        totalTrees,
+        friends,
+        memberCount: memberIds.length,
+    }
+}

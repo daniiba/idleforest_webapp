@@ -9,6 +9,7 @@ import { Link, useRouter, usePathname } from "@/navigation";
 import { ThreadList } from "@/components/ThreadList"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeamStats } from "@/components/TeamStats"
+import TeamForestPanel from "@/components/forest/TeamForestPanel"
 import { TeamMembers } from "@/components/TeamMembers"
 import { TeamMilestoneList } from "@/components/TeamMilestoneBadges"
 import { trackOnboardingEvent } from "@/lib/onboarding-events"
@@ -331,6 +332,15 @@ export default function TeamClient() {
 		} catch (error) {
 			console.error('Error deleting invite:', error)
 		}
+	}
+
+	// The team forest's empty plots: members invite a teammate, others join.
+	const openInvites = () => {
+		if (!showInviteSection) {
+			fetchInvites()
+			setShowInviteSection(true)
+		}
+		window.setTimeout(() => document.getElementById('team-invites')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
 	}
 
 	const toggleInviteSection = () => {
@@ -757,7 +767,7 @@ export default function TeamClient() {
 
 					{/* Invite Section - Expandable */}
 					{showInviteSection && isMember && (
-						<Card className="p-6 bg-white border-2 border-black shadow-none mb-8">
+						<Card id="team-invites" className="p-6 bg-white border-2 border-black shadow-none mb-8">
 							<div className="flex items-center justify-between mb-4">
 								<div className="flex items-center gap-3">
 									<div className="bg-brand-yellow p-2 border-2 border-black">
@@ -836,6 +846,18 @@ export default function TeamClient() {
 					)}
 
 					<TabsContent value="stats" className="mt-0">
+						<TeamForestPanel
+							teamSlug={teamSlug}
+							teamName={team.name}
+							plotLabel={isMember ? 'Invite a teammate' : `Join ${team.name}`}
+							onPlotClick={
+								isMember
+									? openInvites
+									: currentUser
+										? () => handleJoinTeam()
+										: () => window.location.assign(`/auth/user/login?redirect=${encodeURIComponent(`/teams/${teamSlug}`)}`)
+							}
+						/>
 						<TeamStats
 							team={{
 								total_points: team?.total_points || 0,

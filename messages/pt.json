@@ -1037,6 +1037,7 @@
         "trust_rating": "Nota 4,8★ na Chrome Web Store",
         "forest_title": "A floresta de {name} até agora",
         "forest_people": "{count, plural, one {pessoa entrou} other {pessoas entraram}}",
+        "privacy_note": "{name} vai ver quando você entrar e começar a plantar, e o seu nome vai aparecer na floresta dessa pessoa.",
         "forest_requests": "requisições geradas juntos",
         "forest_trees": "{count, plural, one {árvore} other {árvores}} nesta floresta",
         "own_title": "Este é o seu link de convite",

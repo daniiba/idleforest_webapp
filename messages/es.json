@@ -1037,6 +1037,7 @@
         "trust_rating": "Valorada con 4,8★ en Chrome Web Store",
         "forest_title": "El bosque de {name} hasta ahora",
         "forest_people": "{count, plural, one {persona se ha unido} other {personas se han unido}}",
+        "privacy_note": "{name} verá cuando te unas y empieces a plantar, y tu nombre aparecerá en su bosque.",
         "forest_requests": "solicitudes impulsadas juntos",
         "forest_trees": "{count, plural, one {árbol} other {árboles}} en este bosque",
         "own_title": "Este es tu enlace de invitación",

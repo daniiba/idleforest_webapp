@@ -33,6 +33,8 @@ export type Forest3DOptions = {
     onPlotClick?: () => void
     /** Text on empty plots, e.g. "Invite a friend" or "Join Anna". */
     plotLabel?: string
+    /** Name of the centre grove in tooltips, e.g. "Team forest". */
+    mainTitle?: string
 }
 
 export type Forest3DHandle = {
@@ -275,7 +277,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     ringGeometry.rotateX(-Math.PI / 2)
     const plusMap = track(plusTexture())
 
-    const pickables: THREE.Mesh[] = []
+    // Clearings, plots and the plots' floating "+" markers.
+    const pickables: THREE.Object3D[] = []
     const growing: GrowingInstance[] = []
     const pulses: Array<{ mesh: THREE.Mesh; phase: number }> = []
     const bobs: Array<{ sprite: THREE.Sprite; base: number; phase: number }> = []
@@ -284,10 +287,27 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const color = new THREE.Color()
     const upAxis = new THREE.Vector3(0, 1, 0)
 
-    const addLabel = (text: string, anchor: THREE.Vector3, highlight: boolean) => {
+    const addLabel = (text: string, anchor: THREE.Vector3, highlight: boolean, onClick?: () => void) => {
         const element = document.createElement('div')
         element.textContent = text
         element.style.cssText = `position:absolute;left:0;top:0;transform:translate(-50%,-100%);padding:2px 7px;background:${highlight ? FOREST_PALETTE.invite : 'rgba(255,255,255,.88)'};border:1.5px solid ${FOREST_PALETTE.ink};color:${FOREST_PALETTE.ink};font:800 11px/1.3 ui-sans-serif,system-ui,sans-serif;white-space:nowrap;will-change:transform`
+        if (onClick) {
+            // The plot's label works as a button too.
+            element.setAttribute('role', 'button')
+            element.tabIndex = 0
+            element.style.pointerEvents = 'auto'
+            element.style.cursor = 'pointer'
+            element.addEventListener('click', event => {
+                event.stopPropagation()
+                onClick()
+            })
+            element.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    onClick()
+                }
+            })
+        }
         overlay.appendChild(element)
         labels.push({ element, anchor })
     }
@@ -320,12 +340,14 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             const base = groundLevel + 7
             plus.position.copy(toVector(island.center.x, island.center.y, base))
             plus.scale.setScalar(11)
+            plus.userData = { islandIndex }
+            if (plotsInteractive) pickables.push(plus)
             group.add(plus)
             bobs.push({ sprite: plus, base, phase: jitter(islandIndex, 9) * Math.PI * 2 })
 
             if (plotsInteractive && options.plotLabel && !plotLabelShown) {
                 plotLabelShown = true
-                addLabel(options.plotLabel, toVector(island.center.x, island.center.y, base + 7), true)
+                addLabel(options.plotLabel, toVector(island.center.x, island.center.y, base + 7), true, options.onPlotClick)
             }
             scene.add(group)
             return
@@ -700,8 +722,9 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             return
         }
         const island = world.islands[islandIndex]
+        const mainTitle = options.mainTitle || 'Your forest'
         tooltip.textContent = island.kind === 'main'
-            ? (focused ? 'Your forest · click to go back' : 'Your forest')
+            ? (focused ? `${mainTitle} · click to go back` : mainTitle)
             : island.kind === 'plot'
                 ? (plotsInteractive ? `${options.plotLabel || 'Invite a friend'} · click` : 'Room for the next friend')
                 : focused === island.title ? island.title : `${island.title} · click to visit`

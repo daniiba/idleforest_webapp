@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
-import { forestSeed, getForestData } from '@/lib/forest'
+import { forestSeed, getForestData, getTeamForestData } from '@/lib/forest'
 import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { normalizeReferralCode } from '@/lib/referrals'
 
@@ -44,8 +44,12 @@ async function authenticatedUserId(request: NextRequest, admin: ReturnType<typeo
 
 // GET /api/forest                     -> your own forest (cookie or bearer token), with friends' names
 // GET /api/forest?displayName=Anna    -> Anna's public forest, friends shown by their public display names
+// GET /api/forest?team=lisbon-coders   -> a team's forest: team total in the centre, one grove per member
+// GET /api/forest?teamId=<uuid>         -> the same, by team id (desktop app)
 export async function GET(request: NextRequest) {
     const displayName = request.nextUrl.searchParams.get('displayName')?.trim()
+    const teamSlug = request.nextUrl.searchParams.get('team')?.trim()
+    const teamId = request.nextUrl.searchParams.get('teamId')?.trim()
 
     try {
         const admin = createAdminClient()
@@ -53,6 +57,26 @@ export async function GET(request: NextRequest) {
         const program = reward.enabled
             ? { treesPerPerson: reward.treesPerPerson, minActiveDays: reward.minActiveDays }
             : null
+
+        if (teamSlug || teamId) {
+            if ((teamSlug && teamSlug.length > 120) || (teamId && !/^[0-9a-f-]{36}$/i.test(teamId))) {
+                return json({ error: 'Invalid team' }, { status: 400 })
+            }
+
+            const query = admin.from('teams').select('id, name, slug')
+            const { data: team } = await (teamId ? query.eq('id', teamId) : query.eq('slug', teamSlug as string)).maybeSingle()
+
+            if (!team) return json({ error: 'Team not found' }, { status: 404 })
+
+            const forest = await getTeamForestData(admin, team.id)
+            return json({
+                seed: forestSeed(`team:${team.id}`),
+                displayName: team.name,
+                invitePath: null,
+                reward: null,
+                ...forest,
+            }, { cache: 'public, s-maxage=300, stale-while-revalidate=600' })
+        }
 
         if (displayName) {
             if (displayName.length > 100) return json({ error: 'Invalid profile name' }, { status: 400 })

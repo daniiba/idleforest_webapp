@@ -43,6 +43,13 @@ export default function PrivacyPage() {
                     </section>
 
                     <section>
+                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black">Invites, teams and forests</h2>
+                        <p className="mt-3">
+                            If you join through someone&apos;s invite link, that person can see your display name, when you joined, whether IdleForest has started planting on your computer, and how many trees you have planted. Your display name and tree count also appear in their forest, which is shown on their public profile. The same applies to team members in their team&apos;s forest. We never show your email address or anything about what your computer does.
+                        </p>
+                    </section>
+
+                    <section>
                         <h2 className="font-rethink-sans text-2xl font-extrabold text-black">How idle bandwidth is used</h2>
                         <p className="mt-3">
                             Idle bandwidth tasks are limited to public, sessionless backend tasks such as uptime checks, market research, and passive public-site data collection. IdleForest does not route private account activity, ad fraud, crypto mining, credential collection, or malicious activity through your device.

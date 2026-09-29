@@ -16,6 +16,8 @@ type Forest3DProps = {
     /** Empty plots become clickable when set (invite a friend / join). */
     onPlotClick?: () => void
     plotLabel?: string
+    /** Name of the centre grove in tooltips (default "Your forest"). */
+    mainTitle?: string
 }
 
 type Status = 'idle' | 'loading' | 'ready' | 'fallback'
@@ -25,7 +27,7 @@ const buttonClass = 'flex h-9 w-9 items-center justify-center border-2 border-bl
 // Interactive 3D forest. Shows the SVG island immediately (and keeps it for
 // devices without WebGL); three.js is only downloaded once the forest is
 // about to scroll into view.
-export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className, onPlotClick, plotLabel }: Forest3DProps) {
+export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className, onPlotClick, plotLabel, mainTitle }: Forest3DProps) {
     const frameRef = useRef<HTMLDivElement>(null)
     const mountRef = useRef<HTMLDivElement>(null)
     const handleRef = useRef<Forest3DHandle | null>(null)
@@ -72,6 +74,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                     onFocusChange: setFocused,
                     onPlotClick: hasPlotClick ? () => plotClickRef.current?.() : undefined,
                     plotLabel,
+                    mainTitle,
                 })
                 setStatus('ready')
             })
@@ -85,7 +88,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
             handleRef.current?.dispose()
             handleRef.current = null
         }
-    }, [friends, hasPlotClick, inviteTrees, nearViewport, ownTrees, plotLabel, seed])
+    }, [friends, hasPlotClick, inviteTrees, mainTitle, nearViewport, ownTrees, plotLabel, seed])
 
     const ready = status === 'ready'
 

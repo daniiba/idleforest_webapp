@@ -1037,6 +1037,7 @@
         "trust_rating": "Noté 4,8★ sur le Chrome Web Store",
         "forest_title": "La forêt de {name} jusqu'ici",
         "forest_people": "{count, plural, one {personne a rejoint} other {personnes ont rejoint}}",
+        "privacy_note": "{name} verra quand vous rejoignez et commencez à planter, et votre nom apparaîtra dans sa forêt.",
         "forest_requests": "requêtes alimentées ensemble",
         "forest_trees": "{count, plural, one {arbre} other {arbres}} dans cette forêt",
         "own_title": "Voici votre lien d'invitation",

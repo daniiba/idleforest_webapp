@@ -174,6 +174,7 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                                     <ArrowRight className="h-5 w-5" aria-hidden="true" />
                                 </Link>
                                 <p className="mt-3 text-sm font-bold text-neutral-600">{t('cta_note')}</p>
+                                <p className="mt-2 text-xs font-semibold text-neutral-500">{t('privacy_note', { name })}</p>
                                 <p className="mt-4 text-sm font-semibold text-neutral-600">
                                     {t('login_prompt')}{' '}
                                     <Link href={loginHref} className="font-black text-black underline underline-offset-4">

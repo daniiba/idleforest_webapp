@@ -11,13 +11,9 @@ import {
     sendTemplatedEmail,
 } from '@/lib/referral-notifications'
 
-// Two ways to get members who only share bandwidth to bring in people they
-// know:
-//   * a nudge when someone they invited made an account but never started,
-//     with a ready-made reminder they can send in one tap;
-//   * a one-off launch email that shows each active member their own forest
-//     and the empty spot waiting for a friend.
-// Both run from the hourly referral cron.
+// A one-off launch email that shows each active member their own forest and
+// the empty spot waiting for a friend, with one-tap invites. Sent in batches
+// from the hourly referral cron while the campaign is switched on.
 
 type Admin = ReturnType<typeof createAdminClient>
 
@@ -27,91 +23,11 @@ const DEFAULT_FROM = 'Daniel from IdleForest <daniel@idleforest.com>'
 export const FOREST_LAUNCH_CAMPAIGN = 'forest_launch'
 export const FOREST_LAUNCH_TEMPLATE = 'Referral launch: your forest'
 export const FOREST_LAUNCH_SEGMENT = 'referral_forest_launch'
-export const STALLED_TEMPLATE = 'Referral: friend not started yet'
-const STALLED_SEGMENT = 'referral_friend_not_started'
 
 function rewardSentence(reward: ReferralRewardSettings) {
     return reward.enabled
         ? `Send your link to someone you know. When their computer has helped for ${reward.minActiveDays} days, we plant ${giftWords(reward)} for you and ${reward.treesPerPerson === 1 ? 'one' : giftWords(reward)} for them.`
         : 'Send your link to someone you know. Every tree they plant also grows your forest.'
-}
-
-// ---------------------------------------------------------------------------
-// Nudge for friends who joined but never started
-// ---------------------------------------------------------------------------
-
-type StalledRow = {
-    attribution_id: string
-    referrer_id: string
-    referrer_email: string
-    referrer_name: string | null
-    referrer_code: string | null
-    friend_name: string | null
-}
-
-export async function sendStalledFriendNudges(options: { limit?: number } = {}) {
-    const admin = createAdminClient()
-    const reward = await getReferralRewardSettings(admin)
-    const result = { sent: 0, skipped: 0, failed: 0 }
-
-    const { data, error } = await admin.rpc('get_stalled_referrals', { p_limit: options.limit ?? 200 })
-    if (error) throw error
-
-    // One email per inviter, even if several friends stalled.
-    const byReferrer = new Map<string, StalledRow[]>()
-    for (const row of (data || []) as StalledRow[]) {
-        byReferrer.set(row.referrer_id, [...(byReferrer.get(row.referrer_id) || []), row])
-    }
-
-    for (const rows of Array.from(byReferrer.values())) {
-        const ids = rows.map(row => row.attribution_id)
-
-        // Claim first so overlapping runs never send the same nudge twice.
-        const { data: claimed, error: claimError } = await admin
-            .from('referral_attributions')
-            .update({ stalled_notified_at: new Date().toISOString() })
-            .in('id', ids)
-            .is('stalled_notified_at', null)
-            .select('id')
-        if (claimError) throw claimError
-        if (!claimed || claimed.length === 0) continue
-
-        const first = rows[0]
-        const names = rows.map(row => row.friend_name).filter((name): name is string => Boolean(name))
-        const single = rows.length === 1
-        const reminder = reminderMessage(single ? first.friend_name : null, reward)
-
-        const outcome = await sendTemplatedEmail(admin, {
-            templateName: STALLED_TEMPLATE,
-            to: first.referrer_email,
-            userId: first.referrer_id,
-            segment: STALLED_SEGMENT,
-            values: {
-                REFERRER_NAME: first.referrer_name || 'there',
-                FRIEND_NAMES: names.length > 0 ? formatFriendNames(names) : single ? 'Your friend' : 'Some of your friends',
-                HAS_NOT: single ? "hasn't" : "haven't",
-                REMINDER_TEXT: reminder,
-                WHATSAPP_URL: whatsappUrl(reminder),
-                EMAIL_SHARE_URL: emailShareUrl('Your IdleForest app', reminder),
-                REWARD_SENTENCE: reward.enabled
-                    ? `When they are set up and their computer has helped for ${reward.minActiveDays} days, we plant ${giftWords(reward)} for each of you.`
-                    : 'Every tree they plant will also grow your forest.',
-                REFERRALS_URL: referralsPageUrl('referral_friend_not_started'),
-            },
-        })
-
-        if (outcome.sent) {
-            result.sent += 1
-        } else if (outcome.reason === 'unsubscribed') {
-            result.skipped += 1
-        } else {
-            // Let a later run try again.
-            await admin.from('referral_attributions').update({ stalled_notified_at: null }).in('id', ids)
-            result.failed += 1
-        }
-    }
-
-    return result
 }
 
 // ---------------------------------------------------------------------------

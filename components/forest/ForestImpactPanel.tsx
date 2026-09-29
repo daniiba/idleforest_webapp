@@ -20,7 +20,7 @@ export type ForestResponse = {
 
 type ForestImpactPanelProps =
     | { mode: 'self' }
-    | { mode: 'public'; displayName: string; onLoad?: (data: ForestResponse | null) => void; joinable?: boolean }
+    | { mode: 'public'; displayName: string; onLoad?: (data: ForestResponse | null) => void; viewer?: 'visitor' | 'owner' | 'member' }
 
 function formatCount(value: number) {
     return value.toLocaleString('en')
@@ -115,9 +115,19 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     ]
     const barTotal = Math.max(1, data.totalTrees)
 
+    // What the "+" plots do depends on who is looking at this public forest.
+    const viewer = props.mode === 'public' ? props.viewer || 'visitor' : 'owner'
+    const publicPlot = !data.invitePath
+        ? {}
+        : viewer === 'owner'
+            ? { plotLabel: 'Invite a friend', onPlotClick: shareForest }
+            : viewer === 'member'
+                ? { plotLabel: 'Invite your own friends', onPlotClick: () => window.location.assign('/referrals') }
+                : { plotLabel: `Join ${name}`, onPlotClick: () => window.location.assign(data.invitePath as string) }
+
     if (!isSelf) {
         return (
-            <section className="overflow-hidden border-2 border-black bg-forest-ground text-brand-navy" aria-labelledby="forest-heading">
+            <section className="relative overflow-hidden border-2 border-black bg-forest-ground text-brand-navy" aria-labelledby="forest-heading">
                 <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-6">
                     <h2 id="forest-heading" className="text-[11px] font-black uppercase tracking-wider text-black/55">
                         {name}&apos;s forest
@@ -143,9 +153,13 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                     inviteTrees={data.inviteTrees}
                     friends={data.friends}
                     title={`${name}'s forest`}
-                    plotLabel={props.joinable && data.invitePath ? `Join ${name}` : undefined}
-                    onPlotClick={props.joinable && data.invitePath ? () => window.location.assign(data.invitePath as string) : undefined}
+                    {...publicPlot}
                 />
+                {shared ? (
+                    <p className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto w-fit border-2 border-black bg-brand-yellow px-3 py-1.5 text-xs font-black uppercase" role="status">
+                        Invite link copied
+                    </p>
+                ) : null}
             </section>
         )
     }

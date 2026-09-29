@@ -105,6 +105,7 @@ What to watch:
 
 ## 6. Always-on nudges
 
-- **Friend has not started.** Three days after someone joins through your link without starting the app, the hourly job emails you once with a ready-made reminder (WhatsApp, email). On `/referrals`, a **Remind** button next to each person who has not started opens the same message.
+- **Friend still setting up.** On `/referrals`, people who joined but have not started show as *Setting up*, with a **Remind** button. It opens a short, friendly check-in the member can send on WhatsApp, by email or copy. We do not email the member about it automatically.
 - **Desktop forest updates.** The desktop app shows a system notification when someone you invited joins, when you both get a tree, and when your forest reaches 10, 25, 50, 100, 250 and more trees. At most one a day (rewards always), never on first launch. Clicking it opens the Invite tab. Members can turn it off in Settings → Forest updates.
-- Run `20261003_referral_engagement.sql` before using either of the emails.
+- Run `20261003_referral_engagement.sql` and then `20261004_remove_friend_not_started_email.sql` before sending the launch email.
+- The invite page and the privacy policy tell invited people that the person who invited them can see when they join and start planting.

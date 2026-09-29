@@ -134,7 +134,7 @@ function InviteSection({ reward, invite }: { reward: Reward; invite: ReturnType<
 function statusOf(person: ReferredUser, rewardEnabled: boolean) {
     if (rewardEnabled && person.rewarded) return { rank: 3, label: 'Tree planted', className: 'bg-brand-yellow text-black' }
     if (person.activated) return { rank: 2, label: 'Contributing', className: 'bg-brand-navy text-white' }
-    return { rank: 1, label: 'Joined', className: 'bg-white/60 text-neutral-600' }
+    return { rank: 1, label: 'Setting up', className: 'bg-white/60 text-neutral-600' }
 }
 
 function InvitedPeople({ loading, people, reward }: {
@@ -161,7 +161,7 @@ function InvitedPeople({ loading, people, reward }: {
                 </h2>
                 {waiting > 0 ? (
                     <p className="text-sm font-bold text-neutral-700">
-                        {waiting === 1 ? '1 person has' : `${waiting} people have`} not started yet. A short reminder helps.
+                        {waiting === 1 ? '1 friend is' : `${waiting} friends are`} still setting up.
                     </p>
                 ) : null}
             </div>
@@ -236,7 +236,7 @@ function Reminder({ name, reward }: { name: string; reward: Reward }) {
 
     return (
         <div className="mx-6 mb-4 border-2 border-black bg-forest-ground p-4">
-            <p className="text-[11px] font-black uppercase tracking-wider text-black/60">Send {name} this message</p>
+            <p className="text-[11px] font-black uppercase tracking-wider text-black/60">A friendly check-in for {name}</p>
             <p className="mt-2 text-sm font-semibold leading-6">{text}</p>
             <div className="mt-3 flex flex-wrap gap-2">
                 <a href={whatsappUrl(text)} target="_blank" rel="noopener noreferrer" className={`${linkClass} bg-brand-navy text-brand-yellow`}>

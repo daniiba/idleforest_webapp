@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendReferralNotifications } from '@/lib/referral-notifications'
 import { processReferralRewards } from '@/lib/referral-rewards'
-import { sendForestLaunchBatches, sendStalledFriendNudges } from '@/lib/referral-engagement'
+import { sendForestLaunchBatches } from '@/lib/referral-engagement'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -24,8 +24,7 @@ function isAuthorized(request: NextRequest) {
 // 2. send any "joined" / "started contributing" emails that were not sent
 //    from a request path, mainly activations recorded by the node-sync
 //    trigger for people who never reopen the website, then
-// 3. nudge inviters whose friends joined but never started, and
-// 4. send the next batches of the forest launch email while it is switched on.
+// 3. send the next batches of the forest launch email while it is switched on.
 export async function POST(request: NextRequest) {
     return GET(request)
 }
@@ -68,14 +67,6 @@ export async function GET(request: NextRequest) {
     }
 
     response.notifications = notifications
-
-    try {
-        response.stalledNudges = await sendStalledFriendNudges({ limit: 200 })
-    } catch (error) {
-        console.error('Stalled friend nudges failed:', error)
-        response.success = false
-        response.stalledNudgesError = error instanceof Error ? error.message : 'Unknown error'
-    }
 
     try {
         response.forestLaunch = await sendForestLaunchBatches({ deadline: startedAt + RUN_DEADLINE_MS })
