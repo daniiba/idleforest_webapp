@@ -72,13 +72,13 @@ export default function ProjectsSection() {
     const projectStats = groupByProject(plantingsData.events);
 
     return (
-        <section id="projects" className="scroll-mt-24 border-y-4 border-black bg-brand-navy text-white">
+        <section id="projects" className="scroll-mt-24 bg-brand-navy text-white">
             <div className="container mx-auto px-6 py-20 md:py-24">
                 <div className="mx-auto max-w-3xl text-center">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-yellow">
+                    <p className="text-sm font-semibold text-brand-yellow">
                         {t("eyebrow")}
                     </p>
-                    <h2 className="mt-3 font-rethink-sans text-3xl font-extrabold sm:text-4xl md:text-5xl">
+                    <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
                         {t("heading")}
                     </h2>
                     <p className="mt-4 text-base text-white/75 md:text-lg">
@@ -101,7 +101,7 @@ export default function ProjectsSection() {
                                 aria-label={t(`${project.key}.title`)}
                                 className="group block h-full"
                             >
-                                <article className="flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-none transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
+                                <article className="flex h-full flex-col overflow-hidden rounded-3xl bg-white text-brand-navy transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1 group-focus-visible:outline-none">
                                     {project.imageSrc ? (
                                         <div className="relative h-52">
                                             <Image
@@ -114,10 +114,10 @@ export default function ProjectsSection() {
                                     ) : (
                                         <div className="flex h-52 items-end bg-[linear-gradient(135deg,#E0F146_0%,#D9D9D9_50%,#0B101F_100%)] p-6">
                                             <div className="max-w-[14rem]">
-                                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-black/70">
+                                                <p className="text-xs font-semibold text-black/70">
                                                     {t(`${project.key}.partner`)}
                                                 </p>
-                                                <p className="mt-3 font-candu text-3xl uppercase leading-none text-black">
+                                                <p className="mt-3 text-2xl font-extrabold leading-tight text-black">
                                                     {t(`${project.key}.visual_title`)}
                                                 </p>
                                             </div>
@@ -138,17 +138,17 @@ export default function ProjectsSection() {
                                                 </p>
                                             </div>
 
-                                            <div className="flex w-[128px] shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow px-3 py-3 text-center shadow-none">
-                                                <div className="font-candu text-3xl leading-none text-black">
+                                            <div className="flex w-[128px] shrink-0 flex-col items-center justify-center rounded-2xl bg-brand-yellow px-3 py-3 text-center">
+                                                <div className="text-3xl font-extrabold leading-none text-brand-navy tabular-nums">
                                                     {(projectStats[project.projectId]?.trees ?? 0).toLocaleString()}
                                                 </div>
-                                                <div className="mt-2 w-full text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-black/70">
+                                                <div className="mt-2 w-full text-center text-[11px] font-medium text-black/70">
                                                     {t("trees_planted_label")}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="mt-auto space-y-2 border-t border-black/10 pt-4 text-sm text-neutral-700">
+                                        <div className="mt-auto space-y-2 border-t border-neutral-200 pt-4 text-sm text-neutral-700">
                                             <div className="flex items-center gap-2">
                                                 <Leaf className="h-4 w-4 text-brand-navy" />
                                                 <span>{t(`${project.key}.partner`)}</span>
@@ -172,8 +172,8 @@ export default function ProjectsSection() {
                 {/* Hallmark · component: partner-logo-proof · pre-emit critique: P5 H4 E4 S5 R4 V4 · contrast: pass (46-50) */}
                 <div className="mt-12 grid gap-5 lg:grid-cols-3">
                     {partnerDetails.map((partner) => (
-                        <article key={partner.name} className="flex h-full flex-col border-2 border-brand-yellow bg-black/20 p-6">
-                            <div className="mb-5 flex h-24 items-center justify-center border-2 border-brand-yellow bg-white p-4">
+                        <article key={partner.name} className="flex h-full flex-col rounded-3xl border border-white/15 bg-white/5 p-6">
+                            <div className="mb-5 flex h-24 items-center justify-center rounded-2xl bg-white p-4">
                                 <Image
                                     src={partner.logoSrc}
                                     alt={partner.logoAlt}
@@ -183,7 +183,7 @@ export default function ProjectsSection() {
                                     className="max-h-14 w-auto max-w-full object-contain"
                                 />
                             </div>
-                            <h3 className="font-rethink-sans text-2xl font-extrabold text-brand-yellow">
+                            <h3 className="text-xl font-extrabold text-brand-yellow">
                                 {partner.name}
                             </h3>
                             <p className="mt-4 flex-1 text-sm leading-6 text-white/75">
@@ -204,7 +204,7 @@ export default function ProjectsSection() {
                 <div className="mt-12 text-center">
                     <Link
                         href="/transparency"
-                        className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white"
+                        className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-6 py-3 font-bold text-brand-navy transition-colors hover:brightness-95"
                     >
                         Read our full transparency report <ArrowUpRight className="h-4 w-4" />
                     </Link>

@@ -9,6 +9,7 @@ import { EmailForm } from "@/components/email-form";
 import { trackPinterestEvent } from "@/lib/pinterest/client";
 
 import { DeviceDetection } from "@/lib/device-detection";
+import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
 
 export function SmartCTA({
     className,
@@ -106,9 +107,11 @@ export function SmartCTA({
                                 )}
                             >
                                 {isMac ? (
-                                    <Apple className="h-8 w-8" />
+                                    <AppleLogo className="h-7 w-7" />
+                                ) : isLinux ? (
+                                    <LinuxLogo className="h-7 w-7" />
                                 ) : (
-                                    <Monitor className="h-8 w-8" />
+                                    <WindowsLogo className="h-7 w-7" />
                                 )}
                                 {isMac ? "Download for Mac — It’s Free" : isLinux ? "Download for Linux — It’s Free" : "Download for Windows — It’s Free"}
                             </Link>

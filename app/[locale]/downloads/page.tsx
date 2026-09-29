@@ -6,52 +6,44 @@ import {
   EdgeStoreButton
 } from "@/components/browser-buttons";
 import { Link } from "@/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Monitor, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
 
 const DownloadsPage = () => {
   const t = useTranslations('Downloads');
 
   return (
-    <div className="min-h-screen bg-brand-gray text-white">
+    <div className="min-h-screen bg-[#F7F7F2] text-brand-navy">
       <Navigation />
       <main className="min-h-screen">
 
         {/* Header Section */}
         <section className="relative overflow-hidden pt-10 pb-20">
-          <Image
-            src="/Vector (Stroke).svg"
-            alt=""
-            fill
-            priority
-            sizes="150vw"
-            className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none opacity-50"
-          />
           <div className="container mx-auto px-6 relative z-10 text-center">
-            <h1 className="font-candu text-black uppercase text-[38px] sm:text-5xl md:text-6xl leading-[1.05] mb-6">
+            <h1 className="text-brand-navy text-3xl sm:text-4xl md:text-5xl leading-[1.1] tracking-tight mb-4 lowercase first-letter:uppercase">
               <span className="font-extrabold">{t('title')}</span>
             </h1>
-            <p className="text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-neutral-600 max-w-2xl mx-auto">
               {t('description')}
             </p>
           </div>
         </section>
 
         {/* Desktop Applications Section */}
-        <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24 pb-20">
+        <section id="desktop-apps" className="relative bg-[#F7F7F2] text-brand-navy scroll-mt-24 pb-20">
           <div className="container mx-auto px-6">
             <div className="grid gap-6 md:grid-cols-3 max-w-7xl mx-auto">
               {/* Windows Card */}
-              <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                  <Monitor className="h-6 w-6 text-brand-yellow" />
+              <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-brand-navy flex items-center justify-center mb-6 rounded-xl">
+                  <WindowsLogo className="h-6 w-6 text-brand-yellow" />
                 </div>
-                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                  WINDOWS
+                <h3 className="text-2xl font-extrabold mb-3">
+                  Windows
                 </h3>
-                <p className="text-neutral-800 mb-8 max-w-sm">
+                <p className="text-neutral-600 mb-8 max-w-sm">
                   {t('windows_desc')}
                 </p>
                 <Button
@@ -72,14 +64,14 @@ const DownloadsPage = () => {
               </div>
 
               {/* Linux Card */}
-              <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                  <Monitor className="h-6 w-6 text-brand-yellow" />
+              <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-brand-navy flex items-center justify-center mb-6 rounded-xl">
+                  <LinuxLogo className="h-6 w-6 text-brand-yellow" />
                 </div>
-                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                  LINUX
+                <h3 className="text-2xl font-extrabold mb-3">
+                  Linux
                 </h3>
-                <p className="text-neutral-800 mb-8 max-w-sm">
+                <p className="text-neutral-600 mb-8 max-w-sm">
                   {t('linux_desc')}
                 </p>
                 <Button
@@ -100,14 +92,14 @@ const DownloadsPage = () => {
               </div>
 
               {/* Mac OS Card */}
-              <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                  <Monitor className="h-6 w-6 text-brand-yellow" />
+              <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-brand-navy flex items-center justify-center mb-6 rounded-xl">
+                  <AppleLogo className="h-6 w-6 text-brand-yellow" />
                 </div>
-                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                  MAC OS
+                <h3 className="text-2xl font-extrabold mb-3">
+                  macOS
                 </h3>
-                <p className="text-neutral-800 mb-8 max-w-sm">
+                <p className="text-neutral-600 mb-8 max-w-sm">
                   {t('mac_desc')}
                 </p>
                 <Button
@@ -134,10 +126,10 @@ const DownloadsPage = () => {
         <section className="pb-24">
           <div className="container mx-auto px-6 text-black">
             <div className="text-center mb-10">
-              <h2 className="font-rethink-sans text-[30px] sm:text-4xl md:text-5xl font-extrabold tracking-tight">
+              <h2 className="text-[30px] sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                 {t('browser_heading')}
               </h2>
-              <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+              <p className="mt-4 text-base md:text-lg text-neutral-600 max-w-2xl mx-auto">
                 {t('browser_desc')}
               </p>
             </div>

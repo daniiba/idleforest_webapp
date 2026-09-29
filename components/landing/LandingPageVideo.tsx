@@ -4,9 +4,9 @@ import { Link } from "@/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Leaf, Chrome, TreePine, PlayCircle, Shield, BadgeCheck, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple } from "lucide-react";
+import { ArrowRight, Leaf, Chrome, TreePine, PlayCircle, Shield, BadgeCheck, ShieldCheck, Globe, Users, DollarSign, Monitor, Smartphone, Share2, Award, Check, Download, ChevronDown, Apple, Wifi } from "lucide-react";
 import Navigation from "@/components/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { EmailForm } from "@/components/email-form";
 import { useDeviceDetection } from "@/hooks/useDeviceDetection";
@@ -20,6 +20,8 @@ import HeroTrustSignals from "@/components/landing/HeroTrustSignals";
 import ProjectsSection from "@/components/landing/ProjectsSection";
 import PartnerProjects from "@/components/landing/PartnerProjects";
 import TeamSection from "@/components/landing/TeamSection";
+import IdleBandwidthArt from "@/components/landing/IdleBandwidthArt";
+import { WindowsLogo, AppleLogo, LinuxLogo } from "@/components/icons/os-logos";
 
 const screenshots = [
     "/landing/screenshot-1.png",
@@ -108,26 +110,17 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
     return (
         <>
             <Navigation />
-            <main className="min-h-screen bg-brand-gray text-white">
+            <main className="min-h-screen bg-[#F7F7F2] text-brand-navy">
                 {/* HERO */}
 
                 <section className="relative overflow-hidden">
-                    {/* Decorative wavy background */}
-                    <Image
-                        src="/Vector (Stroke).svg"
-                        alt=""
-                        fill
-                        priority
-                        sizes="150vw"
-                        className="absolute top-[100px] right-[100px] object-cover pointer-events-none select-none"
-                    />
-                    <div className="container mx-auto px-6 py-24 ">
+                    <div className="container mx-auto max-w-6xl px-6 py-16 md:py-24">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center">
                             <div className="space-y-6">
                                 <div className="flex items-center gap-2">
                                     <Image src="/europelogo.svg" alt="European Union flag" width={74} height={62} />
                                 </div>
-                                <h1 className="font-candu text-black uppercase text-[38px] sm:text-5xl md:text-6xl leading-[1.05]">
+                                <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-brand-navy lowercase first-letter:uppercase sm:text-5xl lg:text-6xl">
                                     <span className="font-extrabold">{t('hero.title_line1')} </span>
                                     <br className="hidden sm:block" />
                                     <span className="font-extrabold">{t('hero.title_line2')} </span>
@@ -136,7 +129,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                     <br className="hidden sm:block" />
                                     <span className="font-extrabold">{t('hero.title_line4')} </span>
                                 </h1>
-                                <p className="text-base md:text-lg text-neutral-800 max-w-xl">
+                                <p className="text-base md:text-lg text-neutral-600 max-w-xl">
                                     {t('hero.description')}
                                 </p>
                                 <div className="flex flex-col w-full sm:w-auto items-stretch gap-3">
@@ -147,7 +140,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </div>
                             {/* HERO ART PLACEHOLDER */}
                             <div className="relative w-full flex items-center justify-center">
-                                <div className="w-full max-w-lg lg:max-w-full aspect-video rounded-xl overflow-hidden shadow-2xl border-4 border-white/20">
+                                <div className="w-full max-w-lg lg:max-w-full aspect-video rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/10">
                                     <iframe
                                         className="w-full h-full"
                                         src="https://www.youtube.com/embed/tCnupe1tkfs?rel=0"
@@ -172,7 +165,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                     <div className="container mx-auto px-6 py-24 md:py-28">
                         {/* Badge */}
                         <div className="w-full flex justify-center">
-                            <div className="text-brand-yellow inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium shadow">
+                            <div className="text-brand-yellow inline-flex items-center gap-2 rounded-full bg-brand-navy px-4 py-2 text-sm font-semibold">
                                 <Leaf className="h-4 w-4" />
                                 <span>{t('how_it_works.trees_planted_badge', { count: stats.treesPlanted })}</span>
                             </div>
@@ -180,17 +173,17 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
                         {/* Heading */}
                         <div className="text-center mt-6">
-                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                                 {t('how_it_works.heading')}
                             </h2>
-                            <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+                            <p className="mt-4 text-base md:text-lg text-neutral-600 max-w-2xl mx-auto">
                                 {t('how_it_works.subheading')}
                             </p>
                         </div>
 
                         {/* Screenshots Carousel area */}
                         <div className="mt-14 grid place-items-center">
-                            <div className="w-full max-w-xl aspect-video rounded-lg overflow-hidden shadow-lg relative group ">
+                            <div className="w-full max-w-xl aspect-video rounded-3xl overflow-hidden bg-white/40 relative group ">
                                 <div className="relative w-full h-full">
                                     <Image
                                         src={screenshots[currentScreenshot]}
@@ -217,10 +210,10 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
 
                         {/* Three steps */}
-                        <div className="mt-20 grid gap-12 lg:grid-cols-3">
+                        <div className="mt-16 grid gap-6 lg:grid-cols-3">
                             <div id="step-1">
-                                <div className="text-6xl font-extrabold">1.</div>
-                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-lg font-extrabold text-brand-yellow">1</div>
+                                <h3 className="mt-4 text-2xl font-extrabold leading-tight tracking-tight">
                                     {t('how_it_works.step1_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
@@ -232,8 +225,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </p>
                             </div>
                             <div id="step-2">
-                                <div className="text-6xl font-extrabold">2.</div>
-                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-lg font-extrabold text-brand-yellow">2</div>
+                                <h3 className="mt-4 text-2xl font-extrabold leading-tight tracking-tight">
                                     {t('how_it_works.step2_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
@@ -244,8 +237,8 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                 </p>
                             </div>
                             <div id="step-3">
-                                <div className="text-6xl font-extrabold">3.</div>
-                                <h3 className="mt-4 font-inter font-light text-[50px] leading-[1] tracking-[-0.03em]">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-navy text-lg font-extrabold text-brand-yellow">3</div>
+                                <h3 className="mt-4 text-2xl font-extrabold leading-tight tracking-tight">
                                     {t('how_it_works.step3_title')}
                                 </h3>
                                 <p className="mt-3 text-neutral-800 max-w-sm">
@@ -256,7 +249,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         <div className="mt-14 text-center">
                             <Link
                                 href="/how-it-works"
-                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-6 py-3 font-bold text-brand-yellow shadow-none transition-all hover:bg-black hover:shadow-none"
+                                className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-6 py-3 font-bold text-brand-yellow transition-colors hover:bg-black"
                             >
                                 See how it works in detail →
                             </Link>
@@ -265,49 +258,41 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* IDLE BANDWIDTH */}
-                <section id="idle-bandwidth" className="relative overflow-hidden bg-brand-gray text-brand-navy scroll-mt-24">
-                    <Image
-                        src="/Vector (Stroke).svg"
-                        alt=""
-                        fill
-                        sizes="150vw"
-                        className="pointer-events-none absolute inset-0 select-none object-cover"
-                    />
+                <section id="idle-bandwidth" className="relative overflow-hidden bg-white text-brand-navy scroll-mt-24">
                     <div className="container relative mx-auto px-6 py-20 md:py-24">
                         <div className="mx-auto max-w-5xl text-center">
-                            <h2 className="font-rethink-sans text-[40px] font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+                            <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl">
                                 How Idle Bandwidth Funds Trees
                             </h2>
                         </div>
 
-                        <div className="relative mx-auto mt-8 aspect-[2036/772] w-full max-w-6xl" aria-hidden="true">
-                            <Image
-                                src="/landing/idle-bandwidth-flow-v3.png"
-                                alt=""
-                                fill
-                                sizes="(min-width: 1280px) 1152px, 100vw"
-                                className="object-contain"
-                            />
-                        </div>
+                        <IdleBandwidthArt className="mx-auto mt-8 h-auto w-full max-w-5xl" />
 
-                        <ol className="mx-auto mt-2 grid max-w-5xl gap-4 md:grid-cols-3">
+                        <ol className="mx-auto mt-6 grid max-w-5xl items-stretch gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:gap-3">
                             {[
-                                "Spare bandwidth",
-                                "Client pays for public data",
-                                "Trees are funded",
-                            ].map((step, index) => {
+                                { icon: Wifi, title: "Spare bandwidth", text: "IdleForest only uses the internet capacity you are not using, and steps back when you need it." },
+                                { icon: Globe, title: "Client pays for public data", text: "Companies pay for tasks like uptime monitoring and market research on public sites." },
+                                { icon: TreePine, title: "Trees are funded", text: "That revenue funds verified planting with partners like Trees for the Future and Tree-Nation." },
+                            ].map((step, index, all) => {
+                                const Icon = step.icon;
                                 return (
-                                    <li
-                                        key={step}
-                                        className="flex min-h-[104px] items-end justify-between gap-5 rounded-xl border border-brand-navy/15 bg-brand-gray p-5 text-left shadow-[0_12px_30px_rgba(11,16,31,0.08)]"
-                                    >
-                                        <h3 className="max-w-[14rem] text-2xl font-extrabold leading-[1.05] tracking-[-0.025em] text-brand-navy">
-                                            {step}
-                                        </h3>
-                                        <span className="font-mono text-xs font-bold tracking-[0.16em] text-brand-navy/40">
-                                            {String(index + 1).padStart(2, "0")}
-                                        </span>
-                                    </li>
+                                    <Fragment key={step.title}>
+                                        <li className="flex flex-col rounded-3xl border border-neutral-200 bg-[#F7F7F2] p-6 text-left">
+                                            <div className="flex items-center justify-between">
+                                                <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${index === all.length - 1 ? "bg-brand-yellow text-brand-navy" : "bg-brand-navy text-brand-yellow"}`}>
+                                                    <Icon className="h-6 w-6" aria-hidden="true" />
+                                                </span>
+                                                <span className="text-sm font-semibold text-brand-navy/40">{String(index + 1).padStart(2, "0")}</span>
+                                            </div>
+                                            <h3 className="mt-5 text-xl font-extrabold leading-tight tracking-tight">{step.title}</h3>
+                                            <p className="mt-2 text-sm leading-6 text-neutral-600">{step.text}</p>
+                                        </li>
+                                        {index < all.length - 1 && (
+                                            <li aria-hidden="true" className="flex items-center justify-center text-brand-navy/30">
+                                                <ArrowRight className="h-5 w-5 rotate-90 md:rotate-0" />
+                                            </li>
+                                        )}
+                                    </Fragment>
                                 );
                             })}
                         </ol>
@@ -328,10 +313,10 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* DESKTOP APPS */}
-                <section id="desktop-apps" className="relative bg-brand-gray text-black scroll-mt-24">
+                <section id="desktop-apps" className="relative bg-[#F7F7F2] text-brand-navy scroll-mt-24">
                     <div className="container mx-auto px-6 py-20 md:py-24">
                         <div className="text-center mb-12">
-                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                                 {t('desktop_apps.heading')}
                             </h2>
                             <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -341,14 +326,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
 
                         <div className="grid gap-6 md:grid-cols-3 max-w-7xl mx-auto">
                             {/* Windows Card */}
-                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-2xl flex items-center justify-center mb-5">
+                                    <WindowsLogo className="h-6 w-6 text-brand-yellow" />
                                 </div>
-                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                                    WINDOWS
+                                <h3 className="text-2xl font-extrabold mb-3">
+                                    Windows
                                 </h3>
-                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                <p className="text-neutral-600 mb-8 max-w-sm">
                                     {t('desktop_apps.windows_desc')}
                                 </p>
                                 <Button
@@ -374,14 +359,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </div>
 
                             {/* Linux Card */}
-                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-2xl flex items-center justify-center mb-5">
+                                    <LinuxLogo className="h-6 w-6 text-brand-yellow" />
                                 </div>
-                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                                    LINUX
+                                <h3 className="text-2xl font-extrabold mb-3">
+                                    Linux
                                 </h3>
-                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                <p className="text-neutral-600 mb-8 max-w-sm">
                                     {t('desktop_apps.linux_desc')}
                                 </p>
                                 <Button
@@ -407,14 +392,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </div>
 
                             {/* Mac OS Card */}
-                            <div className="bg-brand-yellow rounded-lg p-8 md:p-10 flex flex-col items-center text-center">
-                                <div className="w-12 h-12 bg-brand-navy rounded-sm flex items-center justify-center mb-6">
-                                    <Monitor className="h-6 w-6 text-brand-yellow" />
+                            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8 flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-brand-navy rounded-2xl flex items-center justify-center mb-5">
+                                    <AppleLogo className="h-6 w-6 text-brand-yellow" />
                                 </div>
-                                <h3 className="font-candu text-4xl md:text-5xl font-extrabold mb-4">
-                                    MAC OS
+                                <h3 className="text-2xl font-extrabold mb-3">
+                                    macOS
                                 </h3>
-                                <p className="text-neutral-800 mb-8 max-w-sm">
+                                <p className="text-neutral-600 mb-8 max-w-sm">
                                     {t('desktop_apps.mac_desc')}
                                 </p>
                                 <Button
@@ -443,23 +428,14 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* IMPACT */}
-                <section id="impact" className="relative overflow-visible scroll-mt-24 bg-brand-gray">
-                    {/* Decorative background lines */}
-                    <Image
-                        src="/yellow-shape.svg"
-                        alt=""
-                        fill
-                        priority
-                        sizes="100vw"
-                        className="text-brand-yellow absolute top-[100px] right-[100px] object-fill pointer-events-none select-none"
-                    />
+                <section id="impact" className="relative overflow-visible scroll-mt-24 bg-white">
 
                     <div className="relative container mx-auto px-6 py-20 md:py-24">
                         <div className="text-center mb-10 md:mb-12">
-                            <h2 className="font-rethink-sans text-black text-3xl sm:text-4xl md:text-5xl font-extrabold">{t('impact.heading')}</h2>
+                            <h2 className="text-brand-navy text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">{t('impact.heading')}</h2>
                         </div>
                         {/* 2x2 grid, no gaps so borders align perfectly */}
-                        <div className="grid gap-2 sm:grid-cols-2">
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                             <ImpactCard icon={<TreePine className="h-6 w-6 text-brand-yellow" />} value={stats.treesPlanted} label={t('impact.trees_label')} />
                             <ImpactCard icon={<Globe className="h-6 w-6 text-brand-yellow" />} value={stats.totalRequests} label={t('impact.requests_label')} />
                             <ImpactCard icon={<Users className="h-6 w-6 text-brand-yellow" />} value={stats.totalUsers} label={t('impact.users_label')} />
@@ -468,7 +444,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                         <div className="mt-10 text-center">
                             <Link
                                 href="/transparency"
-                                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-6 py-3 font-bold text-black shadow-none transition-all hover:bg-white hover:shadow-none"
+                                className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-6 py-3 font-bold text-brand-navy transition-colors hover:brightness-95"
                             >
                                 Read our full transparency report →
                             </Link>
@@ -483,10 +459,10 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 <ReviewsSection />
 
                 {/* ACHIEVEMENTS */}
-                <section id="achievements" className="relative bg-brand-gray text-black scroll-mt-24">
+                <section id="achievements" className="relative bg-[#F7F7F2] text-brand-navy scroll-mt-24">
                     <div className="relative container mx-auto px-6 py-20 md:py-24">
                         <div className="text-center mb-10 md:mb-12">
-                            <h2 className="font-rethink-sans text-[36px] sm:text-5xl md:text-6xl font-extrabold">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                                 {t('achievements.heading_line1')}
                                 <br className="hidden sm:block" />
                                 <span className="sm:hidden"> </span>
@@ -494,7 +470,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                             </h2>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="mx-auto max-w-3xl space-y-4">
                             <RoadmapItem
                                 icon={<Chrome className="h-6 w-6" />}
                                 title={t('achievements.browser_ext_title')}
@@ -534,13 +510,13 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* FAQ */}
-                <section id="faq" className="relative bg-brand-yellow text-black scroll-mt-24">
+                <section id="faq" className="relative bg-white text-brand-navy scroll-mt-24">
                     <div className="container mx-auto px-6 py-20 md:py-24">
                         <div className="text-center mb-12">
-                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                                 {t('faq.heading')}
                             </h2>
-                            <p className="mt-4 text-base md:text-lg text-neutral-800 max-w-2xl mx-auto">
+                            <p className="mt-4 text-base md:text-lg text-neutral-600 max-w-2xl mx-auto">
                                 {t('faq.subheading')}
                             </p>
                         </div>
@@ -603,7 +579,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         </p>
                                         <p>
                                             You can see the live count of trees funded on our{" "}
-                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                            <Link href="/transparency" className="font-bold underline hover:text-black">
                                                 transparency page
                                             </Link>.
                                         </p>
@@ -654,7 +630,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         </p>
                                         <p>
                                             The app does not read your tabs, bookmarks, or search history. See our{" "}
-                                            <Link href="/privacy" className="font-bold underline hover:text-white">
+                                            <Link href="/privacy" className="font-bold underline hover:text-black">
                                                 privacy policy
                                             </Link>
                                             {" "}for the full breakdown.
@@ -674,7 +650,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         </p>
                                         <p>
                                             IdleForest does not participate in ad fraud, crypto mining, scraping private data, or malicious activity. We publish more detail in our{" "}
-                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                            <Link href="/transparency" className="font-bold underline hover:text-black">
                                                 transparency report
                                             </Link>.
                                         </p>
@@ -693,7 +669,7 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                                         </p>
                                         <p>
                                             See the{" "}
-                                            <Link href="/transparency" className="font-bold underline hover:text-white">
+                                            <Link href="/transparency" className="font-bold underline hover:text-black">
                                                 transparency report
                                             </Link>
                                             {" "}for the latest breakdown by partner and region.
@@ -761,13 +737,13 @@ export default function LandingPageVideo({ deviceInfo }: { deviceInfo?: DeviceDe
                 </section>
 
                 {/* FINAL CTA */}
-                <section id="start" className="relative bg-brand-navy text-brand-yellow scroll-mt-24">
+                <section id="start" className="relative bg-brand-navy text-white scroll-mt-24">
                     <div className="container mx-auto px-6 py-20 md:py-24">
                         <div className="mx-auto max-w-3xl text-center">
-                            <h2 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
                                 Start Planting Trees in 10 Seconds
                             </h2>
-                            <p className="mt-4 text-base md:text-lg text-brand-yellow/80">
+                            <p className="mt-4 text-base md:text-lg text-white/70">
                                 Install IdleForest. Use your computer as usual. Help fund verified trees.
                             </p>
                             <div className="mt-8 flex justify-center">
@@ -928,7 +904,7 @@ function HowCard({ number, title, description, icon }: { number: number; title: 
                 <div className="space-y-2">
                     <div className="flex items-center gap-2">
                         <span className="text-brand-yellow">{icon}</span>
-                        <h3 className="font-rethink-sans text-2xl">{title}</h3>
+                        <h3 className="text-2xl">{title}</h3>
                     </div>
                     <p className="text-brand-gray leading-relaxed">{description}</p>
                 </div>
@@ -949,23 +925,23 @@ function RoadmapItem({
     status: { label: string; variant: "success" | "warning" | "info" | "neutral" };
 }) {
     // Badges: brand yellow background, black text, square corners, Candu font
-    const badgeClass = "bg-brand-yellow text-black font-rethink-sans rounded-none" as const;
+    const badgeClass = "bg-brand-yellow text-brand-navy rounded-full" as const;
 
     return (
-        <div className="relative border-b-2 border-r-2 border-black bg-transparent p-6 overflow-hidden">
+        <div className="relative rounded-2xl border border-neutral-200 bg-white p-6 overflow-hidden">
             <div className="flex flex-col md:flex-row items-start gap-3 md:gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-neutral-900 text-brand-yellow grid place-items-center mb-2 md:mb-0">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-brand-navy text-brand-yellow grid place-items-center mb-2 md:mb-0">
                     {icon}
                 </div>
                 <div className="flex-1">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-4">
-                        <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold break-words">{title}</h3>
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-extrabold tracking-wide self-start md:self-auto mt-1 md:mt-0 ${badgeClass}`}>
+                        <h3 className="text-lg md:text-xl font-extrabold break-words">{title}</h3>
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-bold self-start md:self-auto mt-1 md:mt-0 ${badgeClass}`}>
                             {status.label === "COMPLETED" && <Check className="h-3.5 w-3.5" />}
                             {status.label}
                         </span>
                     </div>
-                    <p className="mt-2 text-neutral-800 max-w-3xl">{description}</p>
+                    <p className="mt-2 text-neutral-600 max-w-3xl">{description}</p>
                 </div>
             </div>
         </div>
@@ -974,10 +950,10 @@ function RoadmapItem({
 
 function ImpactCard({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
     return (
-        <div className="font-candu bg-brand-navy rounded-none border border-neutral-800 px-6 py-10 md:px-2 md:py-32 text-center flex flex-col items-center justify-center min-h-[180px]">
+        <div className="bg-brand-navy rounded-3xl px-6 py-10 text-center flex flex-col items-center justify-center min-h-[180px]">
             <div className="flex items-center justify-center text-brand-yellow mb-2">{icon}</div>
-            <div className="text-3xl sm:text-4xl md:text-5xl text-brand-yellow leading-none">{value}</div>
-            <div className="mt-3 text-brand-yellow text-xs sm:text-sm md:text-base tracking-wide">{label}</div>
+            <div className="text-3xl sm:text-4xl font-extrabold text-brand-yellow leading-none tabular-nums">{value}</div>
+            <div className="mt-3 text-white/70 text-sm">{label}</div>
         </div>
     );
 }
@@ -994,14 +970,14 @@ function FaqItem({
     onClick: () => void;
 }) {
     return (
-        <div className="border-2 border-black bg-brand-navy overflow-hidden">
+        <div className="rounded-2xl border border-neutral-200 bg-[#F7F7F2] overflow-hidden">
             <button
                 onClick={onClick}
-                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-brand-navy/90 transition-colors"
+                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-neutral-100 transition-colors"
             >
-                <h3 className="font-rethink-sans text-lg md:text-xl font-bold pr-4 text-brand-yellow">{question}</h3>
+                <h3 className="text-base md:text-lg font-bold pr-4 text-brand-navy">{question}</h3>
                 <ChevronDown
-                    className={`h-5 w-5 flex-shrink-0 transition-transform duration-200 text-brand-yellow ${isOpen ? 'rotate-180' : ''
+                    className={`h-5 w-5 flex-shrink-0 transition-transform duration-200 text-brand-navy ${isOpen ? 'rotate-180' : ''
                         }`}
                 />
             </button>
@@ -1009,7 +985,7 @@ function FaqItem({
                 className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
                     }`}
             >
-                <div className="px-6 pb-5 text-brand-yellow leading-relaxed">
+                <div className="px-6 pb-5 text-neutral-700 leading-relaxed">
                     {answer}
                 </div>
             </div>

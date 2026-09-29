@@ -3,6 +3,7 @@ import { Apple, ArrowRight, BadgeCheck, Chrome, Download, ShieldCheck, Sprout, T
 import Navigation from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
+import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
 
 const pageTitle = "Tree Planting App for Mac, Free | IdleForest";
 const pageDescription =
@@ -87,16 +88,16 @@ export default function MacDownloadPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         <section className="relative overflow-hidden bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-center">
               <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
-                  <Apple className="h-4 w-4" />
+                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
+                  <AppleLogo className="h-4 w-4" />
                   tree planting app for mac
                 </div>
-                <h1 className="font-rethink-sans text-[42px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
+                <h1 className="text-[42px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
                   The Free Tree Planting App for Mac
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -107,9 +108,9 @@ export default function MacDownloadPage() {
                 <MacCtas />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
+              <div className="rounded-lg border border-neutral-200 bg-white p-6">
                 <div className="grid gap-4">
-                  <Signal icon={<Apple className="h-5 w-5" />} label="Runs on macOS 11+" />
+                  <Signal icon={<AppleLogo className="h-5 w-5" />} label="Runs on macOS 11+" />
                   <Signal icon={<Wifi className="h-5 w-5" />} label="Uses spare bandwidth" />
                   <Signal icon={<BadgeCheck className="h-5 w-5" />} label="Works when browsers are closed" />
                   <Signal icon={<TreePine className="h-5 w-5" />} label="Funds verified trees" />
@@ -149,7 +150,7 @@ export default function MacDownloadPage() {
         <section className="bg-brand-navy text-white">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="max-w-4xl">
-              <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
+              <h2 className="text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
                 How to Install IdleForest on Mac
               </h2>
               <p className="mt-5 text-lg leading-8 text-white/85">
@@ -174,7 +175,7 @@ export default function MacDownloadPage() {
 
         <section className="bg-white">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-            <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
               Trees You Can Verify
             </h2>
             <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">
@@ -189,9 +190,9 @@ export default function MacDownloadPage() {
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {impactStats.map(([value, label]) => (
-                  <div key={label} className="border-2 border-black bg-brand-yellow p-4">
-                    <p className="font-candu text-4xl leading-none text-brand-navy">{value}</p>
-                    <p className="mt-2 text-xs font-extrabold uppercase tracking-[0.14em] text-black/70">{label}</p>
+                  <div key={label} className="border border-neutral-200 bg-brand-yellow p-4 rounded-2xl">
+                    <p className="text-4xl leading-none text-brand-navy">{value}</p>
+                    <p className="mt-2 text-xs font-extrabold tracking-[0.14em] text-black/70">{label}</p>
                   </div>
                 ))}
               </div>
@@ -202,15 +203,15 @@ export default function MacDownloadPage() {
           </div>
         </section>
 
-        <section className="bg-brand-gray">
+        <section className="bg-neutral-100">
           <div className="container mx-auto px-6 py-16 md:py-24">
-            <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
               Frequently Asked Questions
             </h2>
-            <div className="mt-10 divide-y-2 divide-black border-y-2 border-black">
+            <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
               {faqs.map((item) => (
                 <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[320px_1fr] md:gap-8">
-                  <h3 className="font-rethink-sans text-2xl font-extrabold">{item.question}</h3>
+                  <h3 className="text-2xl font-extrabold">{item.question}</h3>
                   <p className="text-lg leading-8 text-neutral-800">{item.answer}</p>
                 </article>
               ))}
@@ -222,7 +223,7 @@ export default function MacDownloadPage() {
           <div className="container mx-auto px-6 py-16 text-center md:py-24">
             <div className="mx-auto max-w-3xl">
               <Sprout className="mx-auto h-12 w-12 text-brand-navy" />
-              <h2 className="mt-5 font-rethink-sans text-4xl font-extrabold tracking-normal md:text-6xl">
+              <h2 className="mt-5 text-4xl font-extrabold tracking-normal md:text-6xl">
                 Install IdleForest on Mac in a Minute
               </h2>
               <p className="mt-5 text-lg leading-8 text-neutral-800 md:text-xl">
@@ -242,7 +243,7 @@ export default function MacDownloadPage() {
 function MacCtas({ centered = false, compact = false }: { centered?: boolean; compact?: boolean }) {
   return (
     <div className={`mt-8 flex flex-col gap-4 ${centered ? "items-center" : ""}`}>
-      <Button asChild className="h-auto rounded-full bg-black px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-navy">
+      <Button asChild className="h-auto rounded-full bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-navy">
         <a href={macInstallerHref} className="inline-flex items-center gap-2">
           <Download className="h-5 w-5" />
           Download for Mac — It’s Free
@@ -265,7 +266,7 @@ function MacCtas({ centered = false, compact = false }: { centered?: boolean; co
 
 function Signal({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-3 border-b-2 border-black pb-4 last:border-b-0 last:pb-0">
+    <div className="flex items-center gap-3 border-b border-neutral-200 pb-4 last:border-b-0 last:pb-0">
       <div className="grid h-10 w-10 place-items-center rounded-md bg-brand-yellow text-black">{icon}</div>
       <span className="font-bold">{label}</span>
     </div>
@@ -284,7 +285,7 @@ function ContentBand({
   return (
     <section className={tinted ? "bg-white" : "bg-brand-gray"}>
       <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-        <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
+        <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
         <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">{children}</div>
       </div>
     </section>
@@ -303,9 +304,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
+    <article className="rounded-lg border border-brand-yellow bg-white p-6 text-black">
       <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 id={id} className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
+      <h3 id={id} className="mt-4 text-2xl font-extrabold md:text-3xl">{title}</h3>
       <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
     </article>
   );

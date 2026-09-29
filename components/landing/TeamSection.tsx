@@ -54,15 +54,11 @@ export default function TeamSection() {
     const t = useTranslations("Landing.team");
 
     return (
-        <section id="team" className="relative overflow-hidden bg-brand-gray text-brand-navy scroll-mt-24">
+        <section id="team" className="relative overflow-hidden bg-white text-brand-navy scroll-mt-24">
             <div className="relative container mx-auto px-6 py-16 md:py-20">
                 <div className="max-w-3xl">
-                    <div className="inline-flex items-center gap-3 rounded-full border border-brand-navy/15 bg-brand-yellow px-4 py-2 text-xs font-bold uppercase text-brand-navy">
-                        <span>04</span>
-                        <span className="h-1 w-1 rounded-full bg-brand-navy" />
-                        <span>{t("eyebrow")}</span>
-                    </div>
-                    <h2 className="mt-6 max-w-2xl text-4xl font-extrabold leading-[1.05] text-brand-navy sm:text-5xl md:text-6xl">
+                    <p className="text-sm font-semibold text-neutral-500">{t("eyebrow")}</p>
+                    <h2 className="mt-3 max-w-2xl text-3xl font-extrabold leading-[1.1] tracking-tight text-brand-navy sm:text-4xl md:text-5xl">
                         {t("heading")}
                     </h2>
                     <p className="mt-5 max-w-2xl text-base leading-7 text-brand-navy/70 md:text-lg">
@@ -88,7 +84,7 @@ function TeamPortraitCard({ member }: { member: TeamMember }) {
     const roleLabel = t(member.roleKey);
 
     return (
-        <article className="group min-w-[270px] snap-start overflow-hidden rounded-lg border border-brand-navy/15 bg-brand-yellow shadow-[0_18px_50px_rgba(11,16,31,0.12)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-brand-navy/35 hover:shadow-[0_22px_60px_rgba(11,16,31,0.16)] sm:min-w-[320px] lg:min-w-0">
+        <article className="group min-w-[270px] snap-start overflow-hidden rounded-3xl border border-neutral-200 bg-[#F7F7F2] shadow-sm transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-md sm:min-w-[320px] lg:min-w-0">
             <a
                 href={member.linkedInUrl}
                 target="_blank"
@@ -104,9 +100,9 @@ function TeamPortraitCard({ member }: { member: TeamMember }) {
                     />
                 </div>
 
-                <div className="flex min-h-[138px] flex-1 flex-col justify-between border-t border-brand-navy/20 p-5">
+                <div className="flex min-h-[138px] flex-1 flex-col justify-between border-t border-neutral-200 p-5">
                     <div>
-                        <p className="text-xs font-bold uppercase leading-snug text-brand-navy/60">
+                        <p className="text-xs font-semibold leading-snug text-brand-navy/60">
                             {roleLabel}
                         </p>
                         <h3 className="mt-3 text-2xl font-extrabold leading-tight text-brand-navy">
@@ -115,7 +111,7 @@ function TeamPortraitCard({ member }: { member: TeamMember }) {
                     </div>
 
                     <span
-                        className="mt-5 inline-flex w-fit items-center gap-2 rounded-full border border-brand-navy/20 px-3 py-2 text-xs font-bold uppercase text-brand-navy transition-colors group-hover:border-brand-navy group-hover:bg-brand-navy group-hover:text-brand-yellow"
+                        className="mt-5 inline-flex w-fit items-center gap-2 rounded-full border border-brand-navy/20 px-3 py-2 text-xs font-bold text-brand-navy transition-colors group-hover:border-brand-navy group-hover:bg-brand-navy group-hover:text-brand-yellow"
                         aria-hidden="true"
                     >
                         <Linkedin className="h-4 w-4" />

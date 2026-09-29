@@ -142,16 +142,16 @@ export default function ChromeDownloadPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         <section className="relative overflow-hidden bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-center">
               <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
                   <Chrome className="h-4 w-4" />
                   tree planting chrome extension
                 </div>
-                <h1 className="font-rethink-sans text-[42px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
+                <h1 className="text-[42px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
                   The Free Tree Planting Chrome Extension
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -162,14 +162,14 @@ export default function ChromeDownloadPage() {
                 <ChromeCtas desktopDownloadHref={desktopDownloadHref} desktopDownloadLabel={desktopDownloadLabel} />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
+              <div className="rounded-lg border border-neutral-200 bg-white p-6">
                 <div className="mb-5 flex items-center gap-4">
                   <div className="grid h-16 w-16 place-items-center rounded-lg bg-brand-yellow">
                     <Image src="/chrome.png" alt="Chrome logo" width={44} height={44} />
                   </div>
                   <div>
-                    <p className="text-sm font-bold uppercase text-neutral-600">Official store install</p>
-                    <p className="font-rethink-sans text-2xl font-extrabold">Chrome Web Store</p>
+                    <p className="text-sm font-bold text-neutral-600">Official store install</p>
+                    <p className="text-2xl font-extrabold">Chrome Web Store</p>
                   </div>
                 </div>
                 <div className="grid gap-4">
@@ -201,7 +201,7 @@ export default function ChromeDownloadPage() {
         <section className="bg-brand-navy text-white">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="max-w-4xl">
-              <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
+              <h2 className="text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
                 How to Add IdleForest to Chrome
               </h2>
               <p className="mt-5 text-lg leading-8 text-white/85">
@@ -228,7 +228,7 @@ export default function ChromeDownloadPage() {
         <section className="bg-white">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="max-w-4xl">
-              <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+              <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
                 Why IdleForest Beats Other Tree-Planting Extensions
               </h2>
               <p className="mt-5 text-lg leading-8 text-neutral-800">
@@ -236,23 +236,23 @@ export default function ChromeDownloadPage() {
                 a new tab to plant. IdleForest asks for none of that. You install it once, then forget it.
               </p>
             </div>
-            <div className="mt-10 overflow-x-auto rounded-lg border-2 border-black bg-brand-gray">
+            <div className="mt-10 overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-100">
               <table className="w-full min-w-[760px] border-collapse text-left">
                 <thead>
                   <tr className="bg-brand-yellow">
-                    <th className="border-b-2 border-black p-4 font-rethink-sans text-lg font-extrabold"></th>
-                    <th className="border-b-2 border-l-2 border-black p-4 font-rethink-sans text-lg font-extrabold">IdleForest</th>
-                    <th className="border-b-2 border-l-2 border-black p-4 font-rethink-sans text-lg font-extrabold">Search-engine extensions</th>
-                    <th className="border-b-2 border-l-2 border-black p-4 font-rethink-sans text-lg font-extrabold">New-tab / click extensions</th>
+                    <th className="border-b border-neutral-200 p-4 text-lg font-extrabold"></th>
+                    <th className="border-b border-l border-neutral-200 p-4 text-lg font-extrabold">IdleForest</th>
+                    <th className="border-b border-l border-neutral-200 p-4 text-lg font-extrabold">Search-engine extensions</th>
+                    <th className="border-b border-l border-neutral-200 p-4 text-lg font-extrabold">New-tab / click extensions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonRows.map(([label, idleforest, searchExtensions, clickExtensions]) => (
                     <tr key={label}>
-                      <th className="border-t-2 border-black p-4 font-bold">{label}</th>
-                      <td className="border-l-2 border-t-2 border-black p-4">{idleforest}</td>
-                      <td className="border-l-2 border-t-2 border-black p-4">{searchExtensions}</td>
-                      <td className="border-l-2 border-t-2 border-black p-4">{clickExtensions}</td>
+                      <th className="border-t border-neutral-200 p-4 font-bold">{label}</th>
+                      <td className="border-l border-t border-neutral-200 p-4">{idleforest}</td>
+                      <td className="border-l border-t border-neutral-200 p-4">{searchExtensions}</td>
+                      <td className="border-l border-t border-neutral-200 p-4">{clickExtensions}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -271,9 +271,9 @@ export default function ChromeDownloadPage() {
           </div>
         </section>
 
-        <section className="bg-brand-gray">
+        <section className="bg-neutral-100">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-            <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
               Trees You Can Verify
             </h2>
             <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">
@@ -295,13 +295,13 @@ export default function ChromeDownloadPage() {
 
         <section className="bg-white">
           <div className="container mx-auto px-6 py-16 md:py-24">
-            <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
               Frequently Asked Questions
             </h2>
-            <div className="mt-10 divide-y-2 divide-black border-y-2 border-black">
+            <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
               {faqs.map((item) => (
                 <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[320px_1fr] md:gap-8">
-                  <h3 className="font-rethink-sans text-2xl font-extrabold">{item.question}</h3>
+                  <h3 className="text-2xl font-extrabold">{item.question}</h3>
                   <p className="text-lg leading-8 text-neutral-800">{item.richAnswer ?? item.answer}</p>
                 </article>
               ))}
@@ -313,7 +313,7 @@ export default function ChromeDownloadPage() {
           <div className="container mx-auto px-6 py-16 text-center md:py-24">
             <div className="mx-auto max-w-3xl">
               <Sprout className="mx-auto h-12 w-12 text-brand-navy" />
-              <h2 className="mt-5 font-rethink-sans text-4xl font-extrabold tracking-normal md:text-6xl">
+              <h2 className="mt-5 text-4xl font-extrabold tracking-normal md:text-6xl">
                 Add IdleForest to Chrome in 10 Seconds
               </h2>
               <p className="mt-5 text-lg leading-8 text-neutral-800 md:text-xl">
@@ -348,7 +348,7 @@ function ChromeCtas({
 }) {
   return (
     <div className={`mt-8 flex flex-col gap-4 ${centered ? "items-center" : ""}`}>
-      <Button asChild className="h-auto rounded-full bg-black px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-navy">
+      <Button asChild className="h-auto rounded-full bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-navy">
         <a href={chromeWebStoreUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
           <Chrome className="h-5 w-5" />
           Add to Chrome — It’s Free
@@ -367,7 +367,7 @@ function ChromeCtas({
 
 function Signal({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-3 border-b-2 border-black pb-4 last:border-b-0 last:pb-0">
+    <div className="flex items-center gap-3 border-b border-neutral-200 pb-4 last:border-b-0 last:pb-0">
       <div className="grid h-10 w-10 place-items-center rounded-md bg-brand-yellow text-black">{icon}</div>
       <span className="font-bold">{label}</span>
     </div>
@@ -386,7 +386,7 @@ function ContentBand({
   return (
     <section className={tinted ? "bg-white" : "bg-brand-gray"}>
       <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-        <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
+        <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
         <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">{children}</div>
       </div>
     </section>
@@ -405,9 +405,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article id={id} className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
+    <article id={id} className="rounded-lg border border-brand-yellow bg-white p-6 text-black">
       <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
+      <h3 className="mt-4 text-2xl font-extrabold md:text-3xl">{title}</h3>
       <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
     </article>
   );
