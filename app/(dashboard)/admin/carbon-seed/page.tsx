@@ -66,7 +66,7 @@ export default function CarbonSeedPage() {
                         className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold transition-all shadow-sm ${
                             status === 'loading' 
                                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                                : 'bg-black text-white hover:bg-slate-800 active:scale-95'
+                                : 'bg-brand-navy text-white hover:bg-slate-800 active:scale-95'
                         }`}
                     >
                         {status === 'loading' ? (
@@ -133,25 +133,25 @@ export default function CarbonSeedPage() {
                                                 </span>
                                             </h2>
                                             <div className="flex gap-2">
-                                                <span className="text-[10px] font-bold uppercase bg-slate-200 text-slate-600 px-1.5 rounded border border-slate-300">
+                                                <span className="text-[10px] font-bold bg-slate-200 text-slate-600 px-1.5 rounded border border-slate-300">
                                                     {app.category}
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-lg font-black text-slate-900">{app.co2_per_hour_grams}g <span className="text-sm font-medium text-slate-400">CO2/hr</span></div>
+                                            <div className="text-lg font-extrabold text-slate-900">{app.co2_per_hour_grams}g <span className="text-sm font-medium text-slate-400">CO2/hr</span></div>
                                         </div>
                                     </div>
 
                                     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
                                         <div className="space-y-6">
                                             <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                                <span className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Human Equivalent</span>
+                                                <span className="text-[10px] font-bold text-slate-400 block mb-1">Human Equivalent</span>
                                                 <p className="text-sm font-semibold">{humanEquivalent}</p>
                                             </div>
                                             <div>
-                                                <span className="text-[10px] font-bold uppercase text-slate-400 block mb-1">IdleForest Pitch</span>
-                                                <p className="text-sm border-l-4 border-brand-yellow pl-4 italic py-1 text-slate-600 bg-brand-yellow/5">
+                                                <span className="text-[10px] font-bold text-slate-400 block mb-1">IdleForest Pitch</span>
+                                                <p className="text-sm border-l-4 border-brand-yellow pl-4 py-1 text-slate-600 bg-brand-yellow/5">
                                                     "{idleforestPitch}"
                                                 </p>
                                             </div>
@@ -161,7 +161,7 @@ export default function CarbonSeedPage() {
                                             <div className="flex items-center justify-between mb-3">
                                                 <div className="flex items-center gap-2">
                                                     <Globe className="w-3.5 h-3.5 text-slate-400" />
-                                                    <span className="text-[10px] font-bold uppercase text-slate-400">Translation Preview</span>
+                                                    <span className="text-[10px] font-bold text-slate-400">Translation Preview</span>
                                                 </div>
                                                 <div className="flex gap-1">
                                                     {availableLangs.map(lang => (
@@ -169,9 +169,9 @@ export default function CarbonSeedPage() {
                                                             type="button"
                                                             key={lang}
                                                             onClick={() => setLang(app.slug, lang)}
-                                                            className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border transition-all ${
+                                                            className={`text-[10px] font-bold px-2 py-0.5 rounded border transition-all ${
                                                                 currentLang === lang 
-                                                                    ? 'bg-brand-green text-black border-black' 
+                                                                    ? 'bg-brand-green text-black border-neutral-200' 
                                                                     : 'bg-white text-slate-400 border-slate-200 hover:border-slate-400 hover:text-slate-600'
                                                             }`}
                                                         >
@@ -184,13 +184,13 @@ export default function CarbonSeedPage() {
                                             {seoData ? (
                                                 <div className="flex-grow bg-slate-900 rounded-lg p-5 overflow-auto max-h-[350px] custom-scrollbar">
                                                     <div className="mb-6">
-                                                        <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider block mb-2 opacity-60">Intro Text ({currentLang})</span>
+                                                        <span className="text-[9px] font-bold text-brand-green block mb-2 opacity-60">Intro Text ({currentLang})</span>
                                                         <p className="text-xs text-brand-yellow leading-relaxed">{seoData.intro}</p>
                                                     </div>
                                                     
                                                     {seoData.faq && seoData.faq.length > 0 && (
                                                         <div>
-                                                            <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider block mb-3 opacity-60">Frequently Asked Questions</span>
+                                                            <span className="text-[9px] font-bold text-brand-green block mb-3 opacity-60">Frequently Asked Questions</span>
                                                             <div className="space-y-4">
                                                                 {seoData.faq.map((item: any, idx: number) => (
                                                                     <div key={idx} className="bg-slate-800/50 rounded p-3 border border-slate-700/50">
@@ -203,7 +203,7 @@ export default function CarbonSeedPage() {
                                                     )}
                                                 </div>
                                             ) : (
-                                                <div className="flex-grow flex items-center justify-center border-2 border-dashed border-slate-100 rounded-lg text-xs text-slate-400 font-medium italic min-h-[100px]">
+                                                <div className="flex-grow flex items-center justify-center border border-dashed border-slate-100 rounded-lg text-xs text-slate-400 font-medium min-h-[100px]">
                                                     No SEO content defined
                                                 </div>
                                             )}

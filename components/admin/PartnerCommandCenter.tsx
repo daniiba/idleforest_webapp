@@ -557,14 +557,14 @@ export default function PartnerCommandCenter({
 
     return (
         <div className="space-y-5 text-black">
-            <section className="bg-brand-navy text-white border-2 border-black shadow-none p-5 md:p-7 overflow-hidden relative">
+            <section className="bg-brand-navy text-white border border-neutral-200 p-5 md:p-7 overflow-hidden relative rounded-2xl">
                 <div className="absolute -right-10 -top-12 h-44 w-44 rounded-full border-[28px] border-brand-yellow/20" />
                 <div className="relative grid gap-6 lg:grid-cols-[1fr_1.15fr] lg:items-end">
                     <div>
-                        <div className="flex items-center gap-2 text-brand-yellow text-xs font-black uppercase tracking-[0.18em] mb-3">
+                        <div className="flex items-center gap-2 text-brand-yellow text-xs font-extrabold mb-3">
                             <Sparkles className="h-4 w-4" /> {isCloudfund ? 'AI funding research' : 'AI partner research'}
                         </div>
-                        <h2 className="font-candu text-3xl md:text-4xl font-extrabold uppercase leading-none">
+                        <h2 className="text-3xl md:text-4xl font-extrabold leading-none">
                             {isCloudfund ? 'CloudFund research desk' : 'Partner command center'}
                         </h2>
                         <p className="mt-3 max-w-xl text-sm text-white/70">
@@ -573,13 +573,13 @@ export default function PartnerCommandCenter({
                                 : 'Qualify conservation organizations, capture the evidence, and move each relationship from research to follow-up.'}
                         </p>
                     </div>
-                    <div className="bg-white text-black border-2 border-black p-3 shadow-none">
-                        <div className="mb-3 grid grid-cols-2 border-2 border-black bg-neutral-100 p-0.5">
+                    <div className="bg-white text-black border border-neutral-200 p-3 rounded-2xl">
+                        <div className="mb-3 grid grid-cols-2 border border-neutral-200 bg-neutral-100 p-0.5 rounded-2xl">
                             <button
                                 type="button"
                                 onClick={() => setInputMode('discover')}
                                 aria-pressed={inputMode === 'discover'}
-                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-black uppercase ${inputMode === 'discover' ? 'bg-brand-yellow' : 'bg-transparent hover:bg-white'}`}
+                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-extrabold ${inputMode === 'discover' ? 'bg-brand-yellow' : 'bg-transparent hover:bg-white'}`}
                             >
                                 <Compass className="h-4 w-4" /> Find for me
                             </button>
@@ -587,7 +587,7 @@ export default function PartnerCommandCenter({
                                 type="button"
                                 onClick={() => setInputMode('urls')}
                                 aria-pressed={inputMode === 'urls'}
-                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-black uppercase ${inputMode === 'urls' ? 'bg-white' : 'bg-transparent hover:bg-white'}`}
+                                className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-extrabold ${inputMode === 'urls' ? 'bg-white' : 'bg-transparent hover:bg-white'}`}
                             >
                                 <Plus className="h-4 w-4" /> Add URLs
                             </button>
@@ -595,7 +595,7 @@ export default function PartnerCommandCenter({
 
                         {inputMode === 'discover' ? (
                             <div>
-                                <label htmlFor={`${researchTrack}-discovery-focus`} className="mb-2 block text-[11px] font-black uppercase tracking-wider">Optional search focus</label>
+                                <label htmlFor={`${researchTrack}-discovery-focus`} className="mb-2 block text-[11px] font-extrabold">Optional search focus</label>
                                 <input
                                     id={`${researchTrack}-discovery-focus`}
                                     value={discoveryFocus}
@@ -604,12 +604,12 @@ export default function PartnerCommandCenter({
                                     placeholder={isCloudfund
                                         ? 'e.g. Patreon creators · open source · long-running GoFundMe'
                                         : 'e.g. Iberia · animal rewilding · direct operators'}
-                                    className="w-full border-2 border-black bg-neutral-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                    className="w-full border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                 />
                                 <div className="mt-3 flex items-center justify-between gap-3">
                                     <div className="space-y-1">
                                         <span className="block text-[11px] leading-tight text-neutral-500">6 per batch · usually $0.10–$0.35 · saved automatically</span>
-                                        <button type="button" onClick={toggleDiscoveryArchive} className="inline-flex items-center gap-1 text-[11px] font-black text-blue-700 hover:underline">
+                                        <button type="button" onClick={toggleDiscoveryArchive} className="inline-flex items-center gap-1 text-[11px] font-extrabold text-blue-700 hover:underline">
                                             <Archive className="h-3 w-3" /> {isArchiveOpen ? 'Hide archive' : 'Browse archive'}
                                         </button>
                                     </div>
@@ -617,7 +617,7 @@ export default function PartnerCommandCenter({
                                         type="button"
                                         onClick={() => void discoverPartners(discoveryCandidates.length > 0)}
                                         disabled={isDiscovering || isAnalyzing}
-                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-60"
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 bg-brand-yellow px-4 py-2 text-xs font-extrabold transition-transform hover:translate-x-0.5 hover:translate-y-0.5 disabled:opacity-60 rounded-full"
                                     >
                                         {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
                                         {isDiscovering ? 'Searching…' : discoveryCandidates.length > 0 ? 'Find 6 more' : `Find ${entityLabelPlural}`}
@@ -626,7 +626,7 @@ export default function PartnerCommandCenter({
                             </div>
                         ) : (
                             <div>
-                                <label htmlFor={`${researchTrack}-urls`} className="mb-2 block text-[11px] font-black uppercase tracking-wider">
+                                <label htmlFor={`${researchTrack}-urls`} className="mb-2 block text-[11px] font-extrabold">
                                     {isCloudfund ? 'Fundraiser or project URLs' : 'Organization URLs'} · one per line
                                 </label>
                                 <textarea
@@ -635,7 +635,7 @@ export default function PartnerCommandCenter({
                                     onChange={event => setUrlInput(event.target.value)}
                                     placeholder={isCloudfund ? 'patreon.com/example\nwww.gofundme.com/f/example' : 'mossy.earth\nrewilding-europe.com'}
                                     rows={3}
-                                    className="w-full resize-none border-2 border-black bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                    className="w-full resize-none border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                 />
                                 <div className="mt-3 flex items-center justify-between gap-3">
                                     <span className="text-[11px] text-neutral-500">Up to 12 sites per research run</span>
@@ -643,7 +643,7 @@ export default function PartnerCommandCenter({
                                         type="button"
                                         onClick={analyzeUrls}
                                         disabled={isAnalyzing || isDiscovering}
-                                        className="inline-flex min-w-36 items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none transition-transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none disabled:opacity-60"
+                                        className="inline-flex min-w-36 items-center justify-center gap-2 bg-brand-yellow px-4 py-2 text-xs font-extrabold transition-transform hover:translate-x-0.5 hover:translate-y-0.5 disabled:opacity-60 rounded-full"
                                     >
                                         {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                                         {isAnalyzing ? 'Researching…' : 'Analyze'}
@@ -656,7 +656,7 @@ export default function PartnerCommandCenter({
             </section>
 
             {(error || notice) && (
-                <div className={`flex items-start gap-3 border-2 border-black px-4 py-3 text-sm font-semibold ${error ? 'bg-red-100' : 'bg-green-100'}`}>
+                <div className={`flex items-start gap-3 border border-neutral-200 px-4 py-3 text-sm font-semibold rounded-full ${error ? 'bg-red-100' : 'bg-green-100'}`}>
                     {error ? <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" /> : <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none" />}
                     <span>{error || notice}</span>
                     <button type="button" onClick={() => { setError(''); setNotice('') }} className="ml-auto" aria-label="Dismiss"><X className="h-4 w-4" /></button>
@@ -664,11 +664,11 @@ export default function PartnerCommandCenter({
             )}
 
             {discoveryCandidates.length > 0 && (
-                <section className="border-2 border-black bg-[#f5f7ec] p-4 shadow-none md:p-5">
-                    <div className="flex flex-col gap-3 border-b-2 border-black pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <section className="border border-neutral-200 bg-[#f5f7ec] p-4 md:p-5 rounded-2xl">
+                    <div className="flex flex-col gap-3 border-b border-neutral-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
-                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">New potential {entityLabelPlural} · {discoveryCandidates.length}</h3>
+                            <div className="flex items-center gap-2 text-[11px] font-extrabold text-neutral-500"><Compass className="h-4 w-4" /> AI shortlist</div>
+                            <h3 className="mt-1 text-2xl font-extrabold">New potential {entityLabelPlural} · {discoveryCandidates.length}</h3>
                             <p className="mt-1 text-xs text-neutral-600">
                                 {isCloudfund
                                     ? 'Preliminary fundraising signals only. Everything here is saved; full campaign, operator, and outreach research is fetched when you add a project.'
@@ -686,7 +686,7 @@ export default function PartnerCommandCenter({
                             <button
                                 type="button"
                                 onClick={() => setDiscoveryCandidates([])}
-                                className="border-2 border-black bg-white px-3 py-2 text-xs font-black uppercase hover:bg-neutral-100"
+                                className="border border-neutral-200 bg-white px-3 py-2 text-xs font-extrabold hover:bg-neutral-100 rounded-full"
                             >
                                 Clear view
                             </button>
@@ -694,7 +694,7 @@ export default function PartnerCommandCenter({
                                 type="button"
                                 onClick={() => void discoverPartners(true)}
                                 disabled={isDiscovering || isAnalyzing}
-                                className="inline-flex items-center gap-2 border-2 border-black bg-white px-3 py-2 text-xs font-black uppercase hover:bg-neutral-100 disabled:opacity-50"
+                                className="inline-flex items-center gap-2 border border-neutral-200 bg-white px-3 py-2 text-xs font-extrabold hover:bg-neutral-100 disabled:opacity-50 rounded-full"
                             >
                                 {isDiscovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Compass className="h-4 w-4" />}
                                 Find 6 more
@@ -703,7 +703,7 @@ export default function PartnerCommandCenter({
                                 type="button"
                                 onClick={() => void researchTopCandidates()}
                                 disabled={isAnalyzing || researchingCandidateUrl !== null}
-                                className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-xs font-black uppercase shadow-none disabled:opacity-50"
+                                className="inline-flex items-center gap-2 bg-brand-yellow px-3 py-2 text-xs font-extrabold disabled:opacity-50 rounded-full"
                             >
                                 {researchingCandidateUrl === 'batch' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                                 Research top {Math.min(3, discoveryCandidates.length)}
@@ -713,33 +713,33 @@ export default function PartnerCommandCenter({
 
                     <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                         {discoveryCandidates.map(candidate => (
-                            <article key={candidate.url} className="flex min-w-0 flex-col border-2 border-black bg-white p-4">
+                            <article key={candidate.url} className="flex min-w-0 flex-col border border-neutral-200 bg-white p-4 rounded-2xl">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0">
-                                        <p className="truncate font-black">{candidate.name}</p>
+                                        <p className="truncate font-extrabold">{candidate.name}</p>
                                         <p className="mt-0.5 truncate text-xs text-neutral-500">{candidate.location}</p>
                                     </div>
-                                    <span className="flex-none border-2 border-black bg-green-100 px-2 py-1 text-xs font-black">{candidate.discovery_score}/100</span>
+                                    <span className="flex-none border border-neutral-200 bg-green-100 px-2 py-1 text-xs font-extrabold rounded-full">{candidate.discovery_score}/100</span>
                                 </div>
 
                                 <p className="mt-3 text-sm leading-snug text-neutral-700">{compactText(candidate.summary, 150)}</p>
 
-                                <div className="mt-3 grid grid-cols-3 border-2 border-black bg-neutral-50">
-                                    <div className="border-r-2 border-black p-2.5">
-                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">{isCloudfund ? 'Fundraiser' : 'Audience signal'}</p>
-                                        <p className="mt-1 text-xs font-black">
+                                <div className="mt-3 grid grid-cols-3 border border-neutral-200 bg-neutral-50 rounded-2xl">
+                                    <div className="border-r border-neutral-200 p-2.5">
+                                        <p className="text-[9px] font-extrabold text-neutral-500">{isCloudfund ? 'Fundraiser' : 'Audience signal'}</p>
+                                        <p className="mt-1 text-xs font-extrabold">
                                             {isCloudfund
                                                 ? `${fundraisingModelLabels[candidate.fundraising_model]}${candidate.fundraising_platform ? ` · ${candidate.fundraising_platform}` : ''}`
                                                 : candidate.community_size !== null ? `${formatFollowerCount(candidate.community_size, 'estimated')} · ${candidate.community_platform}` : 'Needs verification'}
                                         </p>
                                     </div>
-                                    <div className="border-r-2 border-black p-2.5">
-                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">{isCloudfund ? 'Funding' : 'Activity'}</p>
-                                        <p className="mt-1 text-xs font-black">{isCloudfund ? formatFundingProgress(candidate) : humanize(candidate.activity_status)}</p>
+                                    <div className="border-r border-neutral-200 p-2.5">
+                                        <p className="text-[9px] font-extrabold text-neutral-500">{isCloudfund ? 'Funding' : 'Activity'}</p>
+                                        <p className="mt-1 text-xs font-extrabold">{isCloudfund ? formatFundingProgress(candidate) : humanize(candidate.activity_status)}</p>
                                     </div>
                                     <div className="p-2.5">
-                                        <p className="text-[9px] font-black uppercase tracking-wider text-neutral-500">Access now</p>
-                                        <p className="mt-1 text-xs font-black">{candidate.accessibility_score}/100</p>
+                                        <p className="text-[9px] font-extrabold text-neutral-500">Access now</p>
+                                        <p className="mt-1 text-xs font-extrabold">{candidate.accessibility_score}/100</p>
                                         <p className="mt-0.5 text-[9px] font-bold text-neutral-500">{accessibilityTierLabels[candidate.accessibility_tier]}</p>
                                     </div>
                                 </div>
@@ -753,17 +753,17 @@ export default function PartnerCommandCenter({
 
                                 {candidate.verification_gaps.length > 0 && (
                                     <p className="mt-3 truncate text-[11px] text-amber-800" title={candidate.verification_gaps.join(' · ')}>
-                                        <span className="font-black">Verify:</span> {candidate.verification_gaps.join(' · ')}
+                                        <span className="font-extrabold">Verify:</span> {candidate.verification_gaps.join(' · ')}
                                     </p>
                                 )}
 
                                 <details className="mt-3 border-t border-neutral-200 pt-2 text-xs text-neutral-600">
-                                    <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Why it surfaced</summary>
+                                    <summary className="cursor-pointer font-extrabold text-neutral-500 hover:text-black">Why it surfaced</summary>
                                     <p className="mt-2 leading-relaxed">{candidate.why_fit}</p>
-                                    <p className="mt-1 leading-relaxed"><span className="font-black">Activity:</span> {candidate.activity_signal}</p>
-                                    {isCloudfund && <p className="mt-1 leading-relaxed"><span className="font-black">Fundraising:</span> {candidate.fundraising_signal}</p>}
-                                    <p className="mt-1 leading-relaxed"><span className="font-black">Accessibility:</span> {candidate.accessibility_summary}</p>
-                                    <p className="mt-1 leading-relaxed"><span className="font-black">State dependency:</span> {humanize(candidate.state_dependency)} · <span className="font-black">Small-company evidence:</span> {humanize(candidate.small_company_signal)}</p>
+                                    <p className="mt-1 leading-relaxed"><span className="font-extrabold">Activity:</span> {candidate.activity_signal}</p>
+                                    {isCloudfund && <p className="mt-1 leading-relaxed"><span className="font-extrabold">Fundraising:</span> {candidate.fundraising_signal}</p>}
+                                    <p className="mt-1 leading-relaxed"><span className="font-extrabold">Accessibility:</span> {candidate.accessibility_summary}</p>
+                                    <p className="mt-1 leading-relaxed"><span className="font-extrabold">State dependency:</span> {humanize(candidate.state_dependency)} · <span className="font-extrabold">Small-company evidence:</span> {humanize(candidate.small_company_signal)}</p>
                                     {candidate.sources.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
                                             {candidate.sources.slice(0, 3).map(source => (
@@ -781,7 +781,7 @@ export default function PartnerCommandCenter({
                                         type="button"
                                         onClick={() => void researchCandidate(candidate)}
                                         disabled={isAnalyzing || researchingCandidateUrl !== null}
-                                        className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-2 text-[11px] font-black uppercase disabled:opacity-50"
+                                        className="inline-flex items-center gap-2 bg-brand-yellow px-3 py-2 text-[11px] font-extrabold disabled:opacity-50 rounded-full"
                                     >
                                         {researchingCandidateUrl === candidate.url ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
                                         Research & add
@@ -794,11 +794,11 @@ export default function PartnerCommandCenter({
             )}
 
             {isArchiveOpen && (
-                <section className="border-2 border-black bg-white p-4 shadow-none md:p-5">
-                    <div className="flex flex-col gap-3 border-b-2 border-black pb-4 md:flex-row md:items-end md:justify-between">
+                <section className="border border-neutral-200 bg-white p-4 md:p-5 rounded-2xl">
+                    <div className="flex flex-col gap-3 border-b border-neutral-200 pb-4 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-neutral-500"><Archive className="h-4 w-4" /> Saved discoveries</div>
-                            <h3 className="mt-1 font-candu text-2xl font-extrabold uppercase">Discovery archive · {archiveCandidates.length}</h3>
+                            <div className="flex items-center gap-2 text-[11px] font-extrabold text-neutral-500"><Archive className="h-4 w-4" /> Saved discoveries</div>
+                            <h3 className="mt-1 text-2xl font-extrabold">Discovery archive · {archiveCandidates.length}</h3>
                             <p className="mt-1 text-xs text-neutral-600">Candidates stay here even when you do not add them to the outreach pipeline.</p>
                         </div>
                         <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_150px_170px_150px]">
@@ -808,29 +808,29 @@ export default function PartnerCommandCenter({
                                     value={archiveSearch}
                                     onChange={event => setArchiveSearch(event.target.value)}
                                     placeholder="Search saved discoveries"
-                                    className="w-full border-2 border-black bg-neutral-50 py-2 pl-9 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                    className="w-full border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-3 text-xs focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                 />
                             </div>
                             <select
                                 value={archiveAccessibility}
                                 onChange={event => setArchiveAccessibility(event.target.value as 'all' | PartnerAccessibilityTier)}
-                                className="border-2 border-black bg-white px-2 py-2 text-xs font-bold"
+                                className="border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full"
                             >
                                 <option value="all">All accessibility</option>
                                 {Object.entries(accessibilityTierLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
                             {isCloudfund ? (
-                                <select value={archiveFundraising} onChange={event => setArchiveFundraising(event.target.value as 'all' | PartnerFundraisingModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <select value={archiveFundraising} onChange={event => setArchiveFundraising(event.target.value as 'all' | PartnerFundraisingModel)} className="border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                     <option value="all">All fundraiser models</option>
                                     {Object.entries(fundraisingModelLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                                 </select>
                             ) : (
-                                <select value={archiveDelivery} onChange={event => setArchiveDelivery(event.target.value as 'all' | PartnerDeliveryModel)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <select value={archiveDelivery} onChange={event => setArchiveDelivery(event.target.value as 'all' | PartnerDeliveryModel)} className="border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                     <option value="all">All delivery models</option>
                                     {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                                 </select>
                             )}
-                            <select value={archiveCommunity} onChange={event => setArchiveCommunity(event.target.value as 'all' | PartnerCommunityBand)} className="border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                            <select value={archiveCommunity} onChange={event => setArchiveCommunity(event.target.value as 'all' | PartnerCommunityBand)} className="border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                 <option value="all">All audiences</option>
                                 {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
@@ -844,12 +844,12 @@ export default function PartnerCommandCenter({
                     ) : (
                         <div className="mt-4 grid gap-2 lg:grid-cols-2">
                             {filteredArchive.map(candidate => (
-                                <article key={candidate.id} className="flex min-w-0 items-start gap-3 border-2 border-black bg-neutral-50 p-3">
+                                <article key={candidate.id} className="flex min-w-0 items-start gap-3 border border-neutral-200 bg-neutral-50 p-3 rounded-2xl">
                                     <div className="min-w-0 flex-1">
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <a href={candidate.url} target="_blank" rel="noreferrer" className="truncate font-black hover:underline">{candidate.name}</a>
-                                            <span className="bg-white px-1.5 py-0.5 text-[10px] font-black uppercase">{candidate.discovery_score}/100</span>
-                                            <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${candidate.status === 'researched' ? 'bg-green-100' : 'bg-brand-yellow'}`}>
+                                            <a href={candidate.url} target="_blank" rel="noreferrer" className="truncate font-extrabold hover:underline">{candidate.name}</a>
+                                            <span className="bg-white px-1.5 py-0.5 text-[10px] font-extrabold">{candidate.discovery_score}/100</span>
+                                            <span className={`px-1.5 py-0.5 text-[10px] font-extrabold ${candidate.status === 'researched' ? 'bg-green-100' : 'bg-brand-yellow'}`}>
                                                 {candidate.status === 'researched' ? 'In pipeline' : accessibilityTierLabels[candidate.accessibility_tier]}
                                             </span>
                                         </div>
@@ -857,7 +857,7 @@ export default function PartnerCommandCenter({
                                             {candidate.location} · {isCloudfund ? fundraisingModelLabels[candidate.fundraising_model] : deliveryLabels[candidate.delivery_model]}
                                         </p>
                                         <p className="mt-1 text-xs text-neutral-700">{compactText(candidate.summary, 120)}</p>
-                                        <p className="mt-2 text-[10px] font-bold uppercase tracking-wide text-neutral-500">
+                                        <p className="mt-2 text-[10px] font-bold tracking-wide text-neutral-500">
                                             {isCloudfund
                                                 ? `${formatFundingProgress(candidate)}${candidate.fundraising_platform ? ` · ${candidate.fundraising_platform}` : ''}`
                                                 : candidate.community_size === null ? 'Audience unverified' : `${formatFollowerCount(candidate.community_size, 'estimated')} on ${candidate.community_platform}`}
@@ -869,7 +869,7 @@ export default function PartnerCommandCenter({
                                             type="button"
                                             onClick={() => void researchCandidate(candidate)}
                                             disabled={isAnalyzing || researchingCandidateUrl !== null}
-                                            className="inline-flex flex-none items-center gap-1 border-2 border-black bg-brand-yellow px-2 py-1.5 text-[10px] font-black uppercase disabled:opacity-50"
+                                            className="inline-flex flex-none items-center gap-1 bg-brand-yellow px-2 py-1.5 text-[10px] font-extrabold disabled:opacity-50 rounded-full"
                                         >
                                             {researchingCandidateUrl === candidate.url ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
                                             Research
@@ -889,62 +889,62 @@ export default function PartnerCommandCenter({
                     { label: 'Contacted', value: stats.contacted, icon: Send, tone: 'bg-blue-100' },
                     { label: 'Follow-ups due', value: stats.due, icon: Bell, tone: stats.due ? 'bg-brand-yellow' : 'bg-white' },
                 ].map(item => (
-                    <div key={item.label} className={`${item.tone} border-2 border-black p-4 shadow-none`}>
+                    <div key={item.label} className={`${item.tone} border border-neutral-200 p-4 rounded-2xl`}>
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-black uppercase tracking-wider text-neutral-600">{item.label}</span>
+                            <span className="text-[11px] font-extrabold text-neutral-600">{item.label}</span>
                             <item.icon className="h-4 w-4" />
                         </div>
-                        <div className="mt-1 font-candu text-3xl font-extrabold">{item.value}</div>
+                        <div className="mt-1 text-3xl font-extrabold">{item.value}</div>
                     </div>
                 ))}
             </section>
 
-            <section className="grid min-h-[720px] border-2 border-black bg-white shadow-none lg:grid-cols-[350px_minmax(0,1fr)]">
-                <aside className="border-b-2 border-black lg:border-b-0 lg:border-r-2">
-                    <div className="space-y-3 border-b-2 border-black bg-neutral-50 p-3">
+            <section className="grid min-h-[720px] border border-neutral-200 bg-white lg:grid-cols-[350px_minmax(0,1fr)] rounded-2xl">
+                <aside className="border-b border-neutral-200 lg:border-b-0 lg:border-r">
+                    <div className="space-y-3 border-b border-neutral-200 bg-neutral-50 p-3">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 value={search}
                                 onChange={event => setSearch(event.target.value)}
                                 placeholder={`Search ${entityLabelPlural}`}
-                                className="w-full border-2 border-black bg-white py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                className="w-full border border-neutral-200 bg-white py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                             <select
                                 value={statusFilter}
                                 onChange={event => setStatusFilter(event.target.value as 'all' | PartnerLeadStatus)}
-                                className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold"
+                                className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full"
                             >
                                 <option value="all">All statuses</option>
                                 {statusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
                             {isCloudfund ? (
-                                <select value={fundraisingFilter} onChange={event => setFundraisingFilter(event.target.value as 'all' | PartnerFundraisingModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <select value={fundraisingFilter} onChange={event => setFundraisingFilter(event.target.value as 'all' | PartnerFundraisingModel)} className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                     <option value="all">All fundraiser models</option>
                                     {Object.entries(fundraisingModelLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                                 </select>
                             ) : (
-                                <select value={deliveryFilter} onChange={event => setDeliveryFilter(event.target.value as 'all' | PartnerDeliveryModel)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                                <select value={deliveryFilter} onChange={event => setDeliveryFilter(event.target.value as 'all' | PartnerDeliveryModel)} className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                     <option value="all">All delivery models</option>
                                     {Object.entries(deliveryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                                 </select>
                             )}
-                            <select value={communityFilter} onChange={event => setCommunityFilter(event.target.value as 'all' | PartnerCommunityBand)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                            <select value={communityFilter} onChange={event => setCommunityFilter(event.target.value as 'all' | PartnerCommunityBand)} className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                 <option value="all">All audience sizes</option>
                                 {Object.entries(communityBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
-                            <select value={revenueFilter} onChange={event => setRevenueFilter(event.target.value as 'all' | PartnerRevenueBand)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                            <select value={revenueFilter} onChange={event => setRevenueFilter(event.target.value as 'all' | PartnerRevenueBand)} className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                 <option value="all">All revenue bands</option>
                                 {Object.entries(revenueBandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
-                            <select value={accessibilityFilter} onChange={event => setAccessibilityFilter(event.target.value as 'all' | PartnerAccessibilityTier)} className="min-w-0 border-2 border-black bg-white px-2 py-2 text-xs font-bold">
+                            <select value={accessibilityFilter} onChange={event => setAccessibilityFilter(event.target.value as 'all' | PartnerAccessibilityTier)} className="min-w-0 border border-neutral-200 bg-white px-2 py-2 text-xs font-bold rounded-full">
                                 <option value="all">All accessibility</option>
                                 {Object.entries(accessibilityTierLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                             </select>
                         </div>
-                        <button type="button" onClick={loadLeads} className="flex w-full items-center justify-center gap-2 border-2 border-black bg-white p-2 text-xs font-black uppercase hover:bg-brand-yellow" aria-label="Refresh leads">
+                        <button type="button" onClick={loadLeads} className="flex w-full items-center justify-center gap-2 border border-neutral-200 bg-white p-2 text-xs font-extrabold hover:bg-brand-yellow rounded-2xl" aria-label="Refresh leads">
                             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> Refresh data
                         </button>
                     </div>
@@ -957,24 +957,24 @@ export default function PartnerCommandCenter({
                                 key={lead.id}
                                 type="button"
                                 onClick={() => setSelectedId(lead.id)}
-                                className={`w-full border-b-2 border-black p-4 text-left transition-colors ${selectedId === lead.id ? 'bg-brand-yellow' : 'bg-white hover:bg-neutral-100'}`}
+                                className={`w-full border-b border-neutral-200 p-4 text-left transition-colors ${selectedId === lead.id ? 'bg-brand-yellow' : 'bg-white hover:bg-neutral-100'}`}
                             >
                                 <div className="flex items-start gap-3">
-                                    <div className="flex h-10 w-10 flex-none items-center justify-center border-2 border-black bg-brand-navy text-sm font-black text-white">
+                                    <div className="flex h-10 w-10 flex-none items-center justify-center border border-neutral-200 bg-brand-navy text-sm font-extrabold text-white rounded-2xl">
                                         {lead.name.slice(0, 2).toUpperCase()}
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="flex items-center gap-2">
-                                            <p className="truncate font-black">{lead.name}</p>
+                                            <p className="truncate font-extrabold">{lead.name}</p>
                                             {isReminderDue(lead.reminder_at) && <span className="h-2 w-2 flex-none rounded-full bg-red-600" title="Follow-up due" />}
                                         </div>
                                         <p className="mt-0.5 truncate text-xs text-neutral-500">{lead.location}</p>
                                         <div className="mt-2 flex items-center gap-2">
-                                            <span className="border border-black bg-white px-1.5 py-0.5 text-[10px] font-black">{lead.score}/100</span>
+                                            <span className="border border-neutral-200 bg-white px-1.5 py-0.5 text-[10px] font-extrabold">{lead.score}/100</span>
                                             {lead.accessibility_score !== null && lead.accessibility_score !== undefined && (
-                                                <span className="border border-black bg-green-50 px-1.5 py-0.5 text-[10px] font-black">Access {lead.accessibility_score}</span>
+                                                <span className="border border-neutral-200 bg-green-50 px-1.5 py-0.5 text-[10px] font-extrabold">Access {lead.accessibility_score}</span>
                                             )}
-                                            <span className={`border border-black px-1.5 py-0.5 text-[10px] font-black uppercase ${statusStyles[lead.status]}`}>{PARTNER_STATUS_LABELS[lead.status]}</span>
+                                            <span className={`border border-neutral-200 px-1.5 py-0.5 text-[10px] font-extrabold ${statusStyles[lead.status]}`}>{PARTNER_STATUS_LABELS[lead.status]}</span>
                                         </div>
                                     </div>
                                     <ChevronRight className="mt-2 h-4 w-4 flex-none" />
@@ -983,7 +983,7 @@ export default function PartnerCommandCenter({
                         )) : (
                             <div className="p-8 text-center">
                                 <Globe2 className="mx-auto h-8 w-8 text-neutral-300" />
-                                <p className="mt-3 font-black">No {entityLabelPlural} here</p>
+                                <p className="mt-3 font-extrabold">No {entityLabelPlural} here</p>
                                 <p className="mt-1 text-xs text-neutral-500">Add URLs above or change your filters.</p>
                             </div>
                         )}
@@ -993,16 +993,16 @@ export default function PartnerCommandCenter({
                 <main className="min-w-0">
                     {selected ? (
                         <div>
-                            <header className="border-b-2 border-black p-5 md:p-6">
+                            <header className="border-b border-neutral-200 p-5 md:p-6">
                                 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                                     <div className="min-w-0">
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <span className={`border-2 px-2 py-1 text-[11px] font-black uppercase ${recommendationStyles[selected.recommendation]}`}>
+                                            <span className={`border px-2 py-1 text-[11px] font-extrabold ${recommendationStyles[selected.recommendation]}`}>
                                                 {PARTNER_RECOMMENDATION_LABELS[selected.recommendation]}
                                             </span>
                                             <span className="text-xs font-bold text-neutral-400">Confidence {Math.round(selected.confidence * 100)}%</span>
                                         </div>
-                                        <h3 className="mt-3 font-candu text-3xl font-extrabold uppercase leading-none">{selected.name}</h3>
+                                        <h3 className="mt-3 text-3xl font-extrabold leading-none">{selected.name}</h3>
                                         <a href={selected.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex max-w-full items-center gap-1 truncate text-xs font-bold text-blue-700 hover:underline">
                                             {selected.url.replace(/^https?:\/\//, '').replace(/\/$/, '')} <ExternalLink className="h-3 w-3 flex-none" />
                                         </a>
@@ -1012,18 +1012,18 @@ export default function PartnerCommandCenter({
                                             type="button"
                                             disabled={isAnalyzing}
                                             onClick={() => void researchUrls([selected.url])}
-                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-xs font-black uppercase hover:bg-neutral-100 disabled:opacity-50"
+                                            className="inline-flex items-center gap-2 border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold hover:bg-neutral-100 disabled:opacity-50 rounded-full"
                                         >
                                             {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Refresh research
                                         </button>
-                                        <button type="button" onClick={() => reachOut(selected)} className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-4 py-2 text-xs font-black uppercase shadow-none hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none">
+                                        <button type="button" onClick={() => reachOut(selected)} className="inline-flex items-center gap-2 bg-brand-yellow px-4 py-2 text-xs font-extrabold hover:translate-x-0.5 hover:translate-y-0.5 rounded-full">
                                             <Mail className="h-4 w-4" /> Reach out
                                         </button>
                                         <button
                                             type="button"
                                             disabled={updatingId === selected.id}
                                             onClick={() => patchLead(selected.id, { status: 'contacted', last_contacted_at: new Date().toISOString(), reminder_at: null }, 'Marked as contacted.')}
-                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-xs font-black uppercase hover:bg-green-100 disabled:opacity-50"
+                                            className="inline-flex items-center gap-2 border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold hover:bg-green-100 disabled:opacity-50 rounded-full"
                                         >
                                             <Check className="h-4 w-4" /> Mark contacted
                                         </button>
@@ -1031,7 +1031,7 @@ export default function PartnerCommandCenter({
                                             type="button"
                                             disabled={updatingId === selected.id}
                                             onClick={() => patchLead(selected.id, { status: 'rejected', reminder_at: null }, `${isCloudfund ? 'Project' : 'Partner'} moved to rejected.`)}
-                                            className="inline-flex items-center gap-2 border-2 border-black bg-white px-4 py-2 text-xs font-black uppercase hover:bg-red-100 disabled:opacity-50"
+                                            className="inline-flex items-center gap-2 border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold hover:bg-red-100 disabled:opacity-50 rounded-full"
                                         >
                                             <X className="h-4 w-4" /> Reject
                                         </button>
@@ -1043,7 +1043,7 @@ export default function PartnerCommandCenter({
                                 <button
                                     type="button"
                                     onClick={() => setExpandedLeadId(isSelectedExpanded ? null : selected.id)}
-                                    className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase text-neutral-600 hover:text-black"
+                                    className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold text-neutral-600 hover:text-black"
                                     aria-expanded={isSelectedExpanded}
                                 >
                                     {isSelectedExpanded ? 'Hide full profile' : 'Show full profile'}
@@ -1051,7 +1051,7 @@ export default function PartnerCommandCenter({
                                 </button>
                             </header>
 
-                            {isSelectedExpanded && <div className="grid border-b-2 border-black sm:grid-cols-2 xl:grid-cols-4">
+                            {isSelectedExpanded && <div className="grid border-b border-neutral-200 sm:grid-cols-2 xl:grid-cols-4">
                                 {[
                                     { label: isCloudfund ? 'Project owner' : 'Organization', value: humanize(selected.organization_type) || selected.structure, icon: Users },
                                     { label: 'Location', value: selected.location, icon: MapPin },
@@ -1066,12 +1066,12 @@ export default function PartnerCommandCenter({
                                         icon: Users,
                                     },
                                 ].map((field, index) => (
-                                    <div key={field.label} className={`p-4 ${index < 3 ? 'xl:border-r-2 xl:border-black' : ''} ${index % 2 === 0 ? 'sm:border-r-2 sm:border-black xl:border-r-2' : ''} ${index < 2 ? 'border-b-2 border-black xl:border-b-0' : ''}`}>
-                                        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-neutral-500"><field.icon className="h-3.5 w-3.5" />{field.label}</div>
+                                    <div key={field.label} className={`p-4 ${index < 3 ? 'xl:border-r xl:border-neutral-200' : ''} ${index % 2 === 0 ? 'sm:border-r sm:border-neutral-200 xl:border-r' : ''} ${index < 2 ? 'border-b border-neutral-200 xl:border-b-0' : ''}`}>
+                                        <div className="flex items-center gap-2 text-[10px] font-extrabold text-neutral-500"><field.icon className="h-3.5 w-3.5" />{field.label}</div>
                                         <p className="mt-1.5 text-sm font-bold leading-snug">{compactText(field.value)}</p>
                                         {field.value.replace(/\s+/g, ' ').trim().length > 96 && (
                                             <details className="mt-2 text-xs text-neutral-600">
-                                                <summary className="cursor-pointer font-black uppercase text-neutral-500 hover:text-black">Full details</summary>
+                                                <summary className="cursor-pointer font-extrabold text-neutral-500 hover:text-black">Full details</summary>
                                                 <p className="mt-2 leading-relaxed">{field.value}</p>
                                             </details>
                                         )}
@@ -1080,14 +1080,14 @@ export default function PartnerCommandCenter({
                             </div>}
 
                             <div className="grid xl:grid-cols-[1fr_320px]">
-                                <div className="space-y-6 p-5 md:p-6 xl:border-r-2 xl:border-black">
+                                <div className="space-y-6 p-5 md:p-6 xl:border-r xl:border-neutral-200">
                                     <section>
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h4 className="font-candu text-lg font-extrabold uppercase">{isCloudfund ? 'Funding fit' : 'Partner metrics'}</h4>
-                                            <div className="flex h-12 w-12 items-center justify-center border-2 border-black bg-brand-navy font-candu text-lg font-extrabold text-brand-yellow">{selected.score}</div>
+                                            <h4 className="text-lg font-extrabold">{isCloudfund ? 'Funding fit' : 'Partner metrics'}</h4>
+                                            <div className="flex h-12 w-12 items-center justify-center border border-neutral-200 bg-brand-navy text-lg font-extrabold text-brand-yellow rounded-2xl">{selected.score}</div>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
-                                            {selected.category.map(category => <span key={category} className="border-2 border-black bg-green-100 px-2 py-1 text-xs font-bold">{category}</span>)}
+                                            {selected.category.map(category => <span key={category} className="border border-neutral-200 bg-green-100 px-2 py-1 text-xs font-bold rounded-full">{category}</span>)}
                                         </div>
                                         <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
                                             {(isCloudfund ? [
@@ -1110,16 +1110,16 @@ export default function PartnerCommandCenter({
                                                 ['Activity', humanize(selected.activity_status)],
                                                 ['Accessibility', formatAccessibility(selected)],
                                             ]).map(([label, value]) => (
-                                                <div key={label} className="border-2 border-black bg-neutral-50 p-3">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{label}</p>
-                                                    <p className="mt-1 text-sm font-black leading-tight">{value}</p>
+                                                <div key={label} className="border border-neutral-200 bg-neutral-50 p-3 rounded-2xl">
+                                                    <p className="text-[10px] font-extrabold text-neutral-500">{label}</p>
+                                                    <p className="mt-1 text-sm font-extrabold leading-tight">{value}</p>
                                                 </div>
                                             ))}
                                         </div>
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-5">
-                                        <h4 className="font-candu text-lg font-extrabold uppercase">{isCloudfund ? 'Audience & supporters' : 'Platform audiences'}</h4>
+                                    <section className="border-t border-neutral-200 pt-5">
+                                        <h4 className="text-lg font-extrabold">{isCloudfund ? 'Audience & supporters' : 'Platform audiences'}</h4>
                                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                             {selected.communities.length ? selected.communities.map(community => {
                                                 const qualifies = community.followers !== null && (isCloudfund || (community.followers >= 4000 && community.followers <= 500000))
@@ -1130,18 +1130,18 @@ export default function PartnerCommandCenter({
                                                         ? isCloudfund ? 'Public count' : 'Ideal range'
                                                         : community.followers < 4000 ? 'Below 4K' : 'Above 500K'
                                                 return (
-                                                    <div key={`${community.platform}-${community.url}`} className="border-2 border-black bg-white p-3">
+                                                    <div key={`${community.platform}-${community.url}`} className="border border-neutral-200 bg-white p-3 rounded-2xl">
                                                         <div className="flex items-center justify-between gap-2">
-                                                            <span className="text-xs font-black uppercase">{community.platform}</span>
+                                                            <span className="text-xs font-extrabold">{community.platform}</span>
                                                             <a href={community.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 hover:underline">Profile <ArrowUpRight className="h-3.5 w-3.5" /></a>
                                                         </div>
                                                         <div className="mt-2 flex items-end justify-between gap-3">
-                                                            <span className="font-candu text-2xl font-extrabold">{formatFollowerCount(community.followers, quality)}</span>
-                                                            <span className={`px-1.5 py-0.5 text-[10px] font-black uppercase ${qualifies ? 'bg-green-100 text-green-800' : 'bg-neutral-100 text-neutral-600'}`}>{rangeLabel}</span>
+                                                            <span className="text-2xl font-extrabold">{formatFollowerCount(community.followers, quality)}</span>
+                                                            <span className={`px-1.5 py-0.5 text-[10px] font-extrabold ${qualifies ? 'bg-green-100 text-green-800' : 'bg-neutral-100 text-neutral-600'}`}>{rangeLabel}</span>
                                                         </div>
                                                         <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
                                                             <span className="truncate text-neutral-500">{community.handle}</span>
-                                                            <span className={`font-black uppercase ${quality === 'verified' ? 'text-green-700' : quality === 'estimated' ? 'text-amber-700' : 'text-neutral-400'}`}>
+                                                            <span className={`font-extrabold ${quality === 'verified' ? 'text-green-700' : quality === 'estimated' ? 'text-amber-700' : 'text-neutral-400'}`}>
                                                                 {quality === 'verified' ? 'Verified' : quality === 'estimated' ? 'Sourced estimate' : 'Unavailable'}
                                                             </span>
                                                         </div>
@@ -1153,76 +1153,76 @@ export default function PartnerCommandCenter({
                                                 )
                                             }) : <p className="text-sm text-neutral-500">No independently verified community figures found.</p>}
                                         </div>
-                                        {isSelectedExpanded && <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
-                                            <div className="flex items-center gap-2 text-xs font-black uppercase"><Clock3 className="h-4 w-4" /> Latest activity: {selected.last_activity}</div>
+                                        {isSelectedExpanded && <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4 rounded-2xl">
+                                            <div className="flex items-center gap-2 text-xs font-extrabold"><Clock3 className="h-4 w-4" /> Latest activity: {selected.last_activity}</div>
                                             <p className="mt-2 text-sm text-neutral-700">{selected.activity_summary}</p>
                                         </div>}
                                     </section>
 
                                     {isSelectedExpanded && <>
-                                    <section className="border-t-2 border-black pt-5">
-                                        <h4 className="font-candu text-lg font-extrabold uppercase">Scoring evidence</h4>
+                                    <section className="border-t border-neutral-200 pt-5">
+                                        <h4 className="text-lg font-extrabold">Scoring evidence</h4>
                                         <div className="mt-3 grid gap-3 md:grid-cols-2">
-                                            <div className="border-2 border-black bg-green-50 p-4">
-                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><CheckCircle2 className="h-4 w-4 text-green-700" /> Fit signals</p>
+                                            <div className="border border-neutral-200 bg-green-50 p-4 rounded-2xl">
+                                                <p className="flex items-center gap-2 text-xs font-extrabold"><CheckCircle2 className="h-4 w-4 text-green-700" /> Fit signals</p>
                                                 <ul className="mt-3 space-y-2 text-sm">{selected.fit_reasons.map(reason => <li key={reason}>+ {reason}</li>)}</ul>
                                             </div>
-                                            <div className="border-2 border-black bg-amber-50 p-4">
-                                                <p className="flex items-center gap-2 text-xs font-black uppercase"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps</p>
+                                            <div className="border border-neutral-200 bg-amber-50 p-4 rounded-2xl">
+                                                <p className="flex items-center gap-2 text-xs font-extrabold"><AlertTriangle className="h-4 w-4 text-amber-700" /> Gaps</p>
                                                 <ul className="mt-3 space-y-2 text-sm">{selected.risks.map(risk => <li key={risk}>! {risk}</li>)}</ul>
                                             </div>
                                         </div>
                                     </section>
-                                    <section className="border-t-2 border-black pt-5">
-                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase">
+                                    <section className="border-t border-neutral-200 pt-5">
+                                        <h4 className="flex items-center gap-2 text-lg font-extrabold">
                                             <Target className="h-5 w-5" /> {isCloudfund ? 'CloudFund onboarding fit' : 'Accessibility now'}
                                         </h4>
-                                        <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
+                                        <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4 rounded-2xl">
                                             <div className="grid gap-3 sm:grid-cols-3">
-                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Score & tier</p><p className="mt-1 text-sm font-black">{formatAccessibility(selected)}</p></div>
-                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">State dependency</p><p className="mt-1 text-sm font-black">{humanize(selected.state_dependency)}</p></div>
-                                                <div><p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Small-company evidence</p><p className="mt-1 text-sm font-black">{humanize(selected.small_company_signal)}</p></div>
+                                                <div><p className="text-[10px] font-extrabold text-neutral-500">Score & tier</p><p className="mt-1 text-sm font-extrabold">{formatAccessibility(selected)}</p></div>
+                                                <div><p className="text-[10px] font-extrabold text-neutral-500">State dependency</p><p className="mt-1 text-sm font-extrabold">{humanize(selected.state_dependency)}</p></div>
+                                                <div><p className="text-[10px] font-extrabold text-neutral-500">Small-company evidence</p><p className="mt-1 text-sm font-extrabold">{humanize(selected.small_company_signal)}</p></div>
                                             </div>
                                             <p className="mt-3 text-sm leading-relaxed text-neutral-700">{selected.accessibility_summary || `Not researched yet. Refresh this ${entityLabel}.`}</p>
                                         </div>
                                     </section>
-                                    <section className="border-t-2 border-black pt-5">
-                                        <h4 className="flex items-center gap-2 font-candu text-lg font-extrabold uppercase"><CircleDollarSign className="h-5 w-5" /> {isCloudfund ? 'Fundraiser & credibility' : 'Funding & credibility'}</h4>
+                                    <section className="border-t border-neutral-200 pt-5">
+                                        <h4 className="flex items-center gap-2 text-lg font-extrabold"><CircleDollarSign className="h-5 w-5" /> {isCloudfund ? 'Fundraiser & credibility' : 'Funding & credibility'}</h4>
                                         {isCloudfund ? (
                                             <div className="mt-3 grid gap-3 md:grid-cols-2">
-                                                <div className="border-2 border-black p-4">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Live fundraiser</p>
+                                                <div className="border border-neutral-200 p-4 rounded-2xl">
+                                                    <p className="text-[10px] font-extrabold text-neutral-500">Live fundraiser</p>
                                                     <p className="mt-2 text-sm font-bold">{fundraisingModelLabels[selected.fundraising_model || 'unknown']} · {selected.fundraising_platform || 'Direct / unknown'}</p>
                                                     {selected.fundraising_url ? (
                                                         <a href={selected.fundraising_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">Open fundraiser <ExternalLink className="h-3.5 w-3.5" /></a>
                                                     ) : <p className="mt-2 text-xs text-amber-700">Direct fundraiser URL not verified.</p>}
                                                     <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                                                        <div><dt className="font-black uppercase text-neutral-500">Raised</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.amount_raised, selected.funding_currency)}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Goal</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.funding_goal_amount, selected.funding_currency)}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Started</dt><dd className="mt-1 font-bold">{selected.campaign_started_at ? formatDate(selected.campaign_started_at) : 'Unknown'}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Raised</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.amount_raised, selected.funding_currency)}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Goal</dt><dd className="mt-1 font-bold">{formatFundingAmount(selected.funding_goal_amount, selected.funding_currency)}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Started</dt><dd className="mt-1 font-bold">{selected.campaign_started_at ? formatDate(selected.campaign_started_at) : 'Unknown'}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
                                                     </dl>
                                                 </div>
-                                                <div className="border-2 border-black p-4">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Current funding evidence</p>
+                                                <div className="border border-neutral-200 p-4 rounded-2xl">
+                                                    <p className="text-[10px] font-extrabold text-neutral-500">Current funding evidence</p>
                                                     <p className="mt-2 text-sm font-bold">{selected.fundraising_signal || 'No durable fundraising signal verified.'}</p>
                                                     <p className="mt-3 text-xs leading-relaxed text-neutral-600">{selected.financial_situation}</p>
                                                 </div>
                                             </div>
                                         ) : (
                                             <div className="mt-3 grid gap-3 md:grid-cols-2">
-                                                <div className="border-2 border-black p-4">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Financial model</p>
+                                                <div className="border border-neutral-200 p-4 rounded-2xl">
+                                                    <p className="text-[10px] font-extrabold text-neutral-500">Financial model</p>
                                                     <p className="mt-2 text-sm font-bold">{selected.financial_model.join(' · ') || 'Unknown — not publicly verified'}</p>
                                                     <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                                                        <div><dt className="font-black uppercase text-neutral-500">Revenue</dt><dd className="mt-1 font-bold">{formatRevenue(selected)}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Year</dt><dd className="mt-1 font-bold">{selected.annual_revenue_year || 'Unknown'}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Band</dt><dd className="mt-1 font-bold">{revenueBandLabels[selected.revenue_band || 'unknown']}</dd></div>
-                                                        <div><dt className="font-black uppercase text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Revenue</dt><dd className="mt-1 font-bold">{formatRevenue(selected)}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Year</dt><dd className="mt-1 font-bold">{selected.annual_revenue_year || 'Unknown'}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Band</dt><dd className="mt-1 font-bold">{revenueBandLabels[selected.revenue_band || 'unknown']}</dd></div>
+                                                        <div><dt className="font-extrabold text-neutral-500">Status</dt><dd className="mt-1 font-bold">{humanize(selected.funding_status)}</dd></div>
                                                     </dl>
                                                 </div>
-                                                <div className="border-2 border-black p-4">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Official partners & sponsors</p>
+                                                <div className="border border-neutral-200 p-4 rounded-2xl">
+                                                    <p className="text-[10px] font-extrabold text-neutral-500">Official partners & sponsors</p>
                                                     <div className="mt-2 flex flex-wrap gap-2">
                                                         {selected.sponsors.length ? selected.sponsors.map(sponsor => <span key={sponsor} className="bg-neutral-100 px-2 py-1 text-xs font-bold">{sponsor}</span>) : <p className="text-sm text-neutral-500">None publicly verified.</p>}
                                                     </div>
@@ -1231,13 +1231,13 @@ export default function PartnerCommandCenter({
                                         )}
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-5">
+                                    <section className="border-t border-neutral-200 pt-5">
                                         <div className="flex items-center justify-between gap-3">
-                                            <h4 className="font-candu text-lg font-extrabold uppercase">Outreach draft</h4>
-                                            <button type="button" onClick={() => copyDraft(selected)} className="inline-flex items-center gap-1.5 border-2 border-black px-3 py-1.5 text-xs font-black uppercase hover:bg-brand-yellow"><Copy className="h-3.5 w-3.5" /> Copy</button>
+                                            <h4 className="text-lg font-extrabold">Outreach draft</h4>
+                                            <button type="button" onClick={() => copyDraft(selected)} className="inline-flex items-center gap-1.5 border border-neutral-200 px-3 py-1.5 text-xs font-extrabold hover:bg-brand-yellow rounded-full"><Copy className="h-3.5 w-3.5" /> Copy</button>
                                         </div>
-                                        <div className="mt-3 border-2 border-black bg-neutral-50 p-4">
-                                            <p className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Suggested angle</p>
+                                        <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4 rounded-2xl">
+                                            <p className="text-[10px] font-extrabold text-neutral-500">Suggested angle</p>
                                             <p className="mt-1 text-sm font-bold">{selected.outreach_angle}</p>
                                             <p className="mt-4 border-b border-neutral-300 pb-3 text-sm"><strong>Subject:</strong> {selected.outreach_subject}</p>
                                             <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">{selected.outreach_message}</p>
@@ -1247,52 +1247,52 @@ export default function PartnerCommandCenter({
                                 </div>
 
                                 <aside className="space-y-5 bg-neutral-50 p-5">
-                                    <section className="border-2 border-black bg-brand-yellow p-4 shadow-none">
-                                        <p className="text-[10px] font-black uppercase tracking-wider">Next best action</p>
+                                    <section className="border border-neutral-200 bg-brand-yellow p-4 rounded-2xl">
+                                        <p className="text-[10px] font-extrabold">Next best action</p>
                                         <p className="mt-2 text-sm font-bold leading-snug">{getNextBestAction(selected, researchTrack)}</p>
                                     </section>
                                     <section>
-                                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Pipeline status</label>
+                                        <label className="text-[10px] font-extrabold text-neutral-500">Pipeline status</label>
                                         <select
                                             value={selected.status}
                                             disabled={updatingId === selected.id}
                                             onChange={event => patchLead(selected.id, { status: event.target.value as PartnerLeadStatus })}
-                                            className={`mt-2 w-full border-2 border-black px-3 py-2 text-sm font-black ${statusStyles[selected.status]}`}
+                                            className={`mt-2 w-full border border-neutral-200 px-3 py-2 text-sm font-extrabold rounded-full ${statusStyles[selected.status]}`}
                                         >
                                             {statusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                                         </select>
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-4">
-                                        <p className="flex items-center gap-2 text-xs font-black uppercase"><Bell className="h-4 w-4" /> Reminder</p>
+                                    <section className="border-t border-neutral-200 pt-4">
+                                        <p className="flex items-center gap-2 text-xs font-extrabold"><Bell className="h-4 w-4" /> Reminder</p>
                                         <p className={`mt-2 text-sm font-bold ${isReminderDue(selected.reminder_at) ? 'text-red-700' : ''}`}>{formatDate(selected.reminder_at)}</p>
                                         <div className="mt-3 grid grid-cols-3 gap-1.5">
-                                            {[3, 7, 30].map(days => <button key={days} type="button" onClick={() => setQuickReminder(selected, days)} className="border-2 border-black bg-white px-1 py-1.5 text-[10px] font-black hover:bg-brand-yellow">{days} days</button>)}
+                                            {[3, 7, 30].map(days => <button key={days} type="button" onClick={() => setQuickReminder(selected, days)} className="border border-neutral-200 bg-white px-1 py-1.5 text-[10px] font-extrabold hover:bg-brand-yellow rounded-full">{days} days</button>)}
                                         </div>
                                         {selected.reminder_at && <button type="button" onClick={() => patchLead(selected.id, { reminder_at: null })} className="mt-2 text-xs font-bold text-neutral-500 underline">Clear reminder</button>}
                                     </section>
 
                                     {isSelectedExpanded && <>
-                                    <section className="border-t-2 border-black pt-4">
-                                        <p className="text-xs font-black uppercase">Contact</p>
+                                    <section className="border-t border-neutral-200 pt-4">
+                                        <p className="text-xs font-extrabold">Contact</p>
                                         <div className="mt-3 space-y-2">
                                             {selected.contacts.length ? selected.contacts.map(contact => (
-                                                <a key={`${contact.type}-${contact.value}`} href={getContactHref(contact.type, contact.value)} target={contact.type === 'email' ? undefined : '_blank'} rel="noreferrer" className="flex items-center justify-between gap-2 border-2 border-black bg-white p-2 text-xs font-bold hover:bg-brand-yellow">
+                                                <a key={`${contact.type}-${contact.value}`} href={getContactHref(contact.type, contact.value)} target={contact.type === 'email' ? undefined : '_blank'} rel="noreferrer" className="flex items-center justify-between gap-2 border border-neutral-200 bg-white p-2 text-xs font-bold hover:bg-brand-yellow rounded-2xl">
                                                     <span className="min-w-0 truncate">{contact.label || contact.value}</span><ArrowUpRight className="h-3.5 w-3.5 flex-none" />
                                                 </a>
                                             )) : <p className="text-xs text-neutral-500">No public contact channel verified.</p>}
                                         </div>
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-4">
-                                        <p className="text-xs font-black uppercase">Socials</p>
+                                    <section className="border-t border-neutral-200 pt-4">
+                                        <p className="text-xs font-extrabold">Socials</p>
                                         <div className="mt-2 flex flex-wrap gap-2">
-                                            {selected.socials.map(social => <a key={`${social.type}-${social.value}`} href={getContactHref(social.type, social.value)} target="_blank" rel="noreferrer" className="border border-black bg-white px-2 py-1 text-[10px] font-bold uppercase hover:bg-brand-yellow">{social.label || social.type}</a>)}
+                                            {selected.socials.map(social => <a key={`${social.type}-${social.value}`} href={getContactHref(social.type, social.value)} target="_blank" rel="noreferrer" className="border border-neutral-200 bg-white px-2 py-1 text-[10px] font-bold hover:bg-brand-yellow">{social.label || social.type}</a>)}
                                         </div>
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-4">
-                                        <label htmlFor={`${researchTrack}-notes`} className="text-xs font-black uppercase">Internal notes</label>
+                                    <section className="border-t border-neutral-200 pt-4">
+                                        <label htmlFor={`${researchTrack}-notes`} className="text-xs font-extrabold">Internal notes</label>
                                         <textarea
                                             id={`${researchTrack}-notes`}
                                             key={`${selected.id}-${selected.notes}`}
@@ -1302,17 +1302,17 @@ export default function PartnerCommandCenter({
                                             }}
                                             placeholder="Add context for the next touchpoint…"
                                             rows={4}
-                                            className="mt-2 w-full resize-none border-2 border-black bg-white p-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                            className="mt-2 w-full resize-none border border-neutral-200 bg-white p-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-2xl"
                                         />
                                         <p className="mt-1 text-[10px] text-neutral-400">Saves when you leave the field</p>
                                     </section>
 
-                                    <section className="border-t-2 border-black pt-4">
-                                        <p className="text-xs font-black uppercase">Evidence</p>
+                                    <section className="border-t border-neutral-200 pt-4">
+                                        <p className="text-xs font-extrabold">Evidence</p>
                                         <div className="mt-3 space-y-2">
                                             {selected.sources.map((source, index) => (
                                                 <a key={`${source.url}-${index}`} href={source.url} target="_blank" rel="noreferrer" className="group flex gap-2 text-xs leading-snug text-blue-800 hover:underline">
-                                                    <span className="font-black text-black">{index + 1}.</span><span>{source.title || source.url.replace(/^https?:\/\//, '').split('/')[0]}</span>
+                                                    <span className="font-extrabold text-black">{index + 1}.</span><span>{source.title || source.url.replace(/^https?:\/\//, '').split('/')[0]}</span>
                                                 </a>
                                             ))}
                                         </div>
@@ -1325,7 +1325,7 @@ export default function PartnerCommandCenter({
                         <div className="flex min-h-[540px] items-center justify-center p-8 text-center">
                             <div>
                                 <Globe2 className="mx-auto h-12 w-12 text-neutral-300" />
-                                <h3 className="mt-4 font-candu text-2xl font-extrabold uppercase">Your {entityLabel} pipeline starts here</h3>
+                                <h3 className="mt-4 text-2xl font-extrabold">Your {entityLabel} pipeline starts here</h3>
                                 <p className="mx-auto mt-2 max-w-md text-sm text-neutral-500">
                                     {isCloudfund
                                         ? 'Find active fundraisers or submit project URLs. The research agent will verify campaign duration, current need, operator credibility, activity, contacts, and a tailored CloudFund introduction.'

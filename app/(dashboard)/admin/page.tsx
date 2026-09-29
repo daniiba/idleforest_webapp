@@ -37,11 +37,11 @@ const LazyAdminCharts = {
 }
 
 function AdminSectionLoader({ label }: { label: string }) {
-    return <div className="flex min-h-64 items-center justify-center border-2 border-black bg-white p-8 text-sm font-black uppercase"><Loader2 className="mr-2 h-5 w-5 animate-spin" />{label}</div>
+    return <div className="flex min-h-64 items-center justify-center border border-neutral-200 bg-white p-8 text-sm font-extrabold rounded-2xl"><Loader2 className="mr-2 h-5 w-5 animate-spin" />{label}</div>
 }
 
 function ChartLoader() {
-    return <div className="flex h-[200px] w-full animate-pulse items-center justify-center bg-neutral-100 text-xs font-bold uppercase text-neutral-400">Loading chart…</div>
+    return <div className="flex h-[200px] w-full animate-pulse items-center justify-center bg-neutral-100 text-xs font-bold text-neutral-400">Loading chart…</div>
 }
 
 type AdminStats = Awaited<ReturnType<typeof getAdminStats>>
@@ -75,9 +75,9 @@ const EMPTY_ADMIN_STATS: AdminStats = {
 // Email Preview Component with proper scaling
 const EmailPreview = ({ html, subject, className = "" }: { html: string; subject?: string; className?: string }) => {
     return (
-        <div className={`w-full h-full border-2 border-black overflow-hidden bg-gray-50 relative group flex flex-col ${className}`}>
+        <div className={`w-full h-full border border-neutral-200 overflow-hidden bg-gray-50 relative group flex flex-col rounded-2xl ${className}`}>
             {subject && (
-                <div className="bg-white border-b-2 border-black p-2 text-xs font-bold text-neutral-500 truncate flex-shrink-0">
+                <div className="bg-white border-b border-neutral-200 p-2 text-xs font-bold text-neutral-500 truncate flex-shrink-0">
                     Subject: <span className="text-black">{subject}</span>
                 </div>
             )}
@@ -1397,7 +1397,7 @@ export default function AdminPage() {
     // Loading state while checking session
     if (isCheckingSession) {
         return (
-            <div className="min-h-screen bg-brand-gray flex items-center justify-center p-6 font-rethink-sans">
+            <div className="min-h-screen bg-[#F7F7F2] flex items-center justify-center p-6">
                 <div className="text-black font-bold">Checking session...</div>
             </div>
         )
@@ -1406,14 +1406,14 @@ export default function AdminPage() {
     // Password Gate
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen bg-brand-gray flex items-center justify-center p-6 font-rethink-sans">
-                <div className="bg-white border-2 border-black shadow-none p-8 w-full max-w-md">
+            <div className="min-h-screen bg-[#F7F7F2] flex items-center justify-center p-6">
+                <div className="bg-white border border-neutral-200 p-8 w-full max-w-md rounded-2xl">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="bg-brand-yellow border-2 border-black p-3">
+                        <div className="bg-brand-yellow border border-neutral-200 p-3 rounded-2xl">
                             <Lock className="h-6 w-6 text-black" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-extrabold font-candu uppercase tracking-tight text-black">Admin Access</h1>
+                            <h1 className="text-2xl font-extrabold tracking-tight text-black">Admin Access</h1>
                             <p className="text-sm text-neutral-600">Enter password to continue</p>
                         </div>
                     </div>
@@ -1424,7 +1424,7 @@ export default function AdminPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter admin password"
-                                className="w-full px-4 py-3 border-2 border-black bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-2"
+                                className="w-full px-4 py-3 border border-neutral-200 bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-2 rounded-xl"
                                 autoFocus
                             />
                         </div>
@@ -1434,7 +1434,7 @@ export default function AdminPage() {
                         <button
                             type="submit"
                             disabled={isVerifying}
-                            className="w-full bg-brand-yellow border-2 border-black shadow-none px-6 py-3 font-bold uppercase tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                            className="w-full bg-brand-yellow px-6 py-3 font-bold text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none rounded-full"
                         >
                             {isVerifying ? 'Verifying...' : 'Unlock Dashboard'}
                         </button>
@@ -1633,29 +1633,29 @@ export default function AdminPage() {
     const organicBreakEvenPossible = breakEvenMonthIdx >= 0
 
     return (
-        <div className="min-h-screen bg-brand-gray p-6 md:p-8 py-24 mt-32 font-rethink-sans">
+        <div className="min-h-screen bg-[#F7F7F2] p-6 md:p-8 py-24 mt-32">
             <div className="space-y-6 max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="bg-white border-2 border-black shadow-none p-6 md:p-8">
+                <div className="bg-white border border-neutral-200 p-6 md:p-8 rounded-2xl">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-extrabold font-candu uppercase tracking-tight text-black">Admin Dashboard</h1>
+                            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black">Admin Dashboard</h1>
                             <p className="text-sm text-neutral-600 mt-1">Business metrics & analytics</p>
                         </div>
                         <div className="flex items-center gap-6">
                             {isOverviewLoaded ? <>
                             <div className="text-right">
-                                <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Revenue</div>
-                                <div className="text-2xl font-extrabold font-candu text-green-600">€{stats.totalRevenue.toFixed(2)}</div>
+                                <div className="text-xs font-bold text-neutral-500">Total Revenue</div>
+                                <div className="text-2xl font-extrabold text-green-600">€{stats.totalRevenue.toFixed(2)}</div>
                             </div>
                             <div className="text-right">
-                                <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Marketing Spent</div>
-                                <div className="text-2xl font-extrabold font-candu text-black">€{FINANCIAL_DATA.marketingSpent}</div>
+                                <div className="text-xs font-bold text-neutral-500">Marketing Spent</div>
+                                <div className="text-2xl font-extrabold text-black">€{FINANCIAL_DATA.marketingSpent}</div>
                             </div>
                             <button
                                 onClick={generateMonthlyReport}
                                 disabled={isGeneratingPdf}
-                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
+                                className="bg-brand-yellow px-4 py-2 font-bold text-sm text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2 rounded-full"
                             >
                                 {isGeneratingPdf ? (
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Generating...</>
@@ -1664,7 +1664,7 @@ export default function AdminPage() {
                                 )}
                             </button>
                             </> : (
-                                <div className="border-2 border-black bg-neutral-50 px-4 py-2 text-xs font-bold text-neutral-500">
+                                <div className="border border-neutral-200 bg-neutral-50 px-4 py-2 text-xs font-bold text-neutral-500 rounded-full">
                                     Analytics load only when opened
                                 </div>
                             )}
@@ -1706,20 +1706,20 @@ export default function AdminPage() {
                         }
                     }}
                     className="w-full" defaultValue={'partners'}                 >
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white border-2 border-black shadow-none rounded-none p-1 h-auto">
-                        <TabsTrigger value="real-data" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📊 Data</TabsTrigger>
-                        <TabsTrigger value="projections" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🔮 Projections</TabsTrigger>
-                        <TabsTrigger value="power-users" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">👥 Users</TabsTrigger>
-                        <TabsTrigger value="audiences" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📋 Lists</TabsTrigger>
-                        <TabsTrigger value="templates" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📝 Templates</TabsTrigger>
-                        <TabsTrigger value="marketing" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📣 Marketing</TabsTrigger>
-                        <TabsTrigger value="qr-stickers" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">QR stickers</TabsTrigger>
-                        <TabsTrigger value="partners" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🌱 Partners</TabsTrigger>
-                        <TabsTrigger value="cloudfund" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">☁️ CloudFund</TabsTrigger>
-                        <TabsTrigger value="companies" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">🏢 Companies</TabsTrigger>
-                        <TabsTrigger value="animal-rewards" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">Rewards</TabsTrigger>
-                        <TabsTrigger value="node-transfers" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">Transfers</TabsTrigger>
-                        <TabsTrigger value="report" className="rounded-none font-bold uppercase text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none">📄 Report</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white border border-neutral-200 p-1 h-auto rounded-2xl">
+                        <TabsTrigger value="real-data" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">📊 Data</TabsTrigger>
+                        <TabsTrigger value="projections" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">🔮 Projections</TabsTrigger>
+                        <TabsTrigger value="power-users" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">👥 Users</TabsTrigger>
+                        <TabsTrigger value="audiences" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">📋 Lists</TabsTrigger>
+                        <TabsTrigger value="templates" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">📝 Templates</TabsTrigger>
+                        <TabsTrigger value="marketing" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">📣 Marketing</TabsTrigger>
+                        <TabsTrigger value="qr-stickers" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">QR stickers</TabsTrigger>
+                        <TabsTrigger value="partners" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">🌱 Partners</TabsTrigger>
+                        <TabsTrigger value="cloudfund" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">☁️ CloudFund</TabsTrigger>
+                        <TabsTrigger value="companies" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">🏢 Companies</TabsTrigger>
+                        <TabsTrigger value="animal-rewards" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">Rewards</TabsTrigger>
+                        <TabsTrigger value="node-transfers" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">Transfers</TabsTrigger>
+                        <TabsTrigger value="report" className="font-bold text-xs sm:text-sm py-3 data-[state=active]:bg-brand-yellow data-[state=active]:text-black data-[state=active]:shadow-none rounded-xl">📄 Report</TabsTrigger>
                     </TabsList>
 
                     {isOverviewLoading && ['real-data', 'projections', 'report'].includes(activeTab) && (
@@ -1729,28 +1729,28 @@ export default function AdminPage() {
                     <TabsContent value="real-data" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
                         {/* Key Metrics - Primary Focus */}
                         <section>
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <Activity className="h-5 w-5 text-brand-navy" />
                                 Key Metrics
                             </h2>
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Users className="h-4 w-4 text-brand-navy" />
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Users</p>
+                                        <p className="text-xs font-bold text-neutral-500">Total Users</p>
                                     </div>
-                                    <div className="text-3xl font-extrabold font-candu text-black">{stats.totalUsersCount}</div>
+                                    <div className="text-3xl font-extrabold text-black">{stats.totalUsersCount}</div>
                                     <p className="text-sm text-green-600 flex items-center gap-1 mt-1 font-semibold">
                                         <TrendingUp className="h-3 w-3" />
                                         +{stats.newTotalUsersCount} this month
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Activity className="h-4 w-4 text-brand-navy" />
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Weekly Active (Adjusted)</p>
+                                        <p className="text-xs font-bold text-neutral-500">Weekly Active (Adjusted)</p>
                                     </div>
-                                    <div className="text-3xl font-extrabold font-candu text-black">{stats.chromeWauCurrent + stats.desktopWau}</div>
+                                    <div className="text-3xl font-extrabold text-black">{stats.chromeWauCurrent + stats.desktopWau}</div>
                                     <p className="text-sm text-neutral-600 mt-1">
                                         <span className="text-blue-600">{stats.chromeWauCurrent}</span> ext + <span className="text-purple-600">{stats.desktopWau}</span> desktop
                                     </p>
@@ -1759,20 +1759,20 @@ export default function AdminPage() {
                                         <p className="text-xs text-amber-700 mt-1">Chrome reported {reportedCurrentWau} WAU</p>
                                     )}
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <div className="flex items-center gap-2 mb-2">
                                         <DollarSign className="h-4 w-4 text-brand-navy" />
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Monthly Revenue</p>
+                                        <p className="text-xs font-bold text-neutral-500">Monthly Revenue</p>
                                     </div>
-                                    <div className="text-3xl font-extrabold font-candu text-black">€{stats.monthlyRevenue.toFixed(2)}</div>
+                                    <div className="text-3xl font-extrabold text-black">€{stats.monthlyRevenue.toFixed(2)}</div>
                                     <p className="text-sm text-neutral-600 mt-1">From mellowtel</p>
                                 </div>
-                                <div className={`border-2 border-black shadow-none p-6 ${profit >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+                                <div className={`border border-neutral-200 p-6 rounded-2xl ${profit >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
                                     <div className="flex items-center gap-2 mb-2">
                                         {profit >= 0 ? <TrendingUp className="h-4 w-4 text-green-600" /> : <TrendingDown className="h-4 w-4 text-red-600" />}
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Monthly Profit</p>
+                                        <p className="text-xs font-bold text-neutral-500">Monthly Profit</p>
                                     </div>
-                                    <div className={`text-3xl font-extrabold font-candu ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    <div className={`text-3xl font-extrabold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                         €{profit.toFixed(2)}
                                     </div>
                                     <p className="text-sm text-neutral-600 mt-1">vs €{FINANCIAL_DATA.totalCosts} costs</p>
@@ -1782,53 +1782,53 @@ export default function AdminPage() {
 
                         {/* Unit Economics */}
                         <section>
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <Target className="h-5 w-5 text-brand-navy" />
                                 Unit Economics
                             </h2>
                             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">CAC</div>
-                                    <div className={`text-2xl font-extrabold font-candu ${cac <= targetMaxCac ? 'text-green-600' : 'text-yellow-600'}`}>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">CAC</div>
+                                    <div className={`text-2xl font-extrabold ${cac <= targetMaxCac ? 'text-green-600' : 'text-yellow-600'}`}>
                                         €{cac.toFixed(2)}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">€{FINANCIAL_DATA.marketingSpent} / {stats.totalUsersCount}</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Target CAC</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">€{targetMaxCac.toFixed(2)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Target CAC</div>
+                                    <div className="text-2xl font-extrabold text-black">€{targetMaxCac.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">LTV / 3</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">LTV</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">€{ltv.toFixed(2)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">LTV</div>
+                                    <div className="text-2xl font-extrabold text-black">€{ltv.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">ARPU / Churn</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">LTV/CAC</div>
-                                    <div className={`text-2xl font-extrabold font-candu ${ltvCacRatio >= 3 ? 'text-green-600' : ltvCacRatio >= 1 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">LTV/CAC</div>
+                                    <div className={`text-2xl font-extrabold ${ltvCacRatio >= 3 ? 'text-green-600' : ltvCacRatio >= 1 ? 'text-yellow-600' : 'text-red-600'}`}>
                                         {ltvCacRatio === Infinity ? '∞' : `${ltvCacRatio.toFixed(1)}x`}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">Target: 3x+</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Blended)</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">€{arpu.toFixed(2)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">ARPU (Blended)</div>
+                                    <div className="text-2xl font-extrabold text-black">€{arpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">All platforms</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">ARPU (Active 30d)</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">€{activeLast30DaysArpu.toFixed(2)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">ARPU (Active 30d)</div>
+                                    <div className="text-2xl font-extrabold text-black">€{activeLast30DaysArpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.activeLast30DaysUsersCount} registered active users</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Monthly Churn <span className="text-blue-600">(Chrome)</span></div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">{(churnRate * 100).toFixed(1)}%</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Monthly Churn <span className="text-blue-600">(Chrome)</span></div>
+                                    <div className="text-2xl font-extrabold text-black">{(churnRate * 100).toFixed(1)}%</div>
                                     <p className="text-xs text-neutral-600 mt-1">Avg uninstalls / installs</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Opt-Out Rate <span className="text-purple-600">(Desktop)</span></div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">{(stats.desktopOptOutRate * 100).toFixed(1)}%</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Opt-Out Rate <span className="text-purple-600">(Desktop)</span></div>
+                                    <div className="text-2xl font-extrabold text-black">{(stats.desktopOptOutRate * 100).toFixed(1)}%</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.desktopNodeCount} desktop devices</p>
                                 </div>
                             </div>
@@ -1836,24 +1836,24 @@ export default function AdminPage() {
 
                         {/* Platform Breakdown */}
                         <section>
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <Activity className="h-5 w-5 text-brand-navy" />
                                 Platform Breakdown
                             </h2>
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension ARPU</div>
-                                    <div className="text-2xl font-extrabold font-candu text-blue-600">€{stats.extensionArpu.toFixed(2)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Extension ARPU</div>
+                                    <div className="text-2xl font-extrabold text-blue-600">€{stats.extensionArpu.toFixed(2)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">{stats.chromeWau} WAU • {(stats.extensionRevenueShare * 100).toFixed(0)}% of revenue</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Extension Devices</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">{stats.extensionNodeCount}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Extension Devices</div>
+                                    <div className="text-2xl font-extrabold text-black">{stats.extensionNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Chrome Extension users</p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Desktop Devices</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">{stats.desktopNodeCount}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500 mb-1">Desktop Devices</div>
+                                    <div className="text-2xl font-extrabold text-black">{stats.desktopNodeCount}</div>
                                     <p className="text-xs text-neutral-600 mt-1">Windows + macOS users</p>
                                 </div>
                             </div>
@@ -1861,23 +1861,23 @@ export default function AdminPage() {
 
                         {/* Path to Profitability - Highlighted */}
                         {profit < 0 && (
-                            <div className="bg-brand-yellow border-2 border-black shadow-none p-6 md:p-8">
-                                <h3 className="text-xl font-extrabold font-candu uppercase mb-2 text-black flex items-center gap-2">
+                            <div className="bg-brand-yellow border border-neutral-200 p-6 md:p-8 rounded-2xl">
+                                <h3 className="text-xl font-extrabold mb-2 text-black flex items-center gap-2">
                                     🎯 Path to Profitability
                                 </h3>
                                 <p className="text-sm text-neutral-700 mb-4">Break even at €{FINANCIAL_DATA.totalCosts}/month costs</p>
                                 <div className="grid gap-4 md:grid-cols-3 mb-4">
-                                    <div className="p-4 bg-white border-2 border-black">
-                                        <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Current Revenue</div>
-                                        <div className="text-2xl font-extrabold font-candu mt-1 text-black">€{currentMonthlyRevenue.toFixed(2)}</div>
+                                    <div className="p-4 bg-white border border-neutral-200 rounded-2xl">
+                                        <div className="text-xs font-bold text-neutral-500">Current Revenue</div>
+                                        <div className="text-2xl font-extrabold mt-1 text-black">€{currentMonthlyRevenue.toFixed(2)}</div>
                                     </div>
-                                    <div className="p-4 bg-red-100 border-2 border-black">
-                                        <div className="text-xs font-bold uppercase tracking-wider text-red-600">Gap to Break Even</div>
-                                        <div className="text-2xl font-extrabold font-candu text-red-600 mt-1">€{revenueGap.toFixed(2)}</div>
+                                    <div className="p-4 bg-red-100 border border-neutral-200 rounded-2xl">
+                                        <div className="text-xs font-bold text-red-600">Gap to Break Even</div>
+                                        <div className="text-2xl font-extrabold text-red-600 mt-1">€{revenueGap.toFixed(2)}</div>
                                     </div>
-                                    <div className="p-4 bg-white border-2 border-black">
-                                        <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">WAU Needed</div>
-                                        <div className="text-2xl font-extrabold font-candu text-black mt-1">{requiredWauForProfitability.toLocaleString()}</div>
+                                    <div className="p-4 bg-white border border-neutral-200 rounded-2xl">
+                                        <div className="text-xs font-bold text-neutral-500">WAU Needed</div>
+                                        <div className="text-2xl font-extrabold text-black mt-1">{requiredWauForProfitability.toLocaleString()}</div>
                                         <p className="text-xs text-neutral-600">+{wauGrowthNeeded.toLocaleString()} more</p>
                                     </div>
                                 </div>
@@ -1891,9 +1891,9 @@ export default function AdminPage() {
 
                         {/* Charts - 2 Column Grid */}
                         <section>
-                            <h2 className="text-xl font-extrabold mb-4 font-candu uppercase text-black">Growth Trends</h2>
+                            <h2 className="text-xl font-extrabold mb-4 text-black">Growth Trends</h2>
                             <div className="grid gap-4 lg:grid-cols-3">
-                                <div id="wau-chart" className="bg-white border-2 border-black shadow-none p-6">
+                                <div id="wau-chart" className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-1">Weekly Active Users <span className="text-amber-600 text-sm font-normal">(adjusted)</span></h3>
                                     <p className="text-xs text-neutral-600 mb-2">
                                         {chromeStoreData.yearOverYear.startWau} → {chromeStoreData.yearOverYear.endWau} ({chromeStoreData.yearOverYear.wauGrowth})
@@ -1907,7 +1907,7 @@ export default function AdminPage() {
                                     <LazyAdminCharts.ChromeWau data={chromeStoreData.monthlyData} />
                                 </div>
 
-                                <div id="acquisition-chart" className="bg-white border-2 border-black shadow-none p-6">
+                                <div id="acquisition-chart" className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-1">Acquisition & Churn <span className="text-amber-600 text-sm font-normal">(Chrome Store only)</span></h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         {chromeStoreData.totals.totalInstalls} installs, {chromeStoreData.totals.totalUninstalls} uninstalls ({chromeStoreData.totals.netUsers} net)
@@ -1915,7 +1915,7 @@ export default function AdminPage() {
                                     <LazyAdminCharts.Acquisition data={chromeStoreData.monthlyData} />
                                 </div>
 
-                                <div id="desktop-chart" className="bg-white border-2 border-black shadow-none p-6">
+                                <div id="desktop-chart" className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-1">Desktop App Growth</h3>
                                     <p className="text-xs text-neutral-600 mb-4">
                                         Active users on desktop app
@@ -1926,7 +1926,7 @@ export default function AdminPage() {
                         </section>
 
                         {/* Revenue Chart */}
-                        <div id="revenue-chart" className="bg-white border-2 border-black shadow-none p-6">
+                        <div id="revenue-chart" className="bg-white border border-neutral-200 p-6 rounded-2xl">
                             <h3 className="text-base font-bold text-black mb-1">Revenue & ARPU Trend</h3>
                             <p className="text-xs text-neutral-600 mb-4">ARPU uses adjusted Chrome WAU plus desktop WAU where available (Jan 2026+)</p>
                             <LazyAdminCharts.Revenue data={monthlyMetricsData} />
@@ -1937,13 +1937,13 @@ export default function AdminPage() {
                     {/* MARKETING TAB - Posts & Partnerships with Database Persistence */}
                     <TabsContent value="marketing" className="space-y-6 mt-6">
                         {/* Month/Year Selector */}
-                        <div className="flex flex-wrap items-center gap-4 bg-white border-2 border-black shadow-none p-4">
+                        <div className="flex flex-wrap items-center gap-4 bg-white border border-neutral-200 p-4 rounded-2xl">
                             <div className="flex items-center gap-2">
                                 <label className="text-sm font-bold">Month:</label>
                                 <select
                                     value={selectedMonth}
                                     onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                                    className="border-2 border-black px-3 py-2 font-bold"
+                                    className="border border-neutral-200 px-3 py-2 font-bold rounded-full"
                                 >
                                     {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
                                         <option key={i + 1} value={i + 1}>{m}</option>
@@ -1955,7 +1955,7 @@ export default function AdminPage() {
                                 <select
                                     value={selectedYear}
                                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                                    className="border-2 border-black px-3 py-2 font-bold"
+                                    className="border border-neutral-200 px-3 py-2 font-bold rounded-full"
                                 >
                                     {[2024, 2025, 2026, 2027].map(y => (
                                         <option key={y} value={y}>{y}</option>
@@ -1965,7 +1965,7 @@ export default function AdminPage() {
                             <button
                                 onClick={fetchMarketingEntries}
                                 disabled={isLoadingEntries}
-                                className="bg-brand-yellow border-2 border-black px-4 py-2 font-bold text-sm uppercase flex items-center gap-2 shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all disabled:opacity-50"
+                                className="bg-brand-yellow px-4 py-2 font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-50 rounded-full"
                             >
                                 {isLoadingEntries ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                 Load
@@ -1973,45 +1973,45 @@ export default function AdminPage() {
                         </div>
 
                         {/* Add new entry form */}
-                        <section className="bg-white border-2 border-black shadow-none p-6">
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                        <section className="bg-white border border-neutral-200 p-6 rounded-2xl">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <Plus className="h-5 w-5 text-brand-navy" />
                                 Add Entry
                             </h2>
                             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                                 <div className="lg:col-span-2">
-                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">URL *</label>
+                                    <label className="text-xs font-bold text-neutral-500 mb-1 block">URL *</label>
                                     <input
                                         type="url"
                                         placeholder="Paste URL (Instagram, YouTube, LinkedIn, etc.)"
                                         value={newEntryUrl}
                                         onChange={(e) => setNewEntryUrl(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && handleAddMarketingEntry()}
-                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                        className="w-full px-4 py-3 border border-neutral-200 text-sm rounded-2xl"
                                     />
                                     <p className="text-xs text-gray-500 mt-1">
                                         YouTube videos: analytics can be auto-fetched after adding
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Cost (€)</label>
+                                    <label className="text-xs font-bold text-neutral-500 mb-1 block">Cost (€)</label>
                                     <input
                                         type="number"
                                         step="0.01"
                                         placeholder="0.00"
                                         value={newEntryCost}
                                         onChange={(e) => setNewEntryCost(e.target.value)}
-                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                        className="w-full px-4 py-3 border border-neutral-200 text-sm rounded-2xl"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Notes</label>
+                                    <label className="text-xs font-bold text-neutral-500 mb-1 block">Notes</label>
                                     <input
                                         type="text"
                                         placeholder="Optional notes..."
                                         value={newEntryNotes}
                                         onChange={(e) => setNewEntryNotes(e.target.value)}
-                                        className="w-full px-4 py-3 border-2 border-black text-sm"
+                                        className="w-full px-4 py-3 border border-neutral-200 text-sm rounded-2xl"
                                     />
                                 </div>
                             </div>
@@ -2021,7 +2021,7 @@ export default function AdminPage() {
                             {/* SERP keywords — shown for any non-social-media URL */}
                             {newEntryUrl && !['youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'linkedin.com', 'twitter.com', 'x.com'].some(d => newEntryUrl.toLowerCase().includes(d)) && (
                                 <div className="mt-3 p-3 bg-orange-50 border border-orange-200">
-                                    <label className="text-xs font-bold uppercase text-orange-700 mb-1 block">🔍 SERP Keywords (Google Ranking)</label>
+                                    <label className="text-xs font-bold text-orange-700 mb-1 block">🔍 SERP Keywords (Google Ranking)</label>
                                     <div className="flex gap-2 items-center">
                                         <input
                                             type="text"
@@ -2029,13 +2029,13 @@ export default function AdminPage() {
                                             value={newEntryKeywordInput}
                                             onChange={(e) => setNewEntryKeywordInput(e.target.value)}
                                             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddNewEntryKeyword() } }}
-                                            className="flex-1 px-4 py-2 border-2 border-orange-300 text-sm"
+                                            className="flex-1 px-4 py-2 border border-orange-300 text-sm"
                                         />
                                         <button
                                             type="button"
                                             onClick={handleAddNewEntryKeyword}
                                             disabled={!newEntryKeywordInput.trim()}
-                                            className="px-3 py-2 bg-orange-500 text-white text-xs font-bold uppercase disabled:opacity-50"
+                                            className="px-3 py-2 bg-orange-500 text-white text-xs font-bold disabled:opacity-50"
                                         >
                                             + Add
                                         </button>
@@ -2055,38 +2055,38 @@ export default function AdminPage() {
                             )}
 
                             <details className="mt-4">
-                                <summary className="text-xs font-bold uppercase text-neutral-500 cursor-pointer hover:text-neutral-700">
+                                <summary className="text-xs font-bold text-neutral-500 cursor-pointer hover:text-neutral-700">
                                     + Manual Analytics (optional - for non-YouTube)
                                 </summary>
                                 <div className="grid gap-4 sm:grid-cols-3 mt-3 pt-3 border-t border-gray-200">
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Impressions/Views</label>
+                                        <label className="text-xs font-bold text-neutral-500 mb-1 block">Impressions/Views</label>
                                         <input
                                             type="number"
                                             placeholder="0"
                                             value={newEntryImpressions}
                                             onChange={(e) => setNewEntryImpressions(e.target.value)}
-                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                            className="w-full px-4 py-3 border border-gray-300 text-sm"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Clicks</label>
+                                        <label className="text-xs font-bold text-neutral-500 mb-1 block">Clicks</label>
                                         <input
                                             type="number"
                                             placeholder="0"
                                             value={newEntryClicks}
                                             onChange={(e) => setNewEntryClicks(e.target.value)}
-                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                            className="w-full px-4 py-3 border border-gray-300 text-sm"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-neutral-500 mb-1 block">Engagement (likes, comments)</label>
+                                        <label className="text-xs font-bold text-neutral-500 mb-1 block">Engagement (likes, comments)</label>
                                         <input
                                             type="number"
                                             placeholder="0"
                                             value={newEntryEngagement}
                                             onChange={(e) => setNewEntryEngagement(e.target.value)}
-                                            className="w-full px-4 py-3 border-2 border-gray-300 text-sm"
+                                            className="w-full px-4 py-3 border border-gray-300 text-sm"
                                         />
                                     </div>
                                 </div>
@@ -2095,7 +2095,7 @@ export default function AdminPage() {
                             <button
                                 onClick={handleAddMarketingEntry}
                                 disabled={!newEntryUrl.trim() || isAddingEntry}
-                                className="mt-4 bg-brand-yellow border-2 border-black px-6 py-3 font-bold text-sm uppercase disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+                                className="mt-4 bg-brand-yellow px-6 py-3 font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all rounded-full"
                             >
                                 {isAddingEntry ? (
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Adding...</>
@@ -2106,8 +2106,8 @@ export default function AdminPage() {
                         </section>
 
                         {/* Entries List */}
-                        <section className="bg-white border-2 border-black shadow-none p-6">
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                        <section className="bg-white border border-neutral-200 p-6 rounded-2xl">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <Link2 className="h-5 w-5 text-brand-navy" />
                                 Entries ({marketingEntries.length})
                             </h2>
@@ -2119,7 +2119,7 @@ export default function AdminPage() {
                             ) : marketingEntries.length > 0 ? (
                                 <div className="space-y-4">
                                     {marketingEntries.map((entry) => (
-                                        <div key={entry.id} className="flex gap-4 p-4 bg-gray-50 border-2 border-gray-200 hover:border-black transition-colors">
+                                        <div key={entry.id} className="flex gap-4 p-4 bg-gray-50 border border-gray-200 hover:border-neutral-400 transition-colors">
                                             {/* Thumbnail */}
                                             {entry.image_url && (
                                                 <div className="w-20 h-20 flex-shrink-0 bg-gray-200 border border-gray-300 overflow-hidden">
@@ -2135,10 +2135,10 @@ export default function AdminPage() {
                                             {/* Content */}
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                    <span className={`text-xs font-bold uppercase px-2 py-0.5 ${entry.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                                                    <span className={`text-xs font-bold px-2 py-0.5 ${entry.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
                                                         entry.platform === 'youtube' ? 'bg-red-600 text-white' :
                                                             entry.platform === 'linkedin' ? 'bg-blue-700 text-white' :
-                                                                entry.platform === 'twitter' ? 'bg-black text-white' :
+                                                                entry.platform === 'twitter' ? 'bg-brand-navy text-white' :
                                                                     entry.platform === 'tiktok' ? 'bg-gradient-to-r from-cyan-400 to-pink-500 text-white' :
                                                                         entry.platform === 'blog' ? 'bg-orange-500 text-white' :
                                                                             'bg-gray-600 text-white'
@@ -2203,14 +2203,14 @@ export default function AdminPage() {
                                                                 placeholder="Cost €"
                                                                 value={editEntryCost}
                                                                 onChange={(e) => setEditEntryCost(e.target.value)}
-                                                                className="w-24 px-2 py-1 border-2 border-black text-sm"
+                                                                className="w-24 px-2 py-1 border border-neutral-200 text-sm rounded-2xl"
                                                             />
                                                             <input
                                                                 type="text"
                                                                 placeholder="Notes"
                                                                 value={editEntryNotes}
                                                                 onChange={(e) => setEditEntryNotes(e.target.value)}
-                                                                className="flex-1 min-w-[100px] px-2 py-1 border-2 border-black text-sm"
+                                                                className="flex-1 min-w-[100px] px-2 py-1 border border-neutral-200 text-sm rounded-2xl"
                                                             />
                                                         </div>
                                                         <div className="flex gap-2 items-center flex-wrap">
@@ -2219,26 +2219,26 @@ export default function AdminPage() {
                                                                 placeholder="Views"
                                                                 value={editEntryImpressions}
                                                                 onChange={(e) => setEditEntryImpressions(e.target.value)}
-                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                                className="w-24 px-2 py-1 border border-gray-300 text-sm"
                                                             />
                                                             <input
                                                                 type="number"
                                                                 placeholder="Clicks"
                                                                 value={editEntryClicks}
                                                                 onChange={(e) => setEditEntryClicks(e.target.value)}
-                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                                className="w-24 px-2 py-1 border border-gray-300 text-sm"
                                                             />
                                                             <input
                                                                 type="number"
                                                                 placeholder="Engagement"
                                                                 value={editEntryEngagement}
                                                                 onChange={(e) => setEditEntryEngagement(e.target.value)}
-                                                                className="w-24 px-2 py-1 border-2 border-gray-300 text-sm"
+                                                                className="w-24 px-2 py-1 border border-gray-300 text-sm"
                                                             />
                                                         </div>
                                                         {(entry.platform === 'blog' || entry.platform === 'other') && (
                                                             <div className="space-y-2">
-                                                                <label className="text-xs font-bold uppercase text-orange-700">🔍 SERP Keywords</label>
+                                                                <label className="text-xs font-bold text-orange-700">🔍 SERP Keywords</label>
                                                                 {/* Existing keywords as removable chips */}
                                                                 {entry.serp_keywords_data && entry.serp_keywords_data.length > 0 && (
                                                                     <div className="flex flex-wrap gap-1">
@@ -2265,7 +2265,7 @@ export default function AdminPage() {
                                                                         value={editEntryKeywordInput}
                                                                         onChange={(e) => setEditEntryKeywordInput(e.target.value)}
                                                                         onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddKeywordToEntry(entry.id) } }}
-                                                                        className="flex-1 px-2 py-1 border-2 border-orange-300 text-sm bg-orange-50"
+                                                                        className="flex-1 px-2 py-1 border border-orange-300 text-sm bg-orange-50"
                                                                     />
                                                                     <button
                                                                         onClick={() => handleAddKeywordToEntry(entry.id)}
@@ -2355,8 +2355,8 @@ export default function AdminPage() {
 
                     {/* REPORT TAB - Summary and PDF Generation */}
                     <TabsContent value="report" className={`space-y-6 mt-6 ${!isOverviewLoaded ? 'hidden' : ''}`}>
-                        <section className="bg-white border-2 border-black shadow-none p-6">
-                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 font-candu uppercase text-black">
+                        <section className="bg-white border border-neutral-200 p-6 rounded-2xl">
+                            <h2 className="text-xl font-extrabold mb-4 flex items-center gap-2 text-black">
                                 <FileText className="h-5 w-5 text-brand-navy" />
                                 Monthly Report Generator
                             </h2>
@@ -2364,28 +2364,28 @@ export default function AdminPage() {
 
                             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-6">
                                 <div className="p-4 bg-green-50 border border-green-200">
-                                    <div className="text-xs font-bold uppercase text-green-700 mb-1">Trees This Month</div>
+                                    <div className="text-xs font-bold text-green-700 mb-1">Trees This Month</div>
                                     <div className="text-2xl font-bold text-green-800">{getTreesThisMonth().toLocaleString()}</div>
                                 </div>
                                 <div className="p-4 bg-blue-50 border border-blue-200">
-                                    <div className="text-xs font-bold uppercase text-blue-700 mb-1">Total Trees</div>
+                                    <div className="text-xs font-bold text-blue-700 mb-1">Total Trees</div>
                                     <div className="text-2xl font-bold text-blue-800">{getTotalTrees().toLocaleString()}</div>
                                 </div>
                                 <div className="p-4 bg-yellow-50 border border-yellow-200">
-                                    <div className="text-xs font-bold uppercase text-yellow-700 mb-1">Revenue</div>
+                                    <div className="text-xs font-bold text-yellow-700 mb-1">Revenue</div>
                                     <div className="text-2xl font-bold text-yellow-800">€{stats?.monthlyRevenue.toFixed(2) || '0.00'}</div>
                                 </div>
                                 <div className="p-4 bg-purple-50 border border-purple-200">
-                                    <div className="text-xs font-bold uppercase text-purple-700 mb-1">Marketing Entries</div>
+                                    <div className="text-xs font-bold text-purple-700 mb-1">Marketing Entries</div>
                                     <div className="text-2xl font-bold text-purple-800">{marketingEntries.length}</div>
                                 </div>
                                 <div className="p-4 bg-red-50 border border-red-200">
-                                    <div className="text-xs font-bold uppercase text-red-700 mb-1">Marketing Cost</div>
+                                    <div className="text-xs font-bold text-red-700 mb-1">Marketing Cost</div>
                                     <div className="text-2xl font-bold text-red-800">€{marketingTotals.totalCost.toFixed(2)}</div>
                                 </div>
                             </div>
 
-                            <div className="bg-gray-50 border-2 border-gray-200 p-4 mb-6">
+                            <div className="bg-gray-50 border border-gray-200 p-4 mb-6">
                                 <h3 className="font-bold text-sm mb-2">Report includes:</h3>
                                 <ul className="text-sm text-gray-600 grid gap-1">
                                     <li>• User metrics (total users, new users, WAU, churn rate)</li>
@@ -2398,7 +2398,7 @@ export default function AdminPage() {
                             <button
                                 onClick={generateMonthlyReport}
                                 disabled={isGeneratingPdf}
-                                className="w-full bg-brand-yellow border-2 border-black shadow-none px-6 py-4 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                                className="w-full bg-brand-yellow px-6 py-4 font-bold text-sm text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 rounded-full"
                             >
                                 {isGeneratingPdf ? (
                                     <><Loader2 className="h-5 w-5 animate-spin" /> Generating PDF...</>
@@ -2413,7 +2413,7 @@ export default function AdminPage() {
                         {/* 2026 PROJECTIONS SECTION */}
                         <section className="space-y-4">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                     🔮 2026 Projections
                                 </h2>
                                 <div className="text-sm text-neutral-600">
@@ -2423,34 +2423,34 @@ export default function AdminPage() {
 
                             {/* Key Projection Metrics */}
                             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                                <div className={`border-2 border-black shadow-none p-4 ${organicBreakEvenPossible ? 'bg-green-100' : 'bg-yellow-100'}`}>
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Organic Break-Even</div>
-                                    <div className={`text-2xl font-extrabold font-candu ${organicBreakEvenPossible ? 'text-green-600' : 'text-yellow-600'}`}>
+                                <div className={`border border-neutral-200 p-4 rounded-2xl ${organicBreakEvenPossible ? 'bg-green-100' : 'bg-yellow-100'}`}>
+                                    <div className="text-xs font-bold text-neutral-500">Organic Break-Even</div>
+                                    <div className={`text-2xl font-extrabold ${organicBreakEvenPossible ? 'text-green-600' : 'text-yellow-600'}`}>
                                         {breakEvenMonthName}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">
                                         {organicBreakEvenPossible ? '✓ Achievable organically' : '⚠ Needs paid growth'}
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Dec 2026 WAU (Organic)</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">{projection2026[11]?.organicWau.toLocaleString()}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500">Dec 2026 WAU (Organic)</div>
+                                    <div className="text-2xl font-extrabold text-black">{projection2026[11]?.organicWau.toLocaleString()}</div>
                                     <p className="text-xs text-neutral-600 mt-1">
                                         vs {projection2026[11]?.breakEvenWau.toLocaleString()} needed
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Dec 2026 Revenue</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">€{projection2026[11]?.revenue.toFixed(0)}</div>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500">Dec 2026 Revenue</div>
+                                    <div className="text-2xl font-extrabold text-black">€{projection2026[11]?.revenue.toFixed(0)}</div>
                                     <p className="text-xs text-neutral-600 mt-1">
                                         Profit: <span className={projection2026[11]?.profit >= 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}>
                                             €{projection2026[11]?.profit.toFixed(0)}
                                         </span>
                                     </p>
                                 </div>
-                                <div className="bg-white border-2 border-black shadow-none p-4">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Users Gap (Dec)</div>
-                                    <div className={`text-2xl font-extrabold font-candu ${projection2026[11]?.gapToBreakEven <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                <div className="bg-white border border-neutral-200 p-4 rounded-2xl">
+                                    <div className="text-xs font-bold text-neutral-500">Users Gap (Dec)</div>
+                                    <div className={`text-2xl font-extrabold ${projection2026[11]?.gapToBreakEven <= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                         {projection2026[11]?.gapToBreakEven > 0 ? '+' : ''}{projection2026[11]?.gapToBreakEven.toLocaleString()}
                                     </div>
                                     <p className="text-xs text-neutral-600 mt-1">Paid users needed to break even</p>
@@ -2458,7 +2458,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Organic vs Break-Even WAU Chart */}
-                            <div className="bg-white border-2 border-black shadow-none p-6">
+                            <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                 <h3 className="text-base font-bold text-black mb-1">2026 Organic Growth vs Break-Even Target</h3>
                                 <p className="text-xs text-neutral-600 mb-4">
                                     Green = Projected organic WAU | Red line = WAU needed for break-even | Blue = Paid users needed to fill gap
@@ -2467,17 +2467,17 @@ export default function AdminPage() {
                             </div>
 
                             {/* Paid Acquisition Scenarios Table */}
-                            <div className="bg-brand-yellow border-2 border-black shadow-none p-6">
+                            <div className="bg-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                                 <h3 className="text-base font-bold text-black mb-1 flex items-center gap-2">
                                     💰 Paid Acquisition Scenarios
                                 </h3>
                                 <p className="text-xs text-neutral-700 mb-4">
                                     Budget needed at different CAC levels to hit break-even by target quarter
                                 </p>
-                                <div className="overflow-x-auto bg-white border-2 border-black">
+                                <div className="overflow-x-auto bg-white border border-neutral-200 rounded-2xl">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black">
+                                            <TableRow className="border-b border-neutral-200">
                                                 <TableHead className="text-xs font-bold">Target</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Organic WAU</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Break-Even</TableHead>
@@ -2515,14 +2515,14 @@ export default function AdminPage() {
                                         </TableBody>
                                     </Table>
                                 </div>
-                                <div className="mt-4 text-xs text-neutral-700 space-y-1 border-t border-black pt-3">
+                                <div className="mt-4 text-xs text-neutral-700 space-y-1 border-t border-neutral-200 pt-3">
                                     <p><strong>📊 How to read:</strong> Each row shows what&apos;s needed to hit break-even by that quarter.</p>
                                     <p><strong>💡 Recommendation:</strong> Start with €{paidGrowthScenarios[0]?.monthlyBudget1 || 0}/mo testing at €1 CAC target. Optimize down to €0.50 CAC before scaling.</p>
                                 </div>
                             </div>
 
                             {/* Monthly Projection Table (Detailed) */}
-                            <div className="bg-white border-2 border-black shadow-none p-6">
+                            <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                 <h3 className="text-base font-bold text-black mb-1">Monthly 2026 Projection</h3>
                                 <p className="text-xs text-neutral-600 mb-4">
                                     Detailed month-by-month forecast based on current trends
@@ -2530,7 +2530,7 @@ export default function AdminPage() {
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black">
+                                            <TableRow className="border-b border-neutral-200">
                                                 <TableHead className="text-xs font-bold">Month</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">WAU</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">ARPU</TableHead>
@@ -2575,13 +2575,13 @@ export default function AdminPage() {
                                 {/* Segment Stats Cards */}
                                 <section>
                                     <div className="flex items-center justify-between mb-4">
-                                        <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                        <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                             <Users className="h-5 w-5 text-brand-navy" />
                                             User Segments
                                             {(selectedSegment === 'active' || selectedSegment === 'new_users' || selectedSegment === 'power_users' || selectedSegment === 'team_owners' || selectedSegment === 'profile_no_desktop') && (
                                                 <button
                                                     onClick={() => handleSyncSegment(selectedSegment as UserSegment)}
-                                                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border-2 border-black hover:bg-brand-yellow transition-colors shadow-none"
+                                                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-white border border-neutral-200 hover:bg-brand-yellow transition-colors rounded-full"
                                                 >
                                                     <Mail className="h-3 w-3" /> Sync to Resend
                                                 </button>
@@ -2589,7 +2589,7 @@ export default function AdminPage() {
                                         </h2>
                                         <button
                                             onClick={fetchPowerUsersData}
-                                            className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                            className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border border-neutral-200 transition-all rounded-full"
                                         >
                                             <RefreshCw className="h-4 w-4" /> Refresh
                                         </button>
@@ -2604,106 +2604,106 @@ export default function AdminPage() {
                                                 placeholder="Search by name or email..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="w-full pl-10 pr-4 py-3 border-2 border-black shadow-none focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                className="w-full pl-10 pr-4 py-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                             />
                                         </div>
                                     </div>
                                     <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
                                         <button
                                             onClick={() => setSelectedSegment('all')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'all' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'all' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Users className="h-4 w-4 text-brand-navy" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">All Users</span>
+                                                <span className="text-xs font-bold text-neutral-500">All Users</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.total || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.total || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('power_users')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'power_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'power_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Zap className="h-4 w-4 text-yellow-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Power Users</span>
+                                                <span className="text-xs font-bold text-neutral-500">Power Users</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.power_users || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.power_users || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('active')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'active' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'active' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Activity className="h-4 w-4 text-green-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Active (7d)</span>
+                                                <span className="text-xs font-bold text-neutral-500">Active (7d)</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.active || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.active || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('inactive')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'inactive' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'inactive' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Clock className="h-4 w-4 text-red-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Inactive (30d+)</span>
+                                                <span className="text-xs font-bold text-neutral-500">Inactive (30d+)</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.inactive || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.inactive || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('new_users')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'new_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'new_users' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <UserPlus className="h-4 w-4 text-blue-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">New (30d)</span>
+                                                <span className="text-xs font-bold text-neutral-500">New (30d)</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.new_users || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.new_users || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('unopted_desktop')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'unopted_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <AlertTriangle className="h-4 w-4 text-red-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Unopted Desktop</span>
+                                                <span className="text-xs font-bold text-neutral-500">Unopted Desktop</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.unopted_desktop || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.unopted_desktop || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('extension_no_desktop')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'extension_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'extension_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <MousePointer className="h-4 w-4 text-orange-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Extension Only</span>
+                                                <span className="text-xs font-bold text-neutral-500">Extension Only</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.extension_no_desktop || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.extension_no_desktop || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('profile_no_desktop')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'profile_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'profile_no_desktop' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Monitor className="h-4 w-4 text-blue-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Profile No Desktop</span>
+                                                <span className="text-xs font-bold text-neutral-500">Profile No Desktop</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.profile_no_desktop || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.profile_no_desktop || 0}</div>
                                         </button>
                                         <button
                                             onClick={() => setSelectedSegment('team_owners')}
-                                            className={`p-4 border-2 border-black shadow-none text-left transition-all ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
+                                            className={`p-4 border border-neutral-200 text-left transition-all rounded-2xl ${selectedSegment === 'team_owners' ? 'bg-brand-yellow' : 'bg-white hover:bg-gray-50'}`}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Trophy className="h-4 w-4 text-yellow-500" />
-                                                <span className="text-xs font-bold uppercase text-neutral-500">Team Owners</span>
+                                                <span className="text-xs font-bold text-neutral-500">Team Owners</span>
                                             </div>
-                                            <div className="text-2xl font-extrabold font-candu">{segmentStats?.team_owners || 0}</div>
+                                            <div className="text-2xl font-extrabold">{segmentStats?.team_owners || 0}</div>
                                         </button>
                                     </div>
                                 </section>
 
                                 {/* Sync to Resend Section */}
-                                <section className="bg-brand-navy border-2 border-black shadow-none p-6">
+                                <section className="bg-brand-navy border border-neutral-200 p-6 rounded-2xl">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -2723,7 +2723,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncAllUsers(true)}
                                                         disabled={isSyncingAllUsers}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border border-neutral-200 disabled:opacity-50 transition-all rounded-full"
                                                     >
                                                         {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                                         Preview
@@ -2731,7 +2731,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncAllUsers(false)}
                                                         disabled={isSyncingAllUsers}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold disabled:opacity-50 transition-all rounded-full"
                                                     >
                                                         {isSyncingAllUsers ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                                         Sync Now
@@ -2742,7 +2742,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncSegment(selectedSegment, true)}
                                                         disabled={syncingSegment !== null}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white text-black font-bold border border-neutral-200 disabled:opacity-50 transition-all rounded-full"
                                                     >
                                                         {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                                                         Preview
@@ -2750,7 +2750,7 @@ export default function AdminPage() {
                                                     <button
                                                         onClick={() => handleSyncSegment(selectedSegment, false)}
                                                         disabled={syncingSegment !== null}
-                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 transition-all"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold disabled:opacity-50 transition-all rounded-full"
                                                     >
                                                         {syncingSegment === selectedSegment ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                                                         Sync Now
@@ -2760,14 +2760,14 @@ export default function AdminPage() {
                                         </div>
                                     </div>
                                     {selectedSegment === 'all' && syncAllUsersResult && (
-                                        <div className={`mt-4 p-3 border-2 border-black ${syncAllUsersResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                        <div className={`mt-4 p-3 border border-neutral-200 rounded-2xl ${syncAllUsersResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
                                             <p className={`text-sm font-bold ${syncAllUsersResult.success ? 'text-green-800' : 'text-red-800'}`}>
                                                 {syncAllUsersResult.message}
                                             </p>
                                         </div>
                                     )}
                                     {selectedSegment !== 'all' && syncResult && syncResult.segment === selectedSegment && (
-                                        <div className={`mt-4 p-3 border-2 border-black ${syncResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                        <div className={`mt-4 p-3 border border-neutral-200 rounded-2xl ${syncResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
                                             <p className={`text-sm font-bold ${syncResult.success ? 'text-green-800' : 'text-red-800'}`}>
                                                 {syncResult.message}
                                             </p>
@@ -2776,14 +2776,14 @@ export default function AdminPage() {
                                 </section>
 
                                 {/* User Table */}
-                                <section className="bg-white border-2 border-black shadow-none p-6">
+                                <section className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-4">
                                         {selectedSegment === 'all' ? 'All Users' : `${selectedSegment.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}`} ({filteredUsers.length})
                                     </h3>
                                     <div className="overflow-x-auto">
                                         <Table>
                                             <TableHeader>
-                                                <TableRow className="border-b-2 border-black">
+                                                <TableRow className="border-b border-neutral-200">
                                                     <TableHead className="text-xs font-bold">Name</TableHead>
                                                     <TableHead className="text-xs font-bold">Email</TableHead>
                                                     <TableHead className="text-right text-xs font-bold">Points</TableHead>
@@ -2820,7 +2820,7 @@ export default function AdminPage() {
                                                                 {user.segments.map(seg => (
                                                                     <span
                                                                         key={seg}
-                                                                        className={`px-2 py-0.5 text-[10px] font-bold uppercase border border-black ${seg === 'power_users' ? 'bg-yellow-100' :
+                                                                        className={`px-2 py-0.5 text-[10px] font-bold border border-neutral-200 ${seg === 'power_users' ? 'bg-yellow-100' :
                                                                             seg === 'active' ? 'bg-green-100' :
                                                                                 seg === 'inactive' ? 'bg-red-100' :
                                                                                     seg === 'unopted_desktop' ? 'bg-purple-100' :
@@ -2872,13 +2872,13 @@ export default function AdminPage() {
                     <TabsContent value="audiences" className="space-y-6 mt-6">
                         <ForestLaunchCard />
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                            <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                 <List className="h-5 w-5 text-brand-navy" />
                                 Email Lists ({audiences.length})
                             </h2>
                             <button
                                 onClick={() => selectedAudienceId && fetchContacts(selectedAudienceId)}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-bold bg-white border border-neutral-200 transition-all rounded-full"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingContacts ? 'animate-spin' : ''}`} /> Refresh
                             </button>
@@ -2887,18 +2887,18 @@ export default function AdminPage() {
                         <div className="grid lg:grid-cols-4 gap-6">
                             {/* Audience List Sidebar */}
                             <div className="lg:col-span-1 space-y-2">
-                                <h3 className="text-sm font-bold uppercase text-neutral-500 mb-2">Select Audience</h3>
+                                <h3 className="text-sm font-bold text-neutral-500 mb-2">Select Audience</h3>
                                 {audiences.map(audience => (
                                     <button
                                         key={audience.id}
                                         onClick={() => setSelectedAudienceId(audience.id)}
-                                        className={`w-full text-left p-3 border-2 border-black shadow-none font-bold text-sm transition-all ${selectedAudienceId === audience.id ? 'bg-brand-yellow translate-x-[1px] translate-y-[1px] shadow-none' : 'bg-white hover:bg-gray-50'}`}
+                                        className={`w-full text-left p-3 border border-neutral-200 font-bold text-sm transition-all rounded-2xl ${selectedAudienceId === audience.id ? 'bg-brand-yellow translate-x-[1px] translate-y-[1px]' : 'bg-white hover:bg-gray-50'}`}
                                     >
                                         {audience.name}
                                     </button>
                                 ))}
                                 {audiences.length === 0 && (
-                                    <div className="p-4 bg-neutral-100 border-2 border-dashed border-neutral-300 text-sm text-neutral-500 text-center">
+                                    <div className="p-4 bg-neutral-100 border border-dashed border-neutral-300 text-sm text-neutral-500 text-center">
                                         No audiences found in Resend.
                                     </div>
                                 )}
@@ -2906,10 +2906,10 @@ export default function AdminPage() {
 
                             {/* Contacts Table */}
                             <div className="lg:col-span-3">
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-4 flex items-center justify-between">
                                         <span>Contacts in List ({audienceContacts.length})</span>
-                                        {selectedAudienceId && <span className="text-xs font-normal text-neutral-500 uppercase tracking-wider">ID: {selectedAudienceId}</span>}
+                                        {selectedAudienceId && <span className="text-xs font-normal text-neutral-500">ID: {selectedAudienceId}</span>}
                                     </h3>
 
                                     {isLoadingContacts ? (
@@ -2920,7 +2920,7 @@ export default function AdminPage() {
                                         <div className="overflow-x-auto">
                                             <Table>
                                                 <TableHeader>
-                                                    <TableRow className="border-b-2 border-black">
+                                                    <TableRow className="border-b border-neutral-200">
                                                         <TableHead className="text-xs font-bold">Email</TableHead>
                                                         <TableHead className="text-xs font-bold">Name</TableHead>
                                                         <TableHead className="text-xs font-bold">Status</TableHead>
@@ -2936,11 +2936,11 @@ export default function AdminPage() {
                                                             </TableCell>
                                                             <TableCell className="text-xs py-2">
                                                                 {contact.unsubscribed ? (
-                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-[10px] font-bold uppercase">
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-[10px] font-bold">
                                                                         <UserX className="h-3 w-3" /> Unsubscribed
                                                                     </span>
                                                                 ) : (
-                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 border border-green-200 rounded-full text-[10px] font-bold uppercase">
+                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 border border-green-200 rounded-full text-[10px] font-bold">
                                                                         <Zap className="h-3 w-3" /> Active
                                                                     </span>
                                                                 )}
@@ -2966,7 +2966,7 @@ export default function AdminPage() {
                     </TabsContent>
                     <TabsContent value="templates" className="space-y-6 mt-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                            <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                 <FileText className="h-5 w-5 text-brand-navy" />
                                 Email Templates
                             </h2>
@@ -2976,25 +2976,25 @@ export default function AdminPage() {
                                     setNewTemplate({ name: '', subject: '', content: '', from_email: '' })
                                     setIsTemplateModalOpen(true)
                                 }}
-                                className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold transition-all rounded-full"
                             >
                                 <Plus className="h-4 w-4" /> Create Template
                             </button>
                         </div>
 
                         {/* Broadcast Campaign Section */}
-                        <div className="bg-brand-navy border-2 border-black shadow-none p-6 mb-6">
+                        <div className="bg-brand-navy border border-neutral-200 p-6 mb-6 rounded-2xl">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
                                 <Send className="h-5 w-5 text-brand-yellow" />
                                 Send Broadcast Campaign
                             </h3>
                             <div className="grid md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold uppercase text-gray-300 mb-2">Select Template</label>
+                                    <label className="block text-xs font-bold text-gray-300 mb-2">Select Template</label>
                                     <select
                                         value={broadcastTemplateId}
                                         onChange={(e) => setBroadcastTemplateId(e.target.value)}
-                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                        className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white rounded-xl"
                                     >
                                         <option value="">Choose a template...</option>
                                         {templates.map(t => (
@@ -3003,11 +3003,11 @@ export default function AdminPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold uppercase text-gray-300 mb-2">Select Audience</label>
+                                    <label className="block text-xs font-bold text-gray-300 mb-2">Select Audience</label>
                                     <select
                                         value={broadcastAudienceId}
                                         onChange={(e) => setBroadcastAudienceId(e.target.value)}
-                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                        className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white rounded-xl"
                                     >
                                         <option value="">Choose an audience...</option>
                                         {audiences.map(a => (
@@ -3022,7 +3022,7 @@ export default function AdminPage() {
                                     <button
                                         onClick={handleSendBroadcast}
                                         disabled={!broadcastTemplateId || !broadcastAudienceId || isSendingBroadcast}
-                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-yellow text-black font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all rounded-full"
                                     >
                                         {isSendingBroadcast ? (
                                             <>
@@ -3037,7 +3037,7 @@ export default function AdminPage() {
                                 </div>
                             </div>
                             {broadcastResult && (
-                                <div className={`mt-4 p-3 border-2 border-black ${broadcastResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                                <div className={`mt-4 p-3 border border-neutral-200 rounded-2xl ${broadcastResult.success ? 'bg-green-100' : 'bg-red-100'}`}>
                                     <p className={`text-sm font-bold ${broadcastResult.success ? 'text-green-800' : 'text-red-800'}`}>
                                         {broadcastResult.message}
                                     </p>
@@ -3046,14 +3046,14 @@ export default function AdminPage() {
 
                             {/* Preview Section */}
                             {broadcastTemplateId && broadcastAudienceId && (
-                                <div className="mt-6 pt-6 border-t-2 border-gray-600">
-                                    <h4 className="text-sm font-bold uppercase text-gray-300 mb-4 flex items-center gap-2">
+                                <div className="mt-6 pt-6 border-t border-gray-600">
+                                    <h4 className="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
                                         <Eye className="h-4 w-4" /> Preview Before Sending
                                     </h4>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         {/* Email Preview */}
-                                        <div className="bg-white border-2 border-black">
-                                            <div className="bg-neutral-100 border-b-2 border-black px-3 py-2 text-xs font-bold uppercase text-neutral-500">
+                                        <div className="bg-white border border-neutral-200 rounded-2xl">
+                                            <div className="bg-neutral-100 border-b border-neutral-200 px-3 py-2 text-xs font-bold text-neutral-500">
                                                 Email Template
                                             </div>
                                             {(() => {
@@ -3071,8 +3071,8 @@ export default function AdminPage() {
                                         </div>
 
                                         {/* Recipients Preview */}
-                                        <div className="bg-white border-2 border-black">
-                                            <div className="bg-neutral-100 border-b-2 border-black px-3 py-2 text-xs font-bold uppercase text-neutral-500 flex items-center justify-between">
+                                        <div className="bg-white border border-neutral-200 rounded-2xl">
+                                            <div className="bg-neutral-100 border-b border-neutral-200 px-3 py-2 text-xs font-bold text-neutral-500 flex items-center justify-between">
                                                 <span>Recipients</span>
                                                 <span className="bg-brand-navy text-white px-2 py-0.5 rounded-full text-[10px]">
                                                     {audienceContacts.filter(c => !c.unsubscribed).length} active
@@ -3112,7 +3112,7 @@ export default function AdminPage() {
 
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {templates.map(template => (
-                                <div key={template.id} className="bg-white border-2 border-black shadow-none p-6 flex flex-col justify-between">
+                                <div key={template.id} className="bg-white border border-neutral-200 p-6 flex flex-col justify-between rounded-2xl">
                                     <div>
                                         <h3 className="text-lg font-bold mb-2">{template.name}</h3>
                                         <p className="text-sm font-semibold text-neutral-600 mb-2">Subject: {template.subject}</p>
@@ -3141,7 +3141,7 @@ export default function AdminPage() {
                                 </div>
                             ))}
                             {templates.length === 0 && (
-                                <div className="col-span-full py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
+                                <div className="col-span-full py-12 text-center text-neutral-500 border border-dashed border-neutral-300">
                                     No templates created yet.
                                 </div>
                             )}
@@ -3150,9 +3150,9 @@ export default function AdminPage() {
 
                     {/* ANIMAL REWARDS TAB */}
                     <TabsContent value="animal-rewards" className="space-y-6 mt-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-none p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-neutral-200 p-6 rounded-2xl">
                             <div>
-                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                     <PawPrint className="h-5 w-5 text-brand-navy" />
                                     Animal Reward Approvals
                                 </h2>
@@ -3161,7 +3161,7 @@ export default function AdminPage() {
                             <button
                                 onClick={() => fetchAdoptionRewardRequests()}
                                 disabled={isLoadingAdoptionRewards}
-                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
+                                className="bg-brand-yellow px-4 py-2 font-bold text-sm text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2 rounded-full"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingAdoptionRewards ? 'animate-spin' : ''}`} />
                                 Refresh Candidates
@@ -3169,29 +3169,29 @@ export default function AdminPage() {
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-3">
-                            <div className="bg-white border-2 border-black shadow-none p-5">
-                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Pending Approval</p>
-                                <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'pending').length}</p>
+                            <div className="bg-white border border-neutral-200 p-5 rounded-2xl">
+                                <p className="text-xs font-bold text-neutral-500">Pending Approval</p>
+                                <p className="text-3xl font-extrabold text-black">{adoptionRewardRequests.filter(request => request.status === 'pending').length}</p>
                             </div>
-                            <div className="bg-white border-2 border-black shadow-none p-5">
-                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Approved Not Fulfilled</p>
-                                <p className="text-3xl font-extrabold font-candu text-black">{adoptionRewardRequests.filter(request => request.status === 'approved').length}</p>
+                            <div className="bg-white border border-neutral-200 p-5 rounded-2xl">
+                                <p className="text-xs font-bold text-neutral-500">Approved Not Fulfilled</p>
+                                <p className="text-3xl font-extrabold text-black">{adoptionRewardRequests.filter(request => request.status === 'approved').length}</p>
                             </div>
-                            <div className="bg-white border-2 border-black shadow-none p-5">
-                                <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">Estimated Retail Exposure</p>
-                                <p className="text-3xl font-extrabold font-candu text-black">
+                            <div className="bg-white border border-neutral-200 p-5 rounded-2xl">
+                                <p className="text-xs font-bold text-neutral-500">Estimated Retail Exposure</p>
+                                <p className="text-3xl font-extrabold text-black">
                                     ${(adoptionRewardRequests.filter(request => request.status === 'pending' || request.status === 'approved').length * 16.95).toFixed(2)}
                                 </p>
                             </div>
                         </div>
 
                         {adoptionRewardResult && (
-                            <div className={`border-2 border-black shadow-none p-4 font-bold ${adoptionRewardResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                            <div className={`border border-neutral-200 p-4 font-bold rounded-2xl ${adoptionRewardResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
                                 {adoptionRewardResult.message}
                             </div>
                         )}
 
-                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
+                        <div className="bg-white border border-neutral-200 overflow-hidden rounded-2xl">
                             {isLoadingAdoptionRewards ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3200,13 +3200,13 @@ export default function AdminPage() {
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black bg-neutral-50">
-                                                <TableHead className="font-bold text-black uppercase text-xs">Team</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Reward</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Desktop Milestone</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Fulfillment</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            <TableRow className="border-b border-neutral-200 bg-neutral-50">
+                                                <TableHead className="font-bold text-black text-xs">Team</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Reward</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Desktop Milestone</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Fulfillment</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Status</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Actions</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -3239,8 +3239,8 @@ export default function AdminPage() {
                                                             </a>
                                                         </TableCell>
                                                         <TableCell className="min-w-[180px]">
-                                                            <div className="text-sm font-black text-black">{request.active_desktop_members.toLocaleString()} / {request.threshold.toLocaleString()}</div>
-                                                            <div className="mt-2 h-2 border border-black bg-neutral-100">
+                                                            <div className="text-sm font-extrabold text-black">{request.active_desktop_members.toLocaleString()} / {request.threshold.toLocaleString()}</div>
+                                                            <div className="mt-2 h-2 border border-neutral-200 bg-neutral-100">
                                                                 <div className="h-full bg-green-500" style={{ width: `${Math.min(100, Math.round((request.active_desktop_members / request.threshold) * 100))}%` }} />
                                                             </div>
                                                             <div className="mt-1 text-xs text-neutral-500 font-mono">{request.milestone_id}</div>
@@ -3262,7 +3262,7 @@ export default function AdminPage() {
                                                             {request.notes && <div className="mt-2 text-xs text-neutral-500">{request.notes}</div>}
                                                         </TableCell>
                                                         <TableCell>
-                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold uppercase ${getAdoptionRewardStatusClass(request.status)}`}>
+                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold ${getAdoptionRewardStatusClass(request.status)}`}>
                                                                 {request.status}
                                                             </span>
                                                             <div className="text-xs text-neutral-500 mt-2">
@@ -3275,7 +3275,7 @@ export default function AdminPage() {
                                                                     <button
                                                                         onClick={() => handleAdoptionRewardDecision(request.id, 'approve')}
                                                                         disabled={adoptionRewardActionId === request.id}
-                                                                        className="bg-green-100 text-green-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-green-200 disabled:opacity-50 flex items-center gap-1"
+                                                                        className="bg-green-100 text-green-900 border border-neutral-200 px-3 py-2 font-bold text-xs hover:bg-green-200 disabled:opacity-50 flex items-center gap-1 rounded-full"
                                                                     >
                                                                         {adoptionRewardActionId === request.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
                                                                         Approve
@@ -3285,7 +3285,7 @@ export default function AdminPage() {
                                                                     <button
                                                                         onClick={() => handleFulfillAdoptionReward(request.id)}
                                                                         disabled={adoptionRewardActionId === request.id}
-                                                                        className="bg-blue-100 text-blue-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-blue-200 disabled:opacity-50 flex items-center gap-1"
+                                                                        className="bg-blue-100 text-blue-900 border border-neutral-200 px-3 py-2 font-bold text-xs hover:bg-blue-200 disabled:opacity-50 flex items-center gap-1 rounded-full"
                                                                     >
                                                                         <PawPrint className="h-3 w-3" />
                                                                         Fulfill
@@ -3295,14 +3295,14 @@ export default function AdminPage() {
                                                                     <button
                                                                         onClick={() => handleAdoptionRewardDecision(request.id, 'reject')}
                                                                         disabled={adoptionRewardActionId === request.id}
-                                                                        className="bg-red-100 text-red-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-red-200 disabled:opacity-50 flex items-center gap-1"
+                                                                        className="bg-red-100 text-red-900 border border-neutral-200 px-3 py-2 font-bold text-xs hover:bg-red-200 disabled:opacity-50 flex items-center gap-1 rounded-full"
                                                                     >
                                                                         <X className="h-3 w-3" />
                                                                         Reject
                                                                     </button>
                                                                 )}
                                                                 {!canApprove && !canFulfill && !canReject && (
-                                                                    <span className="text-xs text-neutral-500 font-bold uppercase">No action</span>
+                                                                    <span className="text-xs text-neutral-500 font-bold">No action</span>
                                                                 )}
                                                             </div>
                                                         </TableCell>
@@ -3324,9 +3324,9 @@ export default function AdminPage() {
 
                     {/* NODE TRANSFERS TAB */}
                     <TabsContent value="node-transfers" className="space-y-6 mt-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-2 border-black shadow-none p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-neutral-200 p-6 rounded-2xl">
                             <div>
-                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                     <Monitor className="h-5 w-5 text-brand-navy" />
                                     Node Transfers
                                 </h2>
@@ -3335,7 +3335,7 @@ export default function AdminPage() {
                             <button
                                 onClick={() => fetchNodeTransferRequests()}
                                 disabled={isLoadingNodeTransfers}
-                                className="bg-brand-yellow border-2 border-black shadow-none px-4 py-2 font-bold uppercase text-sm tracking-wider text-black hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2"
+                                className="bg-brand-yellow px-4 py-2 font-bold text-sm text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center gap-2 rounded-full"
                             >
                                 <RefreshCw className={`h-4 w-4 ${isLoadingNodeTransfers ? 'animate-spin' : ''}`} />
                                 Refresh
@@ -3343,12 +3343,12 @@ export default function AdminPage() {
                         </div>
 
                         {nodeTransferResult && (
-                            <div className={`border-2 border-black shadow-none p-4 font-bold ${nodeTransferResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+                            <div className={`border border-neutral-200 p-4 font-bold rounded-2xl ${nodeTransferResult.success ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
                                 {nodeTransferResult.message}
                             </div>
                         )}
 
-                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
+                        <div className="bg-white border border-neutral-200 overflow-hidden rounded-2xl">
                             {isLoadingNodeTransfers ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3357,13 +3357,13 @@ export default function AdminPage() {
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black bg-neutral-50">
-                                                <TableHead className="font-bold text-black uppercase text-xs">Node</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Original Owner</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Requested Owner</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Request</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            <TableRow className="border-b border-neutral-200 bg-neutral-50">
+                                                <TableHead className="font-bold text-black text-xs">Node</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Original Owner</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Requested Owner</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Request</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Status</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Actions</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -3399,7 +3399,7 @@ export default function AdminPage() {
                                                             <div className="text-xs text-neutral-500 mt-1">{formatDateTime(request.created_at)}</div>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold uppercase ${getTransferStatusClass(request.status)}`}>
+                                                            <span className={`inline-flex border px-2 py-1 text-xs font-bold ${getTransferStatusClass(request.status)}`}>
                                                                 {request.status}
                                                             </span>
                                                             {request.resolved_at && (
@@ -3412,7 +3412,7 @@ export default function AdminPage() {
                                                                     <button
                                                                         onClick={() => handleNodeTransferDecision(request.id, 'approve')}
                                                                         disabled={nodeTransferActionId === request.id}
-                                                                        className="bg-green-100 text-green-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-green-200 disabled:opacity-50 flex items-center gap-1"
+                                                                        className="bg-green-100 text-green-900 border border-neutral-200 px-3 py-2 font-bold text-xs hover:bg-green-200 disabled:opacity-50 flex items-center gap-1 rounded-full"
                                                                     >
                                                                         {nodeTransferActionId === request.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
                                                                         Approve
@@ -3420,14 +3420,14 @@ export default function AdminPage() {
                                                                     <button
                                                                         onClick={() => handleNodeTransferDecision(request.id, 'reject')}
                                                                         disabled={nodeTransferActionId === request.id}
-                                                                        className="bg-red-100 text-red-900 border-2 border-black px-3 py-2 font-bold text-xs uppercase hover:bg-red-200 disabled:opacity-50 flex items-center gap-1"
+                                                                        className="bg-red-100 text-red-900 border border-neutral-200 px-3 py-2 font-bold text-xs hover:bg-red-200 disabled:opacity-50 flex items-center gap-1 rounded-full"
                                                                     >
                                                                         <X className="h-3 w-3" />
                                                                         Reject
                                                                     </button>
                                                                 </div>
                                                             ) : (
-                                                                <span className="text-xs text-neutral-500 font-bold uppercase">No action</span>
+                                                                <span className="text-xs text-neutral-500 font-bold">No action</span>
                                                             )}
                                                         </TableCell>
                                                     </TableRow>
@@ -3448,9 +3448,9 @@ export default function AdminPage() {
 
                     {/* COMPANIES TAB */}
                     <TabsContent value="companies" className="space-y-6 mt-6">
-                        <div className="flex justify-between items-center bg-white border-2 border-black shadow-none p-6">
+                        <div className="flex justify-between items-center bg-white border border-neutral-200 p-6 rounded-2xl">
                             <div>
-                                <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
+                                <h2 className="text-xl font-extrabold flex items-center gap-2 text-black">
                                     <TreePine className="h-5 w-5 text-brand-navy" />
                                     Companies & Portals
                                 </h2>
@@ -3458,24 +3458,24 @@ export default function AdminPage() {
                             </div>
                             <button
                                 onClick={openCreateCompany}
-                                className="bg-brand-navy text-white border-2 border-black shadow-none px-4 py-2 flex items-center gap-2 font-bold hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all"
+                                className="bg-brand-navy text-white px-4 py-2 flex items-center gap-2 font-bold transition-all rounded-full"
                             >
                                 <Plus className="h-4 w-4" /> New Company
                             </button>
                         </div>
 
-                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
-                            <div className="flex flex-col gap-3 border-b-2 border-black bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="bg-white border border-neutral-200 overflow-hidden rounded-2xl">
+                            <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
-                                    <h3 className="text-lg font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                    <h3 className="text-lg font-extrabold text-black flex items-center gap-2">
                                         <DollarSign className="h-5 w-5 text-green-700" />
                                         Company Payout Routing
                                     </h3>
                                     <p className="text-sm text-neutral-600 mt-1">Where generated company value should go. Amounts use each company's cents per 1,000 points rate.</p>
                                 </div>
                                 <div className="text-left sm:text-right">
-                                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Estimated open amount</div>
-                                    <div className="text-2xl font-extrabold font-candu text-black">
+                                    <div className="text-xs font-bold text-neutral-500">Estimated open amount</div>
+                                    <div className="text-2xl font-extrabold text-black">
                                         {formatCurrencyCents(companies.reduce((sum, company) => sum + (company.estimated_payout_cents || 0), 0))}
                                     </div>
                                 </div>
@@ -3489,13 +3489,13 @@ export default function AdminPage() {
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black bg-white">
-                                                <TableHead className="font-bold text-black uppercase text-xs">Company</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Send To</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Generated</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Rate</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Amount</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Status</TableHead>
+                                            <TableRow className="border-b border-neutral-200 bg-white">
+                                                <TableHead className="font-bold text-black text-xs">Company</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Send To</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Generated</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Rate</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Amount</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Status</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -3556,7 +3556,7 @@ export default function AdminPage() {
                             )}
                         </div>
 
-                        <div className="bg-white border-2 border-black shadow-none overflow-hidden">
+                        <div className="bg-white border border-neutral-200 overflow-hidden rounded-2xl">
                             {isLoadingCompanies ? (
                                 <div className="p-12 flex justify-center text-neutral-500">
                                     <Loader2 className="h-8 w-8 animate-spin" />
@@ -3565,12 +3565,12 @@ export default function AdminPage() {
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black bg-neutral-50">
-                                                <TableHead className="font-bold text-black uppercase text-xs">Name</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Slug</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Invite Code</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs">Color</TableHead>
-                                                <TableHead className="font-bold text-black uppercase text-xs text-right">Actions</TableHead>
+                                            <TableRow className="border-b border-neutral-200 bg-neutral-50">
+                                                <TableHead className="font-bold text-black text-xs">Name</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Slug</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Invite Code</TableHead>
+                                                <TableHead className="font-bold text-black text-xs">Color</TableHead>
+                                                <TableHead className="font-bold text-black text-xs text-right">Actions</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -3589,7 +3589,7 @@ export default function AdminPage() {
                                                     <TableCell className="font-mono text-sm">{company.invite_code || '—'}</TableCell>
                                                     <TableCell>
                                                         <div className="flex items-center gap-2">
-                                                            <div className="w-4 h-4 rounded-sm border border-black" style={{ backgroundColor: company.theme_color || '#10B981' }}></div>
+                                                            <div className="w-4 h-4 border border-neutral-200 rounded-xl" style={{ backgroundColor: company.theme_color || '#10B981' }}></div>
                                                             <span className="text-xs">{company.theme_color}</span>
                                                         </div>
                                                     </TableCell>
@@ -3638,7 +3638,7 @@ export default function AdminPage() {
                 <div className="mt-6">
                     <button
                         onClick={() => setShowDetails(!showDetails)}
-                        className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-black hover:text-brand-navy transition-colors bg-brand-yellow border-2 border-black shadow-none px-4 py-3 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none"
+                        className="flex items-center gap-2 text-sm font-bold text-black hover:text-brand-navy transition-colors bg-brand-yellow px-4 py-3 rounded-full"
                     >
                         {showDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                         {showDetails ? 'Hide' : 'Show'} Detailed Breakdown
@@ -3648,7 +3648,7 @@ export default function AdminPage() {
                         <div className="mt-4 space-y-4">
                             {/* Cost Breakdown & Database Stats Side by Side */}
                             <div className="grid gap-4 lg:grid-cols-2">
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-1">Fixed Monthly Costs</h3>
                                     <p className="text-xs text-neutral-600 mb-4">€{FINANCIAL_DATA.totalCosts}/month total</p>
                                     <Table>
@@ -3662,7 +3662,7 @@ export default function AdminPage() {
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
-                                            <TableRow className="font-bold border-t-2 border-black">
+                                            <TableRow className="font-bold border-t border-neutral-200">
                                                 <TableCell className="py-2">Total</TableCell>
                                                 <TableCell className="text-right py-2">€{FINANCIAL_DATA.totalCosts.toFixed(2)}</TableCell>
                                                 <TableCell className="text-right py-2">100%</TableCell>
@@ -3671,38 +3671,38 @@ export default function AdminPage() {
                                     </Table>
                                 </div>
 
-                                <div className="bg-white border-2 border-black shadow-none p-6">
+                                <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                     <h3 className="text-base font-bold text-black mb-1">Database Stats</h3>
                                     <p className="text-xs text-neutral-600 mb-4">Live from Supabase</p>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Profiles</div>
-                                            <div className="text-xl font-extrabold font-candu text-black">{stats.profilesCount}</div>
+                                            <div className="text-xs font-bold text-neutral-500">Profiles</div>
+                                            <div className="text-xl font-extrabold text-black">{stats.profilesCount}</div>
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Devices</div>
-                                            <div className="text-xl font-extrabold font-candu text-black">{stats.nodesCount}</div>
+                                            <div className="text-xs font-bold text-neutral-500">Total Devices</div>
+                                            <div className="text-xl font-extrabold text-black">{stats.nodesCount}</div>
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Anonymous</div>
-                                            <div className="text-xl font-extrabold font-candu text-black">{stats.anonymousNodesCount}</div>
+                                            <div className="text-xs font-bold text-neutral-500">Anonymous</div>
+                                            <div className="text-xl font-extrabold text-black">{stats.anonymousNodesCount}</div>
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">New (30d)</div>
-                                            <div className="text-xl font-extrabold font-candu text-green-600">+{stats.newProfilesCount}</div>
+                                            <div className="text-xs font-bold text-neutral-500">New (30d)</div>
+                                            <div className="text-xl font-extrabold text-green-600">+{stats.newProfilesCount}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Monthly Breakdown */}
-                            <div className="bg-white border-2 border-black shadow-none p-6">
+                            <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
                                 <h3 className="text-base font-bold text-black mb-1">Monthly Metrics</h3>
                                 <p className="text-xs text-neutral-600 mb-4">Historical data</p>
                                 <div className="overflow-x-auto">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="border-b-2 border-black">
+                                            <TableRow className="border-b border-neutral-200">
                                                 <TableHead className="text-xs font-bold">Month</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Installs</TableHead>
                                                 <TableHead className="text-right text-xs font-bold">Uninstalls</TableHead>
@@ -3744,10 +3744,10 @@ export default function AdminPage() {
             {/* CREATE/EDIT COMPANY MODAL */}
             {isCompanyModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white border-4 border-black shadow-none w-full max-w-2xl max-h-[90vh] flex flex-col relative">
+                    <div className="bg-white border border-neutral-200 w-full max-w-2xl max-h-[90vh] flex flex-col relative rounded-2xl">
                         {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b-4 border-black bg-brand-yellow">
-                            <h2 className="text-xl font-extrabold font-candu uppercase">
+                        <div className="flex items-center justify-between p-4 border-b border-neutral-200 bg-brand-yellow">
+                            <h2 className="text-xl font-extrabold">
                                 {companyModalMode === 'create' ? 'Create New Company' : 'Edit Company'}
                             </h2>
                             <button
@@ -3762,22 +3762,22 @@ export default function AdminPage() {
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Company Name *</label>
+                                        <label className="text-sm font-bold text-black block">Company Name *</label>
                                         <input
                                             type="text"
                                             value={newCompany.name}
                                             onChange={e => setNewCompany({ ...newCompany, name: e.target.value })}
-                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-medium"
+                                            className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy font-medium rounded-xl"
                                             placeholder="Acme Corp"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Slug (URL)</label>
+                                        <label className="text-sm font-bold text-black block">Slug (URL)</label>
                                         <input
                                             type="text"
                                             value={newCompany.slug}
                                             onChange={e => setNewCompany({ ...newCompany, slug: e.target.value })}
-                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                             placeholder="acme-corp"
                                         />
                                         <p className="text-xs text-neutral-500">Used for /c/slug portal</p>
@@ -3786,30 +3786,30 @@ export default function AdminPage() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Invite Code</label>
+                                        <label className="text-sm font-bold text-black block">Invite Code</label>
                                         <input
                                             type="text"
                                             value={newCompany.invite_code}
                                             onChange={e => setNewCompany({ ...newCompany, invite_code: e.target.value })}
-                                            className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                            className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                             placeholder="acme123"
                                         />
                                         <p className="text-xs text-neutral-500">Gateway code for the widget tracking</p>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Theme Color (Hex)</label>
+                                        <label className="text-sm font-bold text-black block">Theme Color (Hex)</label>
                                         <div className="flex gap-2">
                                             <input
                                                 type="color"
                                                 value={newCompany.theme_color}
                                                 onChange={e => setNewCompany({ ...newCompany, theme_color: e.target.value })}
-                                                className="w-12 h-11 border-2 border-black cursor-pointer p-0"
+                                                className="w-12 h-11 border border-neutral-200 cursor-pointer p-0 rounded-2xl"
                                             />
                                             <input
                                                 type="text"
                                                 value={newCompany.theme_color}
                                                 onChange={e => setNewCompany({ ...newCompany, theme_color: e.target.value })}
-                                                className="flex-1 px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                                className="flex-1 px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                             />
                                         </div>
                                     </div>
@@ -3822,10 +3822,10 @@ export default function AdminPage() {
                                             id="invite_only_check"
                                             checked={newCompany.is_invite_only}
                                             onChange={e => setNewCompany({ ...newCompany, is_invite_only: e.target.checked })}
-                                            className="w-5 h-5 border-2 border-black rounded-none appearance-none checked:bg-brand-navy checked:border-brand-navy flex items-center justify-center relative outline-none"
+                                            className="w-5 h-5 border border-neutral-200 appearance-none checked:bg-brand-navy checked:border-brand-navy flex items-center justify-center relative outline-none rounded-2xl"
                                         />
                                         <div>
-                                            <label htmlFor="invite_only_check" className="text-sm font-bold uppercase tracking-wider text-black block cursor-pointer">Invite Only Registration</label>
+                                            <label htmlFor="invite_only_check" className="text-sm font-bold text-black block cursor-pointer">Invite Only Registration</label>
                                             <p className="text-xs text-neutral-500">Requires valid invite code to join</p>
                                         </div>
                                     </div>
@@ -3833,16 +3833,16 @@ export default function AdminPage() {
 
                                 <div className="space-y-4 border-t border-neutral-200 pt-4 mt-4">
                                     <div>
-                                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-black">Impact Routing</h3>
+                                        <h3 className="text-sm font-extrabold text-black">Impact Routing</h3>
                                         <p className="mt-1 text-xs text-neutral-500">Controls where generated company value appears in the admin payout table.</p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Routing Mode</label>
+                                            <label className="text-sm font-bold text-black block">Routing Mode</label>
                                             <select
                                                 value={newCompany.impact_mode}
                                                 onChange={e => setNewCompany({ ...newCompany, impact_mode: e.target.value as CompanyAdmin['impact_mode'] })}
-                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-medium bg-white"
+                                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy font-medium bg-white rounded-xl"
                                             >
                                                 <option value="idleforest_planting">IdleForest planting pool</option>
                                                 <option value="company_named_donation">Donation in company name</option>
@@ -3850,89 +3850,89 @@ export default function AdminPage() {
                                             </select>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">USD Cents / 1k Points</label>
+                                            <label className="text-sm font-bold text-black block">USD Cents / 1k Points</label>
                                             <input
                                                 type="number"
                                                 min="0"
                                                 value={newCompany.payout_rate_cents_per_1000_points}
                                                 onChange={e => setNewCompany({ ...newCompany, payout_rate_cents_per_1000_points: Number(e.target.value) || 0 })}
-                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                             />
                                             <p className="text-xs text-neutral-500">Default 27 cents is rounded down from the observed request payout rate.</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Recipient Name</label>
+                                            <label className="text-sm font-bold text-black block">Recipient Name</label>
                                             <input
                                                 type="text"
                                                 value={newCompany.payout_recipient_name}
                                                 onChange={e => setNewCompany({ ...newCompany, payout_recipient_name: e.target.value })}
-                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                                 placeholder="Silveira Tech"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Recipient URL</label>
+                                            <label className="text-sm font-bold text-black block">Recipient URL</label>
                                             <input
                                                 type="url"
                                                 value={newCompany.payout_recipient_url}
                                                 onChange={e => setNewCompany({ ...newCompany, payout_recipient_url: e.target.value })}
-                                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                                 placeholder="https://..."
                                             />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold uppercase tracking-wider text-black block">Routing Notes</label>
+                                        <label className="text-sm font-bold text-black block">Routing Notes</label>
                                         <textarea
                                             value={newCompany.payout_notes}
                                             onChange={e => setNewCompany({ ...newCompany, payout_notes: e.target.value })}
-                                            className="w-full min-h-[72px] px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy resize-y"
+                                            className="w-full min-h-[72px] px-4 py-3 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy resize-y rounded-xl"
                                             placeholder="How this company should be paid or donated..."
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2 border-t border-neutral-200 pt-4 mt-4">
-                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Custom Explainer Video URL (YouTube, MP4)</label>
+                                    <label className="text-sm font-bold text-black block">Custom Explainer Video URL (YouTube, MP4)</label>
                                     <input
                                         type="url"
                                         value={newCompany.video_url}
                                         onChange={e => setNewCompany({ ...newCompany, video_url: e.target.value })}
-                                        className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                        className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                         placeholder="https://youtube.com/watch?v=..."
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Company Logo URL</label>
+                                    <label className="text-sm font-bold text-black block">Company Logo URL</label>
                                     <input
                                         type="url"
                                         value={newCompany.logo_url}
                                         onChange={e => setNewCompany({ ...newCompany, logo_url: e.target.value })}
-                                        className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                        className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                         placeholder="https://acme.com/logo.png"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold uppercase tracking-wider text-black block">Short Description</label>
+                                    <label className="text-sm font-bold text-black block">Short Description</label>
                                     <textarea
                                         value={newCompany.description}
                                         onChange={e => setNewCompany({ ...newCompany, description: e.target.value })}
-                                        className="w-full min-h-[100px] px-4 py-3 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy resize-y"
+                                        className="w-full min-h-[100px] px-4 py-3 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy resize-y rounded-xl"
                                         placeholder="Join us in making the world greener..."
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="p-4 border-t-4 border-black bg-neutral-50 flex justify-end gap-3 shrink-0">
+                        <div className="p-4 border-t border-neutral-200 bg-neutral-50 flex justify-end gap-3 shrink-0">
                             <button
                                 type="button"
                                 onClick={() => setIsCompanyModalOpen(false)}
-                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-black bg-white hover:bg-neutral-100 transition-colors"
+                                className="px-6 py-2 border border-neutral-200 font-bold text-black bg-white hover:bg-neutral-100 transition-colors rounded-full"
                             >
                                 Cancel
                             </button>
@@ -3940,7 +3940,7 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={handleSaveCompany}
                                 disabled={isSavingCompany || !newCompany.name.trim()}
-                                className="px-6 py-2 border-2 border-black font-bold uppercase tracking-wider text-white bg-brand-navy hover:bg-brand-navy/90 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-none flex items-center gap-2"
+                                className="px-6 py-2 font-bold text-white bg-brand-navy hover:bg-brand-navy/90 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 rounded-full"
                             >
                                 {isSavingCompany && <Loader2 className="h-4 w-4 animate-spin" />}
                                 Save Company
@@ -3953,10 +3953,10 @@ export default function AdminPage() {
             {/* PREVIEW WIDGET MODAL */}
             {previewCompany && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white border-4 border-black shadow-none w-full max-w-md flex flex-col relative overflow-hidden">
+                    <div className="bg-white border border-neutral-200 w-full max-w-md flex flex-col relative overflow-hidden rounded-2xl">
                         {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b-4 border-black bg-neutral-50">
-                            <h2 className="text-lg font-extrabold font-candu uppercase text-black break-words flex-1 pr-4">
+                        <div className="flex items-center justify-between p-4 border-b border-neutral-200 bg-neutral-50">
+                            <h2 className="text-lg font-extrabold text-black break-words flex-1 pr-4">
                                 Preview: {previewCompany.name}
                             </h2>
                             <button
@@ -3978,7 +3978,7 @@ export default function AdminPage() {
                             ></iframe>
                         </div>
 
-                        <div className="p-4 border-t-4 border-black bg-neutral-50 flex justify-between items-center text-xs text-neutral-500 font-medium">
+                        <div className="p-4 border-t border-neutral-200 bg-neutral-50 flex justify-between items-center text-xs text-neutral-500 font-medium">
                             <span>Width: 350px</span>
                             <span>Height: 480px</span>
                         </div>
@@ -3990,9 +3990,9 @@ export default function AdminPage() {
             {
                 isTemplateModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-4xl border-2 border-black shadow-none p-6 max-h-[95vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-4xl border border-neutral-200 p-6 max-h-[95vh] overflow-y-auto rounded-2xl">
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-extrabold font-candu uppercase text-black">
+                                <h2 className="text-xl font-extrabold text-black">
                                     {templateModalMode === 'create' ? 'Create Template' : 'Edit Template'}
                                 </h2>
                                 <button onClick={handleCloseTemplateModal} className="p-1 hover:bg-neutral-100 rounded">
@@ -4019,7 +4019,7 @@ export default function AdminPage() {
                                                     required
                                                     value={newTemplate.name}
                                                     onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })}
-                                                    className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                    className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                                     placeholder="e.g. Welcome Email"
                                                 />
                                             </div>
@@ -4028,7 +4028,7 @@ export default function AdminPage() {
                                                 <input
                                                     value={newTemplate.from_email}
                                                     onChange={e => setNewTemplate({ ...newTemplate, from_email: e.target.value })}
-                                                    className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                    className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                                     placeholder="Daniel from IdleForest <daniel@idleforest.com>"
                                                 />
                                             </div>
@@ -4039,7 +4039,7 @@ export default function AdminPage() {
                                                 required
                                                 value={newTemplate.subject}
                                                 onChange={e => setNewTemplate({ ...newTemplate, subject: e.target.value })}
-                                                className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                                 placeholder="Email subject..."
                                             />
                                         </div>
@@ -4049,7 +4049,7 @@ export default function AdminPage() {
                                                 required
                                                 value={newTemplate.content}
                                                 onChange={e => setNewTemplate({ ...newTemplate, content: e.target.value })}
-                                                className="w-full px-3 py-2 border-2 border-black min-h-[400px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                                className="w-full px-3 py-2 border border-neutral-200 min-h-[400px] text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                                 placeholder="<p>Enter HTML content here...</p>"
                                             />
                                         </div>
@@ -4057,13 +4057,13 @@ export default function AdminPage() {
                                             <button
                                                 type="button"
                                                 onClick={handleCloseTemplateModal}
-                                                className="px-4 py-2 font-bold border-2 border-transparent hover:bg-neutral-100"
+                                                className="px-4 py-2 font-bold border border-transparent hover:bg-neutral-100"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-none font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all"
+                                                className="px-6 py-2 bg-brand-yellow font-bold transition-all rounded-full"
                                             >
                                                 {templateModalMode === 'create' ? 'Create Template' : 'Save Changes'}
                                             </button>
@@ -4072,7 +4072,7 @@ export default function AdminPage() {
                                 </TabsContent>
 
                                 <TabsContent value="preview">
-                                    <div className="border-2 border-neutral-300 rounded-md bg-gray-50 overflow-hidden">
+                                    <div className="border border-neutral-300 rounded-md bg-gray-50 overflow-hidden">
                                         <div className="bg-white border-b border-neutral-200 p-3 text-sm text-neutral-500 flex gap-4">
                                             <span><span className="font-bold text-black">Subject:</span> {newTemplate.subject || '(No subject)'}</span>
                                         </div>
@@ -4096,9 +4096,9 @@ export default function AdminPage() {
             {
                 isEmailModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-lg border-2 border-black shadow-none p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-lg border border-neutral-200 p-6 max-h-[90vh] overflow-y-auto rounded-2xl">
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                <h2 className="text-xl font-extrabold text-black flex items-center gap-2">
                                     <Mail className="h-5 w-5" /> Send Email
                                 </h2>
                                 <button onClick={() => setIsEmailModalOpen(false)} className="p-1 hover:bg-neutral-100 rounded">
@@ -4107,7 +4107,7 @@ export default function AdminPage() {
                             </div>
 
                             {emailResult && (
-                                <div className={`mb-4 p-3 border-2 border-black ${emailResult.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                <div className={`mb-4 p-3 border border-neutral-200 rounded-2xl ${emailResult.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                     <p className="font-bold text-sm">{emailResult.message}</p>
                                 </div>
                             )}
@@ -4119,10 +4119,10 @@ export default function AdminPage() {
 
                                 {templates.length > 0 && (
                                     <div>
-                                        <label className="block text-xs font-bold uppercase text-neutral-500 mb-1">Load Template</label>
+                                        <label className="block text-xs font-bold text-neutral-500 mb-1">Load Template</label>
                                         <select
                                             onChange={(e) => handleLoadTemplate(e.target.value)}
-                                            className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white"
+                                            className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow bg-white rounded-xl"
                                             defaultValue=""
                                         >
                                             <option value="" disabled>Select a template...</option>
@@ -4139,7 +4139,7 @@ export default function AdminPage() {
                                         required
                                         value={emailCompose.subject}
                                         onChange={e => setEmailCompose({ ...emailCompose, subject: e.target.value })}
-                                        className="w-full px-3 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                        className="w-full px-3 py-2 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                         placeholder="Subject line..."
                                     />
                                 </div>
@@ -4150,7 +4150,7 @@ export default function AdminPage() {
                                         required
                                         value={emailCompose.content}
                                         onChange={e => setEmailCompose({ ...emailCompose, content: e.target.value })}
-                                        className="w-full px-3 py-2 border-2 border-black min-h-[200px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                                        className="w-full px-3 py-2 border border-neutral-200 min-h-[200px] text-sm focus:outline-none focus:ring-2 focus:ring-brand-yellow rounded-xl"
                                         placeholder="Email content..."
                                     />
                                 </div>
@@ -4160,7 +4160,7 @@ export default function AdminPage() {
                                         type="button"
                                         onClick={handleSendTestEmail}
                                         disabled={emailCompose.loading || !emailCompose.content || !emailCompose.subject}
-                                        className="px-4 py-2 bg-brand-navy text-brand-yellow border-2 border-black shadow-none font-bold text-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                        className="px-4 py-2 bg-brand-navy text-brand-yellow font-bold text-sm transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none rounded-full"
                                         title="Send test email to daniiba account"
                                     >
                                         🧪 Test (daniiba)
@@ -4169,7 +4169,7 @@ export default function AdminPage() {
                                         <button
                                             type="button"
                                             onClick={() => setIsEmailModalOpen(false)}
-                                            className="px-4 py-2 font-bold border-2 border-transparent hover:bg-neutral-100"
+                                            className="px-4 py-2 font-bold border border-transparent hover:bg-neutral-100"
                                             disabled={emailCompose.loading}
                                         >
                                             Cancel
@@ -4177,7 +4177,7 @@ export default function AdminPage() {
                                         <button
                                             type="submit"
                                             disabled={emailCompose.loading}
-                                            className="px-6 py-2 bg-brand-yellow border-2 border-black shadow-none font-bold hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none active:shadow-none transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none"
+                                            className="px-6 py-2 bg-brand-yellow font-bold transition-all disabled:opacity-50 disabled:shadow-none disabled:transform-none rounded-full"
                                         >
                                             {emailCompose.loading ? (
                                                 <span className="flex items-center gap-2">
@@ -4201,10 +4201,10 @@ export default function AdminPage() {
             {
                 isHistoryModalOpen && historyUser && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-2xl border-2 border-black shadow-none p-6 max-h-[90vh] overflow-y-auto">
+                        <div className="bg-white w-full max-w-2xl border border-neutral-200 p-6 max-h-[90vh] overflow-y-auto rounded-2xl">
                             <div className="flex justify-between items-center mb-6">
                                 <div>
-                                    <h2 className="text-xl font-extrabold font-candu uppercase text-black flex items-center gap-2">
+                                    <h2 className="text-xl font-extrabold text-black flex items-center gap-2">
                                         <History className="h-5 w-5" /> Email History
                                     </h2>
                                     <p className="text-sm text-neutral-500 mt-1">{historyUser.display_name} ({historyUser.email || 'No email'})</p>
@@ -4221,12 +4221,12 @@ export default function AdminPage() {
                             ) : emailHistory.length > 0 ? (
                                 <div className="space-y-3">
                                     {emailHistory.map((log) => (
-                                        <div key={log.id} className="p-4 border-2 border-neutral-200 hover:border-black transition-colors">
+                                        <div key={log.id} className="p-4 border border-neutral-200 hover:border-neutral-400 transition-colors">
                                             <div className="flex items-start justify-between gap-4">
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-bold text-sm truncate">{log.subject}</p>
                                                     <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
-                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${log.email_type === 'broadcast' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${log.email_type === 'broadcast' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
                                                             {log.email_type}
                                                         </span>
                                                         {log.segment && (
@@ -4268,7 +4268,7 @@ export default function AdminPage() {
                                                     </div>
                                                 </div>
                                                 <div className="text-right flex-shrink-0">
-                                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold uppercase ${log.status === 'sent' || log.status === 'delivered' ? 'bg-green-100 text-green-700' :
+                                                    <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold ${log.status === 'sent' || log.status === 'delivered' ? 'bg-green-100 text-green-700' :
                                                         log.status === 'bounced' || log.status === 'complained' ? 'bg-red-100 text-red-700' :
                                                             'bg-neutral-100 text-neutral-700'
                                                         }`}>
@@ -4283,7 +4283,7 @@ export default function AdminPage() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="py-12 text-center text-neutral-500 border-2 border-dashed border-neutral-300">
+                                <div className="py-12 text-center text-neutral-500 border border-dashed border-neutral-300">
                                     <History className="h-8 w-8 mx-auto mb-2 text-neutral-300" />
                                     <p className="font-bold">No emails sent to this user yet</p>
                                 </div>

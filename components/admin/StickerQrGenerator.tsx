@@ -9,8 +9,8 @@ import { buildStickerLink, DEFAULT_STICKER_CTA, generateSticker, type StickerAss
 const initialDraft: StickerDraft = {
     destination: 'https://idleforest.com/', campaign: 'campus_launch', content: '', cta: DEFAULT_STICKER_CTA,
 }
-const inputClass = 'mt-2 w-full border-2 border-black bg-white px-3 py-2 text-sm font-normal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black'
-const buttonClass = 'inline-flex items-center justify-center gap-2 border-2 border-black px-4 py-2 text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:cursor-not-allowed disabled:opacity-50'
+const inputClass = 'mt-2 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm font-normal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black'
+const buttonClass = 'inline-flex items-center justify-center gap-2 rounded-full border border-neutral-300 px-4 py-2 text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:cursor-not-allowed disabled:opacity-50'
 
 let logoPromise: Promise<string> | undefined
 function loadLogo() {
@@ -78,13 +78,13 @@ export default function StickerQrGenerator() {
 
     return (
         <section className="space-y-6 text-black" aria-labelledby="sticker-heading">
-            <div className="border-2 border-black bg-white p-6">
-                <div className="flex items-center gap-3"><QrCode className="h-7 w-7" /><h2 id="sticker-heading" className="font-candu text-3xl font-extrabold uppercase">QR stickers</h2></div>
+            <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                <div className="flex items-center gap-3"><QrCode className="h-7 w-7" /><h2 id="sticker-heading" className="text-3xl font-extrabold">QR stickers</h2></div>
                 <p className="mt-2 max-w-3xl text-sm text-neutral-600">Create one QR code with the IdleForest logo and your chosen destination. Print the same code on as many stickers as you need.</p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-                <form onSubmit={event => { event.preventDefault(); if (preview) setCreated(true) }} className="min-w-0 space-y-5 border-2 border-black bg-white p-6">
+                <form onSubmit={event => { event.preventDefault(); if (preview) setCreated(true) }} className="min-w-0 space-y-5 border border-neutral-200 bg-white p-6 rounded-2xl">
                     <h3 className="text-lg font-extrabold">Your QR code</h3>
                     <label className="block text-sm font-bold" htmlFor="qr-destination-input">Destination URL
                         <input id="qr-destination-input" type="url" className={inputClass} value={draft.destination} onChange={event => update('destination', event.target.value)} maxLength={500} placeholder="https://idleforest.com/" required aria-describedby="qr-url-help" />
@@ -105,18 +105,18 @@ export default function StickerQrGenerator() {
                     </button>
                 </form>
 
-                <div className="min-w-0 border-2 border-black bg-neutral-100 p-6">
+                <div className="min-w-0 border border-neutral-200 bg-neutral-100 p-6 rounded-2xl">
                     <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 className="text-lg font-extrabold">Sticker preview</h3><span className="font-mono text-xs text-neutral-600">50 × 70 mm · SVG</span></div>
                     <div className="my-6 flex min-h-[350px] items-center justify-center">
-                        {svgUrl ? <img src={svgUrl} alt={`Sticker with the IdleForest logo: ${draft.cta}`} width={250} height={350} className="h-auto w-[250px] max-w-full border border-neutral-300 bg-white shadow-[6px_6px_0_0_#D9D9D9]" /> : <p className="max-w-xs text-center text-sm text-neutral-500">{plan.error || error ? 'Complete the details or retry to preview your code.' : 'Generating preview…'}</p>}
+                        {svgUrl ? <img src={svgUrl} alt={`Sticker with the IdleForest logo: ${draft.cta}`} width={250} height={350} className="h-auto w-[250px] max-w-full border border-neutral-300 bg-white shadow-md" /> : <p className="max-w-xs text-center text-sm text-neutral-500">{plan.error || error ? 'Complete the details or retry to preview your code.' : 'Generating preview…'}</p>}
                     </div>
-                    {plan.link && <div className="space-y-2"><p className="text-xs font-bold uppercase">Encoded destination</p><p className="break-all border border-neutral-300 bg-white p-3 font-mono text-xs leading-5" data-testid="qr-destination">{plan.link.url}</p></div>}
+                    {plan.link && <div className="space-y-2"><p className="text-xs font-bold">Encoded destination</p><p className="break-all border border-neutral-300 bg-white p-3 font-mono text-xs leading-5" data-testid="qr-destination">{plan.link.url}</p></div>}
                     <p className="mt-4 text-xs leading-5 text-neutral-600">The logo is embedded in both downloads. The QR is 40 × 40 mm with Q error correction and a clear white border. Scan a printed sample before printing more copies.</p>
                 </div>
             </div>
 
             <div aria-live="polite" role="status" className="text-sm">{created && preview ? 'Your QR code is ready. Use the same artwork for every sticker.' : ''}</div>
-            {created && preview && <div className="space-y-4 border-2 border-black bg-white p-6">
+            {created && preview && <div className="space-y-4 border border-neutral-200 bg-white p-6 rounded-2xl">
                 <h3 className="text-xl font-extrabold">Download your QR code</h3>
                 <div className="flex flex-wrap gap-3">
                     <button type="button" className={`${buttonClass} bg-brand-yellow`} onClick={() => download(preview.qrSvg, `${preview.filename}_qr.svg`)}><Download className="h-4 w-4" /> Download QR SVG</button>

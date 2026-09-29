@@ -1,6 +1,7 @@
 'use client'
 
-import { Apple, ChevronDown, Chrome, LogOut, Menu, Monitor, X } from "lucide-react"
+import { ChevronDown, Chrome, LogOut, Menu, X } from "lucide-react"
+import { OsLogo } from "@/components/icons/os-logos"
 import { Link, usePathname, useRouter } from "@/navigation"
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -114,12 +115,11 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
   const headerCtaPlatformLabel = headerCtaPlatform === 'mac' ? 'Mac' : headerCtaPlatform === 'linux' ? 'Linux' : 'Windows'
   const desktopDownloadActionHref = `/download/${headerCtaPlatform}/installer`
   const desktopDownloadLabel = `Download for ${headerCtaPlatformLabel} — It’s Free`
-  const DesktopDownloadIcon = headerCtaPlatform === 'mac' ? Apple : Monitor
-
+  
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/20 backdrop-blur-md shadow-sm transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white/85 backdrop-blur-md transition-all">
       {!hideBanner && <TopTeamsBanner />}
-      <div className="relative mx-auto px-4 h-24 grid grid-cols-[auto_1fr_auto] items-center gap-3">
+      <div className="relative mx-auto max-w-7xl px-4 h-20 grid grid-cols-[auto_1fr_auto] items-center gap-3">
         <Link href='/' className="flex items-center gap-2 col-start-1 justify-self-start">
           <Image src="/logo.png" alt="IdleForest logo" width={121} height={33} className="w-[100px] md:w-[121px]" />
         </Link>
@@ -132,7 +132,6 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
           <NavLink href="/transparency" label="Transparency" active={isActive('/transparency')} />
           <NavDropdown label="More" active={hasActiveChild(moreLinks)} items={moreLinks} />
         </nav>
-        <div className="absolute z-[-100] top-0 left-0 bg-brand-gray opacity-50 h-full w-full"></div>
 
         {isMobile && isChrome && (
           <a
@@ -141,7 +140,7 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             rel="noopener noreferrer"
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick('add_to_chrome_header_mobile')}
-            className="lg:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-black shadow-none ring-2 ring-black"
+            className="lg:hidden col-start-2 justify-self-center inline-flex max-w-[190px] items-center justify-center gap-1.5 rounded-full bg-brand-yellow px-3 py-2 text-center text-xs font-bold leading-tight text-brand-navy"
           >
             <Chrome className="h-4 w-4 shrink-0" />
             Add to Chrome — It’s Free
@@ -155,21 +154,21 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             <div className="flex items-center gap-2">
 
               <Link href={profileUrl}>
-                <Button className="bg-brand-yellow text-black border-2 border-black hover:bg-white hover:text-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-none translate-y-0 transition-all active:translate-y-1">
+                <Button className="rounded-full bg-brand-navy px-5 text-sm font-bold text-white hover:bg-black">
                   {t('profile')}
                 </Button>
               </Link>
               <button
                 onClick={handleLogout}
-                className="p-2 border-2 border-transparent hover:border-black rounded-md hover:bg-red-50 text-neutral-600 hover:text-red-600 transition-all"
+                className="p-2 rounded-full hover:bg-red-50 text-neutral-500 hover:text-red-600 transition-colors"
                 title="Log out"
               >
-                <LogOut size={24} />
+                <LogOut size={20} />
               </button>
             </div>
           ) : (
             <Link href="/auth/user/login">
-              <Button className="bg-black text-white border-2 border-transparent hover:bg-brand-yellow hover:text-black hover:border-black font-bold font-candu uppercase text-lg shadow-none hover:shadow-none transition-all">
+              <Button variant="ghost" className="rounded-full px-5 text-sm font-bold text-brand-navy hover:bg-neutral-100">
                 {t('login')}
               </Button>
             </Link>
@@ -178,9 +177,9 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             href={desktopDownloadActionHref}
             data-source-page={pathname}
             onClick={() => trackHeaderInstallClick(`download_${headerCtaPlatform}_header`)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-extrabold leading-none text-black shadow-none ring-2 ring-black transition-all hover:bg-white hover:shadow-none lg:px-5"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-4 py-3 text-sm font-bold leading-none text-brand-navy transition-all hover:brightness-95 lg:px-5"
           >
-            <DesktopDownloadIcon className="h-5 w-5 shrink-0" />
+            <OsLogo os={headerCtaPlatform} className="h-5 w-5 shrink-0" />
             <span>{desktopDownloadLabel}</span>
           </a>
         </div>
@@ -189,22 +188,22 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
         <button
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
-          className="lg:hidden justify-self-end col-start-3 p-2 rounded-md hover:bg-black/10 transition-colors"
+          className="lg:hidden justify-self-end col-start-3 p-2 rounded-full hover:bg-neutral-100 transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <X className="text-black" size={28} /> : <Menu className="text-black" size={28} />}
+          {isMenuOpen ? <X className="text-brand-navy" size={26} /> : <Menu className="text-brand-navy" size={26} />}
         </button>
       </div>
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <nav className="lg:hidden bg-brand-gray/95 backdrop-blur-xl border-t border-black/10 absolute w-full left-0 top-full shadow-xl">
-          <div className="container mx-auto px-4 py-6 flex max-h-[calc(100vh-6rem)] flex-col gap-3 overflow-y-auto">
+        <nav className="lg:hidden bg-white border-t border-neutral-200 absolute w-full left-0 top-full shadow-xl">
+          <div className="container mx-auto px-4 py-6 flex max-h-[calc(100vh-5rem)] flex-col gap-3 overflow-y-auto">
             <MobileLink href="/how-it-works" label="How it Works" active={isActive('/how-it-works')} onClick={() => setIsMenuOpen(false)} />
             <MobileLink href="/partners" label="Partners" active={isActive('/partners')} onClick={() => setIsMenuOpen(false)} />
 
-            <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
-              <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">Download</p>
+            <div className="rounded-2xl bg-neutral-50 p-3">
+              <p className="mb-2 text-center text-xs font-semibold text-neutral-500">Download</p>
               <div className="flex flex-col gap-2">
                 {downloadLinks.map(({ href, label }) => (
                   <MobileLink key={href} href={href} label={label} active={isActive(href)} onClick={() => setIsMenuOpen(false)} compact />
@@ -214,8 +213,8 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
 
             <MobileLink href="/transparency" label="Transparency" active={isActive('/transparency')} onClick={() => setIsMenuOpen(false)} />
 
-            <div className="rounded-lg border-2 border-black/10 bg-white/50 p-3">
-              <p className="mb-2 text-center text-sm font-extrabold uppercase text-neutral-600">More</p>
+            <div className="rounded-2xl bg-neutral-50 p-3">
+              <p className="mb-2 text-center text-xs font-semibold text-neutral-500">More</p>
               <div className="flex flex-col gap-2">
                 {moreLinks.map(({ href, label }) => (
                   <MobileLink key={href} href={href} label={label} active={isActive(href)} onClick={() => setIsMenuOpen(false)} compact />
@@ -226,20 +225,20 @@ export default function Navigation({ variant = 'default', hideBanner = false }: 
             {user ? (
               <div className="space-y-4">
                 <Link href={profileUrl} onClick={() => setIsMenuOpen(false)} className="w-full">
-                  <Button className="w-full bg-brand-yellow text-black border-2 border-black font-bold font-candu uppercase text-xl py-6 shadow-none">
+                  <Button className="w-full rounded-full bg-brand-navy py-6 text-base font-bold text-white hover:bg-black">
                     {t('go_to_profile')}
                   </Button>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-center py-2 font-bold text-red-600 hover:bg-red-50 rounded-md"
+                  className="w-full text-center py-2 font-bold text-red-600 hover:bg-red-50 rounded-full"
                 >
                   {t('log_out')}
                 </button>
               </div>
             ) : (
               <Link href="/auth/user/login" onClick={() => setIsMenuOpen(false)} className="w-full">
-                <Button className="w-full bg-black text-white font-bold font-candu uppercase text-xl py-6 border-2 border-transparent">
+                <Button className="w-full rounded-full bg-brand-navy py-6 text-base font-bold text-white hover:bg-black">
                   {t('login')}
                 </Button>
               </Link>
@@ -257,8 +256,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
   return (
     <Link
       href={href}
-      className={`relative px-1 pb-1 pt-2 text-base lg:text-lg font-bold leading-none tracking-normal text-center transition-colors duration-150 text-black hover:text-brand-yellow ${active ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-brand-yellow after:content-[""]' : ''
-        }`}
+      className={`rounded-full px-3.5 py-2 text-sm lg:text-base font-semibold leading-none text-center transition-colors duration-150 hover:bg-neutral-100 ${active ? 'bg-neutral-100 text-brand-navy' : 'text-neutral-700 hover:text-brand-navy'}`}
     >
       {label}
     </Link>
@@ -278,18 +276,17 @@ function NavDropdown({
     <div className="group relative">
       <button
         type="button"
-        className={`relative inline-flex items-center gap-1 px-1 pb-1 pt-2 text-base lg:text-lg font-bold leading-none tracking-normal text-black transition-colors duration-150 hover:text-brand-yellow ${active ? 'after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-brand-yellow after:content-[""]' : ''
-          }`}
+        className={`inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm lg:text-base font-semibold leading-none transition-colors duration-150 hover:bg-neutral-100 ${active ? 'bg-neutral-100 text-brand-navy' : 'text-neutral-700 hover:text-brand-navy'}`}
       >
         {label}
         <ChevronDown className="h-4 w-4" />
       </button>
-      <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-lg border-2 border-black bg-white p-2 opacity-0 shadow-none transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+      <div className="invisible absolute left-1/2 top-full z-50 mt-3 min-w-56 -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
         {items.map(({ href, label: itemLabel }) => (
           <Link
             key={href}
             href={href}
-            className="block rounded-md px-4 py-3 text-sm font-bold text-black hover:bg-brand-yellow"
+            className="block rounded-xl px-4 py-2.5 text-sm font-semibold text-brand-navy hover:bg-neutral-100"
           >
             {itemLabel}
           </Link>
@@ -316,7 +313,7 @@ function MobileLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`${compact ? 'py-2 text-lg' : 'py-2 text-2xl'} text-center font-bold transition-colors ${active ? 'text-brand-yellow' : 'text-black hover:text-brand-yellow'}`}
+      className={`${compact ? 'py-2 text-lg' : 'py-2 text-2xl'} text-center font-bold transition-colors ${active ? 'text-brand-navy underline decoration-brand-yellow decoration-4 underline-offset-4' : 'text-neutral-700 hover:text-brand-navy'}`}
     >
       {label}
     </Link>
