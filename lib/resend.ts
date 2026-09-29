@@ -279,3 +279,31 @@ export async function listContacts(audienceId: string): Promise<{ success: boole
         return { success: false, error: err instanceof Error ? err.message : 'Unknown error' }
     }
 }
+
+// Send up to 100 emails in one request (Resend batch API).
+export async function sendEmailBatch(
+    items: Array<{ to: string; subject: string; html: string; from?: string }>
+): Promise<{ success: boolean; ids: Array<string | null>; error?: string }> {
+    if (items.length === 0) return { success: true, ids: [] }
+    try {
+        const payload = await Promise.all(items.map(async item => {
+            const unsubscribeUrl = await generateUnsubscribeUrl(item.to)
+            return {
+                from: item.from || 'Daniel from IdleForest <daniel@idleforest.com>',
+                to: item.to,
+                subject: item.subject,
+                html: item.html,
+                headers: {
+                    'List-Unsubscribe': `<${unsubscribeUrl}>`,
+                    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                },
+            }
+        }))
+        const { data, error } = await resend.batch.send(payload)
+        if (error) return { success: false, ids: items.map(() => null), error: error.message }
+        const ids = (data?.data || []).map(entry => entry?.id || null)
+        return { success: true, ids: items.map((_, index) => ids[index] || null) }
+    } catch (err) {
+        return { success: false, ids: items.map(() => null), error: err instanceof Error ? err.message : 'Unknown error' }
+    }
+}

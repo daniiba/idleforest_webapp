@@ -16,6 +16,7 @@ import { getAdminStats, getMonthlyRevenueHistory, verifyAdminPassword, verifyAdm
 import chromeStoreData from './chrome-store-data.json'
 import { TrendingUp, TrendingDown, Users, Activity, DollarSign, Target, ChevronDown, ChevronUp, Lock, Zap, Clock, UserPlus, RefreshCw, Mail, Send, Loader2, Search, Plus, Trash2, X, FileText, Pencil, Eye, Code, List, UserX, Calendar, History, Trophy, Check, MousePointer, AlertTriangle, Download, Link2, TreePine, Monitor, PawPrint, ExternalLink } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import ForestLaunchCard from './ForestLaunchCard'
 
 const LazyStickerQrGenerator = dynamic(() => import('@/components/admin/StickerQrGenerator'), {
     ssr: false,
@@ -2869,6 +2870,7 @@ export default function AdminPage() {
 
                     {/* AUDIENCES TAB */}
                     <TabsContent value="audiences" className="space-y-6 mt-6">
+                        <ForestLaunchCard />
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-xl font-extrabold flex items-center gap-2 font-candu uppercase text-black">
                                 <List className="h-5 w-5 text-brand-navy" />

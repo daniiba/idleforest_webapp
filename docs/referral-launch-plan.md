@@ -41,7 +41,7 @@ It appears on `/referrals`, public profiles, the invite landing page, the deskto
 
 | When | Channel | What |
 |---|---|---|
-| Morning | Email broadcast | Admin → Email → template **"Referral launch: plant a tree with a friend"** → audience: productive-node users. Subject: *Plant a tree with a friend 🌳* |
+| Morning | Personal forest email | Admin → Lists → **Forest launch email**. Send yourself a test, then press **Start sending**. Every member with an active node gets their own forest image and one-tap invite buttons. It goes out in batches with the hourly referral job and nobody gets it twice. You can pause at any time. |
 | Same time | Web app | The `/referrals` banner shows a **New** pill until 15 Nov. The forest panel sits at the top of `/referrals`. |
 | Same time | Desktop | Release notes: "New: Invite tab, see your forest, plant a tree with a friend". The milestone card shows to anyone with 3+ active days. |
 | Midday | Discord | Post the demo island image and the offer (copy below). Pin it. |
@@ -102,3 +102,9 @@ What to watch:
   - Only signups after `program_started_at` count, so historical referrals are never paid.
   - Self-referral is blocked by a database constraint.
 - **Kill switch:** `update referral_reward_settings set enabled = false;` stops new rewards immediately, and the copy everywhere stops promising trees.
+
+## 6. Always-on nudges
+
+- **Friend has not started.** Three days after someone joins through your link without starting the app, the hourly job emails you once with a ready-made reminder (WhatsApp, email). On `/referrals`, a **Remind** button next to each person who has not started opens the same message.
+- **Desktop forest updates.** The desktop app shows a system notification when someone you invited joins, when you both get a tree, and when your forest reaches 10, 25, 50, 100, 250 and more trees. At most one a day (rewards always), never on first launch. Clicking it opens the Invite tab. Members can turn it off in Settings → Forest updates.
+- Run `20261003_referral_engagement.sql` before using either of the emails.

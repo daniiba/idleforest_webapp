@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Copy, Loader2, Share2 } from 'lucide-react'
+import { Bell, Check, Copy, Loader2, Mail, MessageCircle, Share2 } from 'lucide-react'
 import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
 import { formatTrees } from '@/lib/referral-reward-settings'
+import { emailShareUrl, reminderMessage, whatsappUrl } from '@/lib/referral-messages'
 import { LAUNCH_BADGE_UNTIL, useReferralInvite, type ReferredUser } from '@/components/referrals/useReferralInvite'
 
 type Reward = { treesPerPerson: number; minActiveDays: number } | null
@@ -21,7 +22,7 @@ export default function ReferralsDashboard({ reward }: { reward: Reward }) {
             <InvitedPeople
                 loading={invite.loading}
                 people={invite.summary?.referredUsers || []}
-                rewardEnabled={Boolean(reward)}
+                reward={reward}
             />
         </div>
     )
@@ -136,24 +137,34 @@ function statusOf(person: ReferredUser, rewardEnabled: boolean) {
     return { rank: 1, label: 'Joined', className: 'bg-white/60 text-neutral-600' }
 }
 
-function InvitedPeople({ loading, people, rewardEnabled }: {
+function InvitedPeople({ loading, people, reward }: {
     loading: boolean
     people: ReferredUser[]
-    rewardEnabled: boolean
+    reward: Reward
 }) {
     const [showAll, setShowAll] = useState(false)
+    const [open, setOpen] = useState<string | null>(null)
     if (loading) return null
 
+    const rewardEnabled = Boolean(reward)
     const sorted = [...people].sort((a, b) =>
         statusOf(b, rewardEnabled).rank - statusOf(a, rewardEnabled).rank || (b.trees || 0) - (a.trees || 0)
     )
     const shown = showAll ? sorted : sorted.slice(0, 8)
+    const waiting = people.filter(person => !person.activated).length
 
     return (
         <section aria-labelledby="people-heading" className="border-2 border-black bg-brand-gray">
-            <h2 id="people-heading" className="border-b-2 border-black px-6 py-4 font-candu text-2xl font-extrabold uppercase leading-none text-brand-navy">
-                People you invited{people.length > 0 ? ` (${people.length})` : ''}
-            </h2>
+            <div className="flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-black px-6 py-4">
+                <h2 id="people-heading" className="font-candu text-2xl font-extrabold uppercase leading-none text-brand-navy">
+                    People you invited{people.length > 0 ? ` (${people.length})` : ''}
+                </h2>
+                {waiting > 0 ? (
+                    <p className="text-sm font-bold text-neutral-700">
+                        {waiting === 1 ? '1 person has' : `${waiting} people have`} not started yet. A short reminder helps.
+                    </p>
+                ) : null}
+            </div>
 
             {people.length === 0 ? (
                 <p className="px-6 py-5 text-sm font-semibold text-neutral-600">No one yet.</p>
@@ -161,15 +172,32 @@ function InvitedPeople({ loading, people, rewardEnabled }: {
                 <ul>
                     {shown.map((person, index) => {
                         const status = statusOf(person, rewardEnabled)
+                        const key = `${person.displayName}-${person.joinedAt}-${index}`
+                        const canRemind = !person.activated
+                        const isOpen = open === key
                         return (
-                            <li key={`${person.displayName}-${person.joinedAt}-${index}`} className="flex items-center gap-3 border-b border-black/15 px-6 py-3 last:border-b-0">
-                                <p className="min-w-0 flex-1 truncate font-black">{person.displayName}</p>
-                                <span className={`shrink-0 border-2 border-black px-2 py-0.5 text-[11px] font-black uppercase tracking-wider ${status.className}`}>
-                                    {status.label}
-                                </span>
-                                <p className="w-20 shrink-0 text-right font-mono text-sm font-black tabular-nums">
-                                    {formatTrees(person.trees || 0)}
-                                </p>
+                            <li key={key} className="border-b border-black/15 last:border-b-0">
+                                <div className="flex items-center gap-3 px-6 py-3">
+                                    <p className="min-w-0 flex-1 truncate font-black">{person.displayName}</p>
+                                    {canRemind ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => setOpen(isOpen ? null : key)}
+                                            aria-expanded={isOpen}
+                                            className={`inline-flex shrink-0 items-center gap-1.5 border-2 border-black px-2.5 py-1 text-xs font-black uppercase ${isOpen ? 'bg-black text-brand-yellow' : 'bg-brand-yellow text-black hover:bg-black hover:text-brand-yellow'}`}
+                                        >
+                                            <Bell className="h-3.5 w-3.5" aria-hidden="true" />
+                                            Remind
+                                        </button>
+                                    ) : null}
+                                    <span className={`shrink-0 border-2 border-black px-2 py-0.5 text-[11px] font-black uppercase tracking-wider ${status.className}`}>
+                                        {status.label}
+                                    </span>
+                                    <p className="hidden w-20 shrink-0 text-right text-sm font-black tabular-nums sm:block">
+                                        {formatTrees(person.trees || 0)}
+                                    </p>
+                                </div>
+                                {isOpen ? <Reminder name={person.displayName} reward={reward} /> : null}
                             </li>
                         )
                     })}
@@ -186,5 +214,42 @@ function InvitedPeople({ loading, people, rewardEnabled }: {
                 </button>
             ) : null}
         </section>
+    )
+}
+
+// A ready-made reminder for someone who joined but has not set up the app.
+function Reminder({ name, reward }: { name: string; reward: Reward }) {
+    const [copied, setCopied] = useState(false)
+    const text = reminderMessage(name, reward ? { ...reward, enabled: true } : null)
+
+    const copy = async () => {
+        try {
+            await navigator.clipboard.writeText(text)
+            setCopied(true)
+            window.setTimeout(() => setCopied(false), 2000)
+        } catch {
+            // Clipboard blocked: the text is visible to copy by hand.
+        }
+    }
+
+    const linkClass = 'inline-flex items-center justify-center gap-1.5 border-2 border-black px-3 py-2 text-xs font-black uppercase'
+
+    return (
+        <div className="mx-6 mb-4 border-2 border-black bg-forest-ground p-4">
+            <p className="text-[11px] font-black uppercase tracking-wider text-black/60">Send {name} this message</p>
+            <p className="mt-2 text-sm font-semibold leading-6">{text}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+                <a href={whatsappUrl(text)} target="_blank" rel="noopener noreferrer" className={`${linkClass} bg-brand-navy text-brand-yellow`}>
+                    <MessageCircle className="h-4 w-4" aria-hidden="true" /> WhatsApp
+                </a>
+                <a href={emailShareUrl('Your IdleForest app', text)} className={`${linkClass} bg-brand-yellow text-black`}>
+                    <Mail className="h-4 w-4" aria-hidden="true" /> Email
+                </a>
+                <button type="button" onClick={copy} className={`${linkClass} bg-transparent`}>
+                    {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+                    {copied ? 'Copied' : 'Copy'}
+                </button>
+            </div>
+        </div>
     )
 }

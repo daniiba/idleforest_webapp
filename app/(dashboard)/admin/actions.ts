@@ -3368,3 +3368,27 @@ export async function rejectNodeTransferAdmin(requestId: string): Promise<{ succ
 
     return { success: true }
 }
+
+// ========================================
+// FOREST LAUNCH EMAIL (personal forest + invite, sent in hourly batches)
+// ========================================
+
+export async function getForestLaunchStatusAdmin() {
+    if (!(await verifyAdminSession())) throw new Error('Unauthorized')
+    const { getForestLaunchStatus } = await import('@/lib/referral-engagement')
+    return getForestLaunchStatus()
+}
+
+export async function setForestLaunchStatusAdmin(status: 'sending' | 'paused') {
+    if (!(await verifyAdminSession())) throw new Error('Unauthorized')
+    const { setForestLaunchStatus, getForestLaunchStatus } = await import('@/lib/referral-engagement')
+    await setForestLaunchStatus(status)
+    return getForestLaunchStatus()
+}
+
+export async function sendForestLaunchTestAdmin(to: string, displayName?: string) {
+    if (!(await verifyAdminSession())) throw new Error('Unauthorized')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to.trim())) throw new Error('Enter a valid email address')
+    const { sendForestLaunchTest } = await import('@/lib/referral-engagement')
+    return sendForestLaunchTest(to.trim(), displayName)
+}

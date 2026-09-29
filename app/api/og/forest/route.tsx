@@ -12,13 +12,14 @@ export const runtime = 'nodejs'
 //   ?demo=1                 sample forest for the launch email / social posts
 //   ?displayName=Anna       Anna's public forest ("Anna's forest")
 //   ?code=ABCD2345&locale=  invite preview ("Anna invited you to grow a forest")
+//   ?code=ABCD2345&view=owner  the member's own forest, for emails to them ("Your forest")
 
 const COPY = {
-    en: { invited: '{name} invited you to grow a forest', forest: "{name}'s forest", inForest: 'trees in this forest', gift: 'Join and you both get {trees} planted', join: 'Free · Runs in the background · Plants real trees', demoTitle: 'Plant a tree with a friend' },
-    de: { invited: '{name} hat dich eingeladen, einen Wald wachsen zu lassen', forest: 'Der Wald von {name}', inForest: 'Bäume in diesem Wald', gift: 'Mach mit und ihr bekommt beide {trees}', join: 'Kostenlos · Läuft im Hintergrund · Pflanzt echte Bäume', demoTitle: 'Pflanze einen Baum mit einem Freund' },
-    es: { invited: '{name} te ha invitado a hacer crecer un bosque', forest: 'El bosque de {name}', inForest: 'árboles en este bosque', gift: 'Únete y cada uno recibe {trees}', join: 'Gratis · En segundo plano · Planta árboles reales', demoTitle: 'Planta un árbol con un amigo' },
-    fr: { invited: '{name} vous invite à faire pousser une forêt', forest: 'La forêt de {name}', inForest: 'arbres dans cette forêt', gift: 'Rejoignez-nous et chacun reçoit {trees}', join: 'Gratuit · En arrière-plan · Plante de vrais arbres', demoTitle: 'Plantez un arbre avec un ami' },
-    pt: { invited: '{name} convidou você para fazer uma floresta crescer', forest: 'A floresta de {name}', inForest: 'árvores nesta floresta', gift: 'Entre e cada um ganha {trees}', join: 'Grátis · Em segundo plano · Planta árvores de verdade', demoTitle: 'Plante uma árvore com um amigo' },
+    en: { invited: '{name} invited you to grow a forest', forest: "{name}'s forest", inForest: 'trees in this forest', gift: 'Join and you both get {trees} planted', join: 'Free · Runs in the background · Plants real trees', demoTitle: 'Plant a tree with a friend' , yours: 'Your forest', inYours: 'trees in your forest', ownerGift: 'Invite a friend. You both get {trees}.', ownerJoin: 'Your invite link: {link}' },
+    de: { invited: '{name} hat dich eingeladen, einen Wald wachsen zu lassen', forest: 'Der Wald von {name}', inForest: 'Bäume in diesem Wald', gift: 'Mach mit und ihr bekommt beide {trees}', join: 'Kostenlos · Läuft im Hintergrund · Pflanzt echte Bäume', demoTitle: 'Pflanze einen Baum mit einem Freund' , yours: 'Dein Wald', inYours: 'Bäume in deinem Wald', ownerGift: 'Lade jemanden ein. Ihr bekommt beide {trees}.', ownerJoin: 'Dein Einladungslink: {link}' },
+    es: { invited: '{name} te ha invitado a hacer crecer un bosque', forest: 'El bosque de {name}', inForest: 'árboles en este bosque', gift: 'Únete y cada uno recibe {trees}', join: 'Gratis · En segundo plano · Planta árboles reales', demoTitle: 'Planta un árbol con un amigo' , yours: 'Tu bosque', inYours: 'árboles en tu bosque', ownerGift: 'Invita a alguien. Cada uno recibe {trees}.', ownerJoin: 'Tu enlace: {link}' },
+    fr: { invited: '{name} vous invite à faire pousser une forêt', forest: 'La forêt de {name}', inForest: 'arbres dans cette forêt', gift: 'Rejoignez-nous et chacun reçoit {trees}', join: 'Gratuit · En arrière-plan · Plante de vrais arbres', demoTitle: 'Plantez un arbre avec un ami' , yours: 'Votre forêt', inYours: 'arbres dans votre forêt', ownerGift: 'Invitez quelqu’un. Chacun reçoit {trees}.', ownerJoin: 'Votre lien : {link}' },
+    pt: { invited: '{name} convidou você para fazer uma floresta crescer', forest: 'A floresta de {name}', inForest: 'árvores nesta floresta', gift: 'Entre e cada um ganha {trees}', join: 'Grátis · Em segundo plano · Planta árvores de verdade', demoTitle: 'Plante uma árvore com um amigo' , yours: 'A sua floresta', inYours: 'árvores na sua floresta', ownerGift: 'Convide alguém. Cada um ganha {trees}.', ownerJoin: 'Seu link: {link}' },
 } as const
 
 const TREE_WORDS = {
@@ -63,6 +64,7 @@ export async function GET(request: NextRequest) {
     let forest: ForestData = DEMO_FOREST
     let title: string = copy.demoTitle
     let rewardTrees = 1
+    let owner: { code: string } | null = null
 
     try {
         const admin = createAdminClient()
@@ -73,11 +75,15 @@ export async function GET(request: NextRequest) {
         const displayName = params.get('displayName')?.trim()
 
         if (code) {
-            const owner = await resolveReferralOwner(admin, code)
-            if (owner) {
-                seed = forestSeed(owner.userId)
-                forest = await getForestData(admin, owner.userId, { includeNames: false })
-                title = copy.invited.replace('{name}', (owner.displayName || 'A friend').slice(0, 40))
+            const member = await resolveReferralOwner(admin, code)
+            if (member) {
+                const ownerView = params.get('view') === 'owner'
+                seed = forestSeed(member.userId)
+                forest = await getForestData(admin, member.userId, { includeNames: ownerView })
+                title = ownerView
+                    ? copy.yours
+                    : copy.invited.replace('{name}', (member.displayName || 'A friend').slice(0, 40))
+                if (ownerView) owner = { code: code.toUpperCase().slice(0, 16) }
             }
         } else if (displayName && params.get('demo') !== '1') {
             const { data: profile } = await admin
@@ -124,15 +130,15 @@ export async function GET(request: NextRequest) {
                         {forest.totalTrees > 0 ? (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div style={{ display: 'flex', alignSelf: 'flex-start', fontSize: 72, fontWeight: 900, lineHeight: 1, color: '#0B101F', backgroundColor: '#E0F146', padding: '4px 12px' }}>{forest.totalTrees.toLocaleString('en')}</div>
-                                <div style={{ display: 'flex', marginTop: 8, fontSize: 24, fontWeight: 700, color: '#0B101F' }}>{copy.inForest}</div>
+                                <div style={{ display: 'flex', marginTop: 8, fontSize: 24, fontWeight: 700, color: '#0B101F' }}>{owner ? copy.inYours : copy.inForest}</div>
                             </div>
                         ) : null}
                         {rewardTrees > 0 ? (
                             <div style={{ display: 'flex', marginTop: 12, alignSelf: 'flex-start', backgroundColor: '#0B101F', color: '#E0F146', padding: '10px 18px', fontSize: 24, fontWeight: 800 }}>
-                                {copy.gift.replace('{trees}', giftTrees)}
+                                {(owner ? copy.ownerGift : copy.gift).replace('{trees}', giftTrees)}
                             </div>
                         ) : null}
-                        <div style={{ display: 'flex', marginTop: 16, fontSize: 20, fontWeight: 600, color: '#4A5240' }}>{copy.join}</div>
+                        <div style={{ display: 'flex', marginTop: 16, fontSize: 20, fontWeight: 600, color: '#4A5240' }}>{owner ? copy.ownerJoin.replace('{link}', `idleforest.com/r/${owner.code}`) : copy.join}</div>
                     </div>
                 </div>
                 <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 24 }}>
