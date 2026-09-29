@@ -9,6 +9,7 @@ export type ForestIslandProps = {
     inviteTrees: number
     friends: ForestFriend[]
     title?: string
+    hub?: boolean
     animated?: boolean
     className?: string
 }
@@ -21,6 +22,7 @@ export default function ForestIsland({
     inviteTrees,
     friends,
     title,
+    hub,
     animated = true,
     className,
 }: ForestIslandProps) {
@@ -28,9 +30,9 @@ export default function ForestIsland({
     const idPrefix = `fi${reactId.replace(/[^a-z0-9]/gi, '')}`
 
     const { svg } = useMemo(() => {
-        const scene = buildForestScene({ seed, ownTrees, inviteTrees, friends })
+        const scene = buildForestScene({ seed, ownTrees, inviteTrees, friends, hub })
         return { svg: renderForestSvg(scene, { animated, idPrefix, title }) }
-    }, [animated, friends, idPrefix, inviteTrees, ownTrees, seed, title])
+    }, [animated, friends, hub, idPrefix, inviteTrees, ownTrees, seed, title])
 
     return <div className={className} dangerouslySetInnerHTML={{ __html: svg }} />
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
+import PresenceKey from '@/components/forest/PresenceKey'
 import { forestSceneSummary } from '@/lib/forest-scene'
 import type { ForestResponse } from '@/components/forest/ForestImpactPanel'
 
@@ -14,17 +15,23 @@ type TeamForestPanelProps = {
     /** What the empty plots do: invite a teammate, or join the team. */
     plotLabel?: string
     onPlotClick?: () => void
+    /** Members also see whose computer is planting right now. */
+    showPresence?: boolean
 }
 
-// The team's forest: every tree the team planted in the middle, and a named
-// grove for each member around it. Empty plots invite the next teammate.
-export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotClick }: TeamForestPanelProps) {
+// The team's forest: a named grove for each member with one tree for every
+// tree they planted, around a shared clearing. Empty plots invite the next
+// teammate.
+export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotClick, showPresence }: TeamForestPanelProps) {
     const [data, setData] = useState<TeamForestResponse | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         let cancelled = false
-        fetch(`/api/forest?team=${encodeURIComponent(teamSlug)}`)
+        const url = `/api/forest?team=${encodeURIComponent(teamSlug)}`
+        fetch(showPresence ? `${url}&presence=1` : url)
+            // Not a member after all: fall back to the public forest.
+            .then(response => (response.ok ? response : showPresence ? fetch(url) : response))
             .then(response => (response.ok ? response.json() : null))
             .then(body => {
                 if (!cancelled) setData(body)
@@ -38,7 +45,7 @@ export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotC
         return () => {
             cancelled = true
         }
-    }, [teamSlug])
+    }, [showPresence, teamSlug])
 
     if (loading) {
         return (
@@ -49,8 +56,10 @@ export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotC
     }
     if (!data) return null
 
-    const summary = forestSceneSummary(data)
-    const planting = data.friends.filter(friend => friend.contributing).length
+    const summary = forestSceneSummary({ ...data, hub: true, detail: 'full' })
+    // Members see who is planting at this moment; everyone else sees who takes part.
+    const live = data.friends.some(friend => friend.status)
+    const planting = data.friends.filter(friend => (live ? friend.status === 'working' : friend.contributing)).length
     const empty = data.totalTrees === 0
 
     return (
@@ -70,7 +79,7 @@ export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotC
                         <dd className="text-xl font-black tabular-nums">{data.memberCount.toLocaleString('en')}</dd>
                     </div>
                     <div>
-                        <dt className="text-[11px] font-black uppercase tracking-wider text-black/55">Planting now</dt>
+                        <dt className="text-[11px] font-black uppercase tracking-wider text-black/55">{live ? 'Planting now' : 'Taking part'}</dt>
                         <dd className="text-xl font-black tabular-nums">{planting.toLocaleString('en')}</dd>
                     </div>
                 </dl>
@@ -83,15 +92,20 @@ export default function TeamForestPanel({ teamSlug, teamName, plotLabel, onPlotC
                 inviteTrees={0}
                 friends={data.friends}
                 title={`${teamName} forest`}
-                mainTitle="Team forest"
+                mainTitle="Team clearing"
+                hub
                 plotLabel={plotLabel}
                 onPlotClick={onPlotClick}
             />
 
-            <p className="border-t-2 border-black/10 px-5 py-3 text-xs font-semibold text-black/60 sm:px-6">
-                The middle grove is the whole team. Each small grove is one member and grows as their computer plants trees.
-                {summary.hiddenFriends > 0 ? ` Showing the 12 biggest groves, plus ${summary.hiddenFriends} more members.` : ''}
-            </p>
+            <div className="space-y-1 border-t-2 border-black/10 px-5 py-3 text-xs font-semibold text-black/60 sm:px-6">
+                <p>
+                    Each grove is one member, with one tree for every tree they planted.
+                    {summary.hiddenFriends > 0 ? ` The ${summary.hiddenFriends} other members plant in the middle clearing.` : ''}
+                    {summary.treesPerMark > 1 ? ` The forest is so big that each tree here stands for ${summary.treesPerMark}.` : ''}
+                </p>
+                <PresenceKey statuses={data.friends.map(friend => friend.status)} />
+            </div>
         </section>
     )
 }

@@ -45,7 +45,7 @@ export default function PrivacyPage() {
                     <section>
                         <h2 className="font-rethink-sans text-2xl font-extrabold text-black">Invites, teams and forests</h2>
                         <p className="mt-3">
-                            If you join through someone&apos;s invite link, that person can see your display name, when you joined, whether IdleForest has started planting on your computer, and how many trees you have planted. Your display name and tree count also appear in their forest, which is shown on their public profile. The same applies to team members in their team&apos;s forest. We never show your email address or anything about what your computer does.
+                            If you join through someone&apos;s invite link, that person can see your display name, when you joined, whether IdleForest has started planting on your computer, how many trees you have planted, and whether your computer is planting right now. Your display name and tree count also appear in their forest, which is shown on their public profile. Whether your computer is planting right now is only shown to them, never publicly. The same applies to team members in their team&apos;s forest. We never show your email address or what your computer is doing.
                         </p>
                     </section>
 

@@ -12,6 +12,10 @@
 //   * touch: one tap "activates" the scene; until then touches scroll the page
 //   * clicking a friend's grove flies the camera to it; reset() flies back
 //   * clicking an empty plot calls options.onPlotClick (invite / join)
+//
+// Every tree is drawn (up to MAX_FULL_MARKS). When presence is known, each
+// grove has a little person: awake and watering while that computer is
+// planting, asleep otherwise.
 
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -24,6 +28,9 @@ import {
     type TreeShape,
     type WorldIsland,
 } from './forest-scene'
+
+const WATER = '#7CC4F0'
+const CAN = '#5B8DB8'
 
 export type Forest3DOptions = {
     reducedMotion?: boolean
@@ -105,6 +112,59 @@ function foliageTexture() {
     return texture
 }
 
+function letterTexture(letter: string) {
+    const size = 64
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const context = canvas.getContext('2d')!
+    context.font = '900 52px ui-sans-serif, system-ui, sans-serif'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.lineWidth = 8
+    context.strokeStyle = '#ffffff'
+    context.strokeText(letter, size / 2, size / 2 + 2)
+    context.fillStyle = FOREST_PALETTE.ink
+    context.fillText(letter, size / 2, size / 2 + 2)
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    return texture
+}
+
+// Small round badge floating over a grove's person, readable at any zoom:
+// a water drop while the computer is planting, "z" while it rests.
+function badgeTexture(state: 'working' | 'sleeping') {
+    const size = 96
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const context = canvas.getContext('2d')!
+    context.fillStyle = state === 'working' ? '#5FA34A' : '#C9D2E3'
+    context.strokeStyle = FOREST_PALETTE.ink
+    context.lineWidth = 6
+    context.beginPath()
+    context.arc(size / 2, size / 2, size / 2 - 5, 0, Math.PI * 2)
+    context.fill()
+    context.stroke()
+    if (state === 'working') {
+        context.fillStyle = '#ffffff'
+        context.beginPath()
+        context.moveTo(size / 2, size * 0.2)
+        context.bezierCurveTo(size * 0.72, size * 0.46, size * 0.72, size * 0.74, size / 2, size * 0.76)
+        context.bezierCurveTo(size * 0.28, size * 0.74, size * 0.28, size * 0.46, size / 2, size * 0.2)
+        context.fill()
+    } else {
+        context.fillStyle = FOREST_PALETTE.ink
+        context.font = '900 46px ui-sans-serif, system-ui, sans-serif'
+        context.textAlign = 'center'
+        context.textBaseline = 'middle'
+        context.fillText('z', size / 2 + 2, size / 2 + 1)
+    }
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
+    return texture
+}
+
 function plusTexture() {
     const size = 128
     const canvas = document.createElement('canvas')
@@ -165,7 +225,7 @@ type GrowingInstance = {
 }
 
 export function mountForest3D(container: HTMLElement, input: ForestSceneInput, options: Forest3DOptions = {}): Forest3DHandle {
-    const world = buildForestWorld(input)
+    const world = buildForestWorld({ detail: 'full', ...input })
     const reducedMotion = Boolean(options.reducedMotion)
     const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false
     const plotsInteractive = Boolean(options.onPlotClick)
@@ -276,6 +336,25 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const ringGeometry = track(new THREE.RingGeometry(1, 1.16, 48))
     ringGeometry.rotateX(-Math.PI / 2)
     const plusMap = track(plusTexture())
+    // People: walkers on the paths and each grove's keeper.
+    const walkerBody = track(new THREE.CapsuleGeometry(0.9, 2.2, 4, 8))
+    const walkerHead = track(new THREE.SphereGeometry(1, 10, 8))
+    const walkerBodyMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.ink, roughness: 0.8 }))
+    const walkerHeadMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.invite, roughness: 0.6 }))
+    const zMap = track(letterTexture('Z'))
+    const badgeMaterials = {
+        working: track(new THREE.SpriteMaterial({ map: track(badgeTexture('working')), sizeAttenuation: false, depthTest: false, depthWrite: false })),
+        sleeping: track(new THREE.SpriteMaterial({ map: track(badgeTexture('sleeping')), sizeAttenuation: false, depthTest: false, depthWrite: false })),
+    }
+    const pillowGeometry = track(new THREE.BoxGeometry(1.9, 0.7, 1.5))
+    const blanketGeometry = track(new THREE.BoxGeometry(3.4, 0.9, 2.2))
+    const canGeometry = track(new THREE.CylinderGeometry(0.75, 0.85, 1.4, 12))
+    const spoutGeometry = track(new THREE.CylinderGeometry(0.14, 0.2, 1.8, 6))
+    const dropGeometry = track(new THREE.SphereGeometry(0.24, 6, 5))
+    const pillowMaterial = track(new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 }))
+    const blanketMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.friend[5], roughness: 0.9 }))
+    const canMaterial = track(new THREE.MeshStandardMaterial({ color: CAN, roughness: 0.5, metalness: 0.2 }))
+    const dropMaterial = track(new THREE.MeshStandardMaterial({ color: WATER, roughness: 0.2, emissive: WATER, emissiveIntensity: 0.3 }))
 
     // Clearings, plots and the plots' floating "+" markers.
     const pickables: THREE.Object3D[] = []
@@ -283,6 +362,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const pulses: Array<{ mesh: THREE.Mesh; phase: number }> = []
     const bobs: Array<{ sprite: THREE.Sprite; base: number; phase: number }> = []
     const labels: Array<{ element: HTMLDivElement; anchor: THREE.Vector3 }> = []
+    const workers: Array<{ body: THREE.Group; can: THREE.Group; drops: THREE.Mesh[]; phase: number }> = []
+    const sleepers: Array<{ blanket: THREE.Mesh; letters: THREE.Sprite[]; phase: number }> = []
     const matrix = new THREE.Matrix4()
     const color = new THREE.Color()
     const upAxis = new THREE.Vector3(0, 1, 0)
@@ -314,6 +395,76 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
 
     const clearingShape = (island: WorldIsland) =>
         new THREE.Shape(island.terraces[0].outline.map(([x, y]) => new THREE.Vector2(x, -y)))
+
+    // The little person who looks after a grove: awake and watering while
+    // that computer is planting, asleep (with drifting Zs) otherwise.
+    const addCharacter = (character: NonNullable<WorldIsland['character']>, islandIndex: number, top: number, parent: THREE.Group) => {
+        const person = new THREE.Group()
+        person.position.copy(toVector(character.x, character.y, 0)).setY(top)
+        person.scale.setScalar(2.3)
+        const phase = jitter(islandIndex, 41) * Math.PI * 2
+        const pickable = (mesh: THREE.Mesh) => {
+            mesh.castShadow = true
+            mesh.userData = { islandIndex }
+            pickables.push(mesh)
+            return mesh
+        }
+
+        if (character.state === 'working') {
+            const body = new THREE.Group()
+            const torso = pickable(new THREE.Mesh(walkerBody, walkerBodyMaterial))
+            torso.position.y = 2
+            const head = pickable(new THREE.Mesh(walkerHead, walkerHeadMaterial))
+            head.position.y = 4.6
+            body.add(torso, head)
+
+            // Watering can held out to the side, tipping to pour.
+            const can = new THREE.Group()
+            can.position.set(1.3, 2.9, 0.5)
+            const tank = pickable(new THREE.Mesh(canGeometry, canMaterial))
+            tank.position.set(0.9, -0.4, 0)
+            const spout = new THREE.Mesh(spoutGeometry, canMaterial)
+            spout.position.set(2.1, -0.1, 0)
+            spout.rotation.z = -1.05
+            can.add(tank, spout)
+            body.add(can)
+
+            const drops = [0, 1, 2].map(() => {
+                const drop = new THREE.Mesh(dropGeometry, dropMaterial)
+                drop.visible = !reducedMotion
+                person.add(drop)
+                return drop
+            })
+            person.add(body)
+            person.rotation.y = -0.45
+            workers.push({ body, can, drops, phase })
+        } else {
+            // Lying down on a pillow under a blanket.
+            const pillow = pickable(new THREE.Mesh(pillowGeometry, pillowMaterial))
+            pillow.position.set(-2.2, 0.35, 0)
+            const head = pickable(new THREE.Mesh(walkerHead, walkerHeadMaterial))
+            head.position.set(-2.1, 1.55, 0)
+            const blanket = pickable(new THREE.Mesh(blanketGeometry, blanketMaterial))
+            blanket.position.set(0.6, 0.5, 0)
+            person.add(pillow, head, blanket)
+            person.rotation.y = 0.3
+
+            const letters = [0, 1, 2].map(index => {
+                const sprite = new THREE.Sprite(track(new THREE.SpriteMaterial({ map: zMap, transparent: true, depthWrite: false })))
+                sprite.position.set(-1.6 + index * 0.9, 3 + index * 1.6, 0)
+                sprite.scale.setScalar(1.4 + index * 0.5)
+                person.add(sprite)
+                return sprite
+            })
+            sleepers.push({ blanket, letters, phase })
+        }
+
+        const badge = new THREE.Sprite(badgeMaterials[character.state])
+        badge.position.copy(toVector(character.x, character.y, 0)).setY(top + 15)
+        badge.scale.setScalar(0.042)
+        badge.renderOrder = 10
+        parent.add(person, badge)
+    }
 
     let plotLabelShown = false
     const addGrove = (island: WorldIsland, islandIndex: number) => {
@@ -380,7 +531,9 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         const buckets = new Map<string, typeof island.trees>()
         for (const tree of island.trees) {
             const key = tree.kind === 'invite' ? 'invite' : tree.shape
-            buckets.set(key, [...(buckets.get(key) || []), tree])
+            const bucket = buckets.get(key)
+            if (bucket) bucket.push(tree)
+            else buckets.set(key, [tree])
         }
         const trunks = new THREE.InstancedMesh(trunkGeometry, trunkMaterial, Math.max(1, island.trees.length))
         trunks.count = island.trees.length
@@ -412,7 +565,7 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
                 growing.push({ mesh: trunks, index: trunkIndex, position: trunkPosition, quaternion: spin, scale: trunkScale, delay })
                 trunkIndex += 1
 
-                if (tree.kind === 'invite') {
+                if (tree.kind === 'invite' && pulses.length < 40) {
                     const ring = new THREE.Mesh(ringGeometry, track(new THREE.MeshBasicMaterial({
                         color: FOREST_PALETTE.invite,
                         transparent: true,
@@ -472,6 +625,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             }
         }
 
+        if (island.character) addCharacter(island.character, islandIndex, top, group)
+
         if (island.label) {
             const tallest = island.trees.reduce((max, tree) => {
                 const { height, stem } = treeDimensions(tree.shape, tree.size)
@@ -512,11 +667,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     const pathMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.path, roughness: 1, side: THREE.DoubleSide }))
     const pathEdgeMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.pathEdge, roughness: 1, side: THREE.DoubleSide }))
     const walkers: Array<{ group: THREE.Group; curve: THREE.QuadraticBezierCurve3; offset: number; speed: number }> = []
-    const walkerBody = track(new THREE.CapsuleGeometry(0.9, 2.2, 4, 8))
-    const walkerHead = track(new THREE.SphereGeometry(1, 10, 8))
-    const walkerBodyMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.ink, roughness: 0.8 }))
-    const walkerHeadMaterial = track(new THREE.MeshStandardMaterial({ color: FOREST_PALETTE.invite, roughness: 0.6 }))
 
+    const presenceShown = world.islands.some(island => island.character)
     world.roots.forEach((root, rootIndex) => {
         const curve = new THREE.QuadraticBezierCurve3(
             toVector(root.start[0], root.start[1], 0),
@@ -542,7 +694,9 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
         path.receiveShadow = true
         scene.add(edge, path)
 
-        // A tiny visitor walking between the groves.
+        // A tiny visitor walking between the groves. Left out when groves
+        // have their own people, so walking is never mistaken for a status.
+        if (presenceShown) return
         const walker = new THREE.Group()
         const body = new THREE.Mesh(walkerBody, walkerBodyMaterial)
         body.position.y = 2
@@ -722,7 +876,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
             return
         }
         const island = world.islands[islandIndex]
-        const mainTitle = options.mainTitle || 'Your forest'
+        const own = world.islands[0]?.character
+        const mainTitle = `${options.mainTitle || 'Your forest'}${own ? (own.state === 'working' ? ', planting right now' : ', computer resting') : ''}`
         tooltip.textContent = island.kind === 'main'
             ? (focused ? `${mainTitle} · click to go back` : mainTitle)
             : island.kind === 'plot'
@@ -831,6 +986,32 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
     }
     walkers.forEach(walker => placeWalker(walker, 0))
 
+    const animateWorker = (worker: (typeof workers)[number], elapsed: number) => {
+        const t = elapsed + worker.phase
+        worker.body.position.y = Math.abs(Math.sin(t * 2.4)) * 0.25
+        // Tip the can forward, pour for a moment, tip back.
+        const pour = Math.max(0, Math.sin(t * 1.3))
+        worker.can.rotation.z = -0.15 - pour * 0.55
+        worker.drops.forEach((drop, index) => {
+            const k = (t * 1.4 + index / 3) % 1
+            drop.visible = pour > 0.35
+            drop.position.set(3.5 + k * 0.4, 2.2 - k * 2.1 + worker.body.position.y, 0.5)
+        })
+    }
+
+    const animateSleeper = (sleeper: (typeof sleepers)[number], elapsed: number) => {
+        const t = elapsed + sleeper.phase
+        sleeper.blanket.scale.y = 1 + Math.sin(t * 1.5) * 0.12
+        sleeper.letters.forEach((letter, index) => {
+            const k = (t / 3.2 + index / 3) % 1
+            letter.position.set(-1.8 + k * 2.2, 2.6 + k * 5, 0)
+            letter.scale.setScalar(1.1 + k * 1.6)
+            ;(letter.material as THREE.SpriteMaterial).opacity = Math.sin(k * Math.PI)
+        })
+    }
+    workers.forEach(worker => animateWorker(worker, 1.2))
+    sleepers.forEach(sleeper => animateSleeper(sleeper, 0))
+
     const render = () => {
         frame = 0
         if (disposed || !visible || document.hidden) return
@@ -862,6 +1043,8 @@ export function mountForest3D(container: HTMLElement, input: ForestSceneInput, o
                 bob.sprite.position.y = bob.base + Math.sin(elapsed * 2 + bob.phase) * 1.2
             }
             for (const walker of walkers) placeWalker(walker, elapsed)
+            for (const worker of workers) animateWorker(worker, elapsed)
+            for (const sleeper of sleepers) animateSleeper(sleeper, elapsed)
         }
 
         if (flight) {

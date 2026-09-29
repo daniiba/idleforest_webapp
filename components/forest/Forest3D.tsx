@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Hand, Minus, Plus, RotateCcw } from 'lucide-react'
 import ForestIsland from '@/components/forest/ForestIsland'
-import type { ForestFriend } from '@/lib/forest-scene'
+import type { ForestFriend, PresenceStatus } from '@/lib/forest-scene'
 import type { Forest3DHandle } from '@/lib/forest-3d'
 
 type Forest3DProps = {
@@ -18,6 +18,10 @@ type Forest3DProps = {
     plotLabel?: string
     /** Name of the centre grove in tooltips (default "Your forest"). */
     mainTitle?: string
+    /** Your own computer: a working or sleeping person in the middle grove. */
+    ownStatus?: PresenceStatus | null
+    /** Team forest: a shared clearing in the middle, every tree in its planter's grove. */
+    hub?: boolean
 }
 
 type Status = 'idle' | 'loading' | 'ready' | 'fallback'
@@ -27,7 +31,7 @@ const buttonClass = 'flex h-9 w-9 items-center justify-center border-2 border-bl
 // Interactive 3D forest. Shows the SVG island immediately (and keeps it for
 // devices without WebGL); three.js is only downloaded once the forest is
 // about to scroll into view.
-export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className, onPlotClick, plotLabel, mainTitle }: Forest3DProps) {
+export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, className, onPlotClick, plotLabel, mainTitle, ownStatus, hub }: Forest3DProps) {
     const frameRef = useRef<HTMLDivElement>(null)
     const mountRef = useRef<HTMLDivElement>(null)
     const handleRef = useRef<Forest3DHandle | null>(null)
@@ -68,7 +72,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                     setStatus('fallback')
                     return
                 }
-                handleRef.current = mountForest3D(mount, { seed, ownTrees, inviteTrees, friends }, {
+                handleRef.current = mountForest3D(mount, { seed, ownTrees, inviteTrees, friends, ownStatus, hub }, {
                     reducedMotion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
                     onActiveChange: setActive,
                     onFocusChange: setFocused,
@@ -88,7 +92,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
             handleRef.current?.dispose()
             handleRef.current = null
         }
-    }, [friends, hasPlotClick, inviteTrees, mainTitle, nearViewport, ownTrees, plotLabel, seed])
+    }, [friends, hasPlotClick, hub, inviteTrees, mainTitle, nearViewport, ownStatus, ownTrees, plotLabel, seed])
 
     const ready = status === 'ready'
 
@@ -107,6 +111,7 @@ export default function Forest3D({ seed, ownTrees, inviteTrees, friends, title, 
                     inviteTrees={inviteTrees}
                     friends={friends}
                     title={title}
+                    hub={hub}
                 />
             ) : null}
 

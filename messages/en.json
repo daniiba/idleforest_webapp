@@ -1092,7 +1092,7 @@
         "trust_rating": "Rated 4.8★ on the Chrome Web Store",
         "forest_title": "{name}'s forest so far",
         "forest_people": "{count, plural, one {person joined} other {people joined}}",
-        "privacy_note": "{name} will see when you join and start planting, and your name will appear in their forest.",
+        "privacy_note": "{name} will see when you join, whether your computer is planting right now, and your name in their forest.",
         "forest_requests": "requests powered together",
         "forest_trees": "{count, plural, one {tree} other {trees}} in this forest",
         "own_title": "This is your invite link",

@@ -849,6 +849,7 @@ export default function TeamClient() {
 						<TeamForestPanel
 							teamSlug={teamSlug}
 							teamName={team.name}
+							showPresence={isMember}
 							plotLabel={isMember ? 'Invite a teammate' : `Join ${team.name}`}
 							onPlotClick={
 								isMember

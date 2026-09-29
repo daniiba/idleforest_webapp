@@ -109,3 +109,10 @@ What to watch:
 - **Desktop forest updates.** The desktop app shows a system notification when someone you invited joins, when you both get a tree, and when your forest reaches 10, 25, 50, 100, 250 and more trees. At most one a day (rewards always), never on first launch. Clicking it opens the Invite tab. Members can turn it off in Settings → Forest updates.
 - Run `20261003_referral_engagement.sql` and then `20261004_remove_friend_not_started_email.sql` before sending the launch email.
 - The invite page and the privacy policy tell invited people that the person who invited them can see when they join and start planting.
+
+## 7. Who is planting right now, and 1:1 forests
+
+- **People in the groves.** In your own forest (and in a team forest, for its members) each grove has a little person: watering while that computer is on and planting, asleep otherwise. "On" means the computer checked in within the last 15 minutes. The desktop app checks in every 5 minutes. This is never shown on public profiles or share images.
+- **Every tree is a real tree.** The 3D forest draws one tree per tree planted, up to 5,000 per forest. Past that, the note under the forest says how many trees each one stands for. Email and share images stay simplified.
+- **Team forests** draw each tree once, in the grove of the member who planted it. The middle is a shared clearing.
+- Run `20261005_node_presence.sql` to start recording check-ins. Until it runs, forests simply show no people.

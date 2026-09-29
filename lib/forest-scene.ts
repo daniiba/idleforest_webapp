@@ -10,10 +10,14 @@
 // renders the web page, the desktop app and server-side share images, and a
 // member's trees stay where they were as the forest grows.
 
+/** Whether someone's computer is on and planting right now (only shown to the forest's owner and team). */
+export type PresenceStatus = 'working' | 'sleeping'
+
 export type ForestFriend = {
     label?: string | null
     trees: number
     contributing?: boolean
+    status?: PresenceStatus | null
 }
 
 export type ForestSceneInput = {
@@ -21,6 +25,19 @@ export type ForestSceneInput = {
     inviteTrees: number
     friends: ForestFriend[]
     seed: string
+    /** The owner's own computer, shown as a character in the main grove. */
+    ownStatus?: PresenceStatus | null
+    /**
+     * Team forests: the middle is a shared clearing. Every member's trees
+     * grow in their own grove; the middle only holds the trees of members
+     * without a grove of their own, so no tree is drawn twice.
+     */
+    hub?: boolean
+    /**
+     * 'full' (3D view): one drawn tree per real tree, up to MAX_FULL_MARKS.
+     * 'compact' (default, SVG and share images): large forests are scaled down.
+     */
+    detail?: 'compact' | 'full'
 }
 
 type TreeKind = 'own' | 'invite' | 'friend'
@@ -68,6 +85,9 @@ const TILT = 0.62
 const MAX_MAIN_MARKS = 180
 const MAX_FRIEND_MARKS = 26
 const MAX_FRIEND_ISLANDS = 12
+// In the 3D view every tree is drawn up to this many; beyond it, one drawn
+// tree stands for a few real ones.
+export const MAX_FULL_MARKS = 5000
 // Empty plots shown for friends not invited yet, so there is always a
 // visible place for the next one.
 const TARGET_GROVES = 3
@@ -226,6 +246,8 @@ export type WorldIsland = {
     sprout: { x: number; y: number; z: number } | null
     center: { x: number; y: number }
     radius: number
+    /** A little person at the grove's edge: awake and watering, or asleep. */
+    character: { x: number; y: number; z: number; state: PresenceStatus } | null
 }
 
 export type WorldRoot = {
@@ -280,6 +302,30 @@ function placeTrees(options: {
     let spacing = Math.sqrt(area / Math.max(1, count + others.length)) * 0.8
     let attempts = 0
 
+    // Grid of placed trees, so each check only looks at close neighbours.
+    // The spacing only ever shrinks, so neighbouring cells always cover it.
+    const cell = Math.max(spacing, 1e-6)
+    const grid = new Map<string, WorldTree[]>()
+    const cellKey = (gx: number, gy: number) => `${gx},${gy}`
+    const insert = (tree: WorldTree) => {
+        const key = cellKey(Math.floor(tree.x / cell), Math.floor(tree.y / cell))
+        const bucket = grid.get(key)
+        if (bucket) bucket.push(tree)
+        else grid.set(key, [tree])
+    }
+    const crowded = (x: number, y: number) => {
+        const gx = Math.floor(x / cell)
+        const gy = Math.floor(y / cell)
+        for (let dx = -1; dx <= 1; dx += 1) {
+            for (let dy = -1; dy <= 1; dy += 1) {
+                const bucket = grid.get(cellKey(gx + dx, gy + dy))
+                if (bucket?.some(tree => Math.hypot(tree.x - x, tree.y - y) < spacing)) return true
+            }
+        }
+        return false
+    }
+    others.forEach(insert)
+
     while (trees.length < count && attempts < count * 60) {
         attempts += 1
         // Relax the spacing if the clearing is getting full.
@@ -288,9 +334,11 @@ function placeTrees(options: {
         const rho = Math.sqrt(random()) * spread
         const x = clearing.cx + Math.cos(theta) * terraceRadius(clearing, theta) * rho
         const y = clearing.cy + Math.sin(theta) * terraceRadius(clearing, theta) * rho
-        if ([...trees, ...others].some(tree => Math.hypot(tree.x - x, tree.y - y) < spacing)) continue
+        if (crowded(x, y)) continue
         const shape = kind === 'invite' ? 'round' : pickShape(random)
-        trees.push({ x, y, z: clearing.z, kind, shape, tone: random(), size: size * (0.85 + random() * 0.3) })
+        const tree: WorldTree = { x, y, z: clearing.z, kind, shape, tone: random(), size: size * (0.85 + random() * 0.3) }
+        trees.push(tree)
+        insert(tree)
     }
 
     return trees
@@ -311,18 +359,53 @@ function placeBushes(clearing: Terrace, count: number, seed: string, size: numbe
     })
 }
 
+const wholeTrees = (value: number | undefined) => Math.max(0, Math.floor(value || 0))
+
+function sortedFriends(friends: ForestFriend[]) {
+    return friends
+        .map(friend => ({ ...friend, trees: wholeTrees(friend.trees) }))
+        .sort((a, b) => b.trees - a.trees)
+}
+
+// Trees drawn in the middle grove. In a team forest that is everyone
+// without a grove of their own (beyond the 12 biggest).
+function mainGroveTrees(input: Pick<ForestSceneInput, 'ownTrees' | 'inviteTrees' | 'friends' | 'hub'>) {
+    if (!input.hub) return { own: wholeTrees(input.ownTrees), invite: wholeTrees(input.inviteTrees) }
+    const hidden = sortedFriends(input.friends).slice(MAX_FRIEND_ISLANDS)
+    return { own: hidden.reduce((sum, friend) => sum + friend.trees, 0), invite: 0 }
+}
+
 /** What the legend needs to explain: how many trees one mark stands for, and friends not drawn. */
-export function forestSceneSummary(input: Pick<ForestSceneInput, 'ownTrees' | 'inviteTrees' | 'friends'>) {
-    const trees = Math.max(0, Math.floor(input.ownTrees || 0)) + Math.max(0, Math.floor(input.inviteTrees || 0))
-    return {
-        treesPerMark: Math.max(1, Math.ceil(trees / MAX_MAIN_MARKS)),
-        hiddenFriends: Math.max(0, input.friends.length - MAX_FRIEND_ISLANDS),
+export function forestSceneSummary(input: Pick<ForestSceneInput, 'ownTrees' | 'inviteTrees' | 'friends' | 'hub' | 'detail'>) {
+    const main = mainGroveTrees(input)
+    const hiddenFriends = Math.max(0, input.friends.length - MAX_FRIEND_ISLANDS)
+    if (input.detail !== 'full') {
+        return { treesPerMark: Math.max(1, Math.ceil((main.own + main.invite) / MAX_MAIN_MARKS)), hiddenFriends }
     }
+    // Everything drawn counts towards the limit, groves included.
+    const shown = sortedFriends(input.friends).slice(0, MAX_FRIEND_ISLANDS).reduce((sum, friend) => sum + friend.trees, 0)
+    return { treesPerMark: Math.max(1, Math.ceil((main.own + main.invite + shown) / MAX_FULL_MARKS)), hiddenFriends }
+}
+
+// Where a grove's character stands: on its front edge (towards the camera),
+// a little to the side so it doesn't block the path in.
+function characterSpot(clearing: Terrace, state: PresenceStatus | null | undefined) {
+    if (!state) return null
+    const theta = Math.PI / 2 + 0.6
+    const r = terraceRadius(clearing, theta) * 0.95
+    return { x: clearing.cx + Math.cos(theta) * r, y: clearing.cy + Math.sin(theta) * r, z: clearing.z, state }
+}
+
+function statusNote(friend: ForestFriend) {
+    if (friend.status === 'working') return ', planting right now'
+    if (friend.contributing === false) return ' (joined, not planting yet)'
+    if (friend.status === 'sleeping') return ', computer resting'
+    return ''
 }
 
 export function buildForestWorld(input: ForestSceneInput): ForestWorld {
-    const ownTrees = Math.max(0, Math.floor(input.ownTrees || 0))
-    const inviteTrees = Math.max(0, Math.floor(input.inviteTrees || 0))
+    const full = input.detail === 'full'
+    const { own: ownTrees, invite: inviteTrees } = mainGroveTrees(input)
     const random = rng(`${input.seed}:terrain`)
 
     // One mark can stand for several trees so large forests stay readable.
@@ -332,7 +415,9 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
     const marks = ownMarks + inviteMarks
 
     // The grove grows with the forest, so density stays about the same.
-    const mainRadius = Math.min(165, 48 + Math.sqrt(marks) * 11)
+    // In the full view it keeps growing past the compact size limit.
+    const compactRadius = Math.min(165, 48 + Math.sqrt(marks) * 11)
+    const mainRadius = full ? Math.max(compactRadius, Math.sqrt(marks) * 12.3) : compactRadius
     const main = buildClearing(random, 0, 0, mainRadius, 0.14)
     const invite = placeTrees({ clearing: main, count: inviteMarks, kind: 'invite', size: 7.2, seed: `${input.seed}:invite`, spread: 0.75 })
     const own = placeTrees({ clearing: main, count: ownMarks, kind: 'own', size: 6.2, seed: `${input.seed}:own`, spread: 0.9, avoid: invite })
@@ -342,36 +427,51 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
         terraces: [worldOutline(main)],
         levelHeight: CLEARING_THICKNESS,
         trees: [...own, ...invite],
-        bushes: placeBushes(main, Math.round(Math.min(10 + mainRadius * 0.35, marks * 1.2)), `${input.seed}:bushes`, 3.4),
-        title: 'Your forest',
+        bushes: placeBushes(main, Math.round(Math.min(10 + mainRadius * 0.35, input.hub ? Math.max(8, marks * 1.2) : marks * 1.2)), `${input.seed}:bushes`, 3.4),
+        title: input.hub ? 'Team clearing' : 'Your forest',
         label: null,
-        sprout: marks === 0 ? { x: main.cx, y: main.cy, z: 0 } : null,
+        sprout: marks === 0 && !input.hub ? { x: main.cx, y: main.cy, z: 0 } : null,
         center: { x: 0, y: 0 },
         radius: mainRadius,
+        character: input.hub ? null : characterSpot(main, input.ownStatus),
     }]
 
-    const friends = [...input.friends]
-        .map(friend => ({ ...friend, trees: Math.max(0, Math.floor(friend.trees || 0)) }))
-        .sort((a, b) => b.trees - a.trees)
+    const friends = sortedFriends(input.friends)
     const shownFriends = friends.slice(0, MAX_FRIEND_ISLANDS)
     const plots = shownFriends.length < TARGET_GROVES ? TARGET_GROVES - shownFriends.length : shownFriends.length < MAX_FRIEND_ISLANDS ? 1 : 0
     const slots = shownFriends.length + plots
     const roots: WorldRoot[] = []
     const angleOffset = random() * Math.PI * 2
 
-    for (let index = 0; index < slots; index += 1) {
+    // Size every grove first, so big groves can be spaced far enough apart.
+    const groves = Array.from({ length: slots }, (_, index) => {
         const friend = shownFriends[index] as (typeof shownFriends)[number] | undefined
-        const friendRandom = rng(`${input.seed}:friend:${index}`)
-        const angle = angleOffset + (index / slots) * Math.PI * 2 + (friendRandom() - 0.5) * 0.3
         const friendMarks = friend && friend.trees > 0
-            ? Math.min(MAX_FRIEND_MARKS, Math.max(1, Math.round(friend.trees / treesPerMark)))
+            ? (full ? Math.max(1, Math.round(friend.trees / treesPerMark)) : Math.min(MAX_FRIEND_MARKS, Math.max(1, Math.round(friend.trees / treesPerMark))))
             : 0
-        const radius = friend ? (friendMarks > 0 ? Math.min(58, 18 + Math.sqrt(friendMarks) * 7.5) : 15) : 17
+        const compact = Math.min(58, 18 + Math.sqrt(friendMarks) * 7.5)
+        const radius = friend ? (friendMarks > 0 ? (full ? Math.max(compact, Math.sqrt(friendMarks) * 11) : compact) : 15) : 17
+        return { friend, friendMarks, radius }
+    })
+    // Full view: each grove gets a share of the circle in proportion to its
+    // size, on a ring just wide enough that neighbours don't overlap.
+    // Small groves still get room for their name label.
+    const widths = groves.map(grove => Math.max(grove.radius, 40) + 26)
+    const widthTotal = widths.reduce((sum, width) => sum + width, 0)
+    const ring = full && slots > 1 ? (widthTotal / Math.PI) * 1.1 : 0
+    let widthBefore = 0
+
+    for (let index = 0; index < slots; index += 1) {
+        const { friend, friendMarks, radius } = groves[index]
+        const friendRandom = rng(`${input.seed}:friend:${index}`)
+        const share = full ? (widthBefore + widths[index] / 2) / widthTotal : index / slots
+        widthBefore += widths[index]
+        const angle = angleOffset + share * Math.PI * 2 + (friendRandom() - 0.5) * (full ? 0.08 : 0.3)
         // Measure from the main grove's actual edge in this direction, and
         // stagger alternate groves outwards so neighbours don't collide.
         const shore = terraceRadius(main, angle)
-        const stagger = slots > 6 && index % 2 === 1 ? 50 : 0
-        const distance = shore + radius + 42 + stagger + friendRandom() * 18
+        const stagger = !full && slots > 6 && index % 2 === 1 ? 50 : 0
+        const distance = Math.max(shore + radius + 42 + stagger + friendRandom() * 18, ring)
         const cx = Math.cos(angle) * distance
         const cy = Math.sin(angle) * distance
         const clearing = buildClearing(friendRandom, cx, cy, radius, 0.12)
@@ -383,11 +483,12 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
                 levelHeight: CLEARING_THICKNESS,
                 trees: placeTrees({ clearing, count: friendMarks, kind: 'friend', size: 5.2, seed: `${input.seed}:friend-trees:${index}`, spread: 0.85 }),
                 bushes: placeBushes(clearing, Math.round(Math.min(3 + radius * 0.2, friendMarks)), `${input.seed}:friend-bushes:${index}`, 2.8),
-                title: `${friend.label || 'Someone you invited'}: ${friend.trees.toLocaleString('en')} ${friend.trees === 1 ? 'tree' : 'trees'}${friend.contributing === false ? ' (joined, not contributing yet)' : ''}`,
+                title: `${friend.label || (input.hub ? 'A member' : 'Someone you invited')}: ${friend.trees.toLocaleString('en')} ${friend.trees === 1 ? 'tree' : 'trees'}${statusNote(friend)}`,
                 label: friend.label ? friend.label.slice(0, 18) : null,
                 sprout: friendMarks === 0 ? { x: cx, y: cy, z: 0 } : null,
                 center: { x: cx, y: cy },
                 radius,
+                character: characterSpot(clearing, friend.status),
             })
         } else {
             islands.push({
@@ -401,6 +502,7 @@ export function buildForestWorld(input: ForestSceneInput): ForestWorld {
                 sprout: null,
                 center: { x: cx, y: cy },
                 radius,
+                character: null,
             })
         }
 

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Check, Loader2, Share2 } from 'lucide-react'
 import Forest3D from '@/components/forest/Forest3D'
-import { FOREST_COLORS, forestSceneSummary } from '@/lib/forest-scene'
+import PresenceKey from '@/components/forest/PresenceKey'
+import { FOREST_COLORS, forestSceneSummary, type PresenceStatus } from '@/lib/forest-scene'
 import { formatTrees } from '@/lib/referral-reward-settings'
 
 export type ForestResponse = {
@@ -15,7 +16,9 @@ export type ForestResponse = {
     inviteTrees: number
     friendTrees: number
     totalTrees: number
-    friends: Array<{ label: string | null; trees: number; contributing: boolean }>
+    friends: Array<{ label: string | null; trees: number; contributing: boolean; status?: PresenceStatus }>
+    /** Only sent to the forest's owner. */
+    ownStatus?: PresenceStatus
 }
 
 type ForestImpactPanelProps =
@@ -30,7 +33,8 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     const [data, setData] = useState<ForestResponse | null>(null)
     const [loading, setLoading] = useState(true)
     const [shared, setShared] = useState(false)
-    const publicName = props.mode === 'public' ? props.displayName : null
+    // Owners looking at their own profile get their private view (with who is planting right now).
+    const publicName = props.mode === 'public' && props.viewer !== 'owner' ? props.displayName : null
     const onLoadRef = useRef(props.mode === 'public' ? props.onLoad : undefined)
     onLoadRef.current = props.mode === 'public' ? props.onLoad : undefined
 
@@ -102,7 +106,8 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
 
     const isSelf = props.mode === 'self'
     const name = data.displayName || 'This member'
-    const summary = forestSceneSummary(data)
+    const summary = forestSceneSummary({ ...data, detail: 'full' })
+    const presence = [data.ownStatus, ...data.friends.map(friend => friend.status)]
     const segments = [
         { key: 'own', label: isSelf ? 'By you' : `By ${name}`, value: data.ownTrees, color: FOREST_COLORS.own },
         { key: 'invite', label: 'Invite rewards', value: data.inviteTrees, color: FOREST_COLORS.invite },
@@ -152,9 +157,11 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                     ownTrees={data.ownTrees}
                     inviteTrees={data.inviteTrees}
                     friends={data.friends}
+                    ownStatus={data.ownStatus}
                     title={`${name}'s forest`}
                     {...publicPlot}
                 />
+                <PresenceKey className="border-t-2 border-black/10 px-5 py-3 sm:px-6" statuses={presence} />
                 {shared ? (
                     <p className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto w-fit border-2 border-black bg-brand-yellow px-3 py-1.5 text-xs font-black uppercase" role="status">
                         Invite link copied
@@ -180,17 +187,19 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                         ownTrees={data.ownTrees}
                         inviteTrees={data.inviteTrees}
                         friends={data.friends}
+                        ownStatus={data.ownStatus}
                         title={isSelf ? 'Your forest' : `${name}'s forest`}
                         plotLabel={isSelf && data.invitePath ? 'Invite a friend' : undefined}
                         onPlotClick={isSelf && data.invitePath ? shareForest : undefined}
                     />
 
-                    {summary.treesPerMark > 1 || summary.hiddenFriends > 0 ? (
-                        <p className="mt-2 text-center text-xs font-semibold text-black/50">
-                            {summary.treesPerMark > 1 ? `1 tree mark = ${summary.treesPerMark} trees. ` : ''}
-                            {summary.hiddenFriends > 0 ? `+${summary.hiddenFriends} more friends.` : ''}
-                        </p>
-                    ) : null}
+                    <p className="mt-2 text-center text-xs font-semibold text-black/50">
+                        {summary.treesPerMark > 1
+                            ? `Your forest is so big that each tree here stands for ${summary.treesPerMark}. `
+                            : 'Every tree here is a real tree. '}
+                        {summary.hiddenFriends > 0 ? `+${summary.hiddenFriends} more friends.` : ''}
+                    </p>
+                    <PresenceKey className="mt-1 text-center" statuses={presence} />
                 </div>
 
                 <div className="flex flex-col border-t-2 border-black/15 p-5 sm:p-8 lg:border-l-2 lg:border-t-0">

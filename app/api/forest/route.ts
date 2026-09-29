@@ -44,8 +44,12 @@ async function authenticatedUserId(request: NextRequest, admin: ReturnType<typeo
 
 // GET /api/forest                     -> your own forest (cookie or bearer token), with friends' names
 // GET /api/forest?displayName=Anna    -> Anna's public forest, friends shown by their public display names
-// GET /api/forest?team=lisbon-coders   -> a team's forest: team total in the centre, one grove per member
+// GET /api/forest?team=lisbon-coders   -> a team's forest: one grove per member around a shared clearing
 // GET /api/forest?teamId=<uuid>         -> the same, by team id (desktop app)
+// ...&presence=1                        -> team members only: whose computer is planting right now
+//
+// Presence (working / sleeping) is only ever sent to the forest's owner and
+// to members of the team, never in the publicly cached responses.
 export async function GET(request: NextRequest) {
     const displayName = request.nextUrl.searchParams.get('displayName')?.trim()
     const teamSlug = request.nextUrl.searchParams.get('team')?.trim()
@@ -67,6 +71,18 @@ export async function GET(request: NextRequest) {
             const { data: team } = await (teamId ? query.eq('id', teamId) : query.eq('slug', teamSlug as string)).maybeSingle()
 
             if (!team) return json({ error: 'Team not found' }, { status: 404 })
+
+            // A separate URL keeps member-only data out of the shared cache.
+            if (request.nextUrl.searchParams.get('presence') === '1') {
+                const userId = await authenticatedUserId(request, admin)
+                const { data: membership } = userId
+                    ? await admin.from('team_members').select('user_id').eq('team_id', team.id).eq('user_id', userId).maybeSingle()
+                    : { data: null }
+                if (!membership) return json({ error: 'Only team members can see this' }, { status: 403 })
+
+                const forest = await getTeamForestData(admin, team.id, { includePresence: true })
+                return json({ seed: forestSeed(`team:${team.id}`), displayName: team.name, invitePath: null, reward: null, ...forest })
+            }
 
             const forest = await getTeamForestData(admin, team.id)
             return json({
@@ -106,7 +122,7 @@ export async function GET(request: NextRequest) {
 
         const [{ data: profile }, forest] = await Promise.all([
             admin.from('profiles').select('display_name, referral_code').eq('user_id', userId).maybeSingle(),
-            getForestData(admin, userId, { includeNames: true }),
+            getForestData(admin, userId, { includeNames: true, includePresence: true }),
         ])
         const code = normalizeReferralCode(profile?.referral_code)
 

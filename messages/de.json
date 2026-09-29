@@ -1037,7 +1037,7 @@
         "trust_rating": "4,8★ im Chrome Web Store",
         "forest_title": "Der Wald von {name} bisher",
         "forest_people": "{count, plural, one {Person ist beigetreten} other {Personen sind beigetreten}}",
-        "privacy_note": "{name} sieht, wenn du beitrittst und zu pflanzen beginnst, und dein Name erscheint in ihrem Wald.",
+        "privacy_note": "{name} sieht, wann du beitrittst, ob dein Computer gerade pflanzt, und deinen Namen in ihrem Wald.",
         "forest_requests": "gemeinsam ermöglichte Anfragen",
         "forest_trees": "{count, plural, one {Baum} other {Bäume}} in diesem Wald",
         "own_title": "Das ist dein Einladungslink",
