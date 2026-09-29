@@ -96,7 +96,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
 
     if (loading) {
         return props.mode === 'self' ? (
-            <div className="flex min-h-72 items-center justify-center border-2 border-black bg-forest-ground">
+            <div className="flex min-h-72 items-center justify-center border border-neutral-200 bg-forest-ground rounded-2xl">
                 <Loader2 className="h-7 w-7 animate-spin text-brand-navy" aria-label="Loading your forest" />
             </div>
         ) : null
@@ -132,9 +132,9 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
 
     if (!isSelf) {
         return (
-            <section className="relative overflow-hidden border-2 border-black bg-forest-ground text-brand-navy" aria-labelledby="forest-heading">
+            <section className="relative overflow-hidden border border-neutral-200 bg-forest-ground text-brand-navy rounded-2xl" aria-labelledby="forest-heading">
                 <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-6">
-                    <h2 id="forest-heading" className="text-[11px] font-black uppercase tracking-wider text-black/55">
+                    <h2 id="forest-heading" className="text-[11px] font-extrabold text-black/55">
                         {name}&apos;s forest
                     </h2>
                     {data.totalTrees > 0 ? (
@@ -143,7 +143,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                 <div key={segment.key} className="flex items-center gap-1.5">
                                     <span className="h-2.5 w-2.5" style={{ backgroundColor: segment.color }} aria-hidden="true" />
                                     <dt>{segment.label}</dt>
-                                    <dd className="font-black tabular-nums text-brand-navy">{formatCount(segment.value)}</dd>
+                                    <dd className="font-extrabold tabular-nums text-brand-navy">{formatCount(segment.value)}</dd>
                                 </div>
                             ))}
                         </dl>
@@ -161,9 +161,9 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                     title={`${name}'s forest`}
                     {...publicPlot}
                 />
-                <PresenceKey className="border-t-2 border-black/10 px-5 py-3 sm:px-6" statuses={presence} />
+                <PresenceKey className="border-t border-black/10 px-5 py-3 sm:px-6" statuses={presence} />
                 {shared ? (
-                    <p className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto w-fit border-2 border-black bg-brand-yellow px-3 py-1.5 text-xs font-black uppercase" role="status">
+                    <p className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto w-fit bg-brand-yellow px-3 py-1.5 text-xs font-extrabold rounded-full" role="status">
                         Invite link copied
                     </p>
                 ) : null}
@@ -172,10 +172,10 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
     }
 
     return (
-        <section className="overflow-hidden border-2 border-black bg-forest-ground text-brand-navy" aria-labelledby="forest-heading">
+        <section className="overflow-hidden border border-neutral-200 bg-forest-ground text-brand-navy rounded-2xl" aria-labelledby="forest-heading">
             <div className="grid lg:grid-cols-[1.35fr_0.65fr]">
                 <div className="p-5 sm:p-8">
-                    <h2 id="forest-heading" className="font-candu text-3xl font-extrabold uppercase leading-none sm:text-5xl">
+                    <h2 id="forest-heading" className="text-3xl font-extrabold leading-none sm:text-5xl">
                         {data.totalTrees > 0
                             ? `${formatTrees(data.totalTrees)} in ${isSelf ? 'your' : `${name}'s`} forest`
                             : isSelf ? 'Your forest starts here' : `${name}'s forest is just starting`}
@@ -202,7 +202,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                     <PresenceKey className="mt-1 text-center" statuses={presence} />
                 </div>
 
-                <div className="flex flex-col border-t-2 border-black/15 p-5 sm:p-8 lg:border-l-2 lg:border-t-0">
+                <div className="flex flex-col border-t border-black/15 p-5 sm:p-8 lg:border-l lg:border-t-0">
                     <div className="flex h-4 w-full overflow-hidden border border-black/40 bg-black/5" role="img"
                         aria-label={segments.map(segment => `${segment.label}: ${formatCount(segment.value)}`).join(', ')}>
                         {segments.map(segment => segment.value > 0 ? (
@@ -223,12 +223,12 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                     <span className="h-3 w-3 shrink-0" style={{ backgroundColor: segment.color }} aria-hidden="true" />
                                     {segment.label}
                                 </dt>
-                                <dd className="text-lg font-black tabular-nums">{formatCount(segment.value)}</dd>
+                                <dd className="text-lg font-extrabold tabular-nums">{formatCount(segment.value)}</dd>
                             </div>
                         ))}
-                        <div className="flex items-center justify-between gap-4 border-t-2 border-black/20 pt-3">
-                            <dt className="text-sm font-black uppercase tracking-wider">Total</dt>
-                            <dd className="text-2xl font-black tabular-nums"><span className="bg-brand-yellow px-1">{formatCount(data.totalTrees)}</span></dd>
+                        <div className="flex items-center justify-between gap-4 border-t border-black/20 pt-3">
+                            <dt className="text-sm font-extrabold">Total</dt>
+                            <dd className="text-2xl font-extrabold tabular-nums"><span className="bg-brand-yellow px-1">{formatCount(data.totalTrees)}</span></dd>
                         </div>
                     </dl>
 
@@ -238,7 +238,7 @@ export default function ForestImpactPanel(props: ForestImpactPanelProps) {
                                 <button
                                     type="button"
                                     onClick={shareForest}
-                                    className="inline-flex w-full items-center justify-center gap-2 border-2 border-black bg-brand-yellow px-4 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-brand-yellow"
+                                    className="inline-flex w-full items-center justify-center gap-2 bg-brand-yellow px-4 py-3 text-sm font-extrabold text-black hover:bg-black hover:text-brand-yellow rounded-full"
                                 >
                                     {shared ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
                                     {shared ? 'Link copied' : 'Share my forest'}

@@ -92,24 +92,24 @@ export default function UserLoginPage() {
 
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-      <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
-        <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-8">
+    <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+      <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
+        <h1 className="text-4xl font-extrabold text-center mb-8">
           Welcome Back
         </h1>
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t-2 border-dashed border-neutral-300" />
+            <span className="w-full border-t border-dashed border-neutral-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-neutral-500 font-bold uppercase">Or continue with email</span>
+            <span className="px-2 bg-white text-neutral-500 font-bold">Or continue with email</span>
           </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+            <label htmlFor="email" className="block text-sm font-bold text-neutral-600 mb-1">
               Email address
             </label>
             <input
@@ -120,13 +120,13 @@ export default function UserLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+              className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 rounded-xl"
               placeholder="forester@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+            <label htmlFor="password" className="block text-sm font-bold text-neutral-600 mb-1">
               Password
             </label>
             <input
@@ -137,7 +137,7 @@ export default function UserLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+              className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 rounded-xl"
               placeholder="••••••••"
             />
             <div className="mt-2 text-right">
@@ -148,7 +148,7 @@ export default function UserLoginPage() {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold text-sm text-center">
+            <div className="p-3 bg-red-100 border border-red-500 text-red-700 font-bold text-sm text-center">
               {error}
             </div>
           )}
@@ -169,13 +169,13 @@ export default function UserLoginPage() {
             <button
               type="submit"
               disabled={loading || !turnstileToken}
-              className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 text-lg font-bold bg-brand-yellow transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-full"
             >
               {loading ? 'Logging in...' : 'Log in'}
             </button>
           </div>
         </form>
-        <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-300 text-center">
+        <div className="mt-8 pt-6 border-t border-dashed border-neutral-300 text-center">
           <p className="text-sm text-neutral-600 font-bold">
             New to IdleForest?{' '}
             <Link href="/auth/user/signup" className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">

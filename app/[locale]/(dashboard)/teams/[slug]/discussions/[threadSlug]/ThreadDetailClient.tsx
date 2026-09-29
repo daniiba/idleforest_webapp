@@ -162,14 +162,14 @@ export default function ThreadDetailClient({
                 </Link>
 
                 {/* Thread Header */}
-                <div className="bg-white border-2 border-black shadow-none p-6 mb-8">
+                <div className="bg-white border border-neutral-200 p-6 mb-8 rounded-2xl">
                     <div className="flex gap-6">
                         {/* Upvote Section */}
                         <div className="flex flex-col items-center flex-shrink-0">
                             <button
                                 onClick={handleUpvote}
                                 disabled={hasUpvoted || !currentUserId}
-                                className={`p-2 border-2 border-black mb-2 transition-all ${hasUpvoted
+                                className={`p-2 border border-neutral-200 mb-2 transition-all rounded-2xl ${hasUpvoted
                                     ? 'bg-brand-yellow cursor-not-allowed'
                                     : 'bg-white hover:bg-brand-yellow'
                                     }`}
@@ -196,7 +196,7 @@ export default function ThreadDetailClient({
                 </div>
 
                 {/* Comments Section */}
-                <div className="bg-white border-2 border-black shadow-none p-6 mb-8">
+                <div className="bg-white border border-neutral-200 p-6 mb-8 rounded-2xl">
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                         <MessageSquare className="w-5 h-5" />
                         {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
@@ -228,12 +228,12 @@ export default function ThreadDetailClient({
 
                     {/* Comment Form */}
                     {currentUserRole ? (
-                        <form onSubmit={handleSubmitComment} className="border-t-2 border-gray-200 pt-6">
+                        <form onSubmit={handleSubmitComment} className="border-t border-gray-200 pt-6">
                             <textarea
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 placeholder="Add a comment..."
-                                className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium resize-none"
+                                className="w-full p-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium resize-none rounded-2xl"
                                 rows={4}
                                 maxLength={1000}
                                 disabled={isSubmitting}
@@ -243,14 +243,14 @@ export default function ThreadDetailClient({
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !newComment.trim()}
-                                    className="px-6 py-2 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
+                                    className="px-6 py-2 bg-brand-navy text-white font-bold hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-full"
                                 >
                                     {isSubmitting ? 'Posting...' : 'Post Comment'}
                                 </button>
                             </div>
                         </form>
                     ) : (
-                        <div className="border-t-2 border-gray-200 pt-6 text-center">
+                        <div className="border-t border-gray-200 pt-6 text-center">
                             <p className="text-gray-600">
                                 <Link href="/auth/user/login" className="text-brand-navy font-bold hover:underline">
                                     Log in

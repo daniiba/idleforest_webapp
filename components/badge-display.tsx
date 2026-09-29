@@ -397,14 +397,14 @@ const BadgeDisplay = ({ userId, variant = 'dark' }: BadgeDisplayProps) => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
-            <div className={`w-full relative overflow-hidden transform transition-all ${variant === 'light' ? 'border-2 border-black hover:translate-x-[2px] hover:translate-y-[2px]' : 'rounded-lg hover:scale-105'}`}
+            <div className={`w-full relative overflow-hidden transform transition-all ${variant === 'light' ? 'border border-neutral-200 rounded-2xl' : 'rounded-lg hover:scale-105'}`}
               style={{
                 background: tier.style.cardBg,
                 boxShadow: variant === 'light' ? 'none' : `0 8px 32px ${tier.style.shadowColor}`,
               }}>
               <div className="p-6 flex flex-col items-center relative z-10">
                 <div className="relative mb-6">
-                  <div className={`w-20 h-20 flex items-center justify-center ${variant === 'light' ? 'border-2 border-black' : 'rounded-full'}`}
+                  <div className={`w-20 h-20 flex items-center justify-center ${variant === 'light' ? 'border border-neutral-200 rounded-2xl' : 'rounded-full'}`}
                     style={{
                       background: tier.style.iconGradient,
                       boxShadow: variant === 'light' ? 'none' : `0 0 20px ${tier.style.glowColor}`
@@ -544,14 +544,14 @@ function CompactBadgeList({ badges }: { badges: ProcessedBadge[] }) {
           : `${badge.progress.toLocaleString('en')} of ${badge.threshold.toLocaleString('en')}`;
 
         return (
-          <li key={badge.id} className={`border-2 p-3 ${locked ? 'border-black/20' : 'border-black'}`} title={`${badge.description || ''} ${detail}`.trim()}>
+          <li key={badge.id} className={`border p-3 ${locked ? 'border-black/20' : 'border-neutral-200'}`} title={`${badge.description || ''} ${detail}`.trim()}>
             <div className="flex items-center gap-2.5">
-              <span className={`flex h-8 w-8 shrink-0 items-center justify-center border-2 ${tile}`} aria-hidden="true">
+              <span className={`flex h-8 w-8 shrink-0 items-center justify-center border ${tile}`} aria-hidden="true">
                 <Icon className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <p className={`truncate text-sm font-black leading-tight ${locked ? 'text-black/40' : ''}`}>{BADGE_LABELS[badge.badgeType] || badge.badgeType}</p>
-                <p className={`truncate text-[11px] font-bold uppercase tracking-wider ${locked ? 'text-black/35' : 'text-neutral-600'}`}>{tierLabel(badge)}</p>
+                <p className={`truncate text-sm font-extrabold leading-tight ${locked ? 'text-black/40' : ''}`}>{BADGE_LABELS[badge.badgeType] || badge.badgeType}</p>
+                <p className={`truncate text-[11px] font-bold ${locked ? 'text-black/35' : 'text-neutral-600'}`}>{tierLabel(badge)}</p>
               </div>
             </div>
             <div className="mt-3 h-1 w-full bg-black/10" role="progressbar" aria-label={detail} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progressPercent(badge))}>

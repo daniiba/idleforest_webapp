@@ -67,8 +67,8 @@ export function TrustSection({ category }: TrustSectionProps) {
     }
 
     return (
-        <div className="border-t-2 border-neutral-200 pt-12 mt-12 mb-12">
-            <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-6">{t("title")}</h3>
+        <div className="border-t border-neutral-200 pt-12 mt-12 mb-12">
+            <h3 className="text-xl font-extrabold text-black mb-6">{t("title")}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {sources.map((source, idx) => (
                     <div key={idx} className="flex gap-4">

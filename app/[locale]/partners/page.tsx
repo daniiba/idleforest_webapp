@@ -102,16 +102,16 @@ export default async function PartnersPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         <section className="relative overflow-hidden bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="grid gap-8 lg:grid-cols-[1fr_340px] lg:items-end">
               <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
                   <Leaf className="h-4 w-4" />
                   Partner forests
                 </div>
-                <h1 className="font-rethink-sans text-[44px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
+                <h1 className="text-[44px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-5xl">
                   Companies Partnered With IdleForest
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -119,9 +119,9 @@ export default async function PartnersPage() {
                   Join one to direct your future IdleForest support there.
                 </p>
               </div>
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
-                <p className="font-rethink-sans text-5xl font-extrabold">{partners.length}</p>
-                <p className="mt-2 text-sm font-bold uppercase tracking-[0.16em] text-neutral-600">
+              <div className="rounded-lg border border-neutral-200 bg-white p-6">
+                <p className="text-5xl font-extrabold">{partners.length}</p>
+                <p className="mt-2 text-sm font-bold text-neutral-600">
                   active partners
                 </p>
               </div>
@@ -140,7 +140,7 @@ export default async function PartnersPage() {
                 return (
                   <article
                     key={company.id}
-                    className="flex min-h-[320px] flex-col justify-between rounded-lg border-2 border-black bg-white p-6 shadow-none"
+                    className="flex min-h-[320px] flex-col justify-between rounded-lg border border-neutral-200 bg-white p-6"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-4">
@@ -161,7 +161,7 @@ export default async function PartnersPage() {
                             </div>
                           )}
                           <div className="min-w-0">
-                            <h2 className="break-words font-rethink-sans text-2xl font-extrabold leading-tight">
+                            <h2 className="break-words text-2xl font-extrabold leading-tight">
                               {company.name || "Unnamed partner"}
                             </h2>
                             {website ? (
@@ -188,12 +188,12 @@ export default async function PartnersPage() {
                       {href ? (
                         <Link
                           href={href}
-                          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-yellow px-5 py-3 text-sm font-extrabold text-black ring-2 ring-black transition hover:bg-white"
+                          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-yellow px-5 py-3 text-sm font-extrabold text-brand-navy transition hover:brightness-95"
                         >
                           View forest <ArrowRight className="h-4 w-4" />
                         </Link>
                       ) : null}
-                      <span className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-black px-5 py-3 text-sm font-extrabold text-black">
+                      <span className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-neutral-200 px-5 py-3 text-sm font-extrabold text-black">
                         <Users className="h-4 w-4" />
                         {company.is_invite_only ? "Invite-only" : "Open to join"}
                       </span>
@@ -203,9 +203,9 @@ export default async function PartnersPage() {
               })}
             </div>
           ) : (
-            <div className="rounded-lg border-2 border-black bg-white p-8 text-center shadow-none">
+            <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center">
               <SearchX className="mx-auto h-10 w-10 text-brand-navy" />
-              <h2 className="mt-4 font-rethink-sans text-3xl font-extrabold">No partners to show yet</h2>
+              <h2 className="mt-4 text-3xl font-extrabold">No partners to show yet</h2>
               <p className="mx-auto mt-3 max-w-xl text-neutral-700">
                 Partner records are loaded from the database. Once a public partner is available, it will appear here.
               </p>

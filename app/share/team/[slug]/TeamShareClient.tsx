@@ -152,7 +152,7 @@ export default function TeamShareClient() {
 
                 {/* Share buttons */}
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
-                    <h3 className="text-white font-bold text-center uppercase tracking-wider text-sm">
+                    <h3 className="text-white font-bold text-center text-sm">
                         Share This Team
                     </h3>
 
@@ -161,7 +161,7 @@ export default function TeamShareClient() {
                             href={shareLinks.twitter}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#1DA1F2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#1DA1F2] text-white rounded-lg border border-neutral-200 transition-all"
                         >
                             <Twitter className="w-5 h-5" />
                         </a>
@@ -169,7 +169,7 @@ export default function TeamShareClient() {
                             href={shareLinks.facebook}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#4267B2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#4267B2] text-white rounded-lg border border-neutral-200 transition-all"
                         >
                             <Facebook className="w-5 h-5" />
                         </a>
@@ -177,13 +177,13 @@ export default function TeamShareClient() {
                             href={shareLinks.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 bg-[#0A66C2] text-white rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-[#0A66C2] text-white rounded-lg border border-neutral-200 transition-all"
                         >
                             <Linkedin className="w-5 h-5" />
                         </a>
                         <button
                             onClick={handleCopy}
-                            className="flex items-center justify-center w-12 h-12 bg-brand-yellow text-black rounded-lg border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                            className="flex items-center justify-center w-12 h-12 bg-brand-yellow text-black rounded-lg border border-neutral-200 transition-all"
                         >
                             {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                         </button>
@@ -194,7 +194,7 @@ export default function TeamShareClient() {
                 <div className="text-center space-y-4">
                     <Link
                         href={`/teams/${team.slug || team.id}`}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow text-black font-bold uppercase border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-yellow text-black font-bold transition-all rounded-full"
                     >
                         <Users className="w-5 h-5" />
                         View Team & Join

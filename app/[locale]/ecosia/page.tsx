@@ -99,14 +99,14 @@ const Highlight = ({
   title: string;
   children: ReactNode;
 }) => (
-  <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-black bg-brand-gray text-black shadow-none transition-transform duration-200 hover:-translate-y-1">
+  <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-neutral-200 bg-neutral-100 text-black transition-transform duration-200 hover:-translate-y-1">
     <div className="flex h-28 items-end bg-brand-navy p-5 text-brand-yellow">
-      <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow text-black shadow-none">
+      <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow text-black">
         {icon}
       </div>
     </div>
     <div className="flex flex-1 flex-col p-6">
-      <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight text-black">{title}</h3>
+      <h3 className="text-2xl font-extrabold leading-tight text-black">{title}</h3>
       <p className="mt-3 text-sm leading-6 text-neutral-700">{children}</p>
     </div>
   </article>
@@ -227,17 +227,17 @@ const Index = () => {
 
   return (
     <>
-      <main className="relative min-h-screen bg-brand-gray pb-24 text-black">
+      <main className="relative min-h-screen bg-[#F7F7F2] pb-24 text-black">
         <Navigation />
 
-        <section className="border-b-2 border-black bg-brand-yellow">
+        <section className="border-b border-neutral-200 bg-brand-yellow">
           <div className="container mx-auto grid gap-10 px-4 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
             <div>
-              <p className="mb-4 inline-flex items-center gap-2 border-2 border-black bg-white px-3 py-1 text-sm font-bold uppercase">
+              <p className="mb-4 inline-flex items-center gap-2 border border-neutral-200 bg-white px-3 py-1 text-sm font-bold rounded-full">
                 <Leaf className="h-4 w-4" />
                 Ecosia companion
               </p>
-              <h1 className="font-rethink-sans text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
                 Use IdleForest With Ecosia
               </h1>
               <p className="mt-6 max-w-3xl text-xl leading-relaxed text-neutral-800">
@@ -245,27 +245,27 @@ const Index = () => {
                 with no search switch. Two independent sources of impact, both free.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="border-2 border-black bg-brand-navy px-6 py-6 font-bold text-brand-yellow hover:bg-black">
+                <Button asChild className="bg-brand-navy px-6 py-6 font-bold text-brand-yellow hover:bg-black rounded-full">
                   <Link href="/download/chrome">
                     <Chrome className="h-5 w-5" />
                     Add IdleForest to Chrome
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="border-2 border-black bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
+                <Button asChild variant="outline" className="border border-neutral-200 bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow rounded-full">
                   <Link href="/transparency">
                     See the verified planting proof <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
               </div>
               <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-black">
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 shadow-none">No search-engine switch</span>
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 shadow-none">Free to use</span>
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 shadow-none">Public planting records</span>
+                <span className="rounded-full border border-neutral-200 bg-white px-4 py-2">No search-engine switch</span>
+                <span className="rounded-full border border-neutral-200 bg-white px-4 py-2">Free to use</span>
+                <span className="rounded-full border border-neutral-200 bg-white px-4 py-2">Public planting records</span>
               </div>
             </div>
 
-            <aside className="overflow-hidden rounded-[28px] border-2 border-black bg-brand-navy p-6 text-brand-yellow shadow-none">
-              <h2 className="font-rethink-sans text-3xl font-extrabold leading-tight">Keep Ecosia. Add more trees.</h2>
+            <aside className="overflow-hidden rounded-[28px] border border-neutral-200 bg-brand-navy p-6 text-brand-yellow">
+              <h2 className="text-3xl font-extrabold leading-tight">Keep Ecosia. Add more trees.</h2>
               <div className="mt-6 space-y-5">
                 <ProofRow icon={<Search className="h-5 w-5" />} title="Ecosia keeps funding trees when you search">
                   Your existing search habit can stay exactly where it is.
@@ -283,7 +283,7 @@ const Index = () => {
 
         <section className="container mx-auto px-4 py-16">
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="font-rethink-sans text-3xl font-extrabold sm:text-4xl">
+            <h2 className="text-3xl font-extrabold sm:text-4xl">
               Why use IdleForest and Ecosia together
             </h2>
             <p className="mt-4 text-lg text-neutral-700">
@@ -314,10 +314,10 @@ const Index = () => {
           </p>
         </section>
 
-        <section className="border-y-2 border-black bg-white py-16">
+        <section className="border-y border-neutral-200 bg-white py-16">
           <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
-              <h2 className="font-rethink-sans text-3xl font-extrabold sm:text-4xl">
+              <h2 className="text-3xl font-extrabold sm:text-4xl">
                 What IdleForest adds for Ecosia users
               </h2>
               <p className="mt-4 text-neutral-700">
@@ -333,10 +333,10 @@ const Index = () => {
                 .
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/how-it-works" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold text-black shadow-none transition-all hover:bg-black hover:text-brand-yellow hover:shadow-none">
+                <Link href="/how-it-works" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-brand-yellow px-5 py-3 font-bold text-black transition-all hover:bg-black hover:text-brand-yellow">
                   How it works <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/ecosia-alternatives" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 font-bold text-black shadow-none transition-all hover:bg-black hover:text-brand-yellow hover:shadow-none">
+                <Link href="/ecosia-alternatives" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 font-bold text-black transition-all hover:bg-black hover:text-brand-yellow">
                   Ecosia alternatives
                 </Link>
               </div>
@@ -355,14 +355,14 @@ const Index = () => {
               ].map((item, index) => (
                 <div
                   key={`ecosia-addition-${index}`}
-                  className={`flex gap-5 rounded-[28px] border-2 border-black p-6 shadow-none transition-transform duration-200 hover:-translate-y-1 ${index === 0
+                  className={`flex gap-5 rounded-[28px] border border-neutral-200 p-6 transition-transform duration-200 hover:-translate-y-1 ${index === 0
                     ? "bg-brand-navy text-brand-yellow"
                     : index === 1
                       ? "bg-brand-yellow text-black"
                       : "bg-brand-gray text-black"
                     }`}
                 >
-                  <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-black font-candu text-2xl font-extrabold shadow-none ${index === 0 ? "bg-brand-yellow text-black" : "bg-white text-black"}`}>
+                  <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-neutral-200 text-2xl font-extrabold ${index === 0 ? "bg-brand-yellow text-black" : "bg-white text-black"}`}>
                     {index + 1}
                   </span>
                   <p className={`text-lg font-semibold leading-7 ${index === 0 ? "text-brand-yellow/90" : "text-neutral-800"}`}>{item}</p>
@@ -374,7 +374,7 @@ const Index = () => {
 
         <section className="container mx-auto px-4 py-16">
           <div className="mx-auto mb-10 max-w-4xl text-center">
-            <h2 className="font-rethink-sans text-3xl font-extrabold sm:text-4xl">
+            <h2 className="text-3xl font-extrabold sm:text-4xl">
               How Ecosia plants trees (and where it stops)
             </h2>
             <p className="mt-4 text-lg text-neutral-700">
@@ -409,11 +409,11 @@ const Index = () => {
         />
 
         <section className="container mx-auto grid gap-8 px-4 py-16 lg:grid-cols-2">
-          <article className="flex min-w-0 flex-col rounded-[28px] border-2 border-black bg-white p-7 shadow-none transition-transform duration-200 hover:-translate-y-1">
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow text-black shadow-none">
+          <article className="flex min-w-0 flex-col rounded-[28px] border border-neutral-200 bg-white p-7 transition-transform duration-200 hover:-translate-y-1">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow text-black">
               <Bot className="h-7 w-7" />
             </div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">
+            <h2 className="text-3xl font-extrabold">
               Is Ecosia's AI environmentally friendly?
             </h2>
             <p className="mt-4 flex-1 leading-7 text-neutral-700">
@@ -422,16 +422,16 @@ const Index = () => {
               on Ecosia for you; it gives you another free, inspectable way to fund planting while the broader
               search industry gets heavier.
             </p>
-            <Link href="/blog/ecosias-ai-user-backlash-and-environmental-impact" className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold text-black shadow-none transition-all hover:bg-black hover:text-brand-yellow hover:shadow-none">
+            <Link href="/blog/ecosias-ai-user-backlash-and-environmental-impact" className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-neutral-200 bg-brand-yellow px-5 py-3 font-bold text-black transition-all hover:bg-black hover:text-brand-yellow">
               Read about Ecosia AI impact <ArrowRight className="h-4 w-4" />
             </Link>
           </article>
 
-          <article className="flex min-w-0 flex-col rounded-[28px] border-2 border-black bg-brand-yellow p-7 text-black shadow-none transition-transform duration-200 hover:-translate-y-1">
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-navy text-brand-yellow shadow-none">
+          <article className="flex min-w-0 flex-col rounded-[28px] border border-neutral-200 bg-brand-yellow p-7 text-black transition-transform duration-200 hover:-translate-y-1">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-navy text-brand-yellow">
               <ShieldCheck className="h-7 w-7" />
             </div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">
+            <h2 className="text-3xl font-extrabold">
               The planting you are adding is verified
             </h2>
             <p className="mt-4 flex-1 leading-7 text-neutral-800">
@@ -439,33 +439,33 @@ const Index = () => {
               The transparency page links the community total to partner records, receipts, and project details.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/transparency" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 font-bold text-brand-yellow shadow-none transition-all hover:bg-black hover:shadow-none">
+              <Link href="/transparency" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-brand-navy px-5 py-3 font-bold text-brand-yellow transition-all hover:bg-black">
                 See transparency <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/is-ecosia-legit-safe" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 font-bold text-black shadow-none transition-all hover:bg-black hover:text-brand-yellow hover:shadow-none">
+              <Link href="/is-ecosia-legit-safe" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 font-bold text-black transition-all hover:bg-black hover:text-brand-yellow">
                 Ecosia safety guide
               </Link>
             </div>
           </article>
         </section>
 
-        <section className="border-y-2 border-black bg-white py-16">
+        <section className="border-y border-neutral-200 bg-white py-16">
           <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <h2 className="font-rethink-sans text-3xl font-extrabold">Using IdleForest with Ecosia: common questions</h2>
+              <h2 className="text-3xl font-extrabold">Using IdleForest with Ecosia: common questions</h2>
               <p className="mt-3 text-neutral-700">
                 The practical questions Ecosia users usually ask before adding IdleForest.
               </p>
             </div>
             <div className="grid gap-4">
               {useCaseFaqs.map((faq, index) => (
-                <section key={faq.question} className="rounded-2xl border-2 border-black bg-brand-gray p-5 shadow-none">
+                <section key={faq.question} className="rounded-2xl border border-neutral-200 bg-neutral-100 p-5">
                   <div className="flex gap-4">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-lg font-extrabold text-black">
                       {index + 1}
                     </span>
                     <div>
-                      <h3 className="font-rethink-sans text-xl font-extrabold leading-tight">{faq.question}</h3>
+                      <h3 className="text-xl font-extrabold leading-tight">{faq.question}</h3>
                       <p className="mt-2 leading-7 text-neutral-700">{faq.answer}</p>
                     </div>
                   </div>
@@ -478,7 +478,7 @@ const Index = () => {
         <section className="bg-brand-navy py-16 text-white">
           <div className="container mx-auto grid gap-8 px-4 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <h2 className="font-rethink-sans text-4xl font-extrabold text-brand-yellow">
+              <h2 className="text-4xl font-extrabold text-brand-yellow">
                 Keep Ecosia. Add more trees.
               </h2>
               <p className="mt-3 max-w-2xl text-white/80">
@@ -487,12 +487,12 @@ const Index = () => {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="border-2 border-brand-yellow bg-brand-yellow px-6 py-6 font-bold text-black hover:bg-white">
+              <Button asChild className="border-brand-yellow bg-brand-yellow px-6 py-6 font-bold text-black hover:bg-white rounded-full">
                 <Link href="/download/chrome">
                   Add IdleForest to Chrome <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="border-2 border-brand-yellow bg-transparent px-6 py-6 font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black">
+              <Button asChild variant="outline" className="border border-brand-yellow bg-transparent px-6 py-6 font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black rounded-full">
                 <Link href="/blog/how-to-plant-more-trees-with-ecosia">
                   Plant more with Ecosia
                 </Link>

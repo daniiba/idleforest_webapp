@@ -37,7 +37,7 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
     if (isPerTransaction) {
         return (
             <div className="bg-brand-navy border border-brand-yellow/20 rounded-xl p-6 text-white shadow-xl">
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-yellow/80 mb-3">
+                <p className="text-xs font-bold tracking-[0.24em] text-brand-yellow/80 mb-3">
                     Start with the estimate
                 </p>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -61,11 +61,11 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
     }
 
     return (
-        <div className="bg-brand-navy border border-black rounded-lg p-8 text-white shadow-none">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-yellow/80 mb-3">
+        <div className="bg-brand-navy border border-neutral-200 rounded-lg p-8 text-white">
+            <p className="text-xs font-bold tracking-[0.24em] text-brand-yellow/80 mb-3">
                 Start with the calculator
             </p>
-            <h3 className="font-rethink-sans text-2xl font-bold mb-6 flex items-center gap-2 text-brand-yellow">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-brand-yellow">
                 {t("calculate_footprint")}
             </h3>
 
@@ -98,25 +98,25 @@ export function CalculatorWidget({ data }: CalculatorWidgetProps) {
                     <div className="p-3 bg-red-500/10 rounded-full mb-3 text-red-400">
                         <Leaf className="w-6 h-6" />
                     </div>
-                    <div className="font-candu text-4xl font-bold text-white mb-1">
-                        {yearlyCo2Kg} <span className="font-rethink-sans text-xl text-gray-400 font-normal">{t("kg")}</span>
+                    <div className="text-4xl font-bold text-white mb-1">
+                        {yearlyCo2Kg} <span className="text-xl text-gray-400 font-normal">{t("kg")}</span>
                     </div>
-                    <div className="text-sm text-gray-400 font-medium uppercase tracking-wide">{t("yearly_emissions")}</div>
+                    <div className="text-sm text-gray-400 font-medium tracking-wide">{t("yearly_emissions")}</div>
                 </div>
 
-                <div className="bg-black/20 rounded-lg p-6 flex flex-col items-center justify-center text-center border-2 border-brand-green/30 relative overflow-hidden">
+                <div className="bg-black/20 rounded-lg p-6 flex flex-col items-center justify-center text-center border border-brand-green/30 relative overflow-hidden">
                     <div className="absolute inset-0 bg-brand-green/5"></div>
                     <div className="p-3 bg-brand-green/10 rounded-full mb-3 text-brand-green relative z-10">
                         <Trees className="w-6 h-6" />
                     </div>
-                    <div className="font-candu text-4xl font-bold text-brand-yellow mb-1 relative z-10">
-                        {treesNeeded} <span className="font-rethink-sans text-xl text-gray-400 font-normal">{t("trees")}</span>
+                    <div className="text-4xl font-bold text-brand-yellow mb-1 relative z-10">
+                        {treesNeeded} <span className="text-xl text-gray-400 font-normal">{t("trees")}</span>
                     </div>
-                    <div className="text-sm text-gray-400 font-medium uppercase tracking-wide relative z-10">{t("needed_to_offset")}</div>
+                    <div className="text-sm text-gray-400 font-medium tracking-wide relative z-10">{t("needed_to_offset")}</div>
                 </div>
             </div>
 
-            <div className="mt-8 text-center text-sm text-gray-300 bg-white/5 p-4 rounded-lg font-medium italic border border-white/10">
+            <div className="mt-8 text-center text-sm text-gray-300 bg-white/5 p-4 rounded-lg font-medium border border-white/10">
                 "{data.idleforest_pitch}"
             </div>
         </div>

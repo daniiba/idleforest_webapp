@@ -178,16 +178,16 @@ export default function TransparencyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {/* Hero Section */}
         <section className="relative bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-brand-navy text-brand-yellow px-4 py-2 rounded-md mb-6">
                 <Shield className="h-5 w-5" />
-                <span className="font-bold text-sm uppercase">{t('badge')}</span>
+                <span className="font-bold text-sm">{t('badge')}</span>
               </div>
-              <h1 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold mb-6">
+              <h1 className="text-3xl sm:text-5xl md:text-5xl font-extrabold mb-6">
                 Does IdleForest Actually Plant Trees?
               </h1>
               <p className="text-lg md:text-xl text-neutral-800 max-w-3xl mx-auto">
@@ -207,7 +207,7 @@ export default function TransparencyPage() {
                   href="https://github.com/daniiba/idleforest"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-black text-black font-bold px-8 py-4 rounded-full hover:bg-white transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-neutral-200 text-black font-bold px-8 py-4 rounded-full hover:bg-white transition-colors"
                 >
                   Read the open-source code <ExternalLink className="h-5 w-5" />
                 </a>
@@ -217,11 +217,11 @@ export default function TransparencyPage() {
         </section>
 
         {/* Funding Chain Section */}
-        <section className="relative bg-brand-gray py-16 md:py-20">
+        <section className="relative bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   How does IdleForest plant trees?
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -233,11 +233,11 @@ export default function TransparencyPage() {
 
               <div className="grid md:grid-cols-3 gap-6">
                 {fundingSteps.map((step, index) => (
-                  <Card key={step.title} className="bg-brand-yellow border-2 border-black p-6">
-                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-brand-navy font-candu text-3xl text-brand-yellow">
+                  <Card key={step.title} className="bg-brand-yellow border border-neutral-200 p-6 rounded-2xl">
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-brand-navy text-3xl text-brand-yellow">
                       {index + 1}
                     </div>
-                    <h3 className="font-rethink-sans text-xl font-extrabold mb-3">{step.title}</h3>
+                    <h3 className="text-xl font-extrabold mb-3">{step.title}</h3>
                     <p className="text-neutral-800 leading-relaxed">{step.body}</p>
                   </Card>
                 ))}
@@ -247,11 +247,11 @@ export default function TransparencyPage() {
         </section>
 
         {/* Our Approved Client Section */}
-        <section className="relative bg-brand-gray py-16 md:py-20">
+        <section className="relative bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   Where the money comes from: your idle bandwidth
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -259,13 +259,13 @@ export default function TransparencyPage() {
                 </p>
               </div>
 
-              <Card className="bg-brand-yellow border-2 border-black p-8 md:p-10 mb-8">
+              <Card className="bg-brand-yellow border border-neutral-200 p-8 md:p-10 mb-8 rounded-2xl">
                 <div className="flex items-start gap-4 mb-6">
                   <div className="w-12 h-12 bg-brand-navy rounded-md flex items-center justify-center flex-shrink-0">
                     <Globe className="h-6 w-6 text-brand-yellow" />
                   </div>
                   <div>
-                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-2">
+                    <h3 className="text-2xl md:text-3xl font-extrabold mb-2">
                       Olostep
                     </h3>
                     <p className="text-neutral-800 font-bold mb-2">{t('olostep_subtitle')}</p>
@@ -317,15 +317,15 @@ export default function TransparencyPage() {
               </Card>
 
               {/* Who Uses Olostep */}
-              <div className="bg-brand-gray border-2 border-black p-8 md:p-10">
-                <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-6 text-center">
+              <div className="bg-neutral-100 border border-neutral-200 p-8 md:p-10 rounded-2xl">
+                <h3 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">
                   {t('who_uses')}
                 </h3>
                 <p className="text-neutral-800 mb-6 text-center">
                   {t('who_uses_desc')}
                 </p>
 
-                <div className="bg-brand-yellow border-2 border-black p-6 text-center mb-6">
+                <div className="bg-brand-yellow border border-neutral-200 p-6 text-center mb-6 rounded-2xl">
                   <p className="text-neutral-800 leading-relaxed">
                     Olostep serves vetted AI, research, and business-intelligence companies. We keep the client proof
                     here short because this page is about the full funding chain, not a customer directory.
@@ -340,7 +340,7 @@ export default function TransparencyPage() {
                   </a>
                 </div>
 
-                <p className="text-sm text-neutral-600 text-center italic">
+                <p className="text-sm text-neutral-600 text-center">
                   {t('who_uses_note')}
                 </p>
               </div>
@@ -353,7 +353,7 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   Who plants the trees
                 </h2>
                 <p className="text-lg max-w-3xl mx-auto">
@@ -365,8 +365,8 @@ export default function TransparencyPage() {
 
               <div className="grid lg:grid-cols-3 gap-6">
                 {partners.map((partner) => (
-                  <Card key={partner.name} className="bg-brand-yellow text-black border-2 border-brand-yellow p-6">
-                    <div className="mb-5 flex h-24 items-center justify-center border-2 border-black bg-white p-4">
+                  <Card key={partner.name} className="bg-brand-yellow text-black border border-brand-yellow p-6 rounded-2xl">
+                    <div className="mb-5 flex h-24 items-center justify-center border border-neutral-200 bg-white p-4 rounded-2xl">
                       <Image
                         src={partner.logoSrc}
                         alt={partner.logoAlt}
@@ -376,7 +376,7 @@ export default function TransparencyPage() {
                         className="max-h-14 w-auto max-w-full object-contain"
                       />
                     </div>
-                    <h3 className="font-rethink-sans text-2xl font-extrabold mb-3">{partner.name}</h3>
+                    <h3 className="text-2xl font-extrabold mb-3">{partner.name}</h3>
                     <p className="text-neutral-800 leading-relaxed mb-5">{partner.body}</p>
                     <a
                       href={partner.href}
@@ -394,11 +394,11 @@ export default function TransparencyPage() {
         </section>
 
         {/* Receipts Section */}
-        <section id="receipts" className="relative scroll-mt-24 bg-brand-gray py-16 md:py-20">
+        <section id="receipts" className="relative scroll-mt-24 bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   The receipts: real projects you can open
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -422,8 +422,8 @@ export default function TransparencyPage() {
                       rel="noopener noreferrer"
                       className="group block h-full"
                     >
-                      <article className="flex h-full flex-col overflow-hidden border-2 border-black bg-brand-yellow text-black transition-transform duration-200 group-hover:-translate-y-1">
-                        <div className="relative h-52 border-b-2 border-black">
+                      <article className="flex h-full flex-col overflow-hidden border border-neutral-200 bg-brand-yellow text-black transition-transform duration-200 group-hover:-translate-y-1 rounded-2xl">
+                        <div className="relative h-52 border-b border-neutral-200">
                           <Image
                             src={proofProject.imageSrc}
                             alt={project?.name || "IdleForest planting project"}
@@ -434,14 +434,14 @@ export default function TransparencyPage() {
                         <div className="flex flex-1 flex-col p-6">
                           <div className="flex items-start justify-between gap-4">
                             <div>
-                              <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight">
+                              <h3 className="text-2xl font-extrabold leading-tight">
                                 {project?.name}
                               </h3>
                               <p className="mt-3 text-sm leading-6 text-neutral-800">{proofProject.body}</p>
                             </div>
-                            <div className="w-[118px] shrink-0 border-2 border-black bg-brand-gray px-3 py-3 text-center">
-                              <div className="font-candu text-3xl leading-none text-black">{trees.toLocaleString()}</div>
-                              <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-black/70">
+                            <div className="w-[118px] shrink-0 border border-neutral-200 bg-neutral-100 px-3 py-3 text-center rounded-2xl">
+                              <div className="text-3xl leading-none text-black">{trees.toLocaleString()}</div>
+                              <div className="mt-2 text-[10px] font-semibold tracking-[0.14em] text-black/70">
                                 trees
                               </div>
                             </div>
@@ -472,11 +472,11 @@ export default function TransparencyPage() {
               </div>
 
               <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
-                <Card className="bg-brand-navy text-brand-yellow border-2 border-black p-8">
-                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-yellow/80">
+                <Card className="bg-brand-navy text-brand-yellow border border-neutral-200 p-8 rounded-2xl">
+                  <p className="text-sm font-bold text-brand-yellow/80">
                     Live community total
                   </p>
-                  <div className="mt-3 font-candu text-6xl leading-none text-brand-yellow md:text-7xl">
+                  <div className="mt-3 text-6xl leading-none text-brand-yellow md:text-5xl">
                     {totalTrees.toLocaleString()}
                   </div>
                   <p className="mt-4 text-brand-yellow/85">
@@ -491,15 +491,15 @@ export default function TransparencyPage() {
                     </Link>
                     <Link
                       href="/map"
-                      className="inline-flex items-center justify-center gap-2 border-2 border-brand-yellow px-5 py-3 font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                      className="inline-flex items-center justify-center gap-2 border border-brand-yellow px-5 py-3 font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black rounded-full"
                     >
                       Planting map <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
                 </Card>
 
-                <Card className="bg-brand-yellow border-2 border-black p-8">
-                  <h2 className="font-rethink-sans text-2xl font-extrabold mb-5">How to check this yourself</h2>
+                <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
+                  <h2 className="text-2xl font-extrabold mb-5">How to check this yourself</h2>
                   <ul className="space-y-4 text-neutral-800">
                     {[
                       "Open the partner project pages above; the tree counts and project details are published on the partners' own sites, not just here.",
@@ -524,7 +524,7 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   {t('env_title')}
                 </h2>
                 <p className="text-lg max-w-3xl mx-auto">
@@ -533,12 +533,12 @@ export default function TransparencyPage() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-8 mb-12">
-                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
+                <Card className="bg-brand-yellow text-black border border-brand-yellow p-8 rounded-2xl">
                   <div className="text-center mb-6">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4">
                       <span className="text-3xl">🏭</span>
                     </div>
-                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                    <h3 className="text-2xl md:text-3xl font-extrabold">
                       {t('dc_title')}
                     </h3>
                   </div>
@@ -566,12 +566,12 @@ export default function TransparencyPage() {
                   </ul>
                 </Card>
 
-                <Card className="bg-brand-yellow text-black border-2 border-brand-yellow p-8">
+                <Card className="bg-brand-yellow text-black border border-brand-yellow p-8 rounded-2xl">
                   <div className="text-center mb-6">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4 p-2">
                       <Image src="/logo.png" alt="IdleForest logo" width={48} height={48} className="w-full h-full object-contain" />
                     </div>
-                    <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                    <h3 className="text-2xl md:text-3xl font-extrabold">
                       {t('dn_title')}
                     </h3>
                   </div>
@@ -596,8 +596,8 @@ export default function TransparencyPage() {
                 </Card>
               </div>
 
-              <div className="bg-brand-yellow border-2 border-brand-yellow p-8 md:p-10">
-                <h3 className="font-rethink-sans text-2xl md:text-3xl font-extrabold text-center mb-8 text-black">
+              <div className="bg-brand-yellow border border-brand-yellow p-8 md:p-10 rounded-2xl">
+                <h3 className="text-2xl md:text-3xl font-extrabold text-center mb-8 text-black">
                   {t('savings_title')}
                 </h3>
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -617,7 +617,7 @@ export default function TransparencyPage() {
                     <p className="text-xs text-neutral-600 mt-2">{t('carbon_desc')}</p>
                   </div>
                 </div>
-                <div className="bg-brand-gray border-2 border-black p-6 text-center">
+                <div className="bg-neutral-100 border border-neutral-200 p-6 text-center rounded-2xl">
                   <p className="text-neutral-800 leading-relaxed">
                     <strong className="text-black">{t('bottom_line')}</strong> {t('bottom_line_desc')}
                   </p>
@@ -633,13 +633,13 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   {t('searches_title')}
                 </h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <Card className="bg-brand-navy text-brand-yellow border-2 border-black p-6">
+                <Card className="bg-brand-navy text-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
@@ -651,7 +651,7 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-navy text-brand-yellow border-2 border-black p-6">
+                <Card className="bg-brand-navy text-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
@@ -663,7 +663,7 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-navy text-brand-yellow border-2 border-black p-6">
+                <Card className="bg-brand-navy text-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
@@ -675,7 +675,7 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-navy text-brand-yellow border-2 border-black p-6">
+                <Card className="bg-brand-navy text-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                   <div className="flex items-start gap-3 mb-4">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 mt-1" />
                     <div>
@@ -688,7 +688,7 @@ export default function TransparencyPage() {
                 </Card>
               </div>
 
-              <div className="mt-8 bg-brand-gray border-2 border-black p-6">
+              <div className="mt-8 bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-6 w-6 text-brand-navy flex-shrink-0 mt-1" />
                   <div>
@@ -723,11 +723,11 @@ export default function TransparencyPage() {
         </section>
 
         {/* Legal Protections Section */}
-        <section className="relative bg-brand-gray py-16 md:py-20">
+        <section className="relative bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   {t('legal_title')}
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -736,13 +736,13 @@ export default function TransparencyPage() {
               </div>
 
               <div className="space-y-6">
-                <Card className="bg-brand-yellow border-2 border-black p-8">
+                <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-brand-navy rounded-md flex items-center justify-center flex-shrink-0">
                       <Shield className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
+                      <h3 className="text-xl md:text-2xl font-extrabold mb-3">
                         {t('liability_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
@@ -766,13 +766,13 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-yellow border-2 border-black p-8">
+                <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-brand-navy rounded-md flex items-center justify-center flex-shrink-0">
                       <Lock className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
+                      <h3 className="text-xl md:text-2xl font-extrabold mb-3">
                         {t('vetting_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
@@ -800,13 +800,13 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-yellow border-2 border-black p-8">
+                <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-brand-navy rounded-md flex items-center justify-center flex-shrink-0">
                       <FileText className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
+                      <h3 className="text-xl md:text-2xl font-extrabold mb-3">
                         {t('monitoring_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
@@ -834,13 +834,13 @@ export default function TransparencyPage() {
                   </div>
                 </Card>
 
-                <Card className="bg-brand-yellow border-2 border-black p-8">
+                <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-brand-navy rounded-md flex items-center justify-center flex-shrink-0">
                       <Users className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
-                      <h3 className="font-rethink-sans text-xl md:text-2xl font-extrabold mb-3">
+                      <h3 className="text-xl md:text-2xl font-extrabold mb-3">
                         {t('gdpr_title')}
                       </h3>
                       <p className="text-neutral-800 mb-3">
@@ -877,34 +877,34 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   {t('security_title')}
                 </h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('encrypted_title')}</h3>
                   <p className="text-neutral-800 text-sm">
                     {t('encrypted_desc')}
                   </p>
                 </Card>
 
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('isolated_title')}</h3>
                   <p className="text-neutral-800 text-sm">
                     {t('isolated_desc')}
                   </p>
                 </Card>
 
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('logging_title')}</h3>
                   <p className="text-neutral-800 text-sm">
                     {t('logging_desc')}
                   </p>
                 </Card>
 
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('opensource_title')}</h3>
                   <p className="text-neutral-800 text-sm mb-3">
                     {t('opensource_desc')}
@@ -920,14 +920,14 @@ export default function TransparencyPage() {
                   </a>
                 </Card>
 
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('bandwidth_title')}</h3>
                   <p className="text-neutral-800 text-sm">
                     {t('bandwidth_desc')}
                   </p>
                 </Card>
 
-                <Card className="bg-brand-gray border-2 border-black p-6">
+                <Card className="bg-neutral-100 border border-neutral-200 p-6 rounded-2xl">
                   <h3 className="font-bold text-lg mb-3">{t('optout_title')}</h3>
                   <p className="text-neutral-800 text-sm">
                     {t('optout_desc')}
@@ -939,18 +939,18 @@ export default function TransparencyPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="relative bg-brand-gray py-16 md:py-20">
+        <section className="relative bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   Tree-planting proof: common questions
                 </h2>
               </div>
 
               <div className="space-y-4">
                 {faqItems.map((item) => (
-                  <Card key={item.question} className="bg-brand-yellow border-2 border-black p-6">
+                  <Card key={item.question} className="bg-brand-yellow border border-neutral-200 p-6 rounded-2xl">
                     <h3 className="font-bold text-lg mb-2">{item.question}</h3>
                     <p className="text-neutral-800">{item.answer}</p>
                   </Card>
@@ -965,7 +965,7 @@ export default function TransparencyPage() {
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-10">
-                <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4">
                   Choose how to contribute
                 </h2>
                 <p className="text-lg text-neutral-800 max-w-3xl mx-auto">
@@ -994,8 +994,8 @@ export default function TransparencyPage() {
                   },
                 ].map((item) => (
                   <Link key={item.href} href={item.href} className="group block h-full">
-                    <Card className="h-full bg-brand-gray border-2 border-black p-6 transition-transform duration-200 group-hover:-translate-y-1">
-                      <h3 className="font-rethink-sans text-xl font-extrabold mb-3">{item.title}</h3>
+                    <Card className="h-full bg-neutral-100 border border-neutral-200 p-6 transition-transform duration-200 group-hover:-translate-y-1 rounded-2xl">
+                      <h3 className="text-xl font-extrabold mb-3">{item.title}</h3>
                       <p className="text-neutral-800 mb-5">{item.body}</p>
                       <span className="inline-flex items-center gap-2 font-bold text-brand-navy underline underline-offset-4">
                         Open page <ArrowRight className="h-4 w-4" />
@@ -1012,7 +1012,7 @@ export default function TransparencyPage() {
         <section className="relative bg-brand-navy text-brand-yellow py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="font-rethink-sans text-[36px] sm:text-4xl md:text-5xl font-extrabold mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6">
                 {t('still_questions')}
               </h2>
               <p className="text-lg mb-8">
@@ -1027,7 +1027,7 @@ export default function TransparencyPage() {
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center gap-2 border-2 border-brand-yellow text-brand-yellow font-bold px-8 py-4 rounded-full hover:bg-brand-yellow hover:text-black transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border border-brand-yellow text-brand-yellow font-bold px-8 py-4 rounded-full hover:bg-brand-yellow hover:text-black transition-colors"
                 >
                   {t('back_home')}
                 </Link>

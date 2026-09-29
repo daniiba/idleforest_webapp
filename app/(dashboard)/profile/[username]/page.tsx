@@ -342,7 +342,7 @@ export default function PublicProfilePage() {
 
     if (loading) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
+            <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
                 <Loader2 className="h-8 w-8 animate-spin text-black" aria-label="Loading profile" />
             </main>
         )
@@ -350,13 +350,13 @@ export default function PublicProfilePage() {
 
     if (!profile) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg border-2 border-black bg-brand-gray p-8">
-                    <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Profile Not Found</h2>
+            <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+                <div className="w-full max-w-lg border border-neutral-200 bg-neutral-100 p-8 rounded-2xl">
+                    <h2 className="text-2xl font-extrabold mb-4">Profile Not Found</h2>
                     <p className="text-neutral-600 mb-6">The profile you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                     <Link
                         href="/"
-                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
+                        className="block w-full py-4 text-lg font-bold bg-brand-yellow transition-all text-center rounded-full"
                     >
                         Back to Home
                     </Link>
@@ -366,11 +366,11 @@ export default function PublicProfilePage() {
     }
 
     return (
-        <main className="min-h-screen bg-brand-gray px-4 pb-16 pt-8 font-rethink-sans sm:pt-12">
+        <main className="min-h-screen bg-[#F7F7F2] px-4 pb-16 pt-8 sm:pt-12">
             <div className="w-full max-w-6xl mx-auto space-y-6">
                 <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                     <div className="min-w-0">
-                        <h1 className="break-words font-candu text-5xl font-extrabold uppercase leading-none text-brand-navy sm:text-6xl">
+                        <h1 className="break-words text-5xl font-extrabold leading-none text-brand-navy sm:text-6xl">
                             {profile.display_name}
                         </h1>
 
@@ -378,7 +378,7 @@ export default function PublicProfilePage() {
                             {userTeam ? (
                                 <Link
                                     href={`/teams/${userTeam.slug}`}
-                                    className="inline-flex items-center gap-1.5 border-2 border-black bg-brand-navy px-2 py-1 font-black text-white hover:text-brand-yellow"
+                                    className="inline-flex items-center gap-1.5 bg-brand-navy px-2 py-1 font-extrabold text-white hover:text-brand-yellow rounded-full"
                                 >
                                     <Users className="h-3.5 w-3.5 text-brand-yellow" aria-hidden="true" />
                                     {userTeam.name}
@@ -386,9 +386,9 @@ export default function PublicProfilePage() {
                             ) : null}
 
                             {companyForest ? (
-                                <span className="inline-flex items-center gap-1.5 border-2 border-black px-1.5 py-1">
+                                <span className="inline-flex items-center gap-1.5 border border-neutral-200 px-1.5 py-1 rounded-2xl">
                                     <Link href={`/en/c/${companyForest.slug}`} className="flex min-w-0 items-center gap-1.5" title={getCompanyImpactDescription(companyForest)}>
-                                        <span className="flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden bg-black">
+                                        <span className="flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden bg-brand-navy">
                                             {getCompanyLogoUrl(companyForest) ? (
                                                 // eslint-disable-next-line @next/next/no-img-element
                                                 <img src={getCompanyLogoUrl(companyForest)!} alt="" className="h-full w-full object-contain p-px" />
@@ -396,7 +396,7 @@ export default function PublicProfilePage() {
                                                 <Building2 className="h-3 w-3 text-brand-yellow" />
                                             )}
                                         </span>
-                                        <span className="truncate font-black text-black">{companyForest.name}</span>
+                                        <span className="truncate font-extrabold text-black">{companyForest.name}</span>
                                     </Link>
                                     {isOwnProfile && (
                                         <button
@@ -432,7 +432,7 @@ export default function PublicProfilePage() {
                             {isOwnProfile && !userTeam ? (
                                 <button
                                     onClick={() => setShowCreateTeamModal(true)}
-                                    className="inline-flex items-center gap-1 border-2 border-black px-2 py-1 font-black uppercase text-black hover:bg-black/5"
+                                    className="inline-flex items-center gap-1 border border-neutral-200 px-2 py-1 font-extrabold text-black hover:bg-black/5 rounded-full"
                                 >
                                     <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                                     Team
@@ -441,7 +441,7 @@ export default function PublicProfilePage() {
                             {isOwnProfile ? (
                                 <Link
                                     href={`/share/user/${profile.display_name}`}
-                                    className="inline-flex items-center gap-1 border-2 border-black bg-brand-yellow px-2 py-1 font-black uppercase text-black"
+                                    className="inline-flex items-center gap-1 bg-brand-yellow px-2 py-1 font-extrabold text-black rounded-full"
                                 >
                                     <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
                                     Share
@@ -453,15 +453,15 @@ export default function PublicProfilePage() {
                     <dl className="flex shrink-0 items-end gap-8">
                         {forest && forest.totalTrees > 0 ? (
                             <div className="group relative flex flex-col-reverse outline-none" tabIndex={0} aria-describedby="trees-explainer">
-                                <dt className="mt-1 inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-neutral-600">
+                                <dt className="mt-1 inline-flex items-center gap-1 text-[11px] font-extrabold text-neutral-600">
                                     Trees
                                     <Info className="h-3 w-3" aria-hidden="true" />
                                     <span
                                         id="trees-explainer"
                                         role="tooltip"
-                                        className="pointer-events-none absolute left-0 top-full z-20 mt-2 w-64 border-2 border-black bg-brand-navy p-3 text-xs font-semibold normal-case tracking-normal text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100 sm:left-auto sm:right-0"
+                                        className="pointer-events-none absolute left-0 top-full z-20 mt-2 w-64 border border-neutral-200 bg-brand-navy p-3 text-xs font-semibold normal-case tracking-normal text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100 sm:left-auto sm:right-0 rounded-2xl"
                                     >
-                                        <span className="block font-black">Everything growing in {profile.display_name}&apos;s forest</span>
+                                        <span className="block font-extrabold">Everything growing in {profile.display_name}&apos;s forest</span>
                                         <span className="mt-2 block space-y-1 tabular-nums text-white/80">
                                             {forest.ownTrees > 0 ? <span className="block"><strong className="text-white">{forest.ownTrees.toLocaleString('en')}</strong> planted by {profile.display_name}</span> : null}
                                             {forest.inviteTrees > 0 ? <span className="block"><strong className="text-white">{forest.inviteTrees.toLocaleString('en')}</strong> from invite rewards</span> : null}
@@ -469,15 +469,15 @@ export default function PublicProfilePage() {
                                         </span>
                                     </span>
                                 </dt>
-                                <dd className="font-candu text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">
+                                <dd className="text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">
                                     <span className="bg-brand-yellow px-1.5">{forest.totalTrees.toLocaleString('en')}</span>
                                 </dd>
                             </div>
                         ) : null}
                         {profile.total_points > 0 ? (
                             <div className="flex flex-col-reverse">
-                                <dt className="mt-1 text-[11px] font-black uppercase tracking-wider text-neutral-600">Points</dt>
-                                <dd className="font-candu text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">{profile.total_points.toLocaleString('en')}</dd>
+                                <dt className="mt-1 text-[11px] font-extrabold text-neutral-600">Points</dt>
+                                <dd className="text-4xl font-extrabold leading-none text-brand-navy sm:text-5xl">{profile.total_points.toLocaleString('en')}</dd>
                             </div>
                         ) : null}
                     </dl>
@@ -486,8 +486,8 @@ export default function PublicProfilePage() {
                 {/* Create Team Modal */}
                 {showCreateTeamModal && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <div className="w-full max-w-md border-2 border-black bg-brand-gray p-8">
-                            <h2 className="text-2xl font-extrabold font-candu uppercase mb-4">Create a Team</h2>
+                        <div className="w-full max-w-md border border-neutral-200 bg-neutral-100 p-8 rounded-2xl">
+                            <h2 className="text-2xl font-extrabold mb-4">Create a Team</h2>
                             <p className="text-neutral-600 mb-6">Give your team a name to get started.</p>
 
                             <input
@@ -496,7 +496,7 @@ export default function PublicProfilePage() {
                                 onChange={(e) => setTeamName(e.target.value)}
                                 placeholder="Team name *"
                                 maxLength={50}
-                                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4"
+                                className="w-full px-4 py-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4 rounded-xl"
                             />
 
                             <textarea
@@ -505,7 +505,7 @@ export default function PublicProfilePage() {
                                 placeholder="Team description (optional)"
                                 maxLength={500}
                                 rows={3}
-                                className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4 resize-none"
+                                className="w-full px-4 py-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4 resize-none rounded-xl"
                             />
 
                             {/* Image Upload */}
@@ -516,18 +516,18 @@ export default function PublicProfilePage() {
                                         <img
                                             src={imagePreview}
                                             alt="Team preview"
-                                            className="w-24 h-24 object-cover border-2 border-black"
+                                            className="w-24 h-24 object-cover border border-neutral-200 rounded-2xl"
                                         />
                                         <button
                                             type="button"
                                             onClick={removeImage}
-                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 border-2 border-black hover:bg-red-600 transition-colors"
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 border border-neutral-200 hover:bg-red-600 transition-colors"
                                         >
                                             <X className="w-4 h-4" />
                                         </button>
                                     </div>
                                 ) : (
-                                    <label className="flex items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-gray-400 cursor-pointer hover:border-black transition-colors">
+                                    <label className="flex items-center justify-center gap-2 px-4 py-6 border border-dashed border-gray-400 cursor-pointer hover:border-neutral-400 transition-colors">
                                         <Upload className="w-5 h-5 text-gray-500" />
                                         <span className="text-gray-500 text-sm">Click to upload image (max 2MB)</span>
                                         <input
@@ -555,14 +555,14 @@ export default function PublicProfilePage() {
                                         setImagePreview(null)
                                         setCreateError('')
                                     }}
-                                    className="flex-1 py-3 font-bold uppercase tracking-wider bg-transparent border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                    className="flex-1 py-3 font-bold bg-transparent border border-neutral-200 transition-all rounded-2xl"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleCreateTeam}
                                     disabled={creatingTeam}
-                                    className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+                                    className="flex-1 flex items-center justify-center gap-2 py-3 font-bold bg-brand-yellow border border-neutral-200 transition-all disabled:opacity-50 rounded-2xl"
                                 >
                                     {creatingTeam ? (
                                         <><Loader2 className="w-4 h-4 animate-spin" /> {uploadingImage ? 'Uploading...' : 'Creating...'}</>
@@ -577,8 +577,8 @@ export default function PublicProfilePage() {
 
                 {showLeaveCompanyModal && companyForest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                        <div className="w-full max-w-md border-2 border-black bg-brand-gray p-8">
-                            <h2 className="mb-4 text-2xl font-extrabold font-candu uppercase">Return to IdleForest?</h2>
+                        <div className="w-full max-w-md border border-neutral-200 bg-neutral-100 p-8 rounded-2xl">
+                            <h2 className="mb-4 text-2xl font-extrabold">Return to IdleForest?</h2>
                             <p className="mb-4 text-sm font-semibold leading-6 text-neutral-700">
                                 This will stop routing your future activity to {companyForest.name} and move you back to IdleForest&apos;s general reforestation impact.
                             </p>
@@ -598,7 +598,7 @@ export default function PublicProfilePage() {
                                         setLeaveCompanyError('')
                                     }}
                                     disabled={leavingCompany}
-                                    className="flex-1 border-2 border-black bg-transparent py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
+                                    className="flex-1 border border-neutral-200 bg-transparent py-3 font-bold transition-all disabled:opacity-50 rounded-2xl"
                                 >
                                     Keep Fund
                                 </button>
@@ -606,7 +606,7 @@ export default function PublicProfilePage() {
                                     type="button"
                                     onClick={handleLeaveCompany}
                                     disabled={leavingCompany}
-                                    className="flex-1 border-2 border-black bg-brand-yellow py-3 font-bold uppercase tracking-wider shadow-none transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none disabled:opacity-50"
+                                    className="flex-1 border border-neutral-200 bg-brand-yellow py-3 font-bold transition-all disabled:opacity-50 rounded-2xl"
                                 >
                                     {leavingCompany ? 'Returning...' : 'Return'}
                                 </button>
@@ -632,7 +632,7 @@ export default function PublicProfilePage() {
                 <div className={`grid gap-6 ${historicalData.length > 1 ? 'lg:grid-cols-[0.8fr_1.2fr]' : ''}`}>
                     {historicalData.length > 1 ? <PointsCard history={historicalData} /> : null}
                     <section aria-labelledby="badges-heading">
-                        <h2 id="badges-heading" className="mb-2 text-[11px] font-black uppercase tracking-wider text-neutral-600">Badges</h2>
+                        <h2 id="badges-heading" className="mb-2 text-[11px] font-extrabold text-neutral-600">Badges</h2>
                         <BadgeDisplay userId={profile.user_id} variant="light" />
                     </section>
                 </div>

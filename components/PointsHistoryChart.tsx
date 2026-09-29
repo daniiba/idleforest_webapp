@@ -57,7 +57,7 @@ export function PointsHistoryChart({
         if (!active || !payload || payload.length === 0) return null
 
         return (
-            <div className="bg-white border-2 border-black shadow-none p-3">
+            <div className="bg-white border border-neutral-200 p-3 rounded-2xl">
                 <p className="font-bold text-brand-navy mb-2">{label}</p>
                 {payload.map((entry: any, index: number) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
@@ -74,17 +74,17 @@ export function PointsHistoryChart({
     }
 
     return (
-        <div className={`${surfaceClassName} border-2 border-black shadow-none p-6`}>
+        <div className={`${surfaceClassName} border border-neutral-200 p-6 rounded-2xl`}>
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-brand-yellow" />
-                    <h3 className="text-lg font-bold uppercase tracking-wider">{title}</h3>
+                    <h3 className="text-lg font-bold">{title}</h3>
                 </div>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setShowDailyGain(false)}
-                        className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${!showDailyGain
-                            ? 'bg-brand-yellow shadow-none'
+                        className={`px-3 py-1 text-xs font-bold border border-neutral-200 transition-all rounded-full ${!showDailyGain
+                            ? 'bg-brand-yellow'
                             : 'bg-gray-100 hover:bg-gray-200'
                             }`}
                     >
@@ -92,8 +92,8 @@ export function PointsHistoryChart({
                     </button>
                     <button
                         onClick={() => setShowDailyGain(true)}
-                        className={`px-3 py-1 text-xs font-bold uppercase border-2 border-black transition-all ${showDailyGain
-                            ? 'bg-brand-yellow shadow-none'
+                        className={`px-3 py-1 text-xs font-bold border border-neutral-200 transition-all rounded-full ${showDailyGain
+                            ? 'bg-brand-yellow'
                             : 'bg-gray-100 hover:bg-gray-200'
                             }`}
                     >
@@ -171,22 +171,22 @@ export function PointsHistoryChart({
             </div>
 
             {/* Summary stats */}
-            <div className="mt-4 pt-4 border-t-2 border-black/10 grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+            <div className="mt-4 pt-4 border-t border-black/10 grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
                 <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider">Current</p>
+                    <p className="text-xs text-gray-500">Current</p>
                     <p className="text-lg font-bold text-brand-navy">
                         {chartData[chartData.length - 1]?.total?.toLocaleString() || 0}
                     </p>
                 </div>
                 <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider">Latest Gain</p>
+                    <p className="text-xs text-gray-500">Latest Gain</p>
                     <p className="text-lg font-bold text-green-600">
                         +{chartData[chartData.length - 1]?.daily?.toLocaleString() || 0}
                     </p>
                 </div>
                 {showMemberCount && chartData[0]?.members !== undefined && (
                     <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wider">Members</p>
+                        <p className="text-xs text-gray-500">Members</p>
                         <p className="text-lg font-bold text-blue-600">
                             {chartData[chartData.length - 1]?.members?.toLocaleString() || 0}
                         </p>

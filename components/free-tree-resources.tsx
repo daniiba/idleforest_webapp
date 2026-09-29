@@ -3,7 +3,7 @@ import { FREE_TREE_RESOURCES } from '@/lib/free-tree-guide';
 
 export default function FreeTreeResources({ currentPath }: { currentPath: string }) {
   return (
-    <section aria-label="More about free tree planting" className="mx-auto my-12 max-w-4xl border-2 border-black bg-white p-6 text-black">
+    <section aria-label="More about free tree planting" className="mx-auto my-12 max-w-4xl border border-neutral-200 bg-white p-6 text-black rounded-2xl">
       <h2 className="text-2xl font-extrabold">Explore free tree planting</h2>
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         {FREE_TREE_RESOURCES.filter((resource) => resource.href !== currentPath).map((resource) => (

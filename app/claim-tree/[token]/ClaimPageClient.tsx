@@ -142,14 +142,14 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
     if (isExpired) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-brand-gray text-black p-4 font-rethink-sans">
-                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-none">
-                    <div className="mx-auto w-16 h-16 bg-red-500 rounded-full flex items-center justify-center border-2 border-black">
+            <div className="min-h-screen flex items-center justify-center bg-[#F7F7F2] text-black p-4">
+                <div className="max-w-md text-center space-y-4 border border-neutral-200 bg-white p-8 rounded-2xl">
+                    <div className="mx-auto w-16 h-16 bg-red-500 rounded-full flex items-center justify-center border border-neutral-200">
                         <TreePine className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-extrabold font-candu uppercase">Offer Expired</h1>
+                    <h1 className="text-3xl font-extrabold">Offer Expired</h1>
                     <p className="text-neutral-600">Sorry, this tree claim offer has expired (valid for 7 days).</p>
-                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Profile</Link>
+                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold transition-all rounded-full">Go to Profile</Link>
                 </div>
             </div>
         );
@@ -157,14 +157,14 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
     if (isClaimed && !successData) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-brand-gray text-black p-4 font-rethink-sans">
-                <div className="max-w-md text-center space-y-4 border-2 border-black bg-white p-8 shadow-none">
-                    <div className="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center border-2 border-black">
+            <div className="min-h-screen flex items-center justify-center bg-[#F7F7F2] text-black p-4">
+                <div className="max-w-md text-center space-y-4 border border-neutral-200 bg-white p-8 rounded-2xl">
+                    <div className="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center border border-neutral-200">
                         <CheckCircle className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-extrabold font-candu uppercase">Already Claimed</h1>
+                    <h1 className="text-3xl font-extrabold">Already Claimed</h1>
                     <p className="text-neutral-600">You have already claimed your signup trees!</p>
-                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold uppercase border-2 border-black hover:translate-y-[2px] hover:translate-x-[2px] transition-all">Go to Profile</Link>
+                    <Link href={userName ? `/profile/${userName}` : '/'} className="block w-full py-3 bg-brand-navy text-brand-yellow font-bold transition-all rounded-full">Go to Profile</Link>
                 </div>
             </div>
         );
@@ -183,13 +183,13 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
         const justJoinedTeam = successData.trees === 2;
 
         return (
-            <div className="min-h-screen bg-brand-gray text-black flex flex-col items-center justify-center p-4 animate-in fade-in duration-700 font-rethink-sans">
-                <div className="max-w-xl w-full bg-white border-2 border-black p-8 text-center space-y-6 shadow-none">
-                    <div className="mx-auto w-24 h-24 bg-brand-yellow rounded-full flex items-center justify-center mb-4 border-2 border-black">
+            <div className="min-h-screen bg-[#F7F7F2] text-black flex flex-col items-center justify-center p-4 animate-in fade-in duration-700">
+                <div className="max-w-xl w-full bg-white border border-neutral-200 p-8 text-center space-y-6 rounded-2xl">
+                    <div className="mx-auto w-24 h-24 bg-brand-yellow rounded-full flex items-center justify-center mb-4 border border-neutral-200">
                         <TreePine className="w-12 h-12 text-black" />
                     </div>
 
-                    <h1 className="text-4xl font-extrabold font-candu uppercase leading-tight">
+                    <h1 className="text-4xl font-extrabold leading-tight">
                         You planted {successData.trees} {successData.trees === 1 ? 'tree' : 'trees'}!
                     </h1>
                     <p className="text-neutral-800 text-lg">
@@ -198,13 +198,13 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                             : "Your contribution has been recorded via 1ClickImpact."}
                     </p>
 
-                    <div className="h-0.5 bg-black w-full my-6 opacity-20" />
+                    <div className="h-0.5 bg-brand-navy w-full my-6 opacity-20" />
 
                     {shareUrl && (
-                        <div className="space-y-4 bg-brand-navy p-6 border-2 border-black">
+                        <div className="space-y-4 bg-brand-navy p-6 border border-neutral-200 rounded-2xl">
                             <div className="flex items-center justify-center gap-2 text-brand-yellow mb-2">
                                 <Users className="w-6 h-6" />
-                                <h2 className="text-xl font-extrabold font-candu uppercase">
+                                <h2 className="text-xl font-extrabold">
                                     {inviteCodeToUse ? 'Your Team Invite Link' : 'Invite someone to plant with you'}
                                 </h2>
                             </div>
@@ -214,11 +214,11 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                     : 'Know someone who would like this? Send them your personal invite. Their impact shows up in your forest.'}
                             </p>
 
-                            <div className="flex gap-2 items-center bg-black/30 rounded-none p-2 border-2 border-brand-yellow/50">
+                            <div className="flex gap-2 items-center bg-black/30 p-2 border border-brand-yellow/50 rounded-xl">
                                 <code className="flex-1 text-sm text-brand-yellow truncate px-2 font-mono">{shareUrl}</code>
                                 <button
                                     onClick={() => navigator.clipboard.writeText(shareUrl)}
-                                    className="p-2 hover:bg-brand-yellow hover:text-black text-brand-yellow border border-transparent hover:border-black transition-colors rounded-none"
+                                    className="p-2 hover:bg-brand-yellow hover:text-black text-brand-yellow border border-transparent hover:border-neutral-400 transition-colors rounded-xl"
                                     title="Copy Link"
                                 >
                                     <Copy className="w-4 h-4" />
@@ -229,7 +229,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
 
                     <Link
                         href={successData.teamSlug ? `/teams/${successData.teamSlug}` : (userName ? `/profile/${userName}` : '/')}
-                        className="block w-full py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors mt-6 text-lg border-2 border-transparent hover:border-black"
+                        className="block w-full py-4 bg-brand-navy text-white font-bold hover:bg-neutral-800 transition-colors mt-6 text-lg border border-transparent hover:border-neutral-400"
                     >
                         {successData.teamSlug ? 'Go to Team Page' : 'Go to Profile'}
                     </Link>
@@ -239,10 +239,10 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
     }
 
     return (
-        <div className="min-h-screen bg-brand-gray text-black flex flex-col items-center justify-center p-4 font-rethink-sans">
+        <div className="min-h-screen bg-[#F7F7F2] text-black flex flex-col items-center justify-center p-4">
             <div className="max-w-5xl w-full space-y-12">
                 <div className="text-center space-y-4">
-                    <h1 className="text-5xl md:text-7xl font-extrabold font-candu uppercase tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
                         Claim Your Forest
                     </h1>
                     <p className="text-xl text-neutral-800 max-w-2xl mx-auto font-medium">
@@ -251,21 +251,21 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                 </div>
 
                 {error && (
-                    <div className="max-w-2xl mx-auto p-4 bg-red-100 border-2 border-red-500 text-red-800 text-center font-bold shadow-none">
+                    <div className="max-w-2xl mx-auto p-4 bg-red-100 border border-red-500 text-red-800 text-center font-bold">
                         {error}
                     </div>
                 )}
 
                 <div className="grid md:grid-cols-2 gap-8 items-start">
                     {/* Quick Claim Option */}
-                    <div className="bg-white border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-none flex flex-col h-full relative">
-                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border-2 border-black px-4 py-1 text-sm font-bold uppercase tracking-wider">
+                    <div className="bg-white border border-neutral-200 p-8 hover:translate-y-[-2px] transition-transform flex flex-col h-full relative rounded-2xl">
+                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-white border border-neutral-200 px-4 py-1 text-sm font-bold rounded-full">
                             Basic
                         </div>
-                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-none">
+                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border border-neutral-200 rounded-2xl">
                             <Zap className="w-8 h-8 text-brand-yellow" />
                         </div>
-                        <h2 className="text-3xl font-extrabold font-candu uppercase text-center mb-2">Quick Claim</h2>
+                        <h2 className="text-3xl font-extrabold text-center mb-2">Quick Claim</h2>
                         <div className="text-6xl font-extrabold text-center mb-4 text-neutral-900">1 Tree</div>
                         <p className="text-neutral-600 text-center mb-8 flex-1">
                             Plant one tree immediately and explore the dashboard on your own.
@@ -274,29 +274,29 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                         <button
                             onClick={() => handleClaim('quick')}
                             disabled={loading}
-                            className="w-full py-4 bg-white border-2 border-black text-black font-bold uppercase tracking-wider hover:bg-neutral-100 transition-all shadow-none active:shadow-none active:translate-x-[4px] active:translate-y-[4px] flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-white border border-neutral-200 text-black font-bold hover:bg-neutral-100 transition-all flex items-center justify-center gap-2 rounded-2xl"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Plant 1 Tree'}
                         </button>
                     </div>
 
                     {/* Team Claim Option */}
-                    <div className="bg-brand-yellow border-2 border-black p-8 hover:translate-y-[-2px] transition-transform shadow-none flex flex-col h-full relative">
-                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-brand-navy text-brand-yellow border-2 border-black px-4 py-1 text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                    <div className="bg-brand-yellow border border-neutral-200 p-8 hover:translate-y-[-2px] transition-transform flex flex-col h-full relative rounded-2xl">
+                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-brand-navy text-brand-yellow px-4 py-1 text-sm font-bold flex items-center gap-2 rounded-full">
                             <Flame className="w-4 h-4" /> Recommended
                         </div>
 
-                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border-2 border-black shadow-none">
+                        <div className="mb-6 mx-auto p-4 bg-brand-navy w-fit border border-neutral-200 rounded-2xl">
                             <Users className="w-8 h-8 text-brand-yellow" />
                         </div>
-                        <h2 className="text-3xl font-extrabold font-candu uppercase text-center mb-1 text-black">Team Claim</h2>
+                        <h2 className="text-3xl font-extrabold text-center mb-1 text-black">Team Claim</h2>
                         <div className="text-6xl font-extrabold text-center mb-2 text-black">2 Trees</div>
                         <p className="text-neutral-800 font-bold text-center mb-6 text-sm">
                             Join a team & create your invite link to double your impact.
                         </p>
 
                         {/* Team Selection UI */}
-                        <div className="flex-1 bg-white border-2 border-black p-4 mb-6">
+                        <div className="flex-1 bg-white border border-neutral-200 p-4 mb-6 rounded-2xl">
                             {!isCreatingTeam ? (
                                 <>
                                     <div className="relative mb-3">
@@ -306,7 +306,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                             placeholder="Search teams..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full pl-9 pr-3 py-2 border-2 border-neutral-200 focus:border-black outline-none font-bold placeholder:font-normal"
+                                            className="w-full pl-9 pr-3 py-2 border border-neutral-200 focus:border-brand-navy outline-none font-bold placeholder:font-normal"
                                         />
                                     </div>
 
@@ -320,16 +320,16 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                                 <div
                                                     key={team.id}
                                                     onClick={() => setSelectedTeam(team.id)}
-                                                    className={`p-3 border-2 cursor-pointer transition-all flex items-center justify-between group ${selectedTeam === team.id
-                                                        ? 'border-black bg-brand-yellow/20'
+                                                    className={`p-3 border cursor-pointer transition-all flex items-center justify-between group ${selectedTeam === team.id
+                                                        ? 'border-neutral-200 bg-brand-yellow/20'
                                                         : 'border-transparent hover:border-neutral-200 hover:bg-neutral-50'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         {team.image_url ? (
-                                                            <img src={team.image_url} className="w-8 h-8 object-cover border border-black" alt="" />
+                                                            <img src={team.image_url} className="w-8 h-8 object-cover border border-neutral-200" alt="" />
                                                         ) : (
-                                                            <div className="w-8 h-8 bg-brand-navy flex items-center justify-center border border-black text-brand-yellow"><Users size={14} /></div>
+                                                            <div className="w-8 h-8 bg-brand-navy flex items-center justify-center border border-neutral-200 text-brand-yellow"><Users size={14} /></div>
                                                         )}
                                                         <div className="text-left">
                                                             <div className="font-bold text-sm leading-tight">{team.name}</div>
@@ -354,7 +354,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                             ) : (
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center mb-2">
-                                        <h3 className="font-bold text-sm uppercase">New Team Details</h3>
+                                        <h3 className="font-bold text-sm">New Team Details</h3>
                                         <button onClick={() => setIsCreatingTeam(false)} className="text-xs underline text-neutral-500">Cancel</button>
                                     </div>
                                     <input
@@ -362,14 +362,14 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                         placeholder="Team Name"
                                         value={newTeamName}
                                         onChange={(e) => setNewTeamName(e.target.value)}
-                                        className="w-full px-3 py-2 border-2 border-neutral-200 focus:border-black outline-none font-bold"
+                                        className="w-full px-3 py-2 border border-neutral-200 focus:border-brand-navy outline-none font-bold"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Description (Optional)"
                                         value={newTeamDesc}
                                         onChange={(e) => setNewTeamDesc(e.target.value)}
-                                        className="w-full px-3 py-2 border-2 border-neutral-200 focus:border-black outline-none text-sm"
+                                        className="w-full px-3 py-2 border border-neutral-200 focus:border-brand-navy outline-none text-sm"
                                     />
                                 </div>
                             )}
@@ -384,7 +384,7 @@ export default function ClaimPageClient({ token, userName, referralCode, isExpir
                                 }
                             }}
                             disabled={loading || (!isCreatingTeam && !selectedTeam) || (isCreatingTeam && !newTeamName)}
-                            className="w-full py-4 bg-brand-navy text-brand-yellow border-2 border-black font-bold uppercase tracking-wider hover:bg-black transition-all shadow-none active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-brand-navy text-brand-yellow font-bold hover:bg-black transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-full"
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                 isCreatingTeam ? 'Create & Plant 2 Trees' : 'Join & Generate Invite'

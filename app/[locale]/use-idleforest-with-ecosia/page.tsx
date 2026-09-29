@@ -109,18 +109,18 @@ export default function UseIdleForestWithEcosiaPage() {
   };
 
   return (
-    <main className="min-h-screen bg-brand-gray text-black">
+    <main className="min-h-screen bg-[#F7F7F2] text-black">
       <Navigation />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="border-b-2 border-black bg-brand-yellow">
+      <section className="border-b border-neutral-200 bg-brand-yellow">
         <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <p className="mb-4 inline-flex items-center gap-2 border-2 border-black bg-white px-3 py-1 text-sm font-bold uppercase tracking-wide">
+            <p className="mb-4 inline-flex items-center gap-2 border border-neutral-200 bg-white px-3 py-1 text-sm font-bold tracking-wide rounded-full">
               <Leaf className="h-4 w-4" />
               Ecosia companion
             </p>
-            <h1 className="font-rethink-sans text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
               Use IdleForest with Ecosia to plant more trees while you browse
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-800">
@@ -128,12 +128,12 @@ export default function UseIdleForestWithEcosiaPage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <SmartCTA showLearnMore={false} desktopOnly showExtensionDownload={false} />
-              <Button asChild variant="outline" className="border-2 border-black bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
+              <Button asChild variant="outline" className="border border-neutral-200 bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow rounded-full">
                 <Link href="/compare/idleforest-vs-ecosia-vs-treeclicks">
                   Compare the tools <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="border-2 border-black bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
+              <Button asChild variant="outline" className="border border-neutral-200 bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow rounded-full">
                 <Link href="/eco-friendly-search-engine">
                   Eco search hub <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -141,8 +141,8 @@ export default function UseIdleForestWithEcosiaPage() {
             </div>
           </div>
 
-          <div className="border-2 border-black bg-white p-6 shadow-none">
-            <h2 className="mb-5 font-rethink-sans text-2xl font-extrabold">The simple setup</h2>
+          <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+            <h2 className="mb-5 text-2xl font-extrabold">The simple setup</h2>
             <div className="space-y-5">
               <div className="flex gap-4">
                 <Search className="mt-1 h-6 w-6 flex-shrink-0" />
@@ -172,13 +172,13 @@ export default function UseIdleForestWithEcosiaPage() {
 
       <section className="container mx-auto px-6 py-14">
         <div className="mb-8 max-w-3xl">
-          <h2 className="font-rethink-sans text-3xl font-extrabold">Ecosia and IdleForest do different jobs</h2>
+          <h2 className="text-3xl font-extrabold">Ecosia and IdleForest do different jobs</h2>
           <p className="mt-3 text-neutral-700">
             You do not have to pick one. Ecosia turns searches into climate funding; IdleForest adds passive impact during the browsing time around those searches.
           </p>
         </div>
 
-        <div className="overflow-x-auto border-2 border-black bg-white shadow-none">
+        <div className="overflow-x-auto border border-neutral-200 bg-white rounded-2xl">
           <table className="w-full min-w-[760px] text-left">
             <thead className="bg-brand-navy text-brand-yellow">
               <tr>
@@ -189,7 +189,7 @@ export default function UseIdleForestWithEcosiaPage() {
             </thead>
             <tbody>
               {comparisonRows.map((row) => (
-                <tr key={row.label} className="border-t-2 border-black">
+                <tr key={row.label} className="border-t border-neutral-200">
                   <td className="p-4 font-bold">{row.label}</td>
                   <td className="p-4 text-neutral-700">{row.ecosia}</td>
                   <td className="p-4 text-neutral-700">{row.idleforest}</td>
@@ -221,9 +221,9 @@ export default function UseIdleForestWithEcosiaPage() {
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.title} className="border-2 border-black bg-brand-gray p-6 shadow-none">
+              <div key={item.title} className="border border-neutral-200 bg-neutral-100 p-6 rounded-2xl">
                 <Icon className="mb-4 h-7 w-7" />
-                <h3 className="mb-2 font-rethink-sans text-xl font-extrabold">{item.title}</h3>
+                <h3 className="mb-2 text-xl font-extrabold">{item.title}</h3>
                 <p className="text-neutral-700">{item.body}</p>
               </div>
             );
@@ -234,14 +234,14 @@ export default function UseIdleForestWithEcosiaPage() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Common questions</h2>
+            <h2 className="text-3xl font-extrabold">Common questions</h2>
             <p className="mt-3 text-neutral-700">
               These are the practical things to know before adding another eco tool to your browser.
             </p>
           </div>
           <div className="space-y-4">
             {faqs.map((faq) => (
-              <section key={faq.question} className="border-2 border-black bg-white p-5">
+              <section key={faq.question} className="border border-neutral-200 bg-white p-5 rounded-2xl">
                 <h3 className="font-bold">{faq.question}</h3>
                 <p className="mt-2 text-neutral-700">{faq.answer}</p>
               </section>
@@ -250,10 +250,10 @@ export default function UseIdleForestWithEcosiaPage() {
         </div>
       </section>
 
-      <section className="border-t-2 border-black bg-brand-navy py-14 text-white">
+      <section className="border-t border-neutral-200 bg-brand-navy py-14 text-white">
         <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
           <div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Already using Ecosia?</h2>
+            <h2 className="text-3xl font-extrabold">Already using Ecosia?</h2>
             <p className="mt-3 max-w-2xl text-white/80">
               Keep it. Add IdleForest as the passive layer for the moments between searches.
             </p>

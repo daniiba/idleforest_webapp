@@ -126,7 +126,7 @@ export default function ComparisonPage() {
       <main className="container mx-auto px-4 pb-24">
         {/* Uniform attribute-value tables */}
         <section className="mb-16">
-          <Card className="bg-black border-2 border-brand-yellow">
+          <Card className="bg-brand-navy border border-brand-yellow rounded-2xl">
             <CardContent className="p-0 overflow-x-auto">
               <table className="w-full text-left text-gray-200">
                 <thead className="bg-brand-yellow/40">
@@ -154,7 +154,7 @@ export default function ComparisonPage() {
 
         {/* Explicit contrast statements */}
         <section className="grid md:grid-cols-2 gap-6 mb-16">
-          <Card className="bg-black border-2 border-brand-yellow">
+          <Card className="bg-brand-navy border border-brand-yellow rounded-2xl">
             <CardContent className="p-6 text-gray-200">
               <h2 className="text-2xl font-bold text-white mb-3">IdleForest complements Ecosia</h2>
               <p>
@@ -165,7 +165,7 @@ export default function ComparisonPage() {
               </Link>
             </CardContent>
           </Card>
-          <Card className="bg-black border-2 border-brand-yellow">
+          <Card className="bg-brand-navy border border-brand-yellow rounded-2xl">
             <CardContent className="p-6 text-gray-200">
               <h2 className="text-2xl font-bold text-white mb-3">IdleForest vs TreeClicks</h2>
               <p>
@@ -179,7 +179,7 @@ export default function ComparisonPage() {
           <h2 className="text-2xl font-bold text-white mb-4">Where to go next</h2>
           <div className="grid gap-4 md:grid-cols-3">
             {relatedLinks.map((item) => (
-              <Link key={item.href} href={item.href} className="group block border-2 border-brand-yellow bg-black p-5 text-gray-200 hover:bg-brand-yellow hover:text-navy">
+              <Link key={item.href} href={item.href} className="group block border border-brand-yellow bg-brand-navy p-5 text-gray-200 hover:bg-brand-yellow hover:text-navy rounded-2xl">
                 <h3 className="font-bold text-white group-hover:text-navy">{item.title}</h3>
                 <p className="mt-2 text-sm">{item.body}</p>
               </Link>
@@ -190,7 +190,7 @@ export default function ComparisonPage() {
         {/* Internal anchors for common queries */}
         <section className="space-y-6 mb-16">
           {qaAnchors.map((item) => (
-            <Card key={item.id} className="bg-black border-2 border-brand-yellow">
+            <Card key={item.id} className="bg-brand-navy border border-brand-yellow rounded-2xl">
               <CardContent className="p-6">
                 <h2 id={item.id} className="scroll-mt-32 text-2xl font-bold text-white mb-2">{item.q}</h2>
                 <p className="text-gray-300">{item.a}</p>
@@ -201,7 +201,7 @@ export default function ComparisonPage() {
 
         {/* Concluding recap */}
         <section className="mb-12">
-          <Card className="bg-black border-2 border-brand-yellow">
+          <Card className="bg-brand-navy border border-brand-yellow rounded-2xl">
             <CardContent className="p-6">
               <h2 className="text-2xl font-bold text-white mb-3">Quick recap</h2>
               <ul className="list-disc pl-6 text-gray-200 space-y-1">

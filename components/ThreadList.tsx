@@ -100,14 +100,14 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
     }
 
     return (
-        <div className="bg-white border-2 border-black shadow-none mb-8">
+        <div className="bg-white border border-neutral-200 mb-8 rounded-2xl">
             {/* Header */}
-            <div className="p-4 border-b-2 border-black bg-brand-navy flex justify-between items-center">
+            <div className="p-4 border-b border-neutral-200 bg-brand-navy flex justify-between items-center">
                 <h3 className="text-white font-bold text-lg">Team Discussions</h3>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setSortBy('recent')}
-                        className={`px-3 py-1 text-xs font-bold border-2 border-white transition-all ${sortBy === 'recent' ? 'bg-white text-brand-navy' : 'bg-transparent text-white hover:bg-white/10'
+                        className={`px-3 py-1 text-xs font-bold border border-white transition-all ${sortBy === 'recent' ? 'bg-white text-brand-navy' : 'bg-transparent text-white hover:bg-white/10'
                             }`}
                     >
                         <Clock className="w-3 h-3 inline mr-1" />
@@ -115,7 +115,7 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
                     </button>
                     <button
                         onClick={() => setSortBy('top')}
-                        className={`px-3 py-1 text-xs font-bold border-2 border-white transition-all ${sortBy === 'top' ? 'bg-white text-brand-navy' : 'bg-transparent text-white hover:bg-white/10'
+                        className={`px-3 py-1 text-xs font-bold border border-white transition-all ${sortBy === 'top' ? 'bg-white text-brand-navy' : 'bg-transparent text-white hover:bg-white/10'
                             }`}
                     >
                         <TrendingUp className="w-3 h-3 inline mr-1" />
@@ -125,7 +125,7 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
             </div>
 
             {/* Thread List */}
-            <div className="divide-y-2 divide-gray-100">
+            <div className="divide-y divide-gray-100">
                 {isLoading ? (
                     <div className="p-8 text-center text-gray-500">Loading discussions...</div>
                 ) : threads.length === 0 ? (
@@ -174,11 +174,11 @@ export function ThreadList({ teamSlug, teamId, teamName, currentUserRole }: Thre
             </div>
 
             {/* New Thread Button / Join Message */}
-            <div className="p-4 border-t-2 border-black bg-gray-50">
+            <div className="p-4 border-t border-neutral-200 bg-gray-50">
                 {currentUserRole ? (
                     <Link
                         href={`/teams/${teamSlug}/discussions/new`}
-                        className="block w-full py-3 bg-black text-white text-center font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all shadow-none"
+                        className="block w-full py-3 bg-brand-navy text-white text-center font-bold hover:bg-brand-yellow hover:text-black transition-all rounded-full"
                     >
                         Start New Discussion
                     </Link>

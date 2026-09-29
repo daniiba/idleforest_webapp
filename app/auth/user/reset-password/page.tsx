@@ -63,8 +63,8 @@ export default function ResetPasswordPage() {
 
     if (checkingSession) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
+            <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+                <div className="w-full max-w-md bg-white border border-neutral-200 p-8 text-center rounded-2xl">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Verifying session...</p>
                 </div>
@@ -73,9 +73,9 @@ export default function ResetPasswordPage() {
     }
 
     return (
-        <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-            <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
-                <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-4">
+        <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+            <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h1 className="text-4xl font-extrabold text-center mb-4">
                     New Password
                 </h1>
                 <p className="text-center text-neutral-600 mb-8">
@@ -84,7 +84,7 @@ export default function ResetPasswordPage() {
 
                 {success ? (
                     <div className="space-y-6">
-                        <div className="p-4 bg-green-100 border-2 border-green-500 text-green-700 font-bold text-center">
+                        <div className="p-4 bg-green-100 border border-green-500 text-green-700 font-bold text-center">
                             <CheckCircle className="h-10 w-10 mx-auto mb-2" />
                             <p className="text-lg mb-2">Password Updated!</p>
                             <p className="text-sm font-normal">
@@ -95,7 +95,7 @@ export default function ResetPasswordPage() {
                 ) : (
                     <form onSubmit={handleUpdatePassword} className="space-y-6">
                         <div>
-                            <label htmlFor="password" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+                            <label htmlFor="password" className="block text-sm font-bold text-neutral-600 mb-1">
                                 New Password
                             </label>
                             <input
@@ -106,13 +106,13 @@ export default function ResetPasswordPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+                                className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 rounded-xl"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+                            <label htmlFor="confirmPassword" className="block text-sm font-bold text-neutral-600 mb-1">
                                 Confirm Password
                             </label>
                             <input
@@ -123,13 +123,13 @@ export default function ResetPasswordPage() {
                                 required
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50"
+                                className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 rounded-xl"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         {error && (
-                            <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold text-sm text-center">
+                            <div className="p-3 bg-red-100 border border-red-500 text-red-700 font-bold text-sm text-center">
                                 {error}
                             </div>
                         )}
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                className="w-full py-4 text-lg font-bold bg-brand-yellow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rounded-full"
                             >
                                 {loading ? (
                                     <><Loader2 className="h-5 w-5 mr-2 animate-spin text-black" /> Updating...</>
@@ -150,7 +150,7 @@ export default function ResetPasswordPage() {
                     </form>
                 )}
 
-                <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-300 text-center">
+                <div className="mt-8 pt-6 border-t border-dashed border-neutral-300 text-center">
                     <p className="text-sm text-neutral-600 font-bold">
                         Remember your password?{' '}
                         <Link href="/auth/user/login" className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">

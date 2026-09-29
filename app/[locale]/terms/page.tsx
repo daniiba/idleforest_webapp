@@ -8,16 +8,16 @@ export default function TermsOfServicePage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {/* Hero Section */}
         <section className="relative bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-brand-navy text-brand-yellow px-4 py-2 rounded-md mb-6">
                 <FileText className="h-5 w-5" />
-                <span className="font-bold text-sm uppercase">Legal Agreement</span>
+                <span className="font-bold text-sm">Legal Agreement</span>
               </div>
-              <h1 className="font-rethink-sans text-[40px] sm:text-5xl md:text-6xl font-extrabold mb-6">
+              <h1 className="text-3xl sm:text-5xl md:text-5xl font-extrabold mb-6">
                 Terms of Service
               </h1>
               <p className="text-lg md:text-xl text-neutral-800 max-w-3xl mx-auto">
@@ -44,13 +44,13 @@ export default function TermsOfServicePage() {
         </section>
 
         {/* Main Terms Sections */}
-        <section className="relative bg-brand-gray py-16 md:py-20">
+        <section className="relative bg-neutral-100 py-16 md:py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto space-y-8">
 
               {/* 1. Acceptance of Terms */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   1. Acceptance of Terms
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -64,8 +64,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 2. Description of Service */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   2. Description of Service
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -94,8 +94,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 3. User Responsibilities */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   3. User Responsibilities
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -141,15 +141,15 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 4. Liability and Indemnification */}
-              <Card className="bg-brand-yellow border-2 border-black p-8">
+              <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                 <div className="flex items-start gap-4 mb-4">
                   <Shield className="h-8 w-8 text-brand-navy flex-shrink-0" />
-                  <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                  <h2 className="text-2xl md:text-3xl font-extrabold">
                     4. Liability and Indemnification
                   </h2>
                 </div>
                 <div className="space-y-4 text-neutral-800">
-                  <div className="bg-white border-2 border-brand-navy p-6">
+                  <div className="bg-white border border-brand-navy p-6">
                     <h3 className="font-bold text-lg mb-3 text-black">Our Commitment to You:</h3>
                     <p className="mb-3">
                       <strong className="text-black">IdleForest assumes full legal responsibility</strong> for all traffic generated through our network. This means:
@@ -180,8 +180,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 5. Privacy and Data Protection */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   5. Privacy and Data Protection
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -214,8 +214,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 6. Acceptable Use Policy */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   6. Acceptable Use Policy
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -251,8 +251,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 7. Tree Planting Commitments */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   7. Tree Planting Commitments
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -284,8 +284,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 8. Service Availability */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   8. Service Availability
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -314,8 +314,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 9. Account Termination */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   9. Account Termination
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -360,8 +360,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 10. Intellectual Property */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   10. Intellectual Property
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -378,12 +378,12 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 11. Disclaimers and Limitations of Liability */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   11. Disclaimers and Limitations of Liability
                 </h2>
                 <div className="space-y-4 text-neutral-800">
-                  <div className="bg-brand-gray border-2 border-neutral-300 p-6">
+                  <div className="bg-neutral-100 border border-neutral-300 p-6">
                     <p className="font-bold mb-3">Important Legal Notice:</p>
                     <p className="mb-3">
                       THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
@@ -402,8 +402,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 12. Dispute Resolution */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   12. Dispute Resolution
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -420,8 +420,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 13. Changes to Terms */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   13. Changes to These Terms
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -449,8 +449,8 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* 14. Miscellaneous */}
-              <Card className="bg-white border-2 border-black p-8">
-                <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold mb-4">
+              <Card className="bg-white border border-neutral-200 p-8 rounded-2xl">
+                <h2 className="text-2xl md:text-3xl font-extrabold mb-4">
                   14. Miscellaneous
                 </h2>
                 <div className="space-y-4 text-neutral-800">
@@ -473,10 +473,10 @@ export default function TermsOfServicePage() {
               </Card>
 
               {/* Contact Information */}
-              <Card className="bg-brand-yellow border-2 border-black p-8">
+              <Card className="bg-brand-yellow border border-neutral-200 p-8 rounded-2xl">
                 <div className="flex items-start gap-4 mb-4">
                   <AlertCircle className="h-8 w-8 text-brand-navy flex-shrink-0" />
-                  <h2 className="font-rethink-sans text-2xl md:text-3xl font-extrabold">
+                  <h2 className="text-2xl md:text-3xl font-extrabold">
                     Contact Us
                   </h2>
                 </div>
@@ -484,7 +484,7 @@ export default function TermsOfServicePage() {
                   <p>
                     If you have any questions about these Terms of Service, please contact us:
                   </p>
-                  <div className="bg-white border-2 border-brand-navy p-6">
+                  <div className="bg-white border border-brand-navy p-6">
                     <p className="mb-2">
                       <strong className="text-black">Email:</strong> <a href="mailto:support@idleforest.com" className="text-brand-navy hover:underline">support@idleforest.com</a>
                     </p>

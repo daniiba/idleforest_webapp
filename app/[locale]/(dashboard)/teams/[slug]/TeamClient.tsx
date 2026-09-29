@@ -551,7 +551,7 @@ export default function TeamClient() {
 		return (
 			<div className="container mx-auto p-4 pt-24">
 				<div className="max-w-4xl mx-auto">
-					<Card className="p-6 bg-gray-950 border-2 border-brand-yellow">
+					<Card className="p-6 bg-gray-950 border border-brand-yellow rounded-2xl">
 						<h2 className="text-2xl font-bold text-white mb-4">Team Not Found</h2>
 						<p className="text-gray-400 mb-6">The team you're looking for doesn't exist or has been removed.</p>
 					</Card>
@@ -566,7 +566,7 @@ export default function TeamClient() {
 				{/* Critical Alerts - Moved to Top */}
 				{/* Join Error Message */}
 				{joinError && (
-					<div className="bg-red-50 border-2 border-red-400 p-4 mb-4">
+					<div className="bg-red-50 border border-red-400 p-4 mb-4">
 						<div className="flex items-center gap-3">
 							<AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
 							<p className="text-red-700">{joinError}</p>
@@ -576,7 +576,7 @@ export default function TeamClient() {
 
 				<Tabs defaultValue="stats" className="w-full">
 					{/* Team Header Card - Now wraps TabsList */}
-					<div className="bg-white border-2 border-black shadow-none mb-8">
+					<div className="bg-white border border-neutral-200 mb-8 rounded-2xl">
 						<div className="p-6 md:p-8">
 							<div className="flex flex-col md:flex-row gap-6">
 								{/* Team Image */}
@@ -585,11 +585,11 @@ export default function TeamClient() {
 										<img
 											src={team.image_url}
 											alt={`${team.name} logo`}
-											className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-black shadow-none"
+											className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-xl border-3 border-neutral-200"
 										/>
 									</div>
 								) : (
-									<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-black shadow-none flex items-center justify-center">
+									<div className="flex-shrink-0 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-brand-yellow to-yellow-300 rounded-xl border-3 border-neutral-200 flex items-center justify-center">
 										<Users className="w-12 h-12 md:w-16 md:h-16 text-black/60" />
 									</div>
 								)}
@@ -597,7 +597,7 @@ export default function TeamClient() {
 								{/* Team Info */}
 								<div className="flex-1 min-w-0">
 									<div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
-										<h1 className="text-3xl md:text-5xl font-extrabold font-rethink-sans text-black uppercase tracking-tight">
+										<h1 className="text-3xl md:text-5xl font-extrabold text-black tracking-tight">
 											{team.name}
 										</h1>
 
@@ -609,7 +609,7 @@ export default function TeamClient() {
 													onClick={() => handleJoinTeam()}
 													disabled={joiningTeam}
 													title="Join Team"
-													className="flex items-center justify-center p-2.5 bg-green-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+													className="flex items-center justify-center p-2.5 bg-green-500 text-white border border-neutral-200 font-bold transition-all disabled:opacity-50 rounded-2xl"
 												>
 													{joiningTeam ? (
 														<Loader2 className="w-5 h-5 animate-spin" />
@@ -623,7 +623,7 @@ export default function TeamClient() {
 											{isMember && (
 												<button
 													onClick={toggleInviteSection}
-													className="flex items-center gap-2 px-5 py-2.5 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+													className="flex items-center gap-2 px-5 py-2.5 bg-brand-yellow font-extrabold text-sm transition-all rounded-full"
 												>
 													<UserPlus className="w-5 h-5" />
 													Invite
@@ -635,7 +635,7 @@ export default function TeamClient() {
 												<div
 													title="Discord team"
 													aria-label="Discord team"
-													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border-2 border-black font-extrabold uppercase text-sm shadow-none"
+													className="flex items-center gap-2 px-5 py-2.5 bg-[#5865F2] text-white border border-neutral-200 font-extrabold text-sm rounded-full"
 												>
 													<MessageSquare className="w-5 h-5" />
 													Discord
@@ -647,7 +647,7 @@ export default function TeamClient() {
 												<button
 													onClick={() => setShowLeaveConfirm(true)}
 													title="Leave Team"
-													className="flex items-center justify-center p-2.5 bg-gray-100 border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+													className="flex items-center justify-center p-2.5 bg-gray-100 border border-neutral-200 font-bold transition-all rounded-2xl"
 												>
 													<LogOut className="w-5 h-5" />
 												</button>
@@ -658,7 +658,7 @@ export default function TeamClient() {
 												<button
 													onClick={openEditModal}
 													title="Edit Team"
-													className="flex items-center justify-center p-2.5 bg-blue-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+													className="flex items-center justify-center p-2.5 bg-blue-500 text-white border border-neutral-200 font-bold transition-all rounded-2xl"
 												>
 													<Pencil className="w-5 h-5" />
 												</button>
@@ -669,7 +669,7 @@ export default function TeamClient() {
 												<button
 													onClick={() => setShowDeleteConfirm(true)}
 													title="Delete Team"
-													className="flex items-center justify-center p-2.5 bg-red-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+													className="flex items-center justify-center p-2.5 bg-red-500 text-white border border-neutral-200 font-bold transition-all rounded-2xl"
 												>
 													<Trash2 className="w-5 h-5" />
 												</button>
@@ -679,7 +679,7 @@ export default function TeamClient() {
 											<Link
 												href={`/share/team/${params.slug}`}
 												title="Share Team"
-												className="flex items-center justify-center p-2.5 bg-purple-500 text-white border-2 border-black font-bold shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+												className="flex items-center justify-center p-2.5 bg-purple-500 text-white border border-neutral-200 font-bold transition-all rounded-2xl"
 											>
 												<Share2 className="w-5 h-5" />
 											</Link>
@@ -688,7 +688,7 @@ export default function TeamClient() {
 
 									{/* Contribution Status Badge */}
 									{isMember && hasDesktopNode && (
-										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border-2 border-black font-bold uppercase text-xs tracking-wider mb-4 shadow-none transform -rotate-1">
+										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white border border-neutral-200 font-bold text-xs mb-4 transform -rotate-1 rounded-full">
 											<div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
 											Desktop Connected
 										</div>
@@ -710,53 +710,53 @@ export default function TeamClient() {
 						</div>
 
 						{/* Stats Grid - Integrated Bottom Section */}
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t-2 border-black">
-							<div className="p-4 border-r-2 border-black text-center bg-brand-yellow/10">
-								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Total Points</p>
-								<p className="text-2xl md:text-3xl font-black text-brand-navy">{team.total_points.toLocaleString()}</p>
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-t border-neutral-200">
+							<div className="p-4 border-r border-neutral-200 text-center bg-brand-yellow/10">
+								<p className="text-xs text-gray-600 font-extrabold mb-1">Total Points</p>
+								<p className="text-2xl md:text-3xl font-extrabold text-brand-navy">{team.total_points.toLocaleString()}</p>
 							</div>
-							<div className="p-4 md:border-r-2 border-black text-center bg-green-50">
-								<div className="flex items-center justify-center gap-1 text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">
+							<div className="p-4 md:border-r border-neutral-200 text-center bg-green-50">
+								<div className="flex items-center justify-center gap-1 text-xs text-gray-600 font-extrabold mb-1">
 									<TreePine className="h-3.5 w-3.5 text-green-600" />
 									Trees Planted
 								</div>
-								<p className="text-2xl md:text-3xl font-black text-brand-navy">{actualTreesPlanted.toLocaleString()}</p>
+								<p className="text-2xl md:text-3xl font-extrabold text-brand-navy">{actualTreesPlanted.toLocaleString()}</p>
 							</div>
-							<div className="p-4 border-r-2 border-t-2 md:border-t-0 border-black text-center bg-blue-50">
-								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Members</p>
-								<p className="text-2xl md:text-3xl font-black text-brand-navy">{members.length}</p>
+							<div className="p-4 border-r border-t md:border-t-0 border-neutral-200 text-center bg-blue-50">
+								<p className="text-xs text-gray-600 font-extrabold mb-1">Members</p>
+								<p className="text-2xl md:text-3xl font-extrabold text-brand-navy">{members.length}</p>
 							</div>
-							<div className="p-4 border-t-2 md:border-t-0 border-black text-center bg-gray-50">
-								<p className="text-xs text-gray-600 font-extrabold uppercase tracking-widest mb-1">Created</p>
-								<p className="text-2xl md:text-3xl font-black text-brand-navy">{new Date(team.created_at).toLocaleDateString()}</p>
+							<div className="p-4 border-t md:border-t-0 border-neutral-200 text-center bg-gray-50">
+								<p className="text-xs text-gray-600 font-extrabold mb-1">Created</p>
+								<p className="text-2xl md:text-3xl font-extrabold text-brand-navy">{new Date(team.created_at).toLocaleDateString()}</p>
 							</div>
 						</div>
 
 						{/* Tabs integrated into Header Footer */}
-						<div className="border-t-2 border-black bg-black text-white p-0">
-							<TabsList className="flex w-full bg-transparent border-0 p-0 h-auto gap-0 rounded-none">
+						<div className="border-t border-neutral-200 bg-brand-navy text-white p-0">
+							<TabsList className="flex w-full bg-transparent border-0 p-0 h-auto gap-0 rounded-xl">
 
 								<TabsTrigger
 									value="stats"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-0 data-[state=active]:border-l-2 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									className="flex-1 text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-0 data-[state=active]:border-l data-[state=active]:border-black font-bold py-4 text-sm transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black rounded-xl"
 								>
 									Stats
 								</TabsTrigger>
 								<TabsTrigger
 									value="members"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									className="flex-1 text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r border-white/20 data-[state=active]:border-black font-bold py-4 text-sm transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black rounded-xl"
 								>
 									Members
 								</TabsTrigger>
 								<TabsTrigger
 									value="badges"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									className="flex-1 text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r border-white/20 data-[state=active]:border-black font-bold py-4 text-sm transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black rounded-xl"
 								>
 									Badges
 								</TabsTrigger>
 								<TabsTrigger
 									value="discussions"
-									className="flex-1 rounded-none text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r-2 border-white/20 data-[state=active]:border-black font-bold uppercase py-4 text-sm tracking-widest transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black shadow-none"
+									className="flex-1 text-gray-400 data-[state=active]:bg-brand-yellow data-[state=active]:text-black border-r border-white/20 data-[state=active]:border-black font-bold py-4 text-sm transition-all hover:bg-white/10 hover:text-brand-yellow data-[state=active]:hover:bg-brand-yellow data-[state=active]:hover:text-black rounded-xl"
 								>
 									Discussions
 								</TabsTrigger>
@@ -767,10 +767,10 @@ export default function TeamClient() {
 
 					{/* Invite Section - Expandable */}
 					{showInviteSection && isMember && (
-						<Card id="team-invites" className="p-6 bg-white border-2 border-black shadow-none mb-8">
+						<Card id="team-invites" className="p-6 bg-white border border-neutral-200 mb-8 rounded-2xl">
 							<div className="flex items-center justify-between mb-4">
 								<div className="flex items-center gap-3">
-									<div className="bg-brand-yellow p-2 border-2 border-black">
+									<div className="bg-brand-yellow p-2 border border-neutral-200 rounded-2xl">
 										<LinkIcon className="w-5 h-5 text-black" />
 									</div>
 									<div>
@@ -782,7 +782,7 @@ export default function TeamClient() {
 									<button
 										onClick={handleCreateInvite}
 										disabled={creatingInvite}
-										className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white border-2 border-black font-bold text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+										className="flex items-center gap-2 px-4 py-2 bg-brand-navy text-white font-bold text-sm transition-all disabled:opacity-50 rounded-full"
 									>
 										{creatingInvite ? (
 											<><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
@@ -796,13 +796,13 @@ export default function TeamClient() {
 							{invites.length > 0 ? (
 								<div className="space-y-2">
 									{invites.map((invite) => (
-										<div key={invite.id} className="flex items-center justify-between p-3 bg-gray-50 border-2 border-gray-200">
+										<div key={invite.id} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200">
 											<div className="flex flex-col gap-1">
 												<div className="flex items-center gap-3">
 													<code className="text-sm bg-white px-2 py-1 border border-gray-300 font-mono">
 														https://idleforest.com/invite/{invite.invite_code}
 													</code>
-													<span className="text-xs font-bold uppercase text-brand-navy">
+													<span className="text-xs font-bold text-brand-navy">
 														Copies desktop install message
 													</span>
 												</div>
@@ -899,20 +899,20 @@ export default function TeamClient() {
 				{/* Leave Team Confirmation Modal */}
 				{showLeaveConfirm && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
+						<Card className="p-6 bg-white border border-neutral-200 max-w-md mx-4 rounded-2xl">
 							<h3 className="text-xl font-bold mb-4">Leave Team?</h3>
 							<p className="text-gray-600 mb-6">Are you sure you want to leave <strong>{team.name}</strong>? You will lose your contribution points for this team.</p>
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowLeaveConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border border-neutral-200 font-bold text-sm transition-all rounded-full"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleLeaveTeam}
 									disabled={leavingTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white border border-neutral-200 font-bold text-sm transition-all disabled:opacity-50 rounded-full"
 								>
 									{leavingTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Leaving...</> : 'Leave Team'}
 								</button>
@@ -924,20 +924,20 @@ export default function TeamClient() {
 				{/* Delete Team Confirmation Modal */}
 				{showDeleteConfirm && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
+						<Card className="p-6 bg-white border border-neutral-200 max-w-md mx-4 rounded-2xl">
 							<h3 className="text-xl font-bold mb-4 text-red-600">Delete Team?</h3>
 							<p className="text-gray-600 mb-6">Are you sure you want to delete <strong>{team.name}</strong>? This action cannot be undone. All team members and invite links will be removed.</p>
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowDeleteConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border border-neutral-200 font-bold text-sm transition-all rounded-full"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleDeleteTeam}
 									disabled={deletingTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white border border-neutral-200 font-bold text-sm transition-all disabled:opacity-50 rounded-full"
 								>
 									{deletingTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Deleting...</> : 'Delete Team'}
 								</button>
@@ -949,7 +949,7 @@ export default function TeamClient() {
 				{/* Join Team Confirmation Modal */}
 				{showJoinConfirm && existingTeam && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-						<Card className="p-6 bg-white border-2 border-black shadow-none max-w-md mx-4">
+						<Card className="p-6 bg-white border border-neutral-200 max-w-md mx-4 rounded-2xl">
 							<div className="flex items-center gap-3 mb-4">
 								<AlertTriangle className="w-6 h-6 text-orange-500" />
 								<h3 className="text-xl font-bold">Switch Teams?</h3>
@@ -961,14 +961,14 @@ export default function TeamClient() {
 							<div className="flex gap-3">
 								<button
 									onClick={() => setShowJoinConfirm(false)}
-									className="flex-1 px-4 py-2 bg-gray-100 border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+									className="flex-1 px-4 py-2 bg-gray-100 border border-neutral-200 font-bold text-sm transition-all rounded-full"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleConfirmJoin}
 									disabled={joiningTeam}
-									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white border-2 border-black font-bold uppercase text-sm shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white border border-neutral-200 font-bold text-sm transition-all disabled:opacity-50 rounded-full"
 								>
 									{joiningTeam ? <><Loader2 className="w-4 h-4 animate-spin" /> Switching...</> : 'Switch Teams'}
 								</button>
@@ -980,8 +980,8 @@ export default function TeamClient() {
 				{/* Edit Team Modal */}
 				{showEditModal && (
 					<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-						<div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
-							<h2 className="text-2xl font-extrabold uppercase mb-4">Edit Team</h2>
+						<div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
+							<h2 className="text-2xl font-extrabold mb-4">Edit Team</h2>
 							<p className="text-neutral-600 mb-6">Update your team&apos;s description and image.</p>
 
 							{/* Image Upload */}
@@ -992,18 +992,18 @@ export default function TeamClient() {
 										<img
 											src={editImagePreview}
 											alt="Team preview"
-											className="w-24 h-24 object-cover border-2 border-black"
+											className="w-24 h-24 object-cover border border-neutral-200 rounded-2xl"
 										/>
 										<button
 											type="button"
 											onClick={removeEditImage}
-											className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 border-2 border-black hover:bg-red-600 transition-colors"
+											className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 border border-neutral-200 hover:bg-red-600 transition-colors"
 										>
 											<X className="w-4 h-4" />
 										</button>
 									</div>
 								) : (
-									<label className="flex items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-gray-400 cursor-pointer hover:border-brand-yellow hover:bg-gray-50 transition-colors">
+									<label className="flex items-center justify-center gap-2 px-4 py-6 border border-dashed border-gray-400 cursor-pointer hover:border-brand-yellow hover:bg-gray-50 transition-colors">
 										<Upload className="w-5 h-5 text-gray-500" />
 										<span className="text-gray-500 text-sm">Click to upload image (max 2MB)</span>
 										<input
@@ -1022,7 +1022,7 @@ export default function TeamClient() {
 								placeholder="Team description (optional)"
 								maxLength={500}
 								rows={4}
-								className="w-full px-4 py-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4 resize-none"
+								className="w-full px-4 py-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow mb-4 resize-none rounded-xl"
 							/>
 							<p className="text-xs text-gray-500 mb-4">{editDescription.length}/500 characters</p>
 
@@ -1039,14 +1039,14 @@ export default function TeamClient() {
 										setEditImagePreview(null)
 										setEditError('')
 									}}
-									className="flex-1 py-3 font-bold uppercase tracking-wider bg-gray-100 border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+									className="flex-1 py-3 font-bold bg-gray-100 border border-neutral-200 transition-all rounded-2xl"
 								>
 									Cancel
 								</button>
 								<button
 									onClick={handleUpdateTeam}
 									disabled={editingTeam}
-									className="flex-1 flex items-center justify-center gap-2 py-3 font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+									className="flex-1 flex items-center justify-center gap-2 py-3 font-bold bg-brand-yellow border border-neutral-200 transition-all disabled:opacity-50 rounded-2xl"
 								>
 									{editingTeam ? (
 										<><Loader2 className="w-4 h-4 animate-spin" /> {uploadingImage ? 'Uploading...' : 'Saving...'}</>

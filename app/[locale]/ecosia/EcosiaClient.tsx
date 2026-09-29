@@ -50,7 +50,7 @@ export default function EcosiaClient({
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <ExpensesChart data={monthlyData} />
-          <Card className="p-8 bg-brand-navy backdrop-blur-sm border-2 border-brand-yellow">
+          <Card className="p-8 bg-brand-navy backdrop-blur-sm border border-brand-yellow rounded-2xl">
             <h2 className="text-2xl font-bold mb-6 text-white">Ecosia Financial Report Highlights - Key Metrics</h2>
             <div className="space-y-6">
               {[

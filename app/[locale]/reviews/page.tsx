@@ -32,17 +32,17 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
 
 export default function ReviewsPage() {
   return (
-    <main className="min-h-screen bg-brand-gray text-black">
+    <main className="min-h-screen bg-[#F7F7F2] text-black">
       <Navigation />
 
-      <section className="border-b-2 border-black bg-brand-yellow">
+      <section className="border-b border-neutral-200 bg-brand-yellow">
         <div className="container mx-auto px-6 py-16 md:py-20">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="mb-5 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
               <Star className="h-4 w-4" />
               User proof
             </p>
-            <h1 className="font-rethink-sans text-[40px] font-extrabold leading-tight sm:text-5xl md:text-6xl">
+            <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl md:text-5xl">
               IdleForest Reviews
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -72,11 +72,11 @@ export default function ReviewsPage() {
               body: "This page keeps reviews separate from the planting receipts so each claim has its own evidence.",
             },
           ].map((item) => (
-            <Card key={item.title} className="border-2 border-brand-yellow bg-black/20 p-6 text-brand-yellow">
+            <Card key={item.title} className="border border-brand-yellow bg-black/20 p-6 text-brand-yellow rounded-2xl">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-yellow text-black">
                 {item.icon}
               </div>
-              <h2 className="font-rethink-sans text-xl font-extrabold">{item.title}</h2>
+              <h2 className="text-xl font-extrabold">{item.title}</h2>
               <p className="mt-3 text-sm leading-6 text-brand-yellow/80">{item.body}</p>
             </Card>
           ))}
@@ -85,9 +85,9 @@ export default function ReviewsPage() {
 
       <ReviewsSection />
 
-      <section className="border-t-2 border-black bg-brand-yellow">
+      <section className="border-t border-neutral-200 bg-brand-yellow">
         <div className="container mx-auto px-6 py-12 text-center">
-          <h2 className="font-rethink-sans text-3xl font-extrabold">Want the planting proof too?</h2>
+          <h2 className="text-3xl font-extrabold">Want the planting proof too?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-neutral-800">
             Reviews tell you how the app feels to use. The transparency page shows how IdleForest funds verified trees.
           </p>

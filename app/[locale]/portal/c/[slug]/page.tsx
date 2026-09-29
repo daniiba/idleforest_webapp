@@ -276,14 +276,14 @@ export default async function CompanyMemberPortalPage({
     return (
         <>
             <Navigation />
-            <main className="min-h-screen bg-brand-gray px-4 py-8 font-rethink-sans text-brand-navy sm:px-6 lg:px-8">
+            <main className="min-h-screen bg-[#F7F7F2] px-4 py-8 text-brand-navy sm:px-6 lg:px-8">
                 {/* Hallmark · genre: modern-minimal · macrostructure: Workbench · theme: IdleForest app · enrichment: none · nav: existing site header · footer: global · pre-emit critique: P4 H5 E4 S5 R5 V4 */}
                 <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
                     <section className="rounded-lg border border-black/10 bg-white p-5 shadow-sm sm:p-7">
                         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
                             <div className="min-w-0">
                                 <div className="mb-5 flex items-center gap-4">
-                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-black">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-brand-navy">
                                         {getCompanyLogoUrl(typedCompany) ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img src={getCompanyLogoUrl(typedCompany)!} alt="" className="h-full w-full object-contain p-2" />
@@ -292,7 +292,7 @@ export default async function CompanyMemberPortalPage({
                                         )}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="font-candu text-2xl font-extrabold uppercase leading-none text-black sm:text-3xl">
+                                        <p className="text-2xl font-extrabold leading-none text-black sm:text-3xl">
                                             {typedCompany.name}
                                         </p>
                                         <p className="mt-1 text-sm font-bold text-neutral-600">
@@ -300,7 +300,7 @@ export default async function CompanyMemberPortalPage({
                                         </p>
                                     </div>
                                 </div>
-                                <h1 className="max-w-3xl font-candu text-3xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
+                                <h1 className="max-w-3xl text-3xl font-extrabold leading-tight text-black sm:text-5xl">
                                     You are connected.
                                 </h1>
                                 <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-neutral-700">
@@ -313,7 +313,7 @@ export default async function CompanyMemberPortalPage({
                                     <div className="flex gap-3">
                                         {hasDesktopNode ? <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-green-600" /> : <Monitor className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />}
                                         <div className="min-w-0">
-                                            <p className="font-black text-black">{connectionTitle}</p>
+                                            <p className="font-extrabold text-black">{connectionTitle}</p>
                                             <p className="mt-1 text-sm font-semibold leading-6 text-neutral-700">{connectionDescription}</p>
                                         </div>
                                     </div>
@@ -321,7 +321,7 @@ export default async function CompanyMemberPortalPage({
                                 {!hasDesktopNode ? (
                                     <Link
                                         href="/downloads#desktop-apps"
-                                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md border border-black bg-brand-yellow px-4 py-3 text-sm font-black uppercase tracking-wider text-black shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md border border-neutral-200 bg-brand-yellow px-4 py-3 text-sm font-extrabold text-black shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                                     >
                                         Download desktop app
                                         <ArrowRight className="h-4 w-4" />
@@ -330,7 +330,7 @@ export default async function CompanyMemberPortalPage({
                                 <div className="flex flex-wrap items-center gap-3">
                                     <Link
                                         href={publicCompanyHref}
-                                        className="inline-flex min-h-10 items-center gap-2 whitespace-nowrap rounded-md border border-black/10 bg-white px-3 py-2 text-sm font-black text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                        className="inline-flex min-h-10 items-center gap-2 whitespace-nowrap rounded-md border border-black/10 bg-white px-3 py-2 text-sm font-extrabold text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                                     >
                                         Public page
                                         <ArrowRight className="h-4 w-4" />
@@ -357,7 +357,7 @@ export default async function CompanyMemberPortalPage({
                     <section className="rounded-lg border border-black/10 bg-white p-5 shadow-sm sm:p-6">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                             <div>
-                                <h2 className="font-candu text-2xl font-extrabold uppercase leading-none text-black">Devices</h2>
+                                <h2 className="text-2xl font-extrabold leading-none text-black">Devices</h2>
                                 <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-neutral-600">
                                     Company tasks are the difference between a device&apos;s starting total and its current total. Active devices are listed first.
                                 </p>
@@ -371,11 +371,11 @@ export default async function CompanyMemberPortalPage({
                             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
                                 <thead>
                                     <tr className="border-b border-black/10 bg-neutral-50">
-                                        <th className="px-4 py-3 font-black uppercase tracking-wider text-neutral-500">Device</th>
-                                        <th className="px-4 py-3 font-black uppercase tracking-wider text-neutral-500">Status</th>
-                                        <th className="px-4 py-3 font-black uppercase tracking-wider text-neutral-500">Started at</th>
-                                        <th className="px-4 py-3 font-black uppercase tracking-wider text-neutral-500">Now</th>
-                                        <th className="px-4 py-3 font-black uppercase tracking-wider text-neutral-500">Added</th>
+                                        <th className="px-4 py-3 font-extrabold text-neutral-500">Device</th>
+                                        <th className="px-4 py-3 font-extrabold text-neutral-500">Status</th>
+                                        <th className="px-4 py-3 font-extrabold text-neutral-500">Started at</th>
+                                        <th className="px-4 py-3 font-extrabold text-neutral-500">Now</th>
+                                        <th className="px-4 py-3 font-extrabold text-neutral-500">Added</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -384,7 +384,7 @@ export default async function CompanyMemberPortalPage({
                                             return (
                                                 <tr key={node.id} className="border-b border-black/5 last:border-b-0">
                                                     <td className="px-4 py-4">
-                                                        <p className="font-black">{getNodeLabel(node)}</p>
+                                                        <p className="font-extrabold">{getNodeLabel(node)}</p>
                                                         <p className="mt-1 max-w-[18rem] truncate font-mono text-xs text-neutral-500">{node.node_identifier || 'Legacy extension node'}</p>
                                                     </td>
                                                     <td className="px-4 py-4">
@@ -392,7 +392,7 @@ export default async function CompanyMemberPortalPage({
                                                     </td>
                                                     <td className="px-4 py-4 font-semibold tabular-nums text-neutral-700">{formatNumber(baselineTotal, params.locale)}</td>
                                                     <td className="px-4 py-4 font-semibold tabular-nums text-neutral-700">{formatNumber(currentTotal, params.locale)}</td>
-                                                    <td className="px-4 py-4 font-black tabular-nums text-black">{formatNumber(companyTasks, params.locale)}</td>
+                                                    <td className="px-4 py-4 font-extrabold tabular-nums text-black">{formatNumber(companyTasks, params.locale)}</td>
                                                 </tr>
                                             )
                                         })
@@ -442,15 +442,15 @@ export default async function CompanyMemberPortalPage({
 function SummaryItem({ label, value }: { label: string; value: string }) {
     return (
         <div className="bg-white p-4">
-            <dt className="text-xs font-black uppercase tracking-wider text-neutral-500">{label}</dt>
-            <dd className="mt-1 font-candu text-3xl font-extrabold leading-none text-black tabular-nums">{value}</dd>
+            <dt className="text-xs font-extrabold text-neutral-500">{label}</dt>
+            <dd className="mt-1 text-3xl font-extrabold leading-none text-black tabular-nums">{value}</dd>
         </div>
     )
 }
 
 function StatusPill({ active }: { active: boolean }) {
     return (
-        <span className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-3 py-1 text-xs font-black ${active ? 'border-green-200 bg-green-50 text-green-700' : 'border-neutral-200 bg-neutral-100 text-neutral-600'}`}>
+        <span className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-3 py-1 text-xs font-extrabold ${active ? 'border-green-200 bg-green-50 text-green-700' : 'border-neutral-200 bg-neutral-100 text-neutral-600'}`}>
             <span className={`h-2 w-2 rounded-full ${active ? 'bg-green-500' : 'bg-neutral-400'}`} />
             {active ? 'Active' : 'Paused'}
         </span>
@@ -466,21 +466,21 @@ function DetailList({
 }) {
     return (
         <section className="rounded-lg border border-black/10 bg-white p-5 shadow-sm sm:p-6">
-            <h2 className="font-candu text-2xl font-extrabold uppercase leading-none text-black">{title}</h2>
+            <h2 className="text-2xl font-extrabold leading-none text-black">{title}</h2>
             <div className="mt-4">
                 {rows.map((row) => (
                     <div key={row.id} className="flex items-start justify-between gap-4 border-b border-black/10 py-4 last:border-b-0">
                         <div>
-                            <p className="font-black capitalize">{row.title}</p>
+                            <p className="font-extrabold capitalize">{row.title}</p>
                             <p className="mt-1 text-xs font-semibold leading-5 text-neutral-600">{row.meta}</p>
                         </div>
                         {row.href ? (
-                            <a href={row.href} target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-black underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
+                            <a href={row.href} target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-extrabold underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
                                 {row.value}
                                 <ExternalLink className="h-3.5 w-3.5" />
                             </a>
                         ) : (
-                            <p className="shrink-0 text-sm font-black">{row.value}</p>
+                            <p className="shrink-0 text-sm font-extrabold">{row.value}</p>
                         )}
                     </div>
                 ))}

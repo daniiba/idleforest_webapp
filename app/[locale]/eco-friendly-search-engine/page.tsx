@@ -373,7 +373,7 @@ function ProductIcon({
 
   if (!src) {
     return (
-      <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black bg-brand-yellow font-candu text-xl shadow-none">
+      <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-neutral-200 bg-brand-yellow text-xl">
         {name.slice(0, 2).toUpperCase()}
       </div>
     );
@@ -384,7 +384,7 @@ function ProductIcon({
 
   return (
     <div
-      className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black shadow-none ${featured ? "bg-brand-navy" : "bg-white"}`}
+      className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-neutral-200 ${featured ? "bg-brand-navy" : "bg-white"}`}
     >
       {src.startsWith("http") ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -435,8 +435,8 @@ function ExternalToolLink({
 
 function StarRating() {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-3 py-2 text-black shadow-none">
-      <span className="font-candu text-2xl leading-none">4.8</span>
+    <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-2 text-black">
+      <span className="text-2xl leading-none">4.8</span>
       <div className="flex gap-0.5" aria-label="4.8 star rating">
         {[0, 1, 2, 3, 4].map((item) => (
           <Star
@@ -445,7 +445,7 @@ function StarRating() {
           />
         ))}
       </div>
-      <span className="text-xs font-extrabold uppercase tracking-[0.14em] text-neutral-500">
+      <span className="text-xs font-extrabold tracking-[0.14em] text-neutral-500">
         33 reviews
       </span>
     </div>
@@ -454,21 +454,21 @@ function StarRating() {
 
 function DesktopPanel() {
   return (
-    <aside className="overflow-hidden rounded-[32px] border-2 border-black bg-white text-black shadow-none">
+    <aside className="overflow-hidden rounded-[32px] border border-neutral-200 bg-white text-black">
       <div className="bg-brand-navy p-6 text-brand-yellow">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
             <ProductIcon name="IdleForest" featured />
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 No search switch
               </p>
-              <h2 className="font-rethink-sans text-3xl font-extrabold leading-tight">
+              <h2 className="text-3xl font-extrabold leading-tight">
                 Desktop app + extension
               </h2>
             </div>
           </div>
-          <span className="w-fit rounded-full bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase text-black">
+          <span className="w-fit rounded-full bg-brand-yellow px-3 py-1 text-xs font-extrabold text-black">
             No default change
           </span>
         </div>
@@ -488,7 +488,7 @@ function DesktopPanel() {
           ].map((platform) => (
             <span
               key={platform.label}
-              className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-white px-3 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-black"
+              className="inline-flex items-center gap-2 rounded-full border border-brand-yellow bg-white px-3 py-2 text-xs font-extrabold tracking-[0.12em] text-black"
             >
               {platform.icon}
               {platform.label}
@@ -496,8 +496,8 @@ function DesktopPanel() {
           ))}
         </div>
 
-        <div className="mt-5 rounded-2xl border-2 border-brand-yellow bg-white/5 p-4">
-          <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow/65">
+        <div className="mt-5 rounded-2xl border border-brand-yellow bg-white/5 p-4">
+          <p className="mb-3 text-xs font-extrabold text-brand-yellow/65">
             Chrome Web Store proof
           </p>
           <StarRating />
@@ -512,29 +512,29 @@ function DesktopPanel() {
         ].map(([label, value]) => (
           <div
             key={label}
-            className="rounded-2xl border-2 border-black bg-brand-gray p-4 text-center"
+            className="rounded-2xl border border-neutral-200 bg-neutral-100 p-4 text-center"
           >
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-neutral-500">
+            <p className="text-[11px] font-extrabold text-neutral-500">
               {label}
             </p>
-            <p className="mt-1 font-candu text-3xl leading-none text-brand-navy">
+            <p className="mt-1 text-3xl leading-none text-brand-navy">
               {value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="grid gap-3 border-t-2 border-black bg-brand-yellow p-5 sm:grid-cols-2">
+      <div className="grid gap-3 border-t border-neutral-200 bg-brand-yellow p-5 sm:grid-cols-2">
         <Link
           href="/downloads"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow hover:bg-black"
         >
           <MonitorDown className="h-5 w-5" />
           Desktop app
         </Link>
         <Link
           href="/download/chrome"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-center font-bold text-black shadow-none hover:bg-black hover:text-brand-yellow hover:shadow-none"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 text-center font-bold text-black hover:bg-black hover:text-brand-yellow"
         >
           <Image src="/chrome.png" alt="" width={22} height={22} />
           Chrome
@@ -548,7 +548,7 @@ export default function EcoFriendlySearchEnginePage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {schemas.map((schema) => (
           <script
             key={schema["@type"]}
@@ -557,14 +557,14 @@ export default function EcoFriendlySearchEnginePage() {
           />
         ))}
 
-        <section className="border-b-2 border-black bg-brand-yellow">
+        <section className="border-b border-neutral-200 bg-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.78fr)] lg:items-center lg:py-20">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-none">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-bold tracking-wide text-black">
                 <Search className="h-4 w-4" />
                 sustainable search engine guide
               </p>
-              <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
+              <h1 className="text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-6xl">
                 The Most Sustainable Search Engine Setup Is the One You Don't
                 Switch To
               </h1>
@@ -578,7 +578,7 @@ export default function EcoFriendlySearchEnginePage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
+                  className="h-auto rounded-full border border-neutral-200 bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-black"
                 >
                   <Link
                     href="/download/chrome"
@@ -591,7 +591,7 @@ export default function EcoFriendlySearchEnginePage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
+                  className="h-auto rounded-full border border-neutral-200 bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
                 >
                   <Link
                     href="/ecosia"
@@ -608,12 +608,12 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <StarRating />
-                <span className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-none">
+                <span className="rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold tracking-[0.14em]">
                   1,000+ users
                 </span>
                 <Link
                   href="/transparency"
-                  className="rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] shadow-none hover:bg-brand-navy hover:text-brand-yellow"
+                  className="rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold tracking-[0.14em] hover:bg-brand-navy hover:text-brand-yellow"
                 >
                   {totalTrees.toLocaleString()} trees verified
                 </Link>
@@ -627,10 +627,10 @@ export default function EcoFriendlySearchEnginePage() {
         <section className="container mx-auto px-6 py-14 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Practical answer
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 A sustainable search engine helps, but it is not the whole
                 story.
               </h2>
@@ -655,12 +655,12 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-black bg-white p-5 shadow-none"
+                  className="rounded-[28px] border border-neutral-200 bg-white p-5"
                 >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow">
                     {item.icon}
                   </div>
-                  <h3 className="mt-5 font-rethink-sans text-2xl font-extrabold leading-tight">
+                  <h3 className="mt-5 text-2xl font-extrabold leading-tight">
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-neutral-700">
@@ -672,13 +672,13 @@ export default function EcoFriendlySearchEnginePage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-white">
+        <section className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="mx-auto max-w-4xl text-center">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Environmental search engine criteria
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 What makes a search engine sustainable?
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -692,14 +692,14 @@ export default function EcoFriendlySearchEnginePage() {
               {criteria.map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-black bg-brand-gray p-6 shadow-none"
+                  className="rounded-[28px] border border-neutral-200 bg-neutral-100 p-6"
                 >
                   <div className="flex gap-4">
-                    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
+                    <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow">
                       {item.icon}
                     </div>
                     <div>
-                      <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight">
+                      <h3 className="text-2xl font-extrabold leading-tight">
                         {item.title}
                       </h3>
                       <p className="mt-2 leading-7 text-neutral-700">
@@ -711,15 +711,15 @@ export default function EcoFriendlySearchEnginePage() {
               ))}
             </div>
 
-            <div className="mt-10 rounded-[32px] border-2 border-black bg-brand-navy p-6 text-brand-yellow shadow-none">
+            <div className="mt-10 rounded-[32px] border border-neutral-200 bg-brand-navy p-6 text-brand-yellow">
               <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                 <div className="flex items-center gap-4">
                   <ProductIcon name="IdleForest" featured />
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow/65">
+                    <p className="text-xs font-extrabold text-brand-yellow/65">
                       Another route
                     </p>
-                    <h3 className="font-rethink-sans text-3xl font-extrabold leading-tight">
+                    <h3 className="text-3xl font-extrabold leading-tight">
                       Keep your search engine. Add IdleForest beside it.
                     </h3>
                   </div>
@@ -754,10 +754,10 @@ export default function EcoFriendlySearchEnginePage() {
 
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="mb-10 max-w-4xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+            <p className="text-xs font-extrabold text-neutral-500">
               Eco search engines and tools
             </p>
-            <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
               Best sustainable search engines compared
             </h2>
             <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -767,7 +767,7 @@ export default function EcoFriendlySearchEnginePage() {
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-none">
+          <div className="overflow-x-auto rounded-[28px] border border-neutral-200 bg-white">
             <table className="w-full min-w-[1280px] text-left">
               <thead className="bg-brand-navy text-brand-yellow">
                 <tr>
@@ -783,7 +783,7 @@ export default function EcoFriendlySearchEnginePage() {
                   ].map((heading) => (
                     <th
                       key={heading}
-                      className="px-5 py-4 text-sm font-extrabold uppercase tracking-[0.14em]"
+                      className="px-5 py-4 text-sm font-extrabold tracking-[0.14em]"
                     >
                       {heading}
                     </th>
@@ -801,7 +801,7 @@ export default function EcoFriendlySearchEnginePage() {
                       className={
                         isIdleForest
                           ? "bg-brand-yellow align-top"
-                          : "border-t-2 border-black bg-white align-top"
+                          : "border-t border-neutral-200 bg-white align-top"
                       }
                     >
                       <td className="px-5 py-4">
@@ -811,13 +811,13 @@ export default function EcoFriendlySearchEnginePage() {
                             featured={isIdleForest}
                           />
                           <div>
-                            <p className="font-rethink-sans text-xl font-extrabold leading-tight">
+                            <p className="text-xl font-extrabold leading-tight">
                               <ExternalToolLink href={tool.href}>
                                 {tool.name}
                               </ExternalToolLink>
                             </p>
                             {isIdleForest ? (
-                              <span className="mt-1 inline-flex rounded-full border-2 border-black bg-white px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-[0.14em]">
+                              <span className="mt-1 inline-flex rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-extrabold tracking-[0.14em]">
                                 No search switch
                               </span>
                             ) : (
@@ -836,7 +836,7 @@ export default function EcoFriendlySearchEnginePage() {
                       </td>
                       <td className="px-5 py-4">
                         <span
-                          className={`inline-flex rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}
+                          className={`inline-flex rounded-full border border-neutral-200 px-3 py-1 text-xs font-extrabold tracking-[0.12em] ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}
                         >
                           {noSwitch ? "No" : "Yes"}
                         </span>
@@ -861,13 +861,13 @@ export default function EcoFriendlySearchEnginePage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-brand-navy text-brand-yellow">
+        <section className="border-y border-neutral-200 bg-brand-navy text-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 md:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 Search engine that plants trees
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 What search engine plants trees?
               </h2>
               <p className="mt-5 text-lg leading-8 text-brand-yellow/80">
@@ -895,12 +895,12 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item) => (
                 <article
                   key={item.title}
-                  className="rounded-[28px] border-2 border-brand-yellow bg-white p-5 text-black shadow-none"
+                  className="rounded-[28px] border border-brand-yellow bg-white p-5 text-black"
                 >
                   <div className="flex gap-4">
                     {item.icon}
                     <div>
-                      <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight">
+                      <h3 className="text-2xl font-extrabold leading-tight">
                         {item.title}
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-neutral-700">
@@ -916,10 +916,10 @@ export default function EcoFriendlySearchEnginePage() {
 
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="mb-10 max-w-4xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+            <p className="text-xs font-extrabold text-neutral-500">
               Choose your setup
             </p>
-            <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
               Choose by what you are trying to improve
             </h2>
             <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -932,12 +932,12 @@ export default function EcoFriendlySearchEnginePage() {
             {setupCards.map((item) => (
               <article
                 key={item.title}
-                className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none"
+                className="rounded-[28px] border border-neutral-200 bg-white p-6"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow">
                   {item.icon}
                 </div>
-                <h3 className="mt-5 font-rethink-sans text-2xl font-extrabold leading-tight">
+                <h3 className="mt-5 text-2xl font-extrabold leading-tight">
                   {item.title}
                 </h3>
                 <p className="mt-3 leading-7 text-neutral-700">{item.body}</p>
@@ -946,13 +946,13 @@ export default function EcoFriendlySearchEnginePage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-white">
+        <section className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:py-20 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Ecosia alternatives
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Prefer a different search engine to Ecosia?
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -963,7 +963,7 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
               <Link
                 href="/ecosia-alternatives"
-                className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold shadow-none hover:bg-black hover:text-brand-yellow hover:shadow-none"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-brand-yellow px-5 py-3 font-bold hover:bg-black hover:text-brand-yellow"
               >
                 see our full Ecosia alternatives guide{" "}
                 <ArrowRight className="h-4 w-4" />
@@ -977,9 +977,9 @@ export default function EcoFriendlySearchEnginePage() {
               ].map((item, index) => (
                 <div
                   key={item}
-                  className="flex gap-4 rounded-2xl border-2 border-black bg-brand-gray p-5 shadow-none"
+                  className="flex gap-4 rounded-2xl border border-neutral-200 bg-neutral-100 p-5"
                 >
-                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
+                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-lg font-extrabold text-black">
                     {index + 1}
                   </span>
                   <p className="font-bold leading-7 text-neutral-800">{item}</p>
@@ -992,10 +992,10 @@ export default function EcoFriendlySearchEnginePage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Trust signals
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Why people trust IdleForest
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -1004,16 +1004,16 @@ export default function EcoFriendlySearchEnginePage() {
               </p>
             </div>
             <div className="grid gap-5 md:grid-cols-2">
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none">
+              <article className="rounded-[28px] border border-neutral-200 bg-brand-yellow p-6">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-white">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-neutral-200 bg-white">
                     <MonitorDown className="h-7 w-7 text-brand-navy" />
                   </span>
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-black/55">
+                    <p className="text-xs font-extrabold text-black/55">
                       Desktop app
                     </p>
-                    <p className="font-rethink-sans text-2xl font-extrabold">
+                    <p className="text-2xl font-extrabold">
                       Mac + Windows
                     </p>
                   </div>
@@ -1023,9 +1023,9 @@ export default function EcoFriendlySearchEnginePage() {
                   the browser is closed.
                 </p>
               </article>
-              <article className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none">
+              <article className="rounded-[28px] border border-neutral-200 bg-white p-6">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-brand-gray">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-neutral-200 bg-neutral-100">
                     <Image
                       src="/chrome.png"
                       alt="Chrome logo"
@@ -1034,14 +1034,14 @@ export default function EcoFriendlySearchEnginePage() {
                     />
                   </span>
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-neutral-500">
+                    <p className="text-xs font-extrabold text-neutral-500">
                       Chrome Web Store
                     </p>
                     <a
                       href={chromeWebStoreUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-rethink-sans text-2xl font-extrabold underline decoration-2 underline-offset-4 hover:text-brand-navy"
+                      className="inline-flex items-center gap-1 text-2xl font-extrabold underline decoration-2 underline-offset-4 hover:text-brand-navy"
                     >
                       Featured <ExternalLink className="h-4 w-4" />
                     </a>
@@ -1060,12 +1060,12 @@ export default function EcoFriendlySearchEnginePage() {
               ].map(([metric, label, body]) => (
                 <article
                   key={metric}
-                  className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none"
+                  className="rounded-[28px] border border-neutral-200 bg-white p-6"
                 >
-                  <p className="font-candu text-5xl leading-none text-brand-navy">
+                  <p className="text-5xl leading-none text-brand-navy">
                     {metric}
                   </p>
-                  <p className="mt-1 text-xs font-extrabold uppercase tracking-[0.16em] text-neutral-500">
+                  <p className="mt-1 text-xs font-extrabold text-neutral-500">
                     {label}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-neutral-700">
@@ -1073,10 +1073,10 @@ export default function EcoFriendlySearchEnginePage() {
                   </p>
                 </article>
               ))}
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none md:col-span-2">
+              <article className="rounded-[28px] border border-neutral-200 bg-brand-yellow p-6 md:col-span-2">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="font-candu text-5xl leading-none">
+                    <p className="text-5xl leading-none">
                       {totalTrees.toLocaleString()}
                     </p>
                     <p className="mt-2 font-bold text-black/75">
@@ -1085,7 +1085,7 @@ export default function EcoFriendlySearchEnginePage() {
                   </div>
                   <Link
                     href="/transparency"
-                    className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
+                    className="inline-flex w-fit items-center gap-2 rounded-full border border-neutral-200 bg-brand-navy px-5 py-3 font-bold text-brand-yellow hover:bg-black"
                   >
                     Verified planting records <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -1095,13 +1095,13 @@ export default function EcoFriendlySearchEnginePage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-white">
+        <section className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="mb-10 max-w-4xl">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Explore the hub
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 More on eco search, proof, and setup choices
               </h2>
             </div>
@@ -1110,9 +1110,9 @@ export default function EcoFriendlySearchEnginePage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group rounded-[24px] border-2 border-black bg-brand-gray p-5 shadow-none transition-transform hover:-translate-y-1"
+                  className="group rounded-[24px] border border-neutral-200 bg-neutral-100 p-5 transition-transform hover:-translate-y-1"
                 >
-                  <h3 className="font-rethink-sans text-xl font-extrabold leading-tight group-hover:underline">
+                  <h3 className="text-xl font-extrabold leading-tight group-hover:underline">
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-neutral-700">
@@ -1127,10 +1127,10 @@ export default function EcoFriendlySearchEnginePage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 FAQ
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Sustainable search engines: common questions
               </h2>
             </div>
@@ -1138,14 +1138,14 @@ export default function EcoFriendlySearchEnginePage() {
               {faqs.map((faq, index) => (
                 <section
                   key={faq.question}
-                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-none"
+                  className="rounded-2xl border border-neutral-200 bg-white p-5"
                 >
                   <div className="flex gap-4">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-lg font-extrabold text-black">
                       {index + 1}
                     </span>
                     <div>
-                      <h3 className="font-rethink-sans text-xl font-extrabold leading-tight">
+                      <h3 className="text-xl font-extrabold leading-tight">
                         {faq.question}
                       </h3>
                       <p className="mt-2 leading-7 text-neutral-700">
@@ -1162,10 +1162,10 @@ export default function EcoFriendlySearchEnginePage() {
         <section className="bg-brand-navy py-16 text-brand-yellow md:py-20">
           <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 Simple setup
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Greener searching, without the switch
               </h2>
               <p className="mt-4 max-w-2xl text-lg leading-8 text-brand-yellow/80">
@@ -1177,7 +1177,7 @@ export default function EcoFriendlySearchEnginePage() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 asChild
-                className="h-auto rounded-full border-2 border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white"
+                className="h-auto rounded-full border border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white"
               >
                 <Link
                   href="/download/chrome"
@@ -1190,7 +1190,7 @@ export default function EcoFriendlySearchEnginePage() {
               <Button
                 asChild
                 variant="outline"
-                className="h-auto rounded-full border-2 border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                className="h-auto rounded-full border border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black"
               >
                 <Link href="/how-it-works">See how it works</Link>
               </Button>

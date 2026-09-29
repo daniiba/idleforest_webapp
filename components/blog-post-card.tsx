@@ -23,7 +23,7 @@ export interface BlogPost {
 export function BlogPostCard({ post }: { post: BlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} className="block group">
-      <Card className="h-full flex flex-col bg-brand-navy border-4 border-brand-navy shadow-none hover:shadow-none transition-all">
+      <Card className="h-full flex flex-col overflow-hidden rounded-3xl bg-white border border-neutral-200 shadow-sm transition-all group-hover:-translate-y-0.5 group-hover:shadow-md">
         <CardContent className="p-0 flex-grow">
           <div className="relative w-full h-52 overflow-hidden">
             <Image
@@ -37,14 +37,14 @@ export function BlogPostCard({ post }: { post: BlogPost }) {
           </div>
 
           <div className="px-5 pt-4 pb-5">
-            <h2 className="text-white  text-xl leading-snug tracking-wide font-rethink-sans mb-3">
+            <h2 className="text-brand-navy text-lg font-extrabold leading-snug tracking-tight mb-3">
               {post.title}
             </h2>
            {/*  <p className="text-sm text-gray-300/90 line-clamp-2 mb-4">
               {post.brief}
             </p> */}
 
-            <div className="flex flex-wrap items-center gap-5 text-xs text-gray-300/80">
+            <div className="flex flex-wrap items-center gap-5 text-xs text-neutral-500">
               <div className="flex items-center gap-2">
                 <Calendar size={14} />
                 <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
@@ -60,7 +60,7 @@ export function BlogPostCard({ post }: { post: BlogPost }) {
         </CardContent>
 
         <div className="px-5 pb-5">
-          <div className="w-full bg-brand-yellow text-black font-medium text-center py-2 group-hover:brightness-95">
+          <div className="w-full rounded-full bg-brand-navy text-white text-sm font-bold text-center py-2.5 transition-colors group-hover:bg-black">
             Read More
           </div>
         </div>

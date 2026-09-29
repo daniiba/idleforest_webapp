@@ -46,7 +46,7 @@ export default async function BlogPage({
 
   if (posts.length === 0 && currentPage === 1) {
     return (
-      <div className="min-h-screen bg-brand-gray">
+      <div className="min-h-screen bg-[#F7F7F2]">
         <div className="container mx-auto px-4 py-8 pt-8">
           <h1 className="text-4xl font-bold mb-8 text-white">Blog Posts</h1>
           <div className="text-center py-12">
@@ -68,7 +68,7 @@ export default async function BlogPage({
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray relative overflow-hidden">
+    <div className="min-h-screen bg-[#F7F7F2] relative overflow-hidden">
       <Script src="https://www.googletagmanager.com/gtag/js?id=G-NXHH094YJK" strategy="afterInteractive" />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
@@ -79,12 +79,9 @@ export default async function BlogPage({
         `}
       </Script>
       {/* Background decorations */}
-      <img src="/Union.svg" alt="background" className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-20" />
-      <img src="/yellow-shape.svg" alt="accent" className="pointer-events-none select-none absolute -top-24 -left-24 w-[600px] opacity-70" />
-      <img src="/yellow-shape.svg" alt="accent" className="pointer-events-none select-none absolute -bottom-40 -right-20 w-[520px] rotate-12 opacity-70" />
-
+      
       <div className="container mx-auto px-4 py-8 pt-8 relative">
-        <h1 className="text-center font-rethink-sans text-black text-5xl md:text-6xl font-extrabold tracking-tight mb-10">BLOG</h1>
+        <h1 className="text-center text-brand-navy text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-10">Blog</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           {posts.map((post: BlogPost) => (

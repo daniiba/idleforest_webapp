@@ -24,16 +24,16 @@ export default function PublicReferralImpact({ data, isOwnProfile }: PublicRefer
     if (!data || data.referrals === 0) return null
 
     return (
-        <section className="overflow-hidden border-2 border-black bg-brand-navy text-white" aria-labelledby="referral-impact-heading">
+        <section className="overflow-hidden border border-neutral-200 bg-brand-navy text-white rounded-2xl" aria-labelledby="referral-impact-heading">
             <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="p-6 sm:p-8">
                     <div className="flex items-center gap-3">
-                        <span className="flex h-11 w-11 items-center justify-center border-2 border-white bg-brand-yellow text-black">
+                        <span className="flex h-11 w-11 items-center justify-center border border-white bg-brand-yellow text-black">
                             <Network className="h-6 w-6" />
                         </span>
                         <div>
-                            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-yellow">Referral impact</p>
-                            <h2 id="referral-impact-heading" className="mt-1 font-candu text-3xl font-extrabold uppercase leading-none sm:text-4xl">
+                            <p className="font-mono text-xs font-bold text-brand-yellow">Referral impact</p>
+                            <h2 id="referral-impact-heading" className="mt-1 text-3xl font-extrabold leading-none sm:text-4xl">
                                 The forest {data.displayName} is growing
                             </h2>
                         </div>
@@ -44,41 +44,41 @@ export default function PublicReferralImpact({ data, isOwnProfile }: PublicRefer
                     </p>
 
                     <div className="mt-7 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-2 font-mono sm:gap-4">
-                        <div className="border-2 border-white/40 p-3 sm:p-4">
-                            <p className="text-xl font-black tabular-nums sm:text-3xl">{data.ownRequests.toLocaleString()}</p>
-                            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-neutral-300 sm:text-xs">Own</p>
+                        <div className="border border-white/40 p-3 sm:p-4">
+                            <p className="text-xl font-extrabold tabular-nums sm:text-3xl">{data.ownRequests.toLocaleString()}</p>
+                            <p className="mt-1 text-[10px] font-bold text-neutral-300 sm:text-xs">Own</p>
                         </div>
-                        <span className="self-center text-xl font-black text-brand-yellow">+</span>
-                        <div className="border-2 border-brand-yellow bg-brand-yellow p-3 text-black sm:p-4">
-                            <p className="text-xl font-black tabular-nums sm:text-3xl">{data.referredRequests.toLocaleString()}</p>
-                            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider sm:text-xs">From invites</p>
+                        <span className="self-center text-xl font-extrabold text-brand-yellow">+</span>
+                        <div className="border border-brand-yellow bg-brand-yellow p-3 text-black sm:p-4 rounded-2xl">
+                            <p className="text-xl font-extrabold tabular-nums sm:text-3xl">{data.referredRequests.toLocaleString()}</p>
+                            <p className="mt-1 text-[10px] font-bold sm:text-xs">From invites</p>
                         </div>
-                        <span className="self-center text-xl font-black text-brand-yellow">=</span>
-                        <div className="border-2 border-white bg-white p-3 text-black sm:p-4">
-                            <p className="text-xl font-black tabular-nums sm:text-3xl">{data.combinedRequests.toLocaleString()}</p>
-                            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider sm:text-xs">Together</p>
+                        <span className="self-center text-xl font-extrabold text-brand-yellow">=</span>
+                        <div className="border border-white bg-white p-3 text-black sm:p-4">
+                            <p className="text-xl font-extrabold tabular-nums sm:text-3xl">{data.combinedRequests.toLocaleString()}</p>
+                            <p className="mt-1 text-[10px] font-bold sm:text-xs">Together</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="border-t-2 border-black bg-white p-6 text-black lg:border-l-2 lg:border-t-0 sm:p-8">
+                <div className="border-t border-neutral-200 bg-white p-6 text-black lg:border-l lg:border-t-0 sm:p-8">
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="border-2 border-black bg-brand-yellow p-4">
+                        <div className="border border-neutral-200 bg-brand-yellow p-4 rounded-2xl">
                             <Users className="h-5 w-5" />
-                            <p className="mt-4 font-candu text-4xl font-extrabold">{data.referrals}</p>
-                            <p className="text-xs font-black uppercase tracking-wider">People joined</p>
+                            <p className="mt-4 text-4xl font-extrabold">{data.referrals}</p>
+                            <p className="text-xs font-extrabold">People joined</p>
                         </div>
-                        <div className="border-2 border-black bg-brand-gray p-4">
+                        <div className="border border-neutral-200 bg-neutral-100 p-4 rounded-2xl">
                             <Sprout className="h-5 w-5" />
-                            <p className="mt-4 font-candu text-4xl font-extrabold">{data.activatedReferrals}</p>
-                            <p className="text-xs font-black uppercase tracking-wider">Have contributed</p>
+                            <p className="mt-4 text-4xl font-extrabold">{data.activatedReferrals}</p>
+                            <p className="text-xs font-extrabold">Have contributed</p>
                         </div>
                     </div>
 
                     {isOwnProfile ? (
                         <Link
                             href="/referrals"
-                            className="mt-4 flex items-center justify-between border-2 border-black bg-brand-navy px-4 py-3 text-sm font-black uppercase text-white"
+                            className="mt-4 flex items-center justify-between bg-brand-navy px-4 py-3 text-sm font-extrabold text-white rounded-full"
                         >
                             See your referral details
                             <ArrowRight className="h-4 w-4 text-brand-yellow" />
@@ -91,7 +91,7 @@ export default function PublicReferralImpact({ data, isOwnProfile }: PublicRefer
                 </div>
             </div>
 
-            <div className="border-t-2 border-white/20 px-6 pb-7 sm:px-8">
+            <div className="border-t border-white/20 px-6 pb-7 sm:px-8">
                 <ReferralDailyBars
                     dailyImpact={data.dailyImpact}
                     heading={`How ${data.displayName}'s wider forest moved`}

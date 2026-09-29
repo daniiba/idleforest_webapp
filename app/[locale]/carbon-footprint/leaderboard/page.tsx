@@ -30,7 +30,7 @@ export default async function LeaderboardPage() {
     const sortedApps = [...allApps].sort((a, b) => b.co2_per_hour_grams - a.co2_per_hour_grams);
 
     return (
-        <div className="min-h-screen bg-brand-gray pb-12 font-inter">
+        <div className="min-h-screen bg-[#F7F7F2] pb-12 font-inter">
             <Navigation />
             <div className="container mx-auto px-6 pt-8">
                 {/* Breadcrumb / Back Link */}
@@ -49,18 +49,18 @@ export default async function LeaderboardPage() {
 
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-10 text-center">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
+                        <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-4">
                             {t("page.leaderboard_eyebrow")}
                         </p>
-                        <h1 className="font-candu text-[42px] sm:text-6xl uppercase text-black mb-6 leading-none">
-                            {t("page.leaderboard_title_pt1")} <span className="text-brand-yellow bg-black px-2 mx-1">{t("page.leaderboard_title_pt2")}</span> {t("page.leaderboard_title_pt3")}
+                        <h1 className="text-[42px] sm:text-6xl text-black mb-6 leading-none">
+                            {t("page.leaderboard_title_pt1")} <span className="text-brand-yellow bg-brand-navy px-2 mx-1">{t("page.leaderboard_title_pt2")}</span> {t("page.leaderboard_title_pt3")}
                         </h1>
                         <p className="text-lg text-neutral-800 leading-relaxed">
                             {t("page.leaderboard_desc")}
                         </p>
                     </div>
 
-                    <div className="bg-white border-4 border-black shadow-none divide-y-2 divide-black/20 overflow-hidden">
+                    <div className="bg-white border border-neutral-200 divide-y divide-neutral-200/20 overflow-hidden rounded-2xl">
                         {sortedApps.map((app, index) => {
                             const iconUrl = getIconUrl(app);
                             const isCrypto = app.category === "Crypto";
@@ -71,10 +71,10 @@ export default async function LeaderboardPage() {
                                     key={app.slug}
                                     className="flex items-center p-4 sm:p-6 hover:bg-brand-yellow/15 transition-colors group"
                                 >
-                                    <div className="flex-shrink-0 w-8 sm:w-12 text-center font-rethink-sans text-xl sm:text-2xl font-black text-neutral-400 group-hover:text-black transition-colors">
+                                    <div className="flex-shrink-0 w-8 sm:w-12 text-center text-xl sm:text-2xl font-extrabold text-neutral-400 group-hover:text-black transition-colors">
                                         #{index + 1}
                                     </div>
-                                    <div className="flex-shrink-0 w-12 h-12 bg-white border-2 border-black flex items-center justify-center mx-3 sm:mx-4">
+                                    <div className="flex-shrink-0 w-12 h-12 bg-white border border-neutral-200 flex items-center justify-center mx-3 sm:mx-4 rounded-2xl">
                                         {!iconUrl.startsWith("fallback:") ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img src={iconUrl} alt={app.app_name} className="w-6 h-6" />
@@ -83,23 +83,23 @@ export default async function LeaderboardPage() {
                                         )}
                                     </div>
                                     <div className="flex-grow min-w-0 pr-2 sm:pr-4">
-                                        <h2 className="font-rethink-sans text-lg sm:text-xl font-extrabold text-black truncate">{app.app_name}</h2>
+                                        <h2 className="text-lg sm:text-xl font-extrabold text-black truncate">{app.app_name}</h2>
                                         <div className="flex flex-wrap items-center gap-2 mt-1">
-                                            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-neutral-500">
+                                            <span className="text-[10px] sm:text-xs font-bold text-neutral-500">
                                                 {t(`categories.${app.category}`)}
                                             </span>
                                             {isCrypto && (
-                                                <span className="text-[9px] font-bold uppercase tracking-wider bg-black text-brand-yellow px-1 py-0.5">
+                                                <span className="text-[9px] font-bold bg-brand-navy text-brand-yellow px-1 py-0.5">
                                                     {t("page.per_transaction")}
                                                 </span>
                                             )}
                                         </div>
                                     </div>
                                     <div className="flex-shrink-0 text-right">
-                                        <div className="font-rethink-sans text-xl sm:text-3xl font-black text-brand-green">
+                                        <div className="text-xl sm:text-3xl font-extrabold text-brand-green">
                                             {app.co2_per_hour_grams >= 1000 ? (app.co2_per_hour_grams / 1000).toLocaleString() + 'kg' : app.co2_per_hour_grams + 'g'}
                                         </div>
-                                        <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-neutral-500 mt-1">
+                                        <div className="text-[9px] sm:text-[10px] font-bold text-neutral-500 mt-1">
                                             {isCrypto ? t("page.co2_per_tx_short") : t("page.co2_per_hour_short")}
                                         </div>
                                     </div>

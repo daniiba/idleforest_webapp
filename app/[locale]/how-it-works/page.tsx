@@ -115,16 +115,16 @@ export default function HowItWorksPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         <section className="relative overflow-hidden bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-center">
               <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
                   <Leaf className="h-4 w-4" />
                   how does idleforest work
                 </div>
-                <h1 className="font-rethink-sans text-[44px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-7xl">
+                <h1 className="text-[44px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-5xl">
                   How IdleForest Works
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -136,7 +136,7 @@ export default function HowItWorksPage() {
                 <CtaGroup deviceInfo={deviceInfo} />
               </div>
 
-              <div className="rounded-lg border-2 border-black bg-white p-6 shadow-none">
+              <div className="rounded-lg border border-neutral-200 bg-white p-6">
                 <div className="grid gap-4">
                   <Signal icon={<Wifi className="h-5 w-5" />} label="Spare bandwidth" />
                   <Signal icon={<ShieldCheck className="h-5 w-5" />} label="Sessionless data tasks" />
@@ -163,7 +163,7 @@ export default function HowItWorksPage() {
         <section className="bg-brand-navy text-white">
           <div className="container mx-auto px-6 py-16 md:py-24">
             <div className="max-w-4xl">
-              <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
+              <h2 className="text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
                 How the App Turns Bandwidth Into Trees
               </h2>
               <p className="mt-5 text-lg leading-8 text-white/85">
@@ -248,15 +248,15 @@ export default function HowItWorksPage() {
           </p>
         </ContentBand>
 
-        <section className="bg-brand-gray">
+        <section className="bg-neutral-100">
           <div className="container mx-auto px-6 py-16 md:py-24">
-            <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">
+            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
               Frequently Asked Questions
             </h2>
-            <div className="mt-10 divide-y-2 divide-black border-y-2 border-black">
+            <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
               {faqItems.map((item) => (
                 <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[320px_1fr] md:gap-8">
-                  <h3 className="font-rethink-sans text-2xl font-extrabold">{item.question}</h3>
+                  <h3 className="text-2xl font-extrabold">{item.question}</h3>
                   <div className="space-y-3 text-lg leading-8 text-neutral-800">
                     <p>{item.richAnswer ?? item.answer}</p>
                     {item.link ? (
@@ -278,7 +278,7 @@ export default function HowItWorksPage() {
           <div className="container mx-auto px-6 py-16 text-center md:py-24">
             <div className="mx-auto max-w-3xl">
               <Sprout className="mx-auto h-12 w-12 text-brand-navy" />
-              <h2 className="mt-5 font-rethink-sans text-4xl font-extrabold tracking-normal md:text-6xl">
+              <h2 className="mt-5 text-4xl font-extrabold tracking-normal md:text-5xl">
                 Start Planting Trees in 10 Seconds
               </h2>
               <p className="mt-5 text-lg leading-8 text-neutral-800 md:text-xl">
@@ -316,7 +316,7 @@ function CtaGroup({
 
 function Signal({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-3 border-b-2 border-black pb-4 last:border-b-0 last:pb-0">
+    <div className="flex items-center gap-3 border-b border-neutral-200 pb-4 last:border-b-0 last:pb-0">
       <div className="grid h-10 w-10 place-items-center rounded-md bg-brand-yellow text-black">{icon}</div>
       <span className="font-bold">{label}</span>
     </div>
@@ -335,7 +335,7 @@ function ContentBand({
   return (
     <section className={tinted ? "bg-white" : "bg-brand-gray"}>
       <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-        <h2 className="font-rethink-sans text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
+        <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
         <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">{children}</div>
       </div>
     </section>
@@ -354,9 +354,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article className="rounded-lg border-2 border-brand-yellow bg-white p-6 text-black">
+    <article className="rounded-lg border border-brand-yellow bg-white p-6 text-black">
       <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 id={id} className="mt-4 font-rethink-sans text-2xl font-extrabold md:text-3xl">{title}</h3>
+      <h3 id={id} className="mt-4 text-2xl font-extrabold md:text-3xl">{title}</h3>
       <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
     </article>
   );

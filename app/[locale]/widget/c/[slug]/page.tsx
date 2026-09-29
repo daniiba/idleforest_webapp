@@ -45,7 +45,7 @@ export default async function CompanyWidgetPage({
                 aria-label={`Open ${company.name}'s IdleForest partner page`}
                 className="group block w-full max-w-sm rounded-xl outline-none focus-visible:ring-4 focus-visible:ring-brand-yellow focus-visible:ring-offset-4"
             >
-                <article className="relative overflow-hidden rounded-xl border-4 border-black bg-white shadow-none transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1">
+                <article className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white transition-transform duration-200 group-hover:-translate-y-1 group-focus-visible:-translate-y-1">
 
                     <div
                         className="h-24 w-full opacity-20 absolute top-0 left-0 pointer-events-none"
@@ -63,19 +63,19 @@ export default async function CompanyWidgetPage({
                                 <img
                                     src={company.logo_url}
                                     alt=""
-                                    className="w-20 h-20 rounded-full border-4 border-black object-cover relative z-10 bg-white"
+                                    className="w-20 h-20 rounded-full border border-neutral-200 object-cover relative z-10 bg-white"
                                 />
                             ) : (
-                                <div className="w-20 h-20 rounded-full border-4 border-black bg-white flex items-center justify-center relative z-10">
+                                <div className="w-20 h-20 rounded-full border border-neutral-200 bg-white flex items-center justify-center relative z-10">
                                     <TreePine className="h-10 w-10 text-brand-navy" aria-hidden="true" />
                                 </div>
                             )}
                         </div>
 
-                        <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-neutral-500">
+                        <p className="mb-2 text-[10px] font-extrabold text-neutral-500">
                             IdleForest partner
                         </p>
-                        <h1 className="text-2xl font-extrabold font-candu uppercase text-black mb-2">
+                        <h1 className="text-2xl font-extrabold text-black mb-2">
                             {company.name}
                         </h1>
 
@@ -84,22 +84,22 @@ export default async function CompanyWidgetPage({
                         </p>
 
                         {(memberCount > 0 || totalPoints > 0) && (
-                            <div className="flex w-full items-center justify-center gap-2 mb-6 divide-x-2 divide-neutral-200 bg-neutral-50 py-3 rounded-xl border-2 border-neutral-200">
+                            <div className="flex w-full items-center justify-center gap-2 mb-6 divide-x-2 divide-neutral-200 bg-neutral-50 py-3 rounded-xl border border-neutral-200">
                                 <div className="flex flex-col items-center px-4 w-1/2">
                                     <Users className="h-5 w-5 text-brand-navy mb-1" aria-hidden="true" />
                                     <span className="font-extrabold text-xl text-black leading-none mb-1">{memberCount.toLocaleString(params.locale)}</span>
-                                    <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Members</span>
+                                    <span className="text-[10px] font-bold text-neutral-500">Members</span>
                                 </div>
                                 <div className="flex flex-col items-center px-4 w-1/2">
                                     <TreePine className="h-5 w-5 text-green-600 mb-1" aria-hidden="true" />
                                     <span className="font-extrabold text-xl text-black leading-none mb-1">{totalPoints.toLocaleString(params.locale)}</span>
-                                    <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Tasks</span>
+                                    <span className="text-[10px] font-bold text-neutral-500">Tasks</span>
                                 </div>
                             </div>
                         )}
 
                         <span
-                            className="flex w-full items-center justify-center gap-2 rounded-xl border-4 border-black px-4 py-3 text-center font-extrabold uppercase tracking-wider text-black shadow-none transition-all group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-center font-extrabold text-black transition-all group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none"
                             style={{ backgroundColor: themeColor }}
                         >
                             View partner page
@@ -110,7 +110,7 @@ export default async function CompanyWidgetPage({
                             <span>Powered by</span>
                             <span className="flex items-center gap-1 text-black">
                                 <TreePine className="h-3 w-3" aria-hidden="true" />
-                                <span className="font-candu tracking-wide uppercase">IdleForest</span>
+                                <span className="tracking-wide">IdleForest</span>
                             </span>
                         </div>
                     </div>

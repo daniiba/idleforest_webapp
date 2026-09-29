@@ -277,7 +277,7 @@ const schemas = [
 
 function ProofPill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-black shadow-none">
+    <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-extrabold tracking-[0.12em] text-black">
       <CheckCircle2 className="h-4 w-4 text-brand-navy" />
       {children}
     </span>
@@ -293,7 +293,7 @@ function LogoStack({
 }) {
   return (
     <span
-      className={`flex h-11 w-11 items-center justify-center overflow-hidden border-2 border-black ${featured ? "bg-black" : "bg-white"}`}
+      className={`flex h-11 w-11 items-center justify-center overflow-hidden border border-neutral-200 rounded-2xl ${featured ? "bg-black" : "bg-white"}`}
     >
       {logos.length === 1 ? (
         <Image
@@ -325,7 +325,7 @@ export default function CompareHubPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {schemas.map((schema) => (
           <script
             key={schema["@type"]}
@@ -334,15 +334,15 @@ export default function CompareHubPage() {
           />
         ))}
 
-        <section className="relative overflow-hidden border-b-4 border-black bg-brand-yellow">
-          <div className="absolute inset-x-0 top-0 h-6 border-b-2 border-black bg-white/40" />
+        <section className="relative overflow-hidden border-b border-neutral-200 bg-brand-yellow">
+          <div className="absolute inset-x-0 top-0 h-6 border-b border-neutral-200 bg-white/40" />
           <div className="container relative mx-auto grid gap-10 px-6 pb-16 pt-20 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.86fr)] lg:items-center lg:pb-20 lg:pt-24">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase tracking-wide text-black shadow-none">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-bold tracking-wide text-black">
                 <Sparkles className="h-4 w-4" />
                 tree planting app comparison
               </p>
-              <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
+              <h1 className="text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-6xl">
                 Compare Tree-Planting and Eco-Impact Tools
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -358,7 +358,7 @@ export default function CompareHubPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
+                  className="h-auto rounded-full border border-neutral-200 bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-black"
                 >
                   <Link
                     href="/download/chrome"
@@ -371,7 +371,7 @@ export default function CompareHubPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
+                  className="h-auto rounded-full border border-neutral-200 bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
                 >
                   <a
                     href="#comparisons"
@@ -386,7 +386,7 @@ export default function CompareHubPage() {
                   (item, index) => (
                     <div
                       key={item}
-                      className={`border-2 border-black px-4 py-3 text-sm font-extrabold ${index === 2 ? "bg-brand-navy text-brand-yellow" : "bg-white text-black"}`}
+                      className={`border border-neutral-200 px-4 py-3 text-sm font-extrabold rounded-full ${index === 2 ? "bg-brand-navy text-brand-yellow" : "bg-white text-black"}`}
                     >
                       {item}
                     </div>
@@ -397,11 +397,11 @@ export default function CompareHubPage() {
 
             <aside
               aria-label="Tree-planting tool model preview"
-              className="relative border-2 border-black bg-white p-4 shadow-none sm:p-5"
+              className="relative border border-neutral-200 bg-white p-4 sm:p-5 rounded-2xl"
             >
-              <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b-2 border-black pb-4">
+              <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b border-neutral-200 pb-4">
                 <div>
-                  <p className="font-rethink-sans text-2xl font-extrabold leading-tight">
+                  <p className="text-2xl font-extrabold leading-tight">
                     Pick by model,
                     <span className="block text-brand-navy">
                       not marketing.
@@ -411,7 +411,7 @@ export default function CompareHubPage() {
                     The same outcome can come from very different online habits.
                   </p>
                 </div>
-                <div className="grid h-14 w-14 place-items-center border-2 border-black bg-brand-yellow shadow-none">
+                <div className="grid h-14 w-14 place-items-center border border-neutral-200 bg-brand-yellow rounded-2xl">
                   <Trees className="h-7 w-7" />
                 </div>
               </div>
@@ -420,12 +420,12 @@ export default function CompareHubPage() {
                 {heroModels.map((model) => (
                   <div
                     key={model.label}
-                    className={`grid grid-cols-[auto_minmax(0,1fr)] gap-3 border-2 border-black p-3 ${model.featured ? "bg-brand-navy text-brand-yellow" : "bg-brand-gray text-black"}`}
+                    className={`grid grid-cols-[auto_minmax(0,1fr)] gap-3 border border-neutral-200 p-3 rounded-2xl ${model.featured ? "bg-brand-navy text-brand-yellow" : "bg-brand-gray text-black"}`}
                   >
                     <LogoStack logos={model.logos} featured={model.featured} />
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                        <p className="text-xs font-extrabold uppercase tracking-[0.16em]">
+                        <p className="text-xs font-extrabold">
                           {model.label}
                         </p>
                         <p
@@ -444,20 +444,20 @@ export default function CompareHubPage() {
                 ))}
               </div>
 
-              <div className="mt-4 grid grid-cols-2 border-2 border-black">
-                <div className="border-r-2 border-black bg-brand-yellow p-3">
-                  <p className="text-xs font-extrabold uppercase tracking-[0.16em]">
+              <div className="mt-4 grid grid-cols-2 border border-neutral-200 rounded-2xl">
+                <div className="border-r border-neutral-200 bg-brand-yellow p-3">
+                  <p className="text-xs font-extrabold">
                     Deep dives
                   </p>
-                  <p className="mt-1 font-rethink-sans text-3xl font-extrabold">
+                  <p className="mt-1 text-3xl font-extrabold">
                     3
                   </p>
                 </div>
                 <div className="bg-white p-3">
-                  <p className="text-xs font-extrabold uppercase tracking-[0.16em]">
+                  <p className="text-xs font-extrabold">
                     Search switch
                   </p>
-                  <p className="mt-1 font-rethink-sans text-3xl font-extrabold">
+                  <p className="mt-1 text-3xl font-extrabold">
                     Optional
                   </p>
                 </div>
@@ -468,10 +468,10 @@ export default function CompareHubPage() {
 
         <section id="tools" className="container mx-auto px-6 py-16 md:py-20">
           <div className="mb-10 max-w-4xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+            <p className="text-xs font-extrabold text-neutral-500">
               At a glance
             </p>
-            <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
               The main tree-planting tools at a glance
             </h2>
             <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -480,7 +480,7 @@ export default function CompareHubPage() {
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-[28px] border-2 border-black bg-white shadow-none">
+          <div className="overflow-x-auto rounded-[28px] border border-neutral-200 bg-white">
             <table className="w-full min-w-[940px] text-left">
               <thead className="bg-brand-navy text-brand-yellow">
                 <tr>
@@ -493,7 +493,7 @@ export default function CompareHubPage() {
                   ].map((heading) => (
                     <th
                       key={heading}
-                      className="px-5 py-4 text-sm font-extrabold uppercase tracking-[0.14em]"
+                      className="px-5 py-4 text-sm font-extrabold tracking-[0.14em]"
                     >
                       {heading}
                     </th>
@@ -507,13 +507,13 @@ export default function CompareHubPage() {
                     className={
                       tool.featured
                         ? "bg-brand-yellow align-top"
-                        : "border-t-2 border-black bg-white align-top"
+                        : "border-t border-neutral-200 bg-white align-top"
                     }
                   >
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <span
-                          className={`grid h-11 w-11 place-items-center overflow-hidden rounded-xl border-2 border-black ${tool.featured ? "bg-black" : "bg-brand-gray"}`}
+                          className={`grid h-11 w-11 place-items-center overflow-hidden rounded-xl border border-neutral-200 ${tool.featured ? "bg-black" : "bg-brand-gray"}`}
                         >
                           <Image
                             src={tool.logo.src}
@@ -523,7 +523,7 @@ export default function CompareHubPage() {
                             className="h-8 w-8 object-contain"
                           />
                         </span>
-                        <span className="font-rethink-sans text-xl font-extrabold leading-tight">
+                        <span className="text-xl font-extrabold leading-tight">
                           {tool.name}
                         </span>
                       </div>
@@ -545,7 +545,7 @@ export default function CompareHubPage() {
                     </td>
                     <td className="px-5 py-4">
                       <span
-                        className={`inline-flex rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] ${tool.switch.startsWith("No") ? "bg-brand-yellow" : "bg-white"}`}
+                        className={`inline-flex rounded-full border border-neutral-200 px-3 py-1 text-xs font-extrabold tracking-[0.12em] ${tool.switch.startsWith("No") ? "bg-brand-yellow" : "bg-white"}`}
                       >
                         {tool.switch}
                       </span>
@@ -574,13 +574,13 @@ export default function CompareHubPage() {
           </div>
         </section>
 
-        <section id="comparisons" className="border-y-4 border-black bg-white">
+        <section id="comparisons" className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="mb-10 max-w-4xl">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Comparison directory
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Compare IdleForest with each tool
               </h2>
             </div>
@@ -589,9 +589,9 @@ export default function CompareHubPage() {
                 <Link
                   key={card.title}
                   href={card.href}
-                  className="group flex h-full flex-col rounded-[24px] border-2 border-black bg-brand-gray p-6 shadow-none transition-transform hover:-translate-y-1"
+                  className="group flex h-full flex-col rounded-[24px] border border-neutral-200 bg-neutral-100 p-6 transition-transform hover:-translate-y-1"
                 >
-                  <h3 className="font-rethink-sans text-2xl font-extrabold leading-tight group-hover:underline">
+                  <h3 className="text-2xl font-extrabold leading-tight group-hover:underline">
                     {card.title}
                   </h3>
                   <p className="mt-3 flex-1 leading-7 text-neutral-700">
@@ -609,10 +609,10 @@ export default function CompareHubPage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Where IdleForest fits
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 A passive layer, not another habit
               </h2>
             </div>
@@ -642,7 +642,7 @@ export default function CompareHubPage() {
                 </Link>
                 .
               </p>
-              <div className="rounded-[24px] border-2 border-black bg-brand-yellow p-5 shadow-none">
+              <div className="rounded-[24px] border border-neutral-200 bg-brand-yellow p-5">
                 <p className="font-bold">
                   Looking for alternatives, not comparisons? If you want a list
                   of options to replace Ecosia rather than a head-to-head, see
@@ -660,13 +660,13 @@ export default function CompareHubPage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-brand-navy text-brand-yellow">
+        <section className="border-y border-neutral-200 bg-brand-navy text-brand-yellow">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:py-20 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 Trust signals
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Why people choose IdleForest
               </h2>
             </div>
@@ -680,7 +680,7 @@ export default function CompareHubPage() {
               <ProofPill>Made in Lisbon</ProofPill>
               <Link
                 href="/transparency"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-brand-yellow px-5 py-3 font-bold text-black shadow-none hover:bg-white"
+                className="inline-flex items-center gap-2 rounded-full border border-brand-yellow bg-brand-yellow px-5 py-3 font-bold text-black hover:bg-white"
               >
                 Verified planting records <ExternalLink className="h-4 w-4" />
               </Link>
@@ -691,10 +691,10 @@ export default function CompareHubPage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 FAQ
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Tree-planting tool comparisons: common questions
               </h2>
             </div>
@@ -702,14 +702,14 @@ export default function CompareHubPage() {
               {faqs.map((faq, index) => (
                 <section
                   key={faq.question}
-                  className="rounded-2xl border-2 border-black bg-white p-5 shadow-none"
+                  className="rounded-2xl border border-neutral-200 bg-white p-5"
                 >
                   <div className="flex gap-4">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-lg font-extrabold text-black">
                       {index + 1}
                     </span>
                     <div>
-                      <h3 className="font-rethink-sans text-xl font-extrabold leading-tight">
+                      <h3 className="text-xl font-extrabold leading-tight">
                         {faq.question}
                       </h3>
                       <p className="mt-2 leading-7 text-neutral-700">
@@ -726,10 +726,10 @@ export default function CompareHubPage() {
         <section className="bg-brand-yellow py-16 md:py-20">
           <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-black/55">
+              <p className="text-xs font-extrabold text-black/55">
                 Start passive
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Not sure which to pick? Start passive.
               </h2>
               <p className="mt-4 max-w-2xl text-lg leading-8 text-black/75">
@@ -741,7 +741,7 @@ export default function CompareHubPage() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 asChild
-                className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none"
+                className="h-auto rounded-full border border-neutral-200 bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-black"
               >
                 <Link
                   href="/download/chrome"
@@ -754,7 +754,7 @@ export default function CompareHubPage() {
               <Button
                 asChild
                 variant="outline"
-                className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
+                className="h-auto rounded-full border border-neutral-200 bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow"
               >
                 <Link href="/how-it-works">See how it works</Link>
               </Button>

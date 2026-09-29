@@ -102,12 +102,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   };
 
   return (
-    <div className="min-h-screen bg-brand-gray">
+    <div className="min-h-screen bg-[#F7F7F2]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="container mx-auto px-4 py-32 ">
+      <div className="container mx-auto px-4 py-32">
 
 
         <article className="max-w-4xl mx-auto">
@@ -144,20 +144,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             ))}
           </div>
 
-          <div className="prose prose-lg max-w-none text-gray-800
-            prose-p:text-gray-800 prose-p:leading-relaxed
-            prose-strong:text-gray-900 
-            [&_a_strong]:text-inherit
-            prose-pre:bg-gray-100 prose-pre:text-gray-800 prose-pre:p-4 prose-pre:rounded-lg
-            prose-code:text-brand-yellow prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-            prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4
-            prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl
-            prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-none prose-a:box-decoration-clone visited:prose-a:bg-brand-navy visited:prose-a:text-brand-yellow hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline
-            prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-1
-            prose-ul:my-6 prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
-            prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4
-            prose-hr:border-gray-200
-            prose-img:rounded-lg prose-img:shadow-lg">
+          <div className="prose prose-lg max-w-none text-gray-800 prose-p:text-gray-800 prose-p:leading-relaxed prose-strong:text-gray-900 [&_a_strong]:text-inherit prose-pre:bg-gray-100 prose-pre:text-gray-800 prose-pre:p-4 prose-pre:rounded-lg prose-code:text-brand-yellow prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-headings:text-gray-900 prose-headings:font-bold prose-headings:mt-16 prose-headings:mb-4 prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-a:no-underline prose-a:bg-brand-navy prose-a:text-brand-yellow prose-a:px-1.5 prose-a:py-0.5 prose-a:border-2 prose-a:border-black prose-a:shadow-none prose-a:box-decoration-clone visited:prose-a:bg-brand-navy visited:prose-a:text-brand-yellow hover:prose-a:bg-brand-yellow hover:prose-a:text-brand-navy hover:prose-a:underline focus-visible:prose-a:bg-brand-yellow focus-visible:prose-a:text-brand-navy focus-visible:prose-a:underline prose-li:text-gray-800 prose-li:leading-relaxed prose-li:my-1 prose-ul:my-6 prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6 prose-blockquote:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-brand-yellow prose-blockquote:pl-4 prose-hr:border-gray-200 prose-img:rounded-lg prose-img:shadow-lg">
             {isFreeTreeGuide && <FreeTreeGuideIntro />}
             {[
               "does-ecosia-actually-plant-trees",
@@ -174,8 +161,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </div>
 
           {params.slug === "does-ecosia-actually-plant-trees" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
-              <h2 className="font-rethink-sans text-2xl font-extrabold">
+            <div className="mt-12 border border-neutral-200 bg-brand-yellow p-6 text-black rounded-2xl">
+              <h2 className="text-2xl font-extrabold">
                 Checking IdleForest's own planting records?
               </h2>
               <p className="mt-3 text-neutral-800">
@@ -192,8 +179,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "best-chrome-extensions-for-climate-change-and-environmental-impact-2025-guide" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
-              <h2 className="font-rethink-sans text-2xl font-extrabold">
+            <div className="mt-12 border border-neutral-200 bg-brand-yellow p-6 text-black rounded-2xl">
+              <h2 className="text-2xl font-extrabold">
                 Want a passive extension that plants verified trees?
               </h2>
               <p className="mt-3 text-neutral-800">
@@ -210,8 +197,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "ecosias-ai-user-backlash-and-environmental-impact" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
-              <h2 className="font-rethink-sans text-2xl font-extrabold">
+            <div className="mt-12 border border-neutral-200 bg-brand-yellow p-6 text-black rounded-2xl">
+              <h2 className="text-2xl font-extrabold">
                 Already using Ecosia, but want more verified planting?
               </h2>
               <p className="mt-3 text-neutral-800">
@@ -228,8 +215,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "planet-wild-vs-mossy-earth-which-conservation-membership-offers-the-best-rewilding-impact-in-2025" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
-              <h2 className="font-rethink-sans text-2xl font-extrabold">
+            <div className="mt-12 border border-neutral-200 bg-brand-yellow p-6 text-black rounded-2xl">
+              <h2 className="text-2xl font-extrabold">
                 Comparing free tree-planting tools too?
               </h2>
               <p className="mt-3 text-neutral-800">
@@ -246,8 +233,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
 
           {params.slug === "9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" && (
-            <div className="mt-12 border-2 border-black bg-brand-yellow p-6 text-black shadow-none">
-              <h2 className="font-rethink-sans text-2xl font-extrabold">
+            <div className="mt-12 border border-neutral-200 bg-brand-yellow p-6 text-black rounded-2xl">
+              <h2 className="text-2xl font-extrabold">
                 Want the sustainable search setup that does not require a switch?
               </h2>
               <p className="mt-3 text-neutral-800">
@@ -264,7 +251,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           )}
         </article>
 
-        <div className="max-w-4xl mx-auto w-full bg-brand-navy backdrop-blur-sm border-2 rounded-lg border-brand-yellow py-8 my-12">
+        <div className="max-w-4xl mx-auto w-full bg-brand-navy backdrop-blur-sm border rounded-lg border-brand-yellow py-8 my-12">
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center justify-center gap-6 text-center">
               <div>

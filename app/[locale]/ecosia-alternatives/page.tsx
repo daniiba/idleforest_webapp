@@ -292,37 +292,37 @@ function ExternalAlternativeLink({ href, children }: { href?: string; children: 
 
 function StarRating() {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-3 py-2 text-black shadow-none">
-      <span className="font-candu text-2xl leading-none">4.8</span>
+    <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-2 text-black">
+      <span className="text-2xl leading-none">4.8</span>
       <div className="flex gap-0.5 text-brand-navy" aria-label="4.8 star rating">
         {[0, 1, 2, 3, 4].map((item) => (
           <Star key={item} className="h-4 w-4 fill-current text-brand-yellow stroke-black" />
         ))}
       </div>
-      <span className="text-xs font-extrabold uppercase tracking-[0.14em] text-neutral-500">33 reviews</span>
+      <span className="text-xs font-extrabold tracking-[0.14em] text-neutral-500">33 reviews</span>
     </div>
   );
 }
 
 function ChromeStorePanel() {
   return (
-    <aside className="overflow-hidden rounded-[32px] border-2 border-black bg-white text-black shadow-none">
+    <aside className="overflow-hidden rounded-[32px] border border-neutral-200 bg-white text-black">
       <div className="bg-brand-navy p-6 text-brand-yellow">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="grid h-16 w-16 place-items-center rounded-2xl border-2 border-black bg-white shadow-none">
+            <div className="grid h-16 w-16 place-items-center rounded-2xl border border-neutral-200 bg-white">
               <Image src="/logo.png" alt="IdleForest logo" width={42} height={42} />
             </div>
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 IdleForest
               </p>
-              <h2 className="font-rethink-sans text-3xl font-extrabold leading-tight">
+              <h2 className="text-3xl font-extrabold leading-tight">
                 Desktop app + extension
               </h2>
             </div>
           </div>
-          <span className="rounded-full bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase text-black">
+          <span className="rounded-full bg-brand-yellow px-3 py-1 text-xs font-extrabold text-black">
             No switch
           </span>
         </div>
@@ -333,14 +333,14 @@ function ChromeStorePanel() {
             { label: "Chrome", icon: <Image src="/chrome.png" alt="" width={20} height={20} /> },
             { label: "Edge", icon: <Image src="/edge.png" alt="" width={20} height={20} /> },
           ].map((platform) => (
-            <span key={platform.label} className="inline-flex items-center gap-2 rounded-full border-2 border-brand-yellow bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-black">
+            <span key={platform.label} className="inline-flex items-center gap-2 rounded-full border border-brand-yellow bg-white px-3 py-1.5 text-xs font-extrabold tracking-[0.12em] text-black">
               {platform.icon}
               {platform.label}
             </span>
           ))}
         </div>
-        <div className="mt-5 rounded-2xl border-2 border-brand-yellow bg-white/5 p-4">
-          <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow/65">
+        <div className="mt-5 rounded-2xl border border-brand-yellow bg-white/5 p-4">
+          <p className="mb-3 text-xs font-extrabold text-brand-yellow/65">
             Chrome Web Store proof
           </p>
           <StarRating />
@@ -353,18 +353,18 @@ function ChromeStorePanel() {
           ["Desktop", "Mac + Win"],
           ["Trees", totalTrees.toLocaleString()],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-2xl border-2 border-black bg-brand-gray p-4 text-center">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-neutral-500">{label}</p>
-            <p className="mt-1 font-candu text-3xl leading-none text-brand-navy">{value}</p>
+          <div key={label} className="rounded-2xl border border-neutral-200 bg-neutral-100 p-4 text-center">
+            <p className="text-[11px] font-extrabold text-neutral-500">{label}</p>
+            <p className="mt-1 text-3xl leading-none text-brand-navy">{value}</p>
           </div>
         ))}
       </div>
-      <div className="grid gap-3 border-t-2 border-black bg-brand-yellow p-5 sm:grid-cols-2">
-        <Link href="/download/windows" className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none">
+      <div className="grid gap-3 border-t border-neutral-200 bg-brand-yellow p-5 sm:grid-cols-2">
+        <Link href="/download/windows" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 bg-brand-navy px-5 py-3 text-center font-bold text-brand-yellow hover:bg-black">
           <MonitorDown className="h-5 w-5" />
           Windows
         </Link>
-        <Link href="/download/mac" className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 text-center font-bold text-black shadow-none hover:bg-black hover:text-brand-yellow hover:shadow-none">
+        <Link href="/download/mac" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 text-center font-bold text-black hover:bg-black hover:text-brand-yellow">
           <Apple className="h-5 w-5" />
           Mac
         </Link>
@@ -375,7 +375,7 @@ function ChromeStorePanel() {
 
 function MiniMark({ children, featured = false }: { children: ReactNode; featured?: boolean }) {
   return (
-    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-black font-candu text-2xl font-extrabold shadow-none ${featured ? "bg-brand-navy text-brand-yellow" : "bg-brand-yellow text-black"}`}>
+    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-neutral-200 text-2xl font-extrabold ${featured ? "bg-brand-navy text-brand-yellow" : "bg-brand-yellow text-black"}`}>
       {children}
     </div>
   );
@@ -392,7 +392,7 @@ function ProductIcon({ name, featured = false }: { name: string; featured?: bool
   const iconAlt = `${name} logo`;
 
   return (
-    <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-2 border-black shadow-none ${featured ? "bg-brand-navy" : "bg-white"}`}>
+    <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-neutral-200 ${featured ? "bg-brand-navy" : "bg-white"}`}>
       {src.startsWith("http") ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt={iconAlt} width={34} height={34} className={iconClassName} />
@@ -440,7 +440,7 @@ export default function EcosiaAlternativesPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {schemas.map((schema) => (
           <script
             key={schema["@type"]}
@@ -449,14 +449,14 @@ export default function EcosiaAlternativesPage() {
           />
         ))}
 
-        <section className="border-b-2 border-black bg-brand-yellow">
+        <section className="border-b border-neutral-200 bg-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.75fr)] lg:items-center lg:py-20">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 text-sm font-bold uppercase text-black shadow-none">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-bold text-black">
                 <Leaf className="h-4 w-4" />
                 ecosia alternatives
               </p>
-              <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
+              <h1 className="text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-6xl">
                 The Best Ecosia Alternatives, Starting With the One You Don&apos;t Have to Switch To
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -473,19 +473,19 @@ export default function EcosiaAlternativesPage() {
                 for a full breakdown.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="h-auto rounded-full border-2 border-black bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none">
+                <Button asChild className="h-auto rounded-full border border-neutral-200 bg-brand-navy px-7 py-4 text-base font-bold text-brand-yellow hover:bg-black">
                   <Link href="/download/chrome" className="inline-flex items-center gap-2">
                     <Image src="/chrome.png" alt="" width={22} height={22} />
                     Add IdleForest to Chrome, It&apos;s Free
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="h-auto rounded-full border-2 border-black bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow">
+                <Button asChild variant="outline" className="h-auto rounded-full border border-neutral-200 bg-white px-7 py-4 text-base font-bold hover:bg-black hover:text-brand-yellow">
                   <a href="#comparison" className="inline-flex items-center gap-2">
                     Compare all alternatives <ArrowRight className="h-5 w-5" />
                   </a>
                 </Button>
               </div>
-              <p className="mt-5 max-w-2xl rounded-2xl border-2 border-black bg-white px-4 py-3 text-sm font-bold leading-6 shadow-none">
+              <p className="mt-5 max-w-2xl rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-bold leading-6">
                 Rated 4.8 across 33 Chrome Web Store reviews. Used by 1,000+ people. Verified planting
                 partners with a live tree counter.
               </p>
@@ -498,14 +498,14 @@ export default function EcosiaAlternativesPage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Fair context
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Why look beyond Ecosia?
               </h2>
             </div>
-            <div className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none">
+            <div className="rounded-[28px] border border-neutral-200 bg-white p-6">
               <div className="space-y-5 text-lg leading-8 text-neutral-700">
                 <p>
                   <a href="https://www.ecosia.org/" target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-2 underline-offset-4 hover:text-brand-navy">Ecosia</a>
@@ -524,10 +524,10 @@ export default function EcosiaAlternativesPage() {
                 </p>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/ecosia" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-brand-yellow px-5 py-3 font-bold shadow-none hover:bg-white">
+                <Link href="/ecosia" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-brand-yellow px-5 py-3 font-bold hover:bg-white">
                   use IdleForest with Ecosia <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-5 py-3 font-bold shadow-none hover:bg-black hover:text-brand-yellow">
+                <Link href="/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 font-bold hover:bg-black hover:text-brand-yellow">
                   blog comparison
                 </Link>
               </div>
@@ -535,13 +535,13 @@ export default function EcosiaAlternativesPage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-brand-navy text-brand-yellow">
+        <section className="border-y border-neutral-200 bg-brand-navy text-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-brand-yellow/65">
+              <p className="text-xs font-extrabold text-brand-yellow/65">
                 No-switch alternative
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 The no-switch alternative: IdleForest
               </h2>
               <div className="mt-5 space-y-5 text-lg leading-8 text-brand-yellow/85">
@@ -566,7 +566,7 @@ export default function EcosiaAlternativesPage() {
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="h-auto rounded-full border-2 border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black shadow-none hover:bg-white">
+                <Button asChild className="h-auto rounded-full border border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white">
                   <Link href="/download/chrome" className="inline-flex items-center gap-2">
                     <Image src="/chrome.png" alt="" width={22} height={22} />
                     Add IdleForest to Chrome <ArrowRight className="h-5 w-5" />
@@ -577,11 +577,11 @@ export default function EcosiaAlternativesPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {idleForestFeatures.map((item) => (
-                <article key={item.title} className="rounded-[28px] border-2 border-brand-yellow bg-white p-5 text-black shadow-none">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-yellow">
+                <article key={item.title} className="rounded-[28px] border border-brand-yellow bg-white p-5 text-black">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-yellow">
                     {item.icon}
                   </div>
-                  <h3 className="mt-5 font-rethink-sans text-2xl font-extrabold leading-tight">{item.title}</h3>
+                  <h3 className="mt-5 text-2xl font-extrabold leading-tight">{item.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-neutral-700">{item.body}</p>
                 </article>
               ))}
@@ -602,10 +602,10 @@ export default function EcosiaAlternativesPage() {
 
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+            <p className="text-xs font-extrabold text-neutral-500">
               Browsers, apps, sites, and search engines like Ecosia
             </p>
-            <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
               Other Ecosia alternatives, by what you care about
             </h2>
           </div>
@@ -613,24 +613,24 @@ export default function EcosiaAlternativesPage() {
           <div className="mt-12 grid gap-8">
             {groupedAlternatives.map((group, groupIndex) => (
               <section key={group.eyebrow} className="grid gap-5 lg:grid-cols-[0.7fr_1.3fr]">
-                <div className={`rounded-[28px] border-2 border-black p-6 shadow-none ${groupIndex === 1 ? "bg-brand-yellow" : "bg-white"}`}>
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-black bg-brand-navy text-brand-yellow shadow-none">
+                <div className={`rounded-[28px] border border-neutral-200 p-6 ${groupIndex === 1 ? "bg-brand-yellow" : "bg-white"}`}>
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-brand-navy text-brand-yellow">
                     {group.icon}
                   </div>
-                  <h3 className="font-rethink-sans text-3xl font-extrabold leading-tight">{group.eyebrow}</h3>
+                  <h3 className="text-3xl font-extrabold leading-tight">{group.eyebrow}</h3>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {group.items.map((item) => (
-                    <article key={item.name} className="rounded-[28px] border-2 border-black bg-brand-gray p-5 shadow-none transition-transform duration-200 hover:-translate-y-1">
+                    <article key={item.name} className="rounded-[28px] border border-neutral-200 bg-neutral-100 p-5 transition-transform duration-200 hover:-translate-y-1">
                       <div className="flex gap-4">
                         <ProductIcon name={item.name} />
                         <div>
-                          <h4 className="font-rethink-sans text-2xl font-extrabold leading-tight">{item.name}</h4>
+                          <h4 className="text-2xl font-extrabold leading-tight">{item.name}</h4>
                           <p className="mt-2 text-sm leading-6 text-neutral-700">{item.body}</p>
                         </div>
                       </div>
                       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                        <span className="rounded-full border-2 border-black bg-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.14em]">
+                        <span className="rounded-full border border-neutral-200 bg-white px-3 py-1 text-[11px] font-extrabold tracking-[0.14em]">
                           {groupIndex === 2 ? "keeps search" : "changes search"}
                         </span>
                         <ExternalAlternativeLink href={item.href}>Visit</ExternalAlternativeLink>
@@ -643,10 +643,10 @@ export default function EcosiaAlternativesPage() {
           </div>
         </section>
 
-        <section id="comparison" className="border-y-4 border-black bg-white">
+        <section id="comparison" className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="mx-auto max-w-4xl text-center">
-              <h2 className="font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="text-3xl font-extrabold leading-tight sm:text-5xl">
                 Ecosia alternatives compared
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -654,12 +654,12 @@ export default function EcosiaAlternativesPage() {
                 two that add impact without a switch, and IdleForest is the one that runs with zero effort.
               </p>
             </div>
-            <div className="mt-10 overflow-x-auto rounded-[28px] border-2 border-black bg-brand-gray shadow-none">
+            <div className="mt-10 overflow-x-auto rounded-[28px] border border-neutral-200 bg-neutral-100">
               <table className="w-full min-w-[920px] text-left">
                 <thead className="bg-brand-navy text-brand-yellow">
                   <tr>
                     {["Alternative", "What it is", "How it helps the planet", "Switch search engine?", "Best for"].map((heading) => (
-                      <th key={heading} className="px-5 py-4 text-sm font-extrabold uppercase tracking-[0.14em]">
+                      <th key={heading} className="px-5 py-4 text-sm font-extrabold tracking-[0.14em]">
                         {heading}
                       </th>
                     ))}
@@ -671,7 +671,7 @@ export default function EcosiaAlternativesPage() {
                     const noSwitch = alternative.switchSearch.startsWith("No");
 
                     return (
-                    <tr key={alternative.name} className={isRecommended ? "bg-brand-yellow" : "border-t-2 border-black bg-white"}>
+                    <tr key={alternative.name} className={isRecommended ? "bg-brand-yellow" : "border-t border-neutral-200 bg-white"}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           {isRecommended ? (
@@ -680,11 +680,11 @@ export default function EcosiaAlternativesPage() {
                             <ProductIcon name={alternative.name} />
                           )}
                           <div>
-                            <p className="font-rethink-sans text-xl font-extrabold leading-tight">
+                            <p className="text-xl font-extrabold leading-tight">
                               <ExternalAlternativeLink href={alternative.href}>{alternative.name}</ExternalAlternativeLink>
                             </p>
                             {isRecommended && (
-                              <span className="mt-1 inline-flex rounded-full border-2 border-black bg-white px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-[0.14em]">
+                              <span className="mt-1 inline-flex rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-extrabold tracking-[0.14em]">
                                 Recommended
                               </span>
                             )}
@@ -694,7 +694,7 @@ export default function EcosiaAlternativesPage() {
                       <td className="px-5 py-4 text-neutral-700">{alternative.type}</td>
                       <td className="px-5 py-4 text-neutral-700">{alternative.impact}</td>
                       <td className="px-5 py-4">
-                        <span className={`inline-flex rounded-full border-2 border-black px-3 py-1 text-xs font-extrabold ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}>
+                        <span className={`inline-flex rounded-full border border-neutral-200 px-3 py-1 text-xs font-extrabold ${noSwitch ? "bg-brand-yellow" : "bg-white"}`}>
                           {alternative.switchSearch}
                         </span>
                       </td>
@@ -711,10 +711,10 @@ export default function EcosiaAlternativesPage() {
         <section className="container mx-auto px-6 py-16 md:py-20">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 Trust signals
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Why people trust IdleForest
               </h2>
               <p className="mt-4 text-lg leading-8 text-neutral-700">
@@ -723,28 +723,28 @@ export default function EcosiaAlternativesPage() {
               </p>
             </div>
             <div className="grid gap-5 md:grid-cols-2">
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none">
+              <article className="rounded-[28px] border border-neutral-200 bg-brand-yellow p-6">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-white">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-neutral-200 bg-white">
                     <MonitorDown className="h-7 w-7 text-brand-navy" />
                   </span>
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-black/55">Desktop app</p>
-                    <p className="font-rethink-sans text-2xl font-extrabold">Mac + Windows</p>
+                    <p className="text-xs font-extrabold text-black/55">Desktop app</p>
+                    <p className="text-2xl font-extrabold">Mac + Windows</p>
                   </div>
                 </div>
                 <p className="text-sm leading-6 text-black/75">
                   Runs in the background while your computer is on, even when the browser is closed.
                 </p>
               </article>
-              <article className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none">
+              <article className="rounded-[28px] border border-neutral-200 bg-white p-6">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-black bg-brand-gray">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-neutral-200 bg-neutral-100">
                     <Image src="/chrome.png" alt="Chrome logo" width={34} height={34} />
                   </span>
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-neutral-500">Chrome Web Store</p>
-                    <p className="font-rethink-sans text-2xl font-extrabold">Featured</p>
+                    <p className="text-xs font-extrabold text-neutral-500">Chrome Web Store</p>
+                    <p className="text-2xl font-extrabold">Featured</p>
                   </div>
                 </div>
                 <StarRating />
@@ -754,19 +754,19 @@ export default function EcosiaAlternativesPage() {
                 ["Partners", "named", "Trees for the Future, Tree-Nation, and 1ClickImpact."],
                 ["Open", "code", "Public team in Lisbon and code on GitHub."],
               ].map(([metric, label, body]) => (
-                <article key={metric} className="rounded-[28px] border-2 border-black bg-white p-6 shadow-none">
-                  <p className="font-candu text-5xl leading-none text-brand-navy">{metric}</p>
-                  <p className="mt-1 text-xs font-extrabold uppercase tracking-[0.16em] text-neutral-500">{label}</p>
+                <article key={metric} className="rounded-[28px] border border-neutral-200 bg-white p-6">
+                  <p className="text-5xl leading-none text-brand-navy">{metric}</p>
+                  <p className="mt-1 text-xs font-extrabold text-neutral-500">{label}</p>
                   <p className="mt-3 text-sm leading-6 text-neutral-700">{body}</p>
                 </article>
               ))}
-              <article className="rounded-[28px] border-2 border-black bg-brand-yellow p-6 shadow-none md:col-span-2">
+              <article className="rounded-[28px] border border-neutral-200 bg-brand-yellow p-6 md:col-span-2">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="font-candu text-5xl leading-none">{totalTrees.toLocaleString()}</p>
+                    <p className="text-5xl leading-none">{totalTrees.toLocaleString()}</p>
                     <p className="mt-2 font-bold text-black/75">trees in current public planting records</p>
                   </div>
-                  <Link href="/transparency" className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-black bg-brand-navy px-5 py-3 font-bold text-brand-yellow shadow-none hover:bg-black hover:shadow-none">
+                  <Link href="/transparency" className="inline-flex w-fit items-center gap-2 rounded-full border border-neutral-200 bg-brand-navy px-5 py-3 font-bold text-brand-yellow hover:bg-black">
                     See records <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -775,25 +775,25 @@ export default function EcosiaAlternativesPage() {
           </div>
         </section>
 
-        <section className="border-y-4 border-black bg-white">
+        <section className="border-y border-neutral-200 bg-white">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:py-20 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-neutral-500">
+              <p className="text-xs font-extrabold text-neutral-500">
                 FAQ
               </p>
-              <h2 className="mt-3 font-rethink-sans text-[36px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 Ecosia alternatives: frequently asked questions
               </h2>
             </div>
             <div className="grid gap-4">
               {faqs.map((faq, index) => (
-                <section key={faq.question} className="rounded-2xl border-2 border-black bg-brand-gray p-5 shadow-none">
+                <section key={faq.question} className="rounded-2xl border border-neutral-200 bg-neutral-100 p-5">
                   <div className="flex gap-4">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow font-candu text-lg font-extrabold text-black">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-lg font-extrabold text-black">
                       {index + 1}
                     </span>
                     <div>
-                      <h3 className="font-rethink-sans text-xl font-extrabold leading-tight">{faq.question}</h3>
+                      <h3 className="text-xl font-extrabold leading-tight">{faq.question}</h3>
                       <p className="mt-2 leading-7 text-neutral-700">{faq.answer}</p>
                     </div>
                   </div>
@@ -806,7 +806,7 @@ export default function EcosiaAlternativesPage() {
         <section className="bg-brand-navy py-16 text-brand-yellow md:py-20">
           <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <h2 className="mt-3 font-rethink-sans text-[38px] font-extrabold leading-tight sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-5xl">
                 The easiest Ecosia alternative takes one click
               </h2>
               <p className="mt-4 max-w-2xl text-lg leading-8 text-brand-yellow/80">
@@ -815,13 +815,13 @@ export default function EcosiaAlternativesPage() {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="h-auto rounded-full border-2 border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white">
+              <Button asChild className="h-auto rounded-full border border-brand-yellow bg-brand-yellow px-7 py-4 text-base font-bold text-black hover:bg-white">
                 <Link href="/download/chrome" className="inline-flex items-center gap-2">
                   <Image src="/chrome.png" alt="" width={22} height={22} />
                   Add IdleForest to Chrome <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="h-auto rounded-full border-2 border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black">
+              <Button asChild variant="outline" className="h-auto rounded-full border border-brand-yellow bg-transparent px-7 py-4 text-base font-bold text-brand-yellow hover:bg-brand-yellow hover:text-black">
                 <Link href="/how-it-works" className="inline-flex items-center gap-2">
                   See how it works
                 </Link>

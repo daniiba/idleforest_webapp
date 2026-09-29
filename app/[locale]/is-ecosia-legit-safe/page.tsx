@@ -142,30 +142,30 @@ export default function IsEcosiaLegitSafePage() {
   };
 
   return (
-    <main className="min-h-screen bg-brand-gray text-black">
+    <main className="min-h-screen bg-[#F7F7F2] text-black">
       <Navigation />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="border-b-2 border-black bg-brand-yellow">
+      <section className="border-b border-neutral-200 bg-brand-yellow">
         <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
-            <p className="mb-4 inline-flex items-center gap-2 border-2 border-black bg-white px-3 py-1 text-sm font-bold uppercase tracking-wide">
+            <p className="mb-4 inline-flex items-center gap-2 border border-neutral-200 bg-white px-3 py-1 text-sm font-bold tracking-wide rounded-full">
               <ShieldCheck className="h-4 w-4" />
               Ecosia trust check
             </p>
-            <h1 className="font-rethink-sans text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
               Is Ecosia legit and safe?
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-800">
               Short answer: Ecosia appears legitimate, and it is generally safe for normal search use. The real question is whether its privacy tradeoffs, search partners, and tree-planting evidence fit what you expect from an eco-friendly search engine.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="border-2 border-black bg-black px-6 py-6 font-bold text-brand-yellow hover:bg-white hover:text-black">
+              <Button asChild className="bg-brand-navy px-6 py-6 font-bold text-brand-yellow hover:bg-white hover:text-black rounded-full">
                 <Link href="/ecosia">
                   Use IdleForest with Ecosia <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="border-2 border-black bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
+              <Button asChild variant="outline" className="border border-neutral-200 bg-white px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow rounded-full">
                 <Link href="/ecosia">
                   View Ecosia data <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -173,8 +173,8 @@ export default function IsEcosiaLegitSafePage() {
             </div>
           </div>
 
-          <div className="border-2 border-black bg-white p-6 shadow-none">
-            <h2 className="font-rethink-sans text-2xl font-extrabold">Quick verdict</h2>
+          <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+            <h2 className="text-2xl font-extrabold">Quick verdict</h2>
             <div className="mt-5 space-y-5">
               <div className="flex gap-4">
                 <CheckCircle2 className="mt-1 h-6 w-6 flex-shrink-0" />
@@ -195,13 +195,13 @@ export default function IsEcosiaLegitSafePage() {
 
       <section className="container mx-auto px-6 py-14">
         <div className="mb-8 max-w-3xl">
-          <h2 className="font-rethink-sans text-3xl font-extrabold">Evidence checklist</h2>
+          <h2 className="text-3xl font-extrabold">Evidence checklist</h2>
           <p className="mt-3 text-neutral-700">
             A legitimate eco-search product should make its company, funding model, privacy tradeoffs, and environmental proof inspectable.
           </p>
         </div>
 
-        <div className="overflow-x-auto border-2 border-black bg-white shadow-none">
+        <div className="overflow-x-auto border border-neutral-200 bg-white rounded-2xl">
           <table className="w-full min-w-[860px] text-left">
             <thead className="bg-brand-navy text-brand-yellow">
               <tr>
@@ -212,7 +212,7 @@ export default function IsEcosiaLegitSafePage() {
             </thead>
             <tbody>
               {proofRows.map((row) => (
-                <tr key={row.question} className="border-t-2 border-black align-top">
+                <tr key={row.question} className="border-t border-neutral-200 align-top">
                   <td className="p-4 font-bold">{row.question}</td>
                   <td className="p-4 text-neutral-700">{row.answer}</td>
                   <td className="p-4 text-neutral-700">{row.source}</td>
@@ -223,10 +223,10 @@ export default function IsEcosiaLegitSafePage() {
         </div>
       </section>
 
-      <section className="border-y-2 border-black bg-white py-14">
+      <section className="border-y border-neutral-200 bg-white py-14">
         <div className="container mx-auto grid gap-8 px-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Is Ecosia safe?</h2>
+            <h2 className="text-3xl font-extrabold">Is Ecosia safe?</h2>
             <p className="mt-3 text-neutral-700">
               Safe does not mean anonymous. Ecosia is a real search engine with privacy commitments, but search still requires data processing.
             </p>
@@ -248,20 +248,20 @@ export default function IsEcosiaLegitSafePage() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Does Ecosia actually plant trees?</h2>
+            <h2 className="text-3xl font-extrabold">Does Ecosia actually plant trees?</h2>
             <p className="mt-3 text-neutral-700">
               Ecosia funds tree planting and climate projects through search revenue. The strongest proof signals are its monthly financial reports, project updates, partner reporting, and tree-monitoring process.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="border-2 border-black bg-brand-yellow px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow">
+              <Button asChild className="bg-brand-yellow px-6 py-6 font-bold text-black hover:bg-black hover:text-brand-yellow rounded-full">
                 <Link href="/blog/does-ecosia-actually-plant-trees">
                   Read the tree proof guide <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
             </div>
           </div>
-          <div className="border-2 border-black bg-white p-6 shadow-none">
-            <h3 className="font-rethink-sans text-2xl font-extrabold">Use Ecosia plus IdleForest</h3>
+          <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+            <h3 className="text-2xl font-extrabold">Use Ecosia plus IdleForest</h3>
             <ul className="mt-4 space-y-3 text-neutral-700">
               <li><strong>Ecosia:</strong> tree funding when you search.</li>
               <li><strong>IdleForest:</strong> verified tree funding from opt-in idle bandwidth.</li>
@@ -277,14 +277,14 @@ export default function IsEcosiaLegitSafePage() {
       <section className="bg-white py-14">
         <div className="container mx-auto px-6">
           <div className="mb-8 max-w-3xl">
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Primary sources to check</h2>
+            <h2 className="text-3xl font-extrabold">Primary sources to check</h2>
             <p className="mt-3 text-neutral-700">
               These are the sources worth checking before deciding whether Ecosia matches your privacy and impact standards.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {sourceLinks.map((item) => (
-              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="group border-2 border-black bg-brand-gray p-5 shadow-none transition-transform hover:-translate-y-1">
+              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="group border border-neutral-200 bg-neutral-100 p-5 transition-transform hover:-translate-y-1 rounded-2xl">
                 <span className="inline-flex items-center gap-2 font-bold group-hover:underline">
                   {item.label} <ExternalLink className="h-4 w-4" />
                 </span>
@@ -297,14 +297,14 @@ export default function IsEcosiaLegitSafePage() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Common questions</h2>
+            <h2 className="text-3xl font-extrabold">Common questions</h2>
             <p className="mt-3 text-neutral-700">
               Short answers for the trust questions people usually ask before switching search engines.
             </p>
           </div>
           <div className="space-y-4">
             {faqs.map((faq) => (
-              <section key={faq.question} className="border-2 border-black bg-white p-5">
+              <section key={faq.question} className="border border-neutral-200 bg-white p-5 rounded-2xl">
                 <h3 className="font-bold">{faq.question}</h3>
                 <p className="mt-2 text-neutral-700">{faq.answer}</p>
               </section>
@@ -313,19 +313,19 @@ export default function IsEcosiaLegitSafePage() {
         </div>
       </section>
 
-      <section className="border-t-2 border-black bg-brand-navy py-14 text-white">
+      <section className="border-t border-neutral-200 bg-brand-navy py-14 text-white">
         <div className="container mx-auto grid gap-8 px-6 md:grid-cols-[1fr_auto] md:items-center">
           <div>
-            <p className="mb-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-yellow">
+            <p className="mb-3 inline-flex items-center gap-2 text-sm font-bold tracking-wide text-brand-yellow">
               <Leaf className="h-4 w-4" />
               Want more eco-search options?
             </p>
-            <h2 className="font-rethink-sans text-3xl font-extrabold">Compare Ecosia with other eco-friendly search tools</h2>
+            <h2 className="text-3xl font-extrabold">Compare Ecosia with other eco-friendly search tools</h2>
             <p className="mt-3 max-w-2xl text-white/80">
               If Ecosia is legitimate but not exactly what you need, compare search engines, new-tab tools, shopping tools, and passive browsing tools.
             </p>
           </div>
-          <Button asChild className="border-2 border-brand-yellow bg-brand-yellow px-6 py-6 font-bold text-navy hover:bg-black hover:text-brand-yellow">
+          <Button asChild className="border-brand-yellow bg-brand-yellow px-6 py-6 font-bold text-navy hover:bg-black hover:text-brand-yellow rounded-full">
             <Link href="/eco-friendly-search-engine">
               Open eco search hub <ArrowRight className="h-4 w-4" />
             </Link>

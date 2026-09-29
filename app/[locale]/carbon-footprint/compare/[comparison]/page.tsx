@@ -155,7 +155,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
     ];
 
     return (
-        <div className="min-h-screen bg-brand-gray pb-12 font-inter">
+        <div className="min-h-screen bg-[#F7F7F2] pb-12 font-inter">
             <Navigation />
             <script
                 type="application/ld+json"
@@ -180,10 +180,10 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                     {/* Main Content */}
                     <div className="lg:col-span-8">
                         <div className="mb-10 text-center">
-                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
+                            <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-4">
                                 {t("page.compare_eyebrow")}
                             </p>
-                            <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
+                            <h1 className="text-3xl sm:text-5xl md:text-5xl font-extrabold text-black leading-[1.05]">
                                 {data1.app_name} <span className="bg-brand-yellow px-2 mx-2">vs</span> {data2.app_name}
                             </h1>
                             {comparisonSummary ? (
@@ -192,7 +192,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                 </p>
                             ) : null}
                             {!indexableComparison ? (
-                                <p className="mt-4 inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-neutral-700">
+                                <p className="mt-4 inline-flex rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold text-neutral-700">
                                     {t("page.supporting_comparison_page")}
                                 </p>
                             ) : null}
@@ -200,8 +200,8 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                         <div className="flex flex-col md:flex-row gap-6 items-stretch mb-12">
                             {/* App 1 Card */}
-                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-none flex flex-col items-center text-center">
-                                <div className="w-20 h-20 bg-brand-gray flex items-center justify-center border-2 border-black mb-6">
+                            <div className="flex-1 bg-white border border-neutral-200 p-8 flex flex-col items-center text-center rounded-2xl">
+                                <div className="w-20 h-20 bg-neutral-100 flex items-center justify-center border border-neutral-200 mb-6 rounded-2xl">
                                     {!iconUrl1.startsWith("fallback:") ? (
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img src={iconUrl1} alt={`${data1.app_name} Logo`} className="w-10 h-10" />
@@ -209,28 +209,28 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                         <Monitor className="w-10 h-10 text-black" />
                                     )}
                                 </div>
-                                <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-2">{data1.app_name}</h2>
-                                <p className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-6">{t(`categories.${data1.category}`)}</p>
-                                <div className="mt-auto pt-6 border-t-2 border-black/10 w-full">
-                                    <div className="text-5xl font-black text-black mb-2">{data1.co2_per_hour_grams}<span className="text-xl">g</span></div>
-                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">{t("page.co2_per_hour_short")}</p>
+                                <h2 className="text-3xl font-extrabold text-black mb-2">{data1.app_name}</h2>
+                                <p className="text-sm font-bold text-neutral-500 mb-6">{t(`categories.${data1.category}`)}</p>
+                                <div className="mt-auto pt-6 border-t border-black/10 w-full">
+                                    <div className="text-5xl font-extrabold text-black mb-2">{data1.co2_per_hour_grams}<span className="text-xl">g</span></div>
+                                    <p className="text-sm font-bold text-neutral-600">{t("page.co2_per_hour_short")}</p>
                                 </div>
                                 {isData1Worse && !isTie && (
-                                    <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider px-3 py-1 border-2 border-red-800">
+                                    <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold px-3 py-1 border border-red-800">
                                         {t("page.higher_emissions")}
                                     </div>
                                 )}
                             </div>
 
                             <div className="flex items-center justify-center md:px-4">
-                                <div className="w-16 h-16 rounded-full bg-brand-yellow border-4 border-black flex items-center justify-center font-black text-2xl z-10 shrink-0">
+                                <div className="w-16 h-16 rounded-full bg-brand-yellow border border-neutral-200 flex items-center justify-center font-extrabold text-2xl z-10 shrink-0">
                                     VS
                                 </div>
                             </div>
 
                             {/* App 2 Card */}
-                            <div className="flex-1 bg-white border-4 border-black p-8 shadow-none flex flex-col items-center text-center">
-                                <div className="w-20 h-20 bg-brand-gray flex items-center justify-center border-2 border-black mb-6">
+                            <div className="flex-1 bg-white border border-neutral-200 p-8 flex flex-col items-center text-center rounded-2xl">
+                                <div className="w-20 h-20 bg-neutral-100 flex items-center justify-center border border-neutral-200 mb-6 rounded-2xl">
                                     {!iconUrl2.startsWith("fallback:") ? (
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img src={iconUrl2} alt={`${data2.app_name} Logo`} className="w-10 h-10" />
@@ -238,23 +238,23 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                         <Monitor className="w-10 h-10 text-black" />
                                     )}
                                 </div>
-                                <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-2">{data2.app_name}</h2>
-                                <p className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-6">{t(`categories.${data2.category}`)}</p>
-                                <div className="mt-auto pt-6 border-t-2 border-black/10 w-full">
-                                    <div className="text-5xl font-black text-black mb-2">{data2.co2_per_hour_grams}<span className="text-xl">g</span></div>
-                                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest">{t("page.co2_per_hour_short")}</p>
+                                <h2 className="text-3xl font-extrabold text-black mb-2">{data2.app_name}</h2>
+                                <p className="text-sm font-bold text-neutral-500 mb-6">{t(`categories.${data2.category}`)}</p>
+                                <div className="mt-auto pt-6 border-t border-black/10 w-full">
+                                    <div className="text-5xl font-extrabold text-black mb-2">{data2.co2_per_hour_grams}<span className="text-xl">g</span></div>
+                                    <p className="text-sm font-bold text-neutral-600">{t("page.co2_per_hour_short")}</p>
                                 </div>
                                 {!isData1Worse && !isTie && (
-                                    <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider px-3 py-1 border-2 border-red-800">
+                                    <div className="mt-6 bg-red-100 text-red-800 text-xs font-bold px-3 py-1 border border-red-800">
                                         {t("page.higher_emissions")}
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="mb-12 border-2 border-black bg-white p-8 shadow-none">
-                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{comparisonHeading}</p>
-                            <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
+                        <div className="mb-12 border border-neutral-200 bg-white p-8 rounded-2xl">
+                            <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-3">{comparisonHeading}</p>
+                            <h3 className="text-2xl font-extrabold text-black mb-4">{t("page.compare_summary_title")}</h3>
                             <p className="text-lg text-neutral-800 leading-relaxed">
                                 {t("page.compare_summary_intro", { app1: data1.app_name, app2: data2.app_name })}{' '}
                                 {isTie 
@@ -272,23 +272,23 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
 
                         {comparisonReasons.length ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="border-2 border-black bg-white p-6 shadow-none">
-                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.why_gap_title")}</h3>
+                                <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                    <h3 className="text-2xl font-extrabold text-black mb-4">{t("page.why_gap_title")}</h3>
                                     <ul className="space-y-3">
                                         {comparisonReasons.map((reason) => (
                                             <li key={reason} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
-                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-navy" />
                                                 <span>{reason}</span>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
 
-                                <div className="border-2 border-black bg-white p-6 shadow-none">
-                                    <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.action_first_title")}</h3>
+                                <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                    <h3 className="text-2xl font-extrabold text-black mb-4">{t("page.action_first_title")}</h3>
                                     <p className="text-neutral-800 leading-relaxed mb-5">{comparisonAction}</p>
                                     {winner && lighter ? (
-                                        <div className="rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                        <div className="rounded-lg border border-black/10 bg-neutral-100 p-4 text-sm leading-relaxed text-neutral-700">
                                             {t.rich("page.compare_delta_note", {
                                                 winner: winner.app_name,
                                                 delta,
@@ -297,7 +297,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                                             })}
                                         </div>
                                     ) : (
-                                        <div className="rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                        <div className="rounded-lg border border-black/10 bg-neutral-100 p-4 text-sm leading-relaxed text-neutral-700">
                                             {t("page.compare_tie_note")}
                                         </div>
                                     )}
@@ -305,21 +305,21 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </div>
                         ) : null}
 
-                        <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                        <div className="mt-12 mb-12 border-t border-black/10 pt-12">
+                            <h2 className="text-3xl font-extrabold text-black mb-6">
                                 {t("page.deep_dive_into_footprints")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Link
                                     href={`/carbon-footprint/${data1.slug}`}
-                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-none transition-all font-bold group"
+                                    className="border border-neutral-200 bg-neutral-100 p-6 hover:-translate-y-1 transition-all font-bold group rounded-2xl"
                                 >
                                     {t("page.read_full_report", { app: data1.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                                 <Link
                                     href={`/carbon-footprint/${data2.slug}`}
-                                    className="border-2 border-black bg-brand-gray p-6 hover:-translate-y-1 hover:shadow-none transition-all font-bold group"
+                                    className="border border-neutral-200 bg-neutral-100 p-6 hover:-translate-y-1 transition-all font-bold group rounded-2xl"
                                 >
                                     {t("page.read_full_report", { app: data2.app_name })}
                                     <ArrowRight className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -331,8 +331,8 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
                         {comparisonReasons.length ? (
-                            <div className="bg-white border-2 border-black p-6 shadow-none">
-                                <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">{t("page.compare_takeaways_title")}</h3>
+                            <div className="bg-white border border-neutral-200 p-6 rounded-2xl">
+                                <h3 className="text-2xl font-extrabold text-black mb-4">{t("page.compare_takeaways_title")}</h3>
                                 <div className="space-y-3">
                                     {comparisonReasons.slice(0, 2).map((reason) => (
                                         <div key={reason} className="flex items-start gap-3 text-sm leading-relaxed text-neutral-700">
@@ -344,8 +344,8 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </div>
                         ) : null}
 
-                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-none">
-                            <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                        <div className="bg-brand-yellow border border-neutral-200 p-8 sticky top-24 rounded-2xl">
+                            <h3 className="text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}
                             </h3>
                             <p className="text-neutral-900 mb-6 leading-relaxed">
@@ -353,7 +353,7 @@ export default async function CompareCarbonFootprintPage({ params }: PageProps) 
                             </p>
                             <Link
                                 href="/welcome"
-                                className="block w-full border-2 border-black bg-black text-brand-yellow px-6 py-4 text-center font-bold uppercase tracking-wide hover:-translate-y-1 transition-transform"
+                                className="block w-full bg-brand-navy text-brand-yellow px-6 py-4 text-center font-bold tracking-wide hover:-translate-y-1 transition-transform rounded-full"
                             >
                                 Connect Desktop App
                             </Link>

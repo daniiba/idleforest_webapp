@@ -68,7 +68,7 @@ export default function CompanySettingsPanel({
             <div className="fixed bottom-6 right-6 z-[100]">
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="flex items-center justify-center w-14 h-14 bg-black text-white hover:bg-brand-yellow hover:text-black rounded-full shadow-none transition-all border-2 border-transparent hover:border-black group"
+                    className="flex items-center justify-center w-14 h-14 bg-brand-navy text-white hover:bg-brand-yellow hover:text-black rounded-full transition-all border border-transparent hover:border-neutral-400 group"
                     title="Open Company Settings"
                 >
                     <Settings className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
@@ -78,12 +78,12 @@ export default function CompanySettingsPanel({
     }
 
     return (
-        <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] md:w-[600px] lg:w-[800px] bg-white border-l-4 border-black shadow-none z-[100] flex flex-col transition-transform transform translate-x-0">
+        <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] md:w-[600px] lg:w-[800px] bg-white border-l-4 border-neutral-200 z-[100] flex flex-col transition-transform transform translate-x-0">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b-4 border-black bg-brand-yellow">
+            <div className="flex items-center justify-between p-6 border-b border-neutral-200 bg-brand-yellow">
                 <div className="flex items-center gap-3">
                     <Settings className="w-6 h-6 text-black" />
-                    <h2 className="text-2xl font-extrabold font-candu uppercase text-black tracking-wide">Company Owner Settings</h2>
+                    <h2 className="text-2xl font-extrabold text-black tracking-wide">Company Owner Settings</h2>
                 </div>
                 <button
                     onClick={() => setIsOpen(false)}
@@ -99,102 +99,102 @@ export default function CompanySettingsPanel({
                 {/* Left Column: Form Settings */}
                 <div className="flex-1 space-y-6">
                     {/* Stats Block */}
-                    <div className="bg-white border-2 border-black rounded-xl p-4 shadow-none flex items-center justify-around">
+                    <div className="bg-white border border-neutral-200 rounded-xl p-4 flex items-center justify-around">
                         <div className="text-center">
-                            <p className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Active Members</p>
-                            <p className="text-3xl font-extrabold font-candu text-black">{memberCount}</p>
+                            <p className="text-sm font-bold text-neutral-500">Active Members</p>
+                            <p className="text-3xl font-extrabold text-black">{memberCount}</p>
                         </div>
                         <div className="w-0.5 h-12 bg-neutral-200"></div>
                         <div className="text-center">
-                            <p className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Tasks Handled</p>
-                            <p className="text-3xl font-extrabold font-candu text-brand-leaf">{totalPoints.toLocaleString()}</p>
+                            <p className="text-sm font-bold text-neutral-500">Tasks Handled</p>
+                            <p className="text-3xl font-extrabold text-brand-leaf">{totalPoints.toLocaleString()}</p>
                         </div>
                     </div>
 
-                    <h3 className="text-xl font-bold border-b-2 border-black pb-2 pt-4">Edit Details</h3>
+                    <h3 className="text-xl font-bold border-b border-neutral-200 pb-2 pt-4">Edit Details</h3>
 
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Company Name</label>
+                            <label className="text-sm font-bold text-black block">Company Name</label>
                             <input
                                 type="text"
                                 value={formData.name}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                             />
                         </div>
 
                         <div className="flex flex-col gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-black block">Slug (URL)</label>
+                                <label className="text-sm font-bold text-black block">Slug (URL)</label>
                                 <input
                                     type="text"
                                     value={formData.slug}
                                     onChange={e => setFormData({ ...formData, slug: e.target.value })}
-                                    className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy bg-neutral-100 font-mono text-sm"
+                                    className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy bg-neutral-100 text-sm rounded-xl"
                                     disabled // Slug usually shouldn't be changed easily to avoid breaking links
                                     title="Contact support to change your slug"
                                 />
                                 <p className="text-xs text-neutral-500">Contact support to change slug</p>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-black block">Invite Code</label>
+                                <label className="text-sm font-bold text-black block">Invite Code</label>
                                 <input
                                     type="text"
                                     value={formData.invite_code}
                                     onChange={e => setFormData({ ...formData, invite_code: e.target.value })}
-                                    className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                    className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                 />
                             </div>
                         </div>
 
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Description</label>
+                            <label className="text-sm font-bold text-black block">Description</label>
                             <textarea
                                 value={formData.description || ''}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy min-h-[100px]"
+                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy min-h-[100px] rounded-xl"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Logo URL</label>
+                            <label className="text-sm font-bold text-black block">Logo URL</label>
                             <input
                                 type="text"
                                 value={formData.logo_url || ''}
                                 onChange={e => setFormData({ ...formData, logo_url: e.target.value })}
-                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                 placeholder="https://example.com/logo.png"
                             />
                         </div>
 
                         <div className="flex flex-col gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-black block">Theme Color</label>
+                                <label className="text-sm font-bold text-black block">Theme Color</label>
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="color"
                                         value={formData.theme_color}
                                         onChange={e => setFormData({ ...formData, theme_color: e.target.value })}
-                                        className="h-10 w-10 shrink-0 border-2 border-black p-0 cursor-pointer"
+                                        className="h-10 w-10 shrink-0 border border-neutral-200 p-0 cursor-pointer rounded-2xl"
                                     />
                                     <input
                                         type="text"
                                         value={formData.theme_color}
                                         onChange={e => setFormData({ ...formData, theme_color: e.target.value })}
-                                        className="flex-1 min-w-0 px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy font-mono text-sm"
+                                        className="flex-1 min-w-0 px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy text-sm rounded-xl"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold uppercase tracking-wider text-black block">Invite Only</label>
+                                <label className="text-sm font-bold text-black block">Invite Only</label>
                                 <div className="flex items-center h-10 gap-2">
                                     <input
                                         type="checkbox"
                                         checked={formData.is_invite_only}
                                         onChange={e => setFormData({ ...formData, is_invite_only: e.target.checked })}
-                                        className="w-5 h-5 shrink-0 border-2 border-black accent-black focus:ring-0"
+                                        className="w-5 h-5 shrink-0 border border-neutral-200 accent-black focus:ring-0 rounded-2xl"
                                     />
                                     <span className="text-sm">Require invite code?</span>
                                 </div>
@@ -202,12 +202,12 @@ export default function CompanySettingsPanel({
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-bold uppercase tracking-wider text-black block">Explainer Video URL (YouTube)</label>
+                            <label className="text-sm font-bold text-black block">Explainer Video URL (YouTube)</label>
                             <input
                                 type="text"
                                 value={formData.video_url || ''}
                                 onChange={e => setFormData({ ...formData, video_url: e.target.value })}
-                                className="w-full px-4 py-2 border-2 border-black focus:outline-none focus:ring-0 focus:border-brand-navy"
+                                className="w-full px-4 py-2 border border-neutral-200 focus:outline-none focus:ring-0 focus:border-brand-navy rounded-xl"
                                 placeholder="https://youtube.com/watch?v=..."
                             />
                         </div>
@@ -216,9 +216,9 @@ export default function CompanySettingsPanel({
 
                 {/* Right Column: Preview & HTML Code */}
                 <div className="w-full lg:w-[350px] space-y-6 flex flex-col">
-                    <h3 className="text-xl font-bold border-b-2 border-black pb-2">Widget Preview</h3>
+                    <h3 className="text-xl font-bold border-b border-neutral-200 pb-2">Widget Preview</h3>
 
-                    <div className="flex-1 relative bg-neutral-200 border-4 border-black rounded-2xl overflow-hidden flex items-center justify-center p-4">
+                    <div className="flex-1 relative bg-neutral-200 border border-neutral-200 rounded-2xl overflow-hidden flex items-center justify-center p-4">
                         <iframe
                             key={isSaving ? 'saving' : formData.slug} // Force reload on save if needed, but using live URL usually
                             src={`${localePath}/widget/c/${formData.slug}`}
@@ -228,10 +228,10 @@ export default function CompanySettingsPanel({
                     </div>
 
                     <div className="space-y-2">
-                        <h4 className="text-sm font-bold uppercase tracking-wider text-black">Embed Code</h4>
+                        <h4 className="text-sm font-bold text-black">Embed Code</h4>
                         <div className="relative">
                             <textarea
-                                className="w-full h-24 p-2 text-xs font-mono bg-black text-green-400 border-2 border-black rounded-lg focus:outline-none resize-none"
+                                className="w-full h-24 p-2 text-xs font-mono bg-brand-navy text-green-400 border border-neutral-200 rounded-lg focus:outline-none resize-none"
                                 readOnly
                                 value={`<iframe src="${typeof window !== 'undefined' ? window.location.origin : 'https://www.idleforest.com'}${localePath}/widget/c/${formData.slug}" width="100%" height="480" loading="lazy" style="max-width:380px; border:0; border-radius:12px; overflow:hidden;" title="IdleForest partner impact"></iframe>`}
                             />
@@ -251,7 +251,7 @@ export default function CompanySettingsPanel({
             </div>
 
             {/* Footer with Save button */}
-            <div className="p-4 border-t-4 border-black bg-white flex items-center justify-between">
+            <div className="p-4 border-t border-neutral-200 bg-white flex items-center justify-between">
                 <div>
                     {message && (
                         <p className={`text-sm font-bold ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
@@ -269,7 +269,7 @@ export default function CompanySettingsPanel({
                     <button
                         onClick={handleSave}
                         disabled={isSaving}
-                        className="flex items-center gap-2 px-8 py-2 bg-black text-brand-yellow hover:bg-brand-navy hover:text-white border-2 border-black rounded-lg font-bold uppercase tracking-wider transition-all disabled:opacity-50 shadow-none"
+                        className="flex items-center gap-2 px-8 py-2 bg-brand-navy text-brand-yellow hover:bg-brand-navy hover:text-white border border-neutral-200 rounded-lg font-bold transition-all disabled:opacity-50"
                     >
                         {isSaving ? <Loader /> : <Save className="w-4 h-4" />}
                         {isSaving ? 'Saving...' : 'Save Settings'}

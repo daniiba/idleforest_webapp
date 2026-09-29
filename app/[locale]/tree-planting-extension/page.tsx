@@ -196,7 +196,7 @@ export default function TreePlantingExtensionPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-brand-gray text-black">
+      <main className="min-h-screen bg-[#F7F7F2] text-black">
         {schemas.map((schema) => (
           <script
             key={schema["@type"]}
@@ -205,14 +205,14 @@ export default function TreePlantingExtensionPage() {
           />
         ))}
 
-        <section className="border-b-2 border-black bg-brand-yellow">
+        <section className="border-b border-neutral-200 bg-brand-yellow">
           <div className="container mx-auto grid gap-10 px-6 py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.75fr)] lg:items-center lg:py-20">
             <div className="min-w-0">
-              <p className="mb-5 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold uppercase text-brand-yellow">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
                 <Chrome className="h-4 w-4" />
                 plant a tree chrome extension
               </p>
-              <h1 className="font-rethink-sans text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-7xl">
+              <h1 className="text-[42px] font-extrabold leading-tight sm:text-6xl lg:text-6xl">
                 Plant Trees for Free with the IdleForest Chrome Extension
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
@@ -229,26 +229,26 @@ export default function TreePlantingExtensionPage() {
                     Add to Chrome, It's Free <ArrowRight className="h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="h-auto rounded-full border-2 border-black bg-transparent px-7 py-4 text-base font-bold hover:bg-white">
+                <Button asChild variant="outline" className="h-auto rounded-full border border-neutral-200 bg-transparent px-7 py-4 text-base font-bold hover:bg-white">
                   <Link href="/how-it-works" className="inline-flex items-center gap-2">
                     See how it works <Wifi className="h-5 w-5" />
                   </Link>
                 </Button>
               </div>
-              <p className="mt-5 max-w-3xl text-sm font-bold uppercase tracking-wide text-brand-navy">
+              <p className="mt-5 max-w-3xl text-sm font-bold tracking-wide text-brand-navy">
                 Featured on the Chrome Web Store. Rated 4.8 across 33 reviews. Used by 1,000+ people planting trees just
                 by leaving their browser on.
               </p>
             </div>
 
-            <Card className="border-2 border-black bg-white p-6 shadow-none">
-              <div className="flex items-center gap-4 border-b-2 border-black pb-5">
+            <Card className="border border-neutral-200 bg-white p-6 rounded-2xl">
+              <div className="flex items-center gap-4 border-b border-neutral-200 pb-5">
                 <div className="grid h-16 w-16 place-items-center rounded-md bg-brand-yellow">
                   <Image src="/chrome.png" alt="Plant a tree Chrome extension with IdleForest" width={44} height={44} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold uppercase text-neutral-600">Free install</p>
-                  <p className="font-rethink-sans text-2xl font-extrabold">Chrome extension</p>
+                  <p className="text-sm font-bold text-neutral-600">Free install</p>
+                  <p className="text-2xl font-extrabold">Chrome extension</p>
                 </div>
               </div>
               <div className="grid gap-4 pt-5">
@@ -261,10 +261,10 @@ export default function TreePlantingExtensionPage() {
           </div>
         </section>
 
-        <section className="bg-brand-gray">
+        <section className="bg-neutral-100">
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="max-w-3xl">
-              <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
+              <h2 className="text-4xl font-extrabold sm:text-5xl">
                 How the tree-planting Chrome extension works
               </h2>
               <p className="mt-5 text-lg leading-8 text-neutral-800">
@@ -300,11 +300,11 @@ export default function TreePlantingExtensionPage() {
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
               <div>
-                <p className="mb-4 inline-flex items-center gap-2 border-2 border-brand-yellow px-3 py-1 text-sm font-bold uppercase">
+                <p className="mb-4 inline-flex items-center gap-2 border border-brand-yellow px-3 py-1 text-sm font-bold rounded-full">
                   <Leaf className="h-4 w-4" />
                   category choice
                 </p>
-                <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
+                <h2 className="text-4xl font-extrabold sm:text-5xl">
                   The best browser extension for digital sustainability, compared
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-brand-yellow/85">
@@ -318,23 +318,23 @@ export default function TreePlantingExtensionPage() {
                   route.
                 </p>
               </div>
-              <div className="overflow-x-auto border-2 border-brand-yellow bg-brand-gray text-black">
+              <div className="overflow-x-auto border border-brand-yellow bg-neutral-100 text-black rounded-2xl">
                 <table className="w-full min-w-[780px] border-collapse text-left">
                   <thead>
                     <tr className="bg-brand-yellow">
-                      <th className="border-b-2 border-black p-4">Decision point</th>
-                      <th className="border-b-2 border-l-2 border-black p-4">IdleForest</th>
-                      <th className="border-b-2 border-l-2 border-black p-4">Forest</th>
-                      <th className="border-b-2 border-l-2 border-black p-4">TreeClicks</th>
+                      <th className="border-b border-neutral-200 p-4">Decision point</th>
+                      <th className="border-b border-l border-neutral-200 p-4">IdleForest</th>
+                      <th className="border-b border-l border-neutral-200 p-4">Forest</th>
+                      <th className="border-b border-l border-neutral-200 p-4">TreeClicks</th>
                     </tr>
                   </thead>
                   <tbody>
                     {comparisonRows.map(([label, idleforest, forest, treeclicks]) => (
                       <tr key={label}>
-                        <th className="border-t-2 border-black p-4 align-top font-bold">{label}</th>
-                        <td className="border-l-2 border-t-2 border-black p-4 align-top">{idleforest}</td>
-                        <td className="border-l-2 border-t-2 border-black p-4 align-top">{forest}</td>
-                        <td className="border-l-2 border-t-2 border-black p-4 align-top">{treeclicks}</td>
+                        <th className="border-t border-neutral-200 p-4 align-top font-bold">{label}</th>
+                        <td className="border-l border-t border-neutral-200 p-4 align-top">{idleforest}</td>
+                        <td className="border-l border-t border-neutral-200 p-4 align-top">{forest}</td>
+                        <td className="border-l border-t border-neutral-200 p-4 align-top">{treeclicks}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -363,7 +363,7 @@ export default function TreePlantingExtensionPage() {
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
               <div>
-                <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
+                <h2 className="text-4xl font-extrabold sm:text-5xl">
                   Verified trees, named partners, public receipts
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-neutral-800">
@@ -391,18 +391,18 @@ export default function TreePlantingExtensionPage() {
               <div className="grid gap-5 md:grid-cols-2">
                 {featuredPlantingRecords.map((project) => (
                   <a key={project.id} href={project.href} target="_blank" rel="noopener noreferrer" className="group block h-full">
-                    <article className="flex h-full flex-col overflow-hidden border-2 border-black bg-brand-yellow transition-transform group-hover:-translate-y-1">
-                      <div className="relative h-48 border-b-2 border-black">
+                    <article className="flex h-full flex-col overflow-hidden border border-neutral-200 bg-brand-yellow transition-transform group-hover:-translate-y-1 rounded-2xl">
+                      <div className="relative h-48 border-b border-neutral-200">
                         <Image src={project.image} alt={project.project} fill className="object-cover" />
                       </div>
                       <div className="flex flex-1 flex-col p-5">
-                        <p className="text-sm font-bold uppercase text-neutral-700">{project.provider}</p>
-                        <h3 className="mt-2 font-rethink-sans text-2xl font-extrabold">{project.project}</h3>
+                        <p className="text-sm font-bold text-neutral-700">{project.provider}</p>
+                        <h3 className="mt-2 text-2xl font-extrabold">{project.project}</h3>
                         <p className="mt-2 text-sm text-neutral-700"><time dateTime={project.date}>{project.dateLabel}</time></p>
-                        <div className="mt-5 flex items-end justify-between gap-4 border-t-2 border-black pt-4">
+                        <div className="mt-5 flex items-end justify-between gap-4 border-t border-neutral-200 pt-4">
                           <div>
-                            <p className="font-candu text-4xl">{project.trees.toLocaleString('en-US')}</p>
-                            <p className="text-xs font-bold uppercase tracking-wide text-neutral-700">trees in records</p>
+                            <p className="text-4xl">{project.trees.toLocaleString('en-US')}</p>
+                            <p className="text-xs font-bold tracking-wide text-neutral-700">trees in records</p>
                           </div>
                           <span className="inline-flex items-center gap-1 font-bold underline underline-offset-4">
                             Open certificate <ExternalLink className="h-4 w-4" />
@@ -415,12 +415,12 @@ export default function TreePlantingExtensionPage() {
               </div>
             </div>
             <div className="mt-10 grid gap-5 md:grid-cols-[0.8fr_1.2fr]">
-              <Card className="border-2 border-black bg-brand-navy p-6 text-brand-yellow">
-                <p className="text-sm font-bold uppercase tracking-wide text-brand-yellow/80">Community total</p>
-                <p className="mt-2 font-candu text-6xl">{totalTrees.toLocaleString()}</p>
+              <Card className="border border-neutral-200 bg-brand-navy p-6 text-brand-yellow rounded-2xl">
+                <p className="text-sm font-bold tracking-wide text-brand-yellow/80">Community total</p>
+                <p className="mt-2 text-6xl">{totalTrees.toLocaleString()}</p>
                 <p className="mt-3 text-brand-yellow/85">Trees funded in the current public planting records.</p>
               </Card>
-              <Card className="border-2 border-black bg-brand-gray p-6">
+              <Card className="border border-neutral-200 bg-neutral-100 p-6 rounded-2xl">
                 <p className="text-lg leading-8 text-neutral-800">
                   A running total of trees funded by the community sits on the transparency page, updated from real
                   partner records. You can also check the partner sites directly.
@@ -444,11 +444,11 @@ export default function TreePlantingExtensionPage() {
           </div>
         </section>
 
-        <section className="bg-brand-gray">
+        <section className="bg-neutral-100">
           <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-2 md:py-20">
-            <Card className="border-2 border-black bg-brand-yellow p-7">
+            <Card className="border border-neutral-200 bg-brand-yellow p-7 rounded-2xl">
               <CircleDollarSign className="h-10 w-10 text-brand-navy" />
-              <h2 className="mt-4 font-rethink-sans text-3xl font-extrabold">How much impact does idle bandwidth really make?</h2>
+              <h2 className="mt-4 text-3xl font-extrabold">How much impact does idle bandwidth really make?</h2>
               <p className="mt-4 text-lg leading-8 text-neutral-800">
                 Contributions vary with demand for bandwidth tasks, your location, and how long the extension is
                 connected. There is no fixed number of trees per hour or per user.
@@ -458,9 +458,9 @@ export default function TreePlantingExtensionPage() {
                 funding, and your app’s activity to see your own contribution.
               </p>
             </Card>
-            <Card className="border-2 border-black bg-white p-7">
+            <Card className="border border-neutral-200 bg-white p-7 rounded-2xl">
               <ShieldCheck className="h-10 w-10 text-brand-navy" />
-              <h2 className="mt-4 font-rethink-sans text-3xl font-extrabold">Is the extension safe to install?</h2>
+              <h2 className="mt-4 text-3xl font-extrabold">Is the extension safe to install?</h2>
               <p className="mt-4 text-lg leading-8 text-neutral-800">
                 The tasks routed through your connection are sessionless. They carry no cookies, no personal identifiers,
                 and no browsing history. The extension does not read your tabs, bookmarks, or searches.
@@ -478,13 +478,13 @@ export default function TreePlantingExtensionPage() {
 
         <section className="bg-white">
           <div className="container mx-auto px-6 py-16 md:py-20">
-            <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
+            <h2 className="text-4xl font-extrabold sm:text-5xl">
               Questions about the tree-planting extension
             </h2>
-            <div className="mt-10 divide-y-2 divide-black border-y-2 border-black">
+            <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
               {faqs.map((faq) => (
                 <article key={faq.question} className="grid gap-3 py-6 md:grid-cols-[320px_minmax(0,1fr)] md:gap-8">
-                  <h3 className="font-rethink-sans text-2xl font-extrabold">{faq.question}</h3>
+                  <h3 className="text-2xl font-extrabold">{faq.question}</h3>
                   <p className="text-lg leading-8 text-neutral-800">{faq.answer}</p>
                 </article>
               ))}
@@ -496,11 +496,11 @@ export default function TreePlantingExtensionPage() {
           <div className="container mx-auto px-6 py-16 md:py-20">
             <div>
               <div className="max-w-4xl">
-                <p className="mb-4 inline-flex items-center gap-2 border-2 border-brand-yellow px-3 py-1 text-sm font-bold uppercase">
+                <p className="mb-4 inline-flex items-center gap-2 border border-brand-yellow px-3 py-1 text-sm font-bold rounded-full">
                   <Star className="h-4 w-4" />
                   community proof
                 </p>
-                <h2 className="font-rethink-sans text-4xl font-extrabold sm:text-5xl">
+                <h2 className="text-4xl font-extrabold sm:text-5xl">
                   Trusted by a growing community of passive tree planters
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-brand-yellow/85">
@@ -525,7 +525,7 @@ export default function TreePlantingExtensionPage() {
                     alt={`IdleForest Chrome Web Store review screenshot ${index + 1}`}
                     width={1400}
                     height={920}
-                    className="h-auto w-full border-2 border-brand-yellow bg-white object-contain"
+                    className="h-auto w-full border border-brand-yellow bg-white object-contain rounded-2xl"
                   />
                 ))}
               </div>
@@ -536,7 +536,7 @@ export default function TreePlantingExtensionPage() {
         <section className="bg-brand-yellow">
           <div className="container mx-auto px-6 py-16 text-center md:py-20">
             <Sprout className="mx-auto h-12 w-12 text-brand-navy" />
-            <h2 className="mx-auto mt-5 max-w-4xl font-rethink-sans text-4xl font-extrabold sm:text-6xl">
+            <h2 className="mx-auto mt-5 max-w-4xl text-4xl font-extrabold sm:text-6xl">
               Start planting trees in ten seconds
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-neutral-800">
@@ -549,7 +549,7 @@ export default function TreePlantingExtensionPage() {
                   Add to Chrome, It's Free <Chrome className="h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="h-auto rounded-full border-2 border-black bg-transparent px-7 py-4 text-base font-bold hover:bg-white">
+              <Button asChild variant="outline" className="h-auto rounded-full border border-neutral-200 bg-transparent px-7 py-4 text-base font-bold hover:bg-white">
                 <Link href="/download/windows" className="inline-flex items-center gap-2">
                   Get the desktop app <MonitorDown className="h-5 w-5" />
                 </Link>
@@ -573,7 +573,7 @@ export default function TreePlantingExtensionPage() {
 
 function Signal({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-3 border-b-2 border-black pb-4 last:border-b-0 last:pb-0">
+    <div className="flex items-center gap-3 border-b border-neutral-200 pb-4 last:border-b-0 last:pb-0">
       <div className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-md bg-brand-yellow text-black">{icon}</div>
       <span className="font-bold">{label}</span>
     </div>
@@ -590,11 +590,11 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <Card className="h-full border-2 border-black bg-brand-yellow p-6">
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-brand-navy font-candu text-3xl text-brand-yellow">
+    <Card className="h-full border border-neutral-200 bg-brand-yellow p-6 rounded-2xl">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-brand-navy text-3xl text-brand-yellow">
         {number}
       </div>
-      <h3 className="font-rethink-sans text-2xl font-extrabold">{title}</h3>
+      <h3 className="text-2xl font-extrabold">{title}</h3>
       <p className="mt-4 text-neutral-800 leading-7">{children}</p>
     </Card>
   );

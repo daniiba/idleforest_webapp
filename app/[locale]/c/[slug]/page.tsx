@@ -248,14 +248,14 @@ function getMossyEarthFallbackCompany() {
 }
 
 function PhoneRepairEyebrow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-    return <p className={`font-mono text-[0.64rem] font-black uppercase tracking-[0.28em] text-[#050505] ${className}`}>{children}</p>
+    return <p className={`font-mono text-[0.64rem] font-extrabold tracking-[0.28em] text-[#050505] ${className}`}>{children}</p>
 }
 
 function PhoneRepairMark({ company, compact = false }: { company: any; compact?: boolean }) {
     return (
         <div className="flex items-center gap-2">
             <span className={`${compact ? 'h-6 w-6' : 'h-8 w-8'} phone-repair-mark-logo`} role="img" aria-label={company.name} />
-            <span className="text-[0.72rem] font-black uppercase tracking-normal text-[#050505]">{company.name}</span>
+            <span className="text-[0.72rem] font-extrabold tracking-normal text-[#050505]">{company.name}</span>
         </div>
     )
 }
@@ -386,13 +386,13 @@ function PhoneRepairWireframePanel({
             <div className="phone-line-hero-copy relative z-10 flex h-full min-h-[440px] flex-col justify-between gap-8 pr-0 lg:max-w-[430px] lg:pr-4">
                 <div className="pt-12 sm:pt-10 lg:pt-10">
                     <PhoneRepairEyebrow className="text-[#6d7416]">{copy.eyebrow}</PhoneRepairEyebrow>
-                    <h1 className="mt-5 max-w-[410px] font-candu text-[3rem] font-black uppercase leading-[0.9] tracking-normal text-[#050505] sm:text-[4.25rem] lg:text-[4.15rem]">{copy.title}</h1>
+                    <h1 className="mt-5 max-w-[410px] text-[3rem] font-extrabold leading-[0.9] tracking-normal text-[#050505] sm:text-[4.25rem] lg:text-[4.15rem]">{copy.title}</h1>
                     <p className="mt-5 max-w-[370px] text-base font-semibold leading-7 text-[#31332b] sm:text-lg sm:leading-8">{copy.description}</p>
                     <div className="mt-5 flex flex-wrap items-center gap-3">
                         {isMember ? (
                             <Link
                                 href={joinHref}
-                                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
+                                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-extrabold text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
                                 {copy.portalCta}
                                 <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
@@ -400,13 +400,13 @@ function PhoneRepairWireframePanel({
                         ) : isValidInvite ? (
                             <Link
                                 href={joinHref}
-                                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
+                                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-brand-navy px-6 py-3 font-mono text-[0.62rem] font-extrabold text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
                                 {copy.installCta}
                                 <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
                             </Link>
                         ) : (
-                            <span className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/10 bg-white/90 px-5 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-brand-navy shadow-[0_18px_34px_rgba(11,16,31,0.08)]">
+                            <span className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/10 bg-white/90 px-5 py-3 font-mono text-[0.62rem] font-extrabold tracking-[0.14em] text-brand-navy shadow-[0_18px_34px_rgba(11,16,31,0.08)]">
                                 {copy.inviteRequired}
                             </span>
                         )}
@@ -415,7 +415,7 @@ function PhoneRepairWireframePanel({
                                 href={companyWebsite.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/15 bg-white/90 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-brand-navy transition-colors hover:border-brand-navy/35"
+                                className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-navy/15 bg-white/90 px-6 py-3 font-mono text-[0.62rem] font-extrabold text-brand-navy transition-colors hover:border-brand-navy/35"
                             >
                                 {copy.bookRepair}
                             </a>
@@ -1436,7 +1436,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                 <header className="px-3 py-3 sm:px-7 sm:py-4">
                     <div className="mx-auto flex max-w-[1540px] items-center justify-between gap-3 rounded-[22px] border border-[#deded8] bg-white/80 px-3 py-3 backdrop-blur sm:gap-4 sm:rounded-[26px] sm:px-6">
                         <PhoneRepairMark company={company} compact />
-                        <nav className="hidden items-center gap-6 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[#6f6f69] md:flex">
+                        <nav className="hidden items-center gap-6 font-mono text-[0.62rem] font-extrabold text-[#6f6f69] md:flex">
                             <a href="#ascii-flow" className="hover:text-brand-navy">
                                 {phoneRepairT('nav.howItWorks')}
                             </a>
@@ -1450,14 +1450,14 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                         {isMember ? (
                             <Link
                                 href={joinHref}
-                                className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
+                                className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-extrabold text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
                                 {phoneRepairT('cta.portal')}
                             </Link>
                         ) : isValidInvite ? (
                             <Link
                                 href={joinHref}
-                                className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
+                                className="rounded-full bg-brand-navy px-5 py-3 font-mono text-[0.6rem] font-extrabold text-white transition-colors hover:bg-brand-yellow hover:text-brand-navy"
                             >
                                 {phoneRepairT('cta.join')}
                             </Link>
@@ -1487,14 +1487,14 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                     <section id="ascii-flow" className="mx-auto mt-4 grid max-w-[1540px] gap-5 rounded-[34px] bg-[#efefeb] p-5 sm:mt-5 sm:p-7 lg:grid-cols-[0.82fr_1.18fr]">
                         <div className="rounded-[26px] bg-brand-navy p-6 text-white sm:p-8">
                             <PhoneRepairEyebrow className="text-brand-yellow">{phoneRepairT('how.eyebrow')}</PhoneRepairEyebrow>
-                            <h2 className="mt-6 max-w-[520px] font-candu text-[3rem] font-black uppercase leading-none tracking-normal text-white sm:text-[4.2rem]">{phoneRepairT('how.title')}</h2>
+                            <h2 className="mt-6 max-w-[520px] text-[3rem] font-extrabold leading-none tracking-normal text-white sm:text-[4.2rem]">{phoneRepairT('how.title')}</h2>
                             <p className="mt-6 max-w-[520px] text-base font-medium leading-7 text-white/76">{phoneRepairT('how.body')}</p>
                         </div>
                         <div className="grid gap-4 md:grid-cols-3">
                             {phoneRepairPledgeItems.map((item) => (
                                 <div key={item.number} className="rounded-[26px] bg-white p-6">
-                                    <p className="font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-emerald-700">{item.number}</p>
-                                    <h3 className="mt-5 font-candu text-3xl font-black uppercase leading-none tracking-normal text-black">{item.title}</h3>
+                                    <p className="font-mono text-[0.6rem] font-extrabold text-emerald-700">{item.number}</p>
+                                    <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-normal text-black">{item.title}</h3>
                                     <p className="mt-5 text-base font-medium leading-7 text-[#62625f]">{item.body}</p>
                                 </div>
                             ))}
@@ -1506,8 +1506,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                         className="mx-auto mt-8 grid max-w-[1540px] gap-8 rounded-[34px] bg-white p-5 shadow-[0_28px_80px_rgba(20,20,16,0.08)] sm:p-7 lg:grid-cols-[0.92fr_1.08fr]"
                     >
                         <div className="rounded-[26px] bg-brand-yellow p-6 text-brand-navy">
-                            <p className="font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] text-brand-navy/70">{phoneRepairT('proof.eyebrow')}</p>
-                            <p className="mt-4 font-candu text-6xl font-black uppercase leading-none tracking-normal text-brand-navy">{formatNumber(verifiedTrees, params.locale)}</p>
+                            <p className="font-mono text-[0.6rem] font-extrabold text-brand-navy/70">{phoneRepairT('proof.eyebrow')}</p>
+                            <p className="mt-4 text-6xl font-extrabold leading-none tracking-normal text-brand-navy">{formatNumber(verifiedTrees, params.locale)}</p>
                             <p className="mt-4 max-w-[580px] text-base font-medium leading-7 text-brand-navy/80">
                                 {phoneRepairT('proof.body', {
                                     count: plantingCountries.length,
@@ -1522,8 +1522,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     [phoneRepairT('labels.points'), formatNumber(totalPoints, params.locale)],
                                 ].map(([label, value]) => (
                                     <div key={label} className="rounded-[24px] bg-[#f2f2ef] p-5">
-                                        <p className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[#777]">{label}</p>
-                                        <p className="mt-4 font-candu text-4xl font-black uppercase leading-none tracking-normal text-black">{value}</p>
+                                        <p className="font-mono text-[0.58rem] font-extrabold text-[#777]">{label}</p>
+                                        <p className="mt-4 text-4xl font-extrabold leading-none tracking-normal text-black">{value}</p>
                                     </div>
                                 ))}
                             </div>
@@ -1539,11 +1539,11 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                         <span className="relative col-start-1 row-span-4 block h-24 w-full overflow-hidden rounded-[18px] bg-[#f2f2ef] sm:col-auto sm:row-auto sm:h-16 sm:w-20">
                                             {record.image ? <Image src={record.image} alt={record.name} fill sizes="(max-width: 639px) 96px, 80px" className="object-cover" /> : null}
                                         </span>
-                                        <span className="col-start-2 col-span-2 font-mono text-[0.68rem] font-black uppercase text-[#777] sm:col-auto">{record.trees}</span>
-                                        <span className="col-start-2 col-span-2 min-w-0 break-words font-candu text-[1.6rem] font-black uppercase leading-[0.94] tracking-normal sm:col-auto sm:text-2xl sm:leading-none">
+                                        <span className="col-start-2 col-span-2 font-mono text-[0.68rem] font-extrabold text-[#777] sm:col-auto">{record.trees}</span>
+                                        <span className="col-start-2 col-span-2 min-w-0 break-words text-[1.6rem] font-extrabold leading-[0.94] tracking-normal sm:col-auto sm:text-2xl sm:leading-none">
                                             {record.name}
                                         </span>
-                                        <span className="col-start-2 font-mono text-[0.58rem] font-black uppercase tracking-[0.16em] text-[#777] sm:col-auto">{record.date}</span>
+                                        <span className="col-start-2 font-mono text-[0.58rem] font-extrabold text-[#777] sm:col-auto">{record.date}</span>
                                         <ArrowUpRight aria-hidden className="col-start-3 row-start-1 h-4 w-4 justify-self-end sm:col-auto sm:row-auto sm:justify-self-auto" strokeWidth={3} />
                                     </a>
                                 ))}
@@ -1557,7 +1557,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                     >
                         <div className="min-w-0">
                             <PhoneRepairEyebrow className="text-brand-yellow">{phoneRepairT('install.eyebrow')}</PhoneRepairEyebrow>
-                            <h2 className="mt-6 max-w-full break-words font-candu text-[2.08rem] font-black uppercase leading-[0.96] tracking-normal text-white sm:max-w-[720px] sm:text-[4rem] sm:leading-none">
+                            <h2 className="mt-6 max-w-full break-words text-[2.08rem] font-extrabold leading-[0.96] tracking-normal text-white sm:max-w-[720px] sm:text-[4rem] sm:leading-none">
                                 {phoneRepairT('install.title')}
                             </h2>
                             <p className="mt-6 max-w-full text-[0.98rem] font-medium leading-7 text-white/75 sm:max-w-[620px] sm:text-base">{phoneRepairT('install.body')}</p>
@@ -1566,7 +1566,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                             {isMember ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
+                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-extrabold text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
                                     {phoneRepairT('cta.portal')}
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
@@ -1574,7 +1574,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                             ) : isValidInvite ? (
                                 <Link
                                     href={joinHref}
-                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
+                                    className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-brand-yellow px-6 py-3 font-mono text-[0.62rem] font-extrabold text-brand-navy transition-colors hover:bg-white hover:text-black sm:w-auto"
                                 >
                                     {phoneRepairT('cta.startInstall')}
                                     <ArrowRight aria-hidden className="h-3.5 w-3.5" strokeWidth={3} />
@@ -1585,7 +1585,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     href={companyWebsite.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-white transition-colors hover:border-white sm:w-auto"
+                                    className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 font-mono text-[0.62rem] font-extrabold text-white transition-colors hover:border-white sm:w-auto"
                                 >
                                     {phoneRepairT('cta.bookRepair')}
                                 </a>
@@ -1690,7 +1690,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     </div>
                                 )}
                                 <div>
-                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">Company forest</p>
+                                    <p className="text-xs font-bold text-neutral-500">Company forest</p>
                                     <p className="text-lg font-extrabold text-brand-navy">{company.name}</p>
                                     {companyWebsite && (
                                         <a
@@ -1706,7 +1706,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                 </div>
                             </div>
 
-                            <h1 className="max-w-3xl font-candu text-5xl font-extrabold leading-[0.95] tracking-normal text-brand-navy sm:text-6xl lg:text-7xl">Turn everyday work into real trees.</h1>
+                            <h1 className="max-w-3xl text-5xl font-extrabold leading-[0.95] tracking-normal text-brand-navy sm:text-6xl lg:text-7xl">Turn everyday work into real trees.</h1>
                             <p className="mt-6 max-w-2xl text-lg leading-8 text-neutral-700">
                                 {company.description ||
                                     `${company.name} is using IdleForest to convert idle bandwidth into verified reforestation impact. Join the company forest and help grow the number together.`}
@@ -1716,7 +1716,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                 {isMember ? (
                                     <Link
                                         href={`/${params.locale}/portal/c/${company.slug}`}
-                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
+                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
                                         style={{ backgroundColor: themeColor }}
                                     >
                                         Go to portal
@@ -1725,7 +1725,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                 ) : isValidInvite ? (
                                     <Link
                                         href={`/${params.locale}/auth/user/signup${invite ? `?invite=${invite}` : ''}`}
-                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
+                                        className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-extrabold tracking-wide text-black shadow-sm transition hover:-translate-y-0.5"
                                         style={{ backgroundColor: themeColor }}
                                     >
                                         Join {company.name}
@@ -1747,8 +1747,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                         <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-md bg-brand-yellow text-brand-navy">
                                             <TreePine className="h-6 w-6" />
                                         </div>
-                                        <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">{companyTreesLabel}</p>
-                                        <p className="mt-3 font-candu text-6xl font-extrabold leading-none text-brand-yellow">{formatNumber(companyTrees)}</p>
+                                        <p className="text-sm font-bold text-white/55">{companyTreesLabel}</p>
+                                        <p className="mt-3 text-6xl font-extrabold leading-none text-brand-yellow">{formatNumber(companyTrees)}</p>
                                         <p className="mt-3 text-sm leading-6 text-white/70">
                                             {recordedCompanyTrees > 0
                                                 ? 'Pulled from company donation history and awarded install bonuses.'
@@ -1759,14 +1759,14 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                         <div className="border-b border-white/10 p-6">
                                             <div className="flex items-center gap-3">
                                                 <Users className="h-5 w-5 text-brand-yellow" />
-                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Members</p>
+                                                <p className="text-sm font-bold text-white/55">Members</p>
                                             </div>
                                             <p className="mt-2 text-3xl font-extrabold">{formatNumber(memberCount)}</p>
                                         </div>
                                         <div className="p-6">
                                             <div className="flex items-center gap-3">
                                                 <Leaf className="h-5 w-5 text-brand-yellow" />
-                                                <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">Tasks handled</p>
+                                                <p className="text-sm font-bold text-white/55">Tasks handled</p>
                                             </div>
                                             <p className="mt-2 text-3xl font-extrabold">{formatNumber(totalPoints)}</p>
                                         </div>
@@ -1797,23 +1797,23 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
                             <div>
-                                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-emerald-700">Planting proof</p>
-                                <h2 className="mt-3 font-candu text-4xl font-extrabold leading-tight text-brand-navy sm:text-5xl">Where trees are planted</h2>
+                                <p className="text-sm font-extrabold text-emerald-700">Planting proof</p>
+                                <h2 className="mt-3 text-4xl font-extrabold leading-tight text-brand-navy sm:text-5xl">Where trees are planted</h2>
                                 <p className="mt-4 text-base leading-7 text-neutral-700">
                                     Company contributions support IdleForest&apos;s verified planting pipeline. These are real examples from current project records.
                                 </p>
                             </div>
                             <div className="grid gap-3 sm:grid-cols-3">
                                 <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
-                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Verified trees</p>
+                                    <p className="text-xs font-bold text-neutral-500">Verified trees</p>
                                     <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(verifiedTrees)}</p>
                                 </div>
                                 <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
-                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Projects</p>
+                                    <p className="text-xs font-bold text-neutral-500">Projects</p>
                                     <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(plantingProjects.length)}</p>
                                 </div>
                                 <div className="rounded-lg border border-black/10 bg-white p-5 shadow-sm">
-                                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-neutral-500">Countries</p>
+                                    <p className="text-xs font-bold text-neutral-500">Countries</p>
                                     <p className="mt-2 text-3xl font-extrabold text-brand-navy">{formatNumber(plantingCountries.length)}</p>
                                 </div>
                             </div>
@@ -1834,7 +1834,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                                     <TreePine className="h-16 w-16" />
                                                 </div>
                                             )}
-                                            <div className="absolute left-4 top-4 rounded-md bg-white/95 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-navy shadow-sm">
+                                            <div className="absolute left-4 top-4 rounded-md bg-white/95 px-3 py-2 text-xs font-extrabold tracking-[0.14em] text-brand-navy shadow-sm">
                                                 {formatNumber(planting.totalTrees)} trees
                                             </div>
                                         </div>
@@ -1912,11 +1912,11 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     <Play className="h-5 w-5" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-yellow">How it works</p>
+                                    <p className="text-sm font-extrabold text-brand-yellow">How it works</p>
                                     <h2 className="text-3xl font-extrabold">A quick walkthrough for {company.name}</h2>
                                 </div>
                             </div>
-                            <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/15 bg-black shadow-2xl">
+                            <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/15 bg-brand-navy shadow-2xl">
                                 {company.video_url.includes('youtube.com') || company.video_url.includes('youtu.be') ? (
                                     <iframe
                                         src={getYouTubeEmbedUrl(company.video_url)}
@@ -1935,8 +1935,8 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                     <section className="bg-brand-navy py-14 text-white sm:py-20">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="mb-10 max-w-2xl">
-                                <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-brand-yellow">How it works</p>
-                                <h2 className="mt-3 font-candu text-4xl font-extrabold leading-tight sm:text-5xl">Three simple steps</h2>
+                                <p className="text-sm font-extrabold text-brand-yellow">How it works</p>
+                                <h2 className="mt-3 text-4xl font-extrabold leading-tight sm:text-5xl">Three simple steps</h2>
                             </div>
                             <div className="grid gap-5 md:grid-cols-3">
                                 {[
@@ -1945,7 +1945,7 @@ export default async function CompanyPortalPage({ params, searchParams }: { para
                                     ['03', 'Plant', 'IdleForest turns eligible idle activity into funded planting through verified partners.'],
                                 ].map(([step, title, description]) => (
                                     <div key={step} className="rounded-lg border border-white/15 bg-white/[0.04] p-6">
-                                        <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-md bg-brand-yellow font-candu text-xl font-extrabold text-brand-navy">{step}</div>
+                                        <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-md bg-brand-yellow text-xl font-extrabold text-brand-navy">{step}</div>
                                         <h3 className="text-2xl font-extrabold">{title}</h3>
                                         <p className="mt-3 text-sm leading-6 text-white/70">{description}</p>
                                     </div>

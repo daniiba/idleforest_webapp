@@ -112,20 +112,20 @@ export default async function ReferralInvitePage({ params }: PageProps) {
     ]
 
     return (
-        <main className="min-h-screen bg-brand-gray px-4 py-6 font-rethink-sans text-black sm:py-10">
+        <main className="min-h-screen bg-[#F7F7F2] px-4 py-6 text-black sm:py-10">
             <div className="mx-auto w-full max-w-6xl">
                 <Link href="/" className="mb-6 inline-flex items-center" aria-label="IdleForest">
                     <Image src="/logo.png" alt="IdleForest" width={140} height={32} className="h-8 w-auto" priority />
                 </Link>
 
-                <section className="grid overflow-hidden border-2 border-black bg-brand-gray lg:grid-cols-[1.15fr_0.85fr]" aria-labelledby="invite-heading">
+                <section className="grid overflow-hidden border border-neutral-200 bg-neutral-100 lg:grid-cols-[1.15fr_0.85fr] rounded-2xl" aria-labelledby="invite-heading">
                     <div className="p-6 sm:p-10">
-                        <p className="inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-black uppercase tracking-[0.2em]">
+                        <p className="inline-flex items-center gap-2 bg-brand-yellow px-3 py-1 text-xs font-extrabold rounded-full">
                             <UserPlus className="h-4 w-4" aria-hidden="true" />
                             {t('eyebrow')}
                         </p>
 
-                        <h1 id="invite-heading" className="mt-5 font-candu text-4xl font-extrabold uppercase leading-none text-brand-navy sm:text-6xl">
+                        <h1 id="invite-heading" className="mt-5 text-4xl font-extrabold leading-none text-brand-navy sm:text-6xl">
                             {t('title', { name })}
                         </h1>
 
@@ -134,19 +134,19 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                         </p>
 
                         {isOwner ? (
-                            <div className="mt-8 border-2 border-black bg-brand-navy p-5 text-white">
-                                <p className="text-lg font-black uppercase">{t('own_title')}</p>
+                            <div className="mt-8 border border-neutral-200 bg-brand-navy p-5 text-white rounded-2xl">
+                                <p className="text-lg font-extrabold">{t('own_title')}</p>
                                 <p className="mt-2 text-sm font-semibold leading-6 text-neutral-300">{t('own_body')}</p>
-                                <Link href="/referrals" className="mt-4 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-black uppercase text-black">
+                                <Link href="/referrals" className="mt-4 inline-flex items-center gap-2 bg-brand-yellow px-5 py-3 text-sm font-extrabold text-black rounded-full">
                                     {t('own_cta')}
                                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                                 </Link>
                             </div>
                         ) : isMember ? (
-                            <div className="mt-8 border-2 border-black bg-neutral-100 p-5">
-                                <p className="text-lg font-black uppercase">{t('member_title')}</p>
+                            <div className="mt-8 border border-neutral-200 bg-neutral-100 p-5 rounded-2xl">
+                                <p className="text-lg font-extrabold">{t('member_title')}</p>
                                 <p className="mt-2 text-sm font-semibold leading-6 text-neutral-700">{t('member_body', { name })}</p>
-                                <Link href="/referrals" className="mt-4 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-5 py-3 text-sm font-black uppercase text-black">
+                                <Link href="/referrals" className="mt-4 inline-flex items-center gap-2 bg-brand-yellow px-5 py-3 text-sm font-extrabold text-black rounded-full">
                                     {t('member_cta')}
                                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                                 </Link>
@@ -154,10 +154,10 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                         ) : (
                             <div className="mt-8">
                                 {reward.enabled ? (
-                                    <div className="mb-5 flex items-start gap-3 border-2 border-black bg-brand-navy p-4 text-white">
+                                    <div className="mb-5 flex items-start gap-3 border border-neutral-200 bg-brand-navy p-4 text-white rounded-2xl">
                                         <Gift className="mt-0.5 h-6 w-6 shrink-0 text-brand-yellow" aria-hidden="true" />
                                         <div>
-                                            <p className="font-black uppercase text-brand-yellow">
+                                            <p className="font-extrabold text-brand-yellow">
                                                 {t('reward_title', { trees: reward.treesPerPerson })}
                                             </p>
                                             <p className="mt-1 text-sm font-semibold leading-6 text-neutral-200">
@@ -168,7 +168,7 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                                 ) : null}
                                 <Link
                                     href={signupHref}
-                                    className="inline-flex w-full items-center justify-center gap-3 border-2 border-black bg-brand-yellow px-8 py-4 text-lg font-black uppercase tracking-wider text-black transition-transform hover:translate-x-[2px] hover:translate-y-[2px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto"
+                                    className="inline-flex w-full items-center justify-center gap-3 bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto rounded-full"
                                 >
                                     {t('cta')}
                                     <ArrowRight className="h-5 w-5" aria-hidden="true" />
@@ -177,7 +177,7 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                                 <p className="mt-2 text-xs font-semibold text-neutral-500">{t('privacy_note', { name })}</p>
                                 <p className="mt-4 text-sm font-semibold text-neutral-600">
                                     {t('login_prompt')}{' '}
-                                    <Link href={loginHref} className="font-black text-black underline underline-offset-4">
+                                    <Link href={loginHref} className="font-extrabold text-black underline underline-offset-4">
                                         {t('login')}
                                     </Link>
                                 </p>
@@ -197,20 +197,20 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                         </ul>
                     </div>
 
-                    <div className="border-t-2 border-black bg-brand-navy p-6 text-white sm:p-10 lg:border-l-2 lg:border-t-0">
-                        <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-yellow">{t('steps_title')}</p>
+                    <div className="border-t border-neutral-200 bg-brand-navy p-6 text-white sm:p-10 lg:border-l lg:border-t-0">
+                        <p className="font-mono text-xs font-bold text-brand-yellow">{t('steps_title')}</p>
 
                         <ol className="mt-5 space-y-3">
                             {steps.map((step, index) => {
                                 const Icon = step.icon
                                 return (
-                                    <li key={step.title} className="flex gap-4 border-2 border-white/30 bg-white/5 p-4">
-                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-black bg-brand-yellow text-black">
+                                    <li key={step.title} className="flex gap-4 border border-white/30 bg-white/5 p-4">
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-neutral-200 bg-brand-yellow text-black rounded-2xl">
                                             <Icon className="h-5 w-5" aria-hidden="true" />
                                         </span>
                                         <div>
                                             <p className="font-mono text-[11px] font-bold text-brand-yellow">0{index + 1}</p>
-                                            <p className="font-black uppercase">{step.title}</p>
+                                            <p className="font-extrabold">{step.title}</p>
                                             <p className="mt-1 text-sm font-semibold leading-6 text-neutral-300">{step.body}</p>
                                         </div>
                                     </li>
@@ -219,8 +219,8 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                         </ol>
 
                         {forest && (forest.totalTrees > 0 || forest.friends.length > 0) ? (
-                            <div className="mt-6 border-2 border-black bg-forest-ground p-5 text-brand-navy">
-                                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-black/60">{t('forest_title', { name })}</p>
+                            <div className="mt-6 border border-neutral-200 bg-forest-ground p-5 text-brand-navy rounded-2xl">
+                                <p className="text-[11px] font-extrabold text-black/60">{t('forest_title', { name })}</p>
                                 <ForestIsland
                                     className="mt-2"
                                     seed={forest.seed}
@@ -232,14 +232,14 @@ export default async function ReferralInvitePage({ params }: PageProps) {
                                 <div className="mt-3 grid grid-cols-2 gap-3">
                                     {forest.totalTrees > 0 ? (
                                         <div>
-                                            <p className="font-candu text-4xl font-extrabold">{forest.totalTrees.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-black/60">{t('forest_trees', { count: forest.totalTrees })}</p>
+                                            <p className="text-4xl font-extrabold">{forest.totalTrees.toLocaleString(params.locale)}</p>
+                                            <p className="text-xs font-extrabold text-black/60">{t('forest_trees', { count: forest.totalTrees })}</p>
                                         </div>
                                     ) : null}
                                     {forest.friends.length > 0 ? (
                                         <div>
-                                            <p className="font-candu text-4xl font-extrabold">{forest.friends.length.toLocaleString(params.locale)}</p>
-                                            <p className="text-xs font-black uppercase tracking-wider text-black/60">{t('forest_people', { count: forest.friends.length })}</p>
+                                            <p className="text-4xl font-extrabold">{forest.friends.length.toLocaleString(params.locale)}</p>
+                                            <p className="text-xs font-extrabold text-black/60">{t('forest_people', { count: forest.friends.length })}</p>
                                         </div>
                                     ) : null}
                                 </div>

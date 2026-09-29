@@ -56,8 +56,8 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
     } satisfies ChartConfig;
 
     return (
-        <div className="bg-brand-gray border-2 border-black p-8 shadow-none">
-            <h3 className="font-rethink-sans text-2xl font-extrabold mb-8 text-black text-center uppercase">
+        <div className="bg-neutral-100 border border-neutral-200 p-8 rounded-2xl">
+            <h3 className="text-2xl font-extrabold mb-8 text-black text-center">
                 {t("title")}
             </h3>
 
@@ -100,7 +100,7 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
                             dataKey="emissions"
                             position="top"
                             offset={10}
-                            className="fill-black font-extrabold font-candu text-xl"
+                            className="fill-black font-extrabold text-xl"
                             formatter={(value: number) => `${value.toFixed(1)} kg`}
                         />
                     </Bar>
@@ -109,16 +109,16 @@ export function ComparisonGraph({ data }: ComparisonGraphProps) {
 
             <div className="mt-8 flex items-center justify-center gap-6">
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-brand-yellow border border-black rounded-sm shadow-none"></div>
-                    <span className="text-sm font-bold font-rethink-sans">IdleForest</span>
+                    <div className="w-4 h-4 bg-brand-yellow border border-neutral-200 rounded-xl"></div>
+                    <span className="text-sm font-bold">IdleForest</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-red-500 border border-black rounded-sm shadow-none"></div>
-                    <span className="text-sm font-bold font-rethink-sans">{data.app_name}</span>
+                    <div className="w-4 h-4 bg-red-500 border border-neutral-200 rounded-xl"></div>
+                    <span className="text-sm font-bold">{data.app_name}</span>
                 </div>
             </div>
 
-            <p className="text-sm text-neutral-600 text-center mt-6 border-t-2 border-black/5 pt-4 font-medium">
+            <p className="text-sm text-neutral-600 text-center mt-6 border-t border-black/5 pt-4 font-medium">
                 {t("offset_note")}
             </p>
         </div>

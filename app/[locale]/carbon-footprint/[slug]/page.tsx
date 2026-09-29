@@ -215,7 +215,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
     ];
 
     return (
-        <div className="min-h-screen bg-brand-gray  pb-12 font-inter">
+        <div className="min-h-screen bg-[#F7F7F2] pb-12 font-inter">
             <Navigation />
             <script
                 type="application/ld+json"
@@ -237,7 +237,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                     {/* Main Content */}
                     <div className="lg:col-span-8">
                         <div className="flex items-center gap-6 mb-6">
-                            <div className="w-20 h-20 bg-white flex items-center justify-center border-2 border-black shadow-none">
+                            <div className="w-20 h-20 bg-white flex items-center justify-center border border-neutral-200 rounded-2xl">
                                 {(() => {
                                     const iconUrl = getIconUrl(data);
                                     if (iconUrl.startsWith("fallback:")) {
@@ -256,8 +256,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     );
                                 })()}
                             </div>
-                            <h1 className="font-candu text-[38px] sm:text-5xl md:text-6xl font-extrabold text-black uppercase leading-[1.05]">
-                                {t("page.carbon_footprint_of")} <span className="text-brand-yellow bg-black px-2">{data.app_name}</span>
+                            <h1 className="text-3xl sm:text-5xl md:text-5xl font-extrabold text-black leading-[1.05]">
+                                {t("page.carbon_footprint_of")} <span className="text-brand-yellow bg-brand-navy px-2">{data.app_name}</span>
                             </h1>
                         </div>
 
@@ -276,7 +276,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         </p>
 
                         {data.seo && (
-                            <div className="mb-10 border-2 border-black bg-white p-6 shadow-none">
+                            <div className="mb-10 border border-neutral-200 bg-white p-6 rounded-2xl">
                                 <p className="text-lg text-neutral-800 leading-relaxed">
                                     {data.seo.intro}
                                 </p>
@@ -288,8 +288,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         </div>
 
                         {data.seo?.methodology_summary || data.seo?.methodology_bullets?.length ? (
-                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
-                                <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                            <div className="mb-12 border border-neutral-200 bg-white p-6 rounded-2xl">
+                                <h2 className="text-2xl font-extrabold text-black mb-4">
                                     {data.seo.methodology_title || t("sources.title")}
                                 </h2>
                                 {data.seo.methodology_summary ? (
@@ -301,7 +301,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <ul className="space-y-3">
                                         {data.seo.methodology_bullets.map((bullet) => (
                                             <li key={bullet} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
-                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-navy" />
                                                 <span>{bullet}</span>
                                             </li>
                                         ))}
@@ -310,22 +310,22 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                             </div>
                         ) : null}
 
-                        <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
-                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                        <div className="mb-12 border border-neutral-200 bg-white p-6 rounded-2xl">
+                            <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-3">
                                 {CALCULATION_PROOF_COPY.eyebrow}
                             </p>
-                            <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-5">
+                            <h2 className="text-2xl font-extrabold text-black mb-5">
                                 {CALCULATION_PROOF_COPY.title}
                             </h2>
                             <div className="space-y-4">
-                                <div className="rounded-lg border border-black/10 bg-brand-gray p-4">
-                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 mb-2">
+                                <div className="rounded-lg border border-black/10 bg-neutral-100 p-4">
+                                    <p className="text-xs font-bold text-neutral-500 mb-2">
                                         {isPerTransaction ? CALCULATION_PROOF_COPY.transactionFormulaLabel : CALCULATION_PROOF_COPY.annualFormulaLabel}
                                     </p>
                                     <p className="font-mono text-sm text-black break-words">{annualFormula}</p>
                                 </div>
-                                <div className="rounded-lg border border-black/10 bg-brand-gray p-4">
-                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 mb-2">
+                                <div className="rounded-lg border border-black/10 bg-neutral-100 p-4">
+                                    <p className="text-xs font-bold text-neutral-500 mb-2">
                                         {CALCULATION_PROOF_COPY.treeFormulaLabel}
                                     </p>
                                     <p className="font-mono text-sm text-black break-words">{treeFormula}</p>
@@ -339,14 +339,14 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         {data.seo?.key_drivers?.length || data.seo?.assumptions?.length || data.seo?.uncertainty ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.seo?.key_drivers?.length ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-none">
-                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                        <h2 className="text-2xl font-extrabold text-black mb-4">
                                             {t("page.drivers_title")}
                                         </h2>
                                         <ul className="space-y-3">
                                             {data.seo.key_drivers.map((driver) => (
                                                 <li key={driver} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
-                                                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-navy" />
                                                     <span>{driver}</span>
                                                 </li>
                                             ))}
@@ -355,22 +355,22 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 ) : null}
 
                                 {data.seo?.assumptions?.length || data.seo?.uncertainty ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-none">
-                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                        <h2 className="text-2xl font-extrabold text-black mb-4">
                                             {t("page.assumptions_title")}
                                         </h2>
                                         {data.seo?.assumptions?.length ? (
                                             <ul className="space-y-3">
                                                 {data.seo.assumptions.map((assumption) => (
                                                     <li key={assumption} className="flex items-start gap-3 text-neutral-800 leading-relaxed">
-                                                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-black" />
+                                                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-navy" />
                                                         <span>{assumption}</span>
                                                     </li>
                                                 ))}
                                             </ul>
                                         ) : null}
                                         {data.seo?.uncertainty ? (
-                                            <p className="mt-5 rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                            <p className="mt-5 rounded-lg border border-black/10 bg-neutral-100 p-4 text-sm leading-relaxed text-neutral-700">
                                                 <strong className="text-black">{t("page.uncertainty_note")}</strong> {data.seo.uncertainty}
                                             </p>
                                         ) : null}
@@ -386,8 +386,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         {data.seo?.reduction_tips?.length || data.seo?.reviewer ? (
                             <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {data.seo?.reduction_tips?.length ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-none">
-                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                    <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                        <h2 className="text-2xl font-extrabold text-black mb-4">
                                             {t("page.reduction_title")}
                                         </h2>
                                         <ul className="space-y-3">
@@ -402,11 +402,11 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                 ) : null}
 
                                 {data.seo?.reviewer ? (
-                                    <div className="border-2 border-black bg-white p-6 shadow-none">
-                                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">
+                                    <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                        <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-3">
                                             {t("page.reviewed_eyebrow")}
                                         </p>
-                                        <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                                        <h2 className="text-2xl font-extrabold text-black mb-4">
                                             {t("page.review_title")}
                                         </h2>
                                         <div className="space-y-2 text-neutral-800">
@@ -417,7 +417,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                                 <p><strong className="text-black">{t("page.last_reviewed_label")}</strong> {reviewedDate}</p>
                                             ) : null}
                                         </div>
-                                        <p className="mt-5 rounded-lg border border-black/10 bg-brand-gray p-4 text-sm leading-relaxed text-neutral-700">
+                                        <p className="mt-5 rounded-lg border border-black/10 bg-neutral-100 p-4 text-sm leading-relaxed text-neutral-700">
                                             {t("page.editorial_note")}
                                         </p>
                                     </div>
@@ -426,8 +426,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         ) : null}
 
                         {data.seo?.source_references?.length ? (
-                            <div className="mb-12 border-2 border-black bg-white p-6 shadow-none">
-                                <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                            <div className="mb-12 border border-neutral-200 bg-white p-6 rounded-2xl">
+                                <h2 className="text-2xl font-extrabold text-black mb-4">
                                     {t("page.sources_title")}
                                 </h2>
                                 <div className="space-y-4">
@@ -437,10 +437,10 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                             href={source.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="block rounded-lg border border-black/10 bg-brand-gray p-4 transition-colors hover:border-black"
+                                            className="block rounded-lg border border-black/10 bg-neutral-100 p-4 transition-colors hover:border-neutral-400"
                                         >
                                             <div className="flex items-center justify-between gap-4 mb-2">
-                                                <h3 className="font-rethink-sans text-lg font-extrabold text-black">{source.title}</h3>
+                                                <h3 className="text-lg font-extrabold text-black">{source.title}</h3>
                                                 <ExternalLink className="h-4 w-4 shrink-0 text-neutral-500" />
                                             </div>
                                             <p className="text-neutral-700 leading-relaxed">{source.note}</p>
@@ -451,14 +451,14 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                         ) : null}
 
                         {data.seo?.faq?.length ? (
-                            <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
-                                <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                            <div className="mt-12 mb-12 border-t border-black/10 pt-12">
+                                <h2 className="text-3xl font-extrabold text-black mb-6">
                                     {t("page.more_questions_about", { app: data.app_name })}
                                 </h2>
                                 <div className="space-y-4">
                                     {data.seo.faq.map((item) => (
-                                        <div key={item.question} className="border-2 border-black bg-white p-6 shadow-none">
-                                            <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-3">
+                                        <div key={item.question} className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                                            <h3 className="text-xl font-extrabold text-black mb-3">
                                                 {item.question}
                                             </h3>
                                             <p className="text-neutral-700 leading-relaxed">{item.answer}</p>
@@ -468,8 +468,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                             </div>
                         ) : null}
 
-                        <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                        <div className="mt-12 mb-12 border-t border-black/10 pt-12">
+                            <h2 className="text-3xl font-extrabold text-black mb-6">
                                 {t("page.explore_the_cluster")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -477,17 +477,17 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={item.href}
                                         href={item.href}
-                                        className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
+                                        className="border border-neutral-200 bg-white p-6 hover:-translate-y-1 transition-all rounded-2xl"
                                     >
-                                        <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.title}</h3>
+                                        <h3 className="text-xl font-extrabold text-black mb-2">{item.title}</h3>
                                         <p className="text-neutral-700 leading-relaxed">{item.description}</p>
                                     </Link>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="mt-12 mb-12 border-t-2 border-black/10 pt-12">
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">
+                        <div className="mt-12 mb-12 border-t border-black/10 pt-12">
+                            <h2 className="text-3xl font-extrabold text-black mb-6">
                                 {t("page.featured_carbon_guides")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -495,20 +495,20 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={guide.slug}
                                         href={`/carbon-footprint/${guide.slug}`}
-                                        className="border-2 border-black bg-brand-gray p-5 hover:-translate-y-1 hover:shadow-none transition-all"
+                                        className="border border-neutral-200 bg-neutral-100 p-5 hover:-translate-y-1 transition-all rounded-2xl"
                                     >
-                                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">
+                                        <div className="text-xs font-bold text-neutral-500 mb-2">
                                             {t(`categories.${guide.category}`)}
                                         </div>
-                                        <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{guide.app_name}</h3>
+                                        <h3 className="text-xl font-extrabold text-black mb-2">{guide.app_name}</h3>
                                         <p className="text-neutral-700 text-sm leading-relaxed">{guide.seo?.intro || guide.idleforest_pitch}</p>
                                     </Link>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="mt-16 pt-12 border-t-2 border-black/10">
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-8">
+                        <div className="mt-16 pt-12 border-t border-black/10">
+                            <h2 className="text-3xl font-extrabold text-black mb-8">
                                 {t("page.compare_with_related")}
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -516,7 +516,7 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                     <Link
                                         key={related.slug}
                                         href={buildComparisonPath(data.slug, related.slug)}
-                                        className="relative block p-6 bg-white border-2 border-black hover:-translate-y-1 hover:shadow-none transition-all group duration-200"
+                                        className="relative block p-6 bg-white border border-neutral-200 hover:-translate-y-1 transition-all group duration-200 rounded-2xl"
                                     >
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center gap-3">
@@ -537,17 +537,17 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
                                                         />
                                                     );
                                                 })()}
-                                                <h3 className="font-rethink-sans font-extrabold text-xl group-hover:text-brand-green transition-colors">
+                                                <h3 className="font-extrabold text-xl group-hover:text-brand-green transition-colors">
                                                     {related.app_name}
                                                 </h3>
                                             </div>
-                                            <span className="text-[10px] font-bold uppercase tracking-widest bg-brand-yellow text-black px-2 py-1 border border-black">
+                                            <span className="text-[10px] font-bold bg-brand-yellow text-black px-2 py-1 border border-neutral-200">
                                                 {t(`categories.${related.category}`)}
                                             </span>
                                         </div>
                                         <div className="space-y-1">
                                             <p className="text-base font-bold text-neutral-900 flex items-center gap-2">
-                                                <span className="w-2 h-2 bg-black rounded-full"></span>
+                                                <span className="w-2 h-2 bg-brand-navy rounded-full"></span>
                                                 {related.co2_per_hour_grams}{t("page.g_co2_hour")}
                                             </p>
                                             <p className="text-sm text-neutral-600 pl-4">
@@ -566,8 +566,8 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                     {/* Sidebar / CTA */}
                     <div className="lg:col-span-4 space-y-8">
-                        <div className="bg-brand-yellow border-2 border-black p-8 sticky top-24 shadow-none">
-                            <h3 className="font-rethink-sans text-2xl font-extrabold text-black mb-4">
+                        <div className="bg-brand-yellow border border-neutral-200 p-8 sticky top-24 rounded-2xl">
+                            <h3 className="text-2xl font-extrabold text-black mb-4">
                                 {t("page.about_idleforest")}
                             </h3>
                             <p className="text-neutral-900 mb-6 leading-relaxed">
@@ -576,17 +576,17 @@ export default async function CarbonFootprintPage({ params }: PageProps) {
 
                             <SmartCTA className="w-full text-black" showLearnMore={false} forceVertical={true} buttonVariant="inverse" desktopOnly showExtensionDownload={false} />
 
-                            <div className="mt-6 text-sm text-neutral-800 border-t-2 border-black/10 pt-4 font-medium">
+                            <div className="mt-6 text-sm text-neutral-800 border-t border-black/10 pt-4 font-medium">
                                 <p className="mb-2 flex items-center gap-2">
-                                    <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
+                                    <span className="w-4 h-4 bg-brand-navy text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
                                     {t("page.free_to_use")}
                                 </p>
                                 <p className="mb-2 flex items-center gap-2">
-                                    <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
+                                    <span className="w-4 h-4 bg-brand-navy text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
                                     {t("page.no_account")}
                                 </p>
                                 <p className="flex items-center gap-2">
-                                    <span className="w-4 h-4 bg-black text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
+                                    <span className="w-4 h-4 bg-brand-navy text-brand-yellow rounded-full flex items-center justify-center text-[10px]">✓</span>
                                     {t("page.open_source")}
                                 </p>
                             </div>

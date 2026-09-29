@@ -293,13 +293,13 @@ function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
+    <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
       {/* Team Invite Banner */}
       {inviteInfo && (
-        <div className="mb-6 p-4 bg-brand-navy text-white border-2 border-black">
+        <div className="mb-6 p-4 bg-brand-navy text-white border border-neutral-200 rounded-2xl">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-brand-yellow" />
-            <span className="text-xs uppercase tracking-wider text-gray-300">Joining Team</span>
+            <span className="text-xs text-gray-300">Joining Team</span>
           </div>
           <p className="font-bold text-lg">{inviteInfo.teamName}</p>
           <p className="text-sm text-gray-400">Invited by {inviteInfo.inviterName}</p>
@@ -307,10 +307,10 @@ function SignupForm() {
       )}
 
       {companyInfo && !inviteInfo && (
-        <div className="mb-6 p-4 bg-brand-navy text-white border-2 border-black">
+        <div className="mb-6 p-4 bg-brand-navy text-white border border-neutral-200 rounded-2xl">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-brand-yellow" />
-            <span className="text-xs uppercase tracking-wider text-gray-300">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Joining the clean-ocean fund' : 'Joining Company Forest'}</span>
+            <span className="text-xs text-gray-300">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Joining the clean-ocean fund' : 'Joining Company Forest'}</span>
           </div>
           <p className="font-bold text-lg">{companyInfo.name}</p>
           <p className="text-sm text-gray-400">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Create your account, then set up your computer or email yourself a setup link.' : 'No invite required'}</p>
@@ -318,15 +318,15 @@ function SignupForm() {
       )}
 
       {referralInfo && !inviteInfo && !companyInfo && (
-        <div className="mb-6 border-2 border-black bg-brand-yellow p-4 text-black">
+        <div className="mb-6 border border-neutral-200 bg-brand-yellow p-4 text-black rounded-2xl">
           <div className="mb-1 flex items-center gap-2">
             <Users className="h-4 w-4" />
-            <span className="text-xs font-black uppercase tracking-wider">Personal invite</span>
+            <span className="text-xs font-extrabold">Personal invite</span>
           </div>
           <p className="font-bold text-lg">{referralInfo.inviterName} invited you to grow IdleForest together.</p>
           <p className="mt-1 text-sm font-semibold text-neutral-700">Free, runs quietly in the background, and plants real trees. Create your account, then connect the desktop app to join {referralInfo.inviterName}&apos;s forest.</p>
           {referralInfo.reward && (
-            <p className="mt-2 border-t-2 border-black pt-2 text-sm font-black">
+            <p className="mt-2 border-t border-neutral-200 pt-2 text-sm font-extrabold">
               Welcome gift: once your computer has contributed on {referralInfo.reward.minActiveDays} days, you and {referralInfo.inviterName} each get {formatTrees(referralInfo.reward.treesPerPerson)} planted.
             </p>
           )}
@@ -334,25 +334,25 @@ function SignupForm() {
       )}
 
       {validatingReferral && !inviteInfo && !companyInfo && (
-        <div className="mb-6 flex items-center gap-2 border-2 border-black bg-neutral-100 p-4 text-sm font-bold">
+        <div className="mb-6 flex items-center gap-2 border border-neutral-200 bg-neutral-100 p-4 text-sm font-bold rounded-2xl">
           <Loader2 className="h-4 w-4 animate-spin" />
           Checking your invite…
         </div>
       )}
 
       {referralValidationError && !validatingReferral && (
-        <div className="mb-6 border-2 border-amber-500 bg-amber-50 p-3 text-sm font-bold text-amber-900">
+        <div className="mb-6 border border-amber-500 bg-amber-50 p-3 text-sm font-bold text-amber-900">
           {referralValidationError}
         </div>
       )}
 
-      <h1 className="text-4xl font-extrabold text-center font-candu uppercase mb-8 leading-none">
+      <h1 className="text-4xl font-extrabold text-center mb-8 leading-none">
         {inviteInfo || companyInfo ? 'Create Account' : <>Join the <br /><span className="bg-brand-yellow px-2">Forest</span></>}
       </h1>
 
       <form onSubmit={handleSignup} className="space-y-4">
         <div>
-          <label htmlFor="displayName" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+          <label htmlFor="displayName" className="block text-sm font-bold text-neutral-600 mb-1">
             Display Name
           </label>
           <input
@@ -362,12 +362,12 @@ function SignupForm() {
             required
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
             placeholder="Your Name"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+          <label htmlFor="email" className="block text-sm font-bold text-neutral-600 mb-1">
             Email address
           </label>
           <input
@@ -378,12 +378,12 @@ function SignupForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
             placeholder="you@example.com"
           />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-bold uppercase tracking-wider text-neutral-600 mb-1">
+          <label htmlFor="password" className="block text-sm font-bold text-neutral-600 mb-1">
             Password
           </label>
           <input
@@ -394,12 +394,12 @@ function SignupForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-black focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all font-mono placeholder:text-neutral-400 bg-neutral-50 text-black"
+            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
             placeholder="••••••••"
           />
         </div>
-        {error && <div className="p-3 bg-red-100 border-2 border-red-500 text-red-700 font-bold text-sm text-center">{error}</div>}
-        {message && <div className="p-3 bg-green-100 border-2 border-green-500 text-green-700 font-bold text-sm text-center">{message}</div>}
+        {error && <div className="p-3 bg-red-100 border border-red-500 text-red-700 font-bold text-sm text-center">{error}</div>}
+        {message && <div className="p-3 bg-green-100 border border-green-500 text-green-700 font-bold text-sm text-center">{message}</div>}
 
         <div className="flex justify-center pt-2">
           <Turnstile
@@ -417,7 +417,7 @@ function SignupForm() {
           <button
             type="submit"
             disabled={loading || validatingReferral || !turnstileToken}
-            className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-4 text-lg font-bold bg-brand-yellow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rounded-full"
           >
             {loading ? (
               <><Loader2 className="h-5 w-5 mr-2 animate-spin text-black" /> Creating...</>
@@ -428,7 +428,7 @@ function SignupForm() {
         </div>
       </form>
 
-      <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-300 text-center space-y-4">
+      <div className="mt-8 pt-6 border-t border-dashed border-neutral-300 text-center space-y-4">
         <p className="text-sm text-neutral-600 font-bold">
           Already have an account?{' '}
           <Link href={companySlug ? `/auth/user/login?redirect=${encodeURIComponent(`/en/join/company/${companySlug}`)}` : "/auth/user/login"} className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">
@@ -452,7 +452,7 @@ function SignupForm() {
 
 function SignupFormLoading() {
   return (
-    <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
+    <div className="w-full max-w-md bg-white border border-neutral-200 p-8 text-center rounded-2xl">
       <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
       <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
     </div>
@@ -461,7 +461,7 @@ function SignupFormLoading() {
 
 export default function UserSignupPage() {
   return (
-    <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
+    <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
       <Suspense fallback={<SignupFormLoading />}>
         <SignupForm />
       </Suspense>

@@ -91,12 +91,12 @@ export default function NewThreadPage() {
                     Back to Team
                 </Link>
 
-                <div className="bg-white border-2 border-black shadow-none p-8">
+                <div className="bg-white border border-neutral-200 p-8 rounded-2xl">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Start a New Discussion</h1>
                     <p className="text-gray-600 mb-8">Share ideas, ask questions, or start a conversation with your team.</p>
 
                     {error && (
-                        <div className="bg-red-50 border-2 border-red-500 p-4 mb-6">
+                        <div className="bg-red-50 border border-red-500 p-4 mb-6">
                             <p className="text-red-700 font-medium">{error}</p>
                         </div>
                     )}
@@ -112,7 +112,7 @@ export default function NewThreadPage() {
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="What's this discussion about?"
-                                className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium"
+                                className="w-full p-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium rounded-2xl"
                                 maxLength={200}
                                 disabled={isSubmitting}
                                 required
@@ -132,7 +132,7 @@ export default function NewThreadPage() {
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 placeholder="Share your thoughts, questions, or ideas..."
-                                className="w-full p-3 border-2 border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium resize-none"
+                                className="w-full p-3 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-brand-yellow font-medium resize-none rounded-2xl"
                                 rows={12}
                                 maxLength={5000}
                                 disabled={isSubmitting}
@@ -148,14 +148,14 @@ export default function NewThreadPage() {
                         <div className="flex gap-4 justify-end">
                             <Link
                                 href={`/teams/${teamSlug}`}
-                                className="px-6 py-3 bg-gray-100 text-gray-700 font-bold border-2 border-black hover:bg-gray-200 transition-all shadow-none"
+                                className="px-6 py-3 bg-gray-100 text-gray-700 font-bold border border-neutral-200 hover:bg-gray-200 transition-all rounded-full"
                             >
                                 Cancel
                             </Link>
                             <button
                                 type="submit"
                                 disabled={isSubmitting || title.length < 10 || content.length < 20}
-                                className="px-6 py-3 bg-black text-white font-bold border-2 border-black hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
+                                className="px-6 py-3 bg-brand-navy text-white font-bold hover:bg-brand-yellow hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-full"
                             >
                                 {isSubmitting ? 'Creating...' : 'Create Discussion'}
                             </button>

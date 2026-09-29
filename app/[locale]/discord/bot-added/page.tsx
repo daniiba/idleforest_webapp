@@ -16,11 +16,11 @@ function BotAddedContent() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center max-w-md mx-auto">
-            <div className="bg-white border-2 border-black shadow-none p-8 w-full reveal-animation">
-                <div className="bg-green-100 w-16 h-16 flex items-center justify-center border-2 border-black rounded-full mx-auto mb-6">
+            <div className="bg-white border border-neutral-200 p-8 w-full reveal-animation rounded-2xl">
+                <div className="bg-green-100 w-16 h-16 flex items-center justify-center border border-neutral-200 rounded-full mx-auto mb-6">
                     <CheckCircle2 className="w-8 h-8 text-green-600" />
                 </div>
-                <h1 className="text-2xl font-bold font-candu uppercase text-brand-navy mb-4">
+                <h1 className="text-2xl font-bold text-brand-navy mb-4">
                     Bot Added Successfully!
                 </h1>
                 <p className="text-neutral-600 mb-8">
@@ -30,7 +30,7 @@ function BotAddedContent() {
                     href={returnUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-4 font-bold uppercase tracking-wider bg-[#5865F2] text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+                    className="w-full flex items-center justify-center gap-2 py-4 font-bold bg-[#5865F2] text-white border border-neutral-200 transition-all rounded-2xl"
                 >
                     Return to Discord <ArrowRight className="w-4 h-4" />
                 </a>

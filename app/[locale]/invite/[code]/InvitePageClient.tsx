@@ -194,8 +194,8 @@ export default function InvitePageClient() {
 
     if (loading) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8 text-center">
+            <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+                <div className="w-full max-w-md bg-white border border-neutral-200 p-8 text-center rounded-2xl">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
                     <p className="mt-4 text-neutral-600 font-bold">Loading invite...</p>
                 </div>
@@ -205,15 +205,15 @@ export default function InvitePageClient() {
 
     if (error || !inviteData) {
         return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
-                    <h1 className="text-3xl font-extrabold font-candu uppercase mb-4 text-center">
+            <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+                <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
+                    <h1 className="text-3xl font-extrabold mb-4 text-center">
                         Oops!
                     </h1>
                     <p className="text-neutral-600 text-center mb-6">{error || 'Invalid invite link'}</p>
                     <Link
                         href="/"
-                        className="block w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all text-center"
+                        className="block w-full py-4 text-lg font-bold bg-brand-yellow transition-all text-center rounded-full"
                     >
                         Go to Homepage
                     </Link>
@@ -223,14 +223,14 @@ export default function InvitePageClient() {
     }
 
     return (
-        <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-            <div className="w-full max-w-md bg-white border-2 border-black shadow-none p-8">
+        <main className="flex items-center justify-center min-h-screen bg-[#F7F7F2] p-4">
+            <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-yellow border-2 border-black mb-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-yellow border border-neutral-200 mb-4 rounded-2xl">
                         <UserPlus className="w-8 h-8 text-black" />
                     </div>
-                    <h1 className="text-3xl font-extrabold font-candu uppercase mb-2">
+                    <h1 className="text-3xl font-extrabold mb-2">
                         You&apos;re Invited!
                     </h1>
                     <p className="text-neutral-600">
@@ -239,25 +239,25 @@ export default function InvitePageClient() {
                 </div>
 
                 {/* Team Info Card */}
-                <div className="border-2 border-black p-6 mb-6 bg-neutral-50">
+                <div className="border border-neutral-200 p-6 mb-6 bg-neutral-50 rounded-2xl">
                     {/* Team Image */}
                     {inviteData.team.image_url ? (
                         <div className="flex justify-center mb-4">
                             <img
                                 src={inviteData.team.image_url}
                                 alt={`${inviteData.team.name} logo`}
-                                className="w-24 h-24 object-cover border-2 border-black shadow-none"
+                                className="w-24 h-24 object-cover border border-neutral-200 rounded-2xl"
                             />
                         </div>
                     ) : (
                         <div className="flex justify-center mb-4">
-                            <div className="w-24 h-24 bg-brand-yellow border-2 border-black shadow-none flex items-center justify-center">
+                            <div className="w-24 h-24 bg-brand-yellow border border-neutral-200 flex items-center justify-center rounded-2xl">
                                 <Users className="w-10 h-10 text-black" />
                             </div>
                         </div>
                     )}
 
-                    <h2 className="text-2xl font-bold font-candu uppercase text-center text-black">{inviteData.team.name}</h2>
+                    <h2 className="text-2xl font-bold text-center text-black">{inviteData.team.name}</h2>
 
                     {/* Team Description */}
                     {inviteData.team.description && (
@@ -265,19 +265,19 @@ export default function InvitePageClient() {
                     )}
 
                     {/* Stats */}
-                    <div className="flex justify-center gap-8 mt-4 pt-4 border-t-2 border-dashed border-neutral-300">
+                    <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-dashed border-neutral-300">
                         <div className="text-center">
                             <p className="text-2xl font-bold text-black">{inviteData.memberCount}</p>
-                            <p className="text-xs uppercase tracking-wider text-neutral-500 font-semibold">Members</p>
+                            <p className="text-xs text-neutral-500 font-semibold">Members</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-black">{inviteData.team.total_points.toLocaleString()}</p>
-                            <p className="text-xs uppercase tracking-wider text-neutral-500 font-semibold">Points</p>
+                            <p className="text-xs text-neutral-500 font-semibold">Points</p>
                         </div>
                     </div>
 
                     {/* Tree Planting Message */}
-                    <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t-2 border-dashed border-neutral-300">
+                    <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-dashed border-neutral-300">
                         <TreePine className="w-5 h-5 text-green-600" />
                         <p className="text-sm text-neutral-600">
                             Plant trees together!
@@ -287,7 +287,7 @@ export default function InvitePageClient() {
 
                 {/* Switch Team Warning - shows proactively if user is in a different team */}
                 {existingTeam && existingTeam.id !== inviteData.team.id && (
-                    <div className={`border-2 p-4 mb-4 ${isTeamOwner ? 'border-red-400 bg-red-50' : 'border-orange-400 bg-orange-50'}`}>
+                    <div className={`border p-4 mb-4 ${isTeamOwner ? 'border-red-400 bg-red-50' : 'border-orange-400 bg-orange-50'}`}>
                         <div className="flex items-start gap-3">
                             <AlertTriangle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isTeamOwner ? 'text-red-500' : 'text-orange-500'}`} />
                             <div>
@@ -310,7 +310,7 @@ export default function InvitePageClient() {
                                 {isTeamOwner ? (
                                     <Link
                                         href={`/teams/${existingTeam.slug || existingTeam.id}`}
-                                        className="inline-block px-4 py-2 text-sm font-bold uppercase bg-red-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                        className="inline-block px-4 py-2 text-sm font-bold bg-red-500 text-white border border-neutral-200 transition-all rounded-full"
                                     >
                                         Go to Your Team
                                     </Link>
@@ -319,13 +319,13 @@ export default function InvitePageClient() {
                                         <button
                                             onClick={handleConfirmSwitch}
                                             disabled={joining}
-                                            className="px-4 py-2 text-sm font-bold uppercase bg-orange-500 text-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all disabled:opacity-50"
+                                            className="px-4 py-2 text-sm font-bold bg-orange-500 text-white border border-neutral-200 transition-all disabled:opacity-50 rounded-full"
                                         >
                                             {joining ? 'Switching...' : 'Confirm Switch'}
                                         </button>
                                         <button
                                             onClick={() => setShowSwitchConfirm(false)}
-                                            className="px-4 py-2 text-sm font-bold uppercase bg-white border-2 border-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+                                            className="px-4 py-2 text-sm font-bold bg-white border border-neutral-200 transition-all rounded-full"
                                         >
                                             Cancel
                                         </button>
@@ -341,7 +341,7 @@ export default function InvitePageClient() {
                     <button
                         onClick={() => handleJoinTeam()}
                         disabled={joining || showSwitchConfirm || isTeamOwner}
-                        className="w-full py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none active:translate-y-[4px] active:translate-x-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        className="w-full py-4 text-lg font-bold bg-brand-yellow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rounded-full"
                     >
                         {joining ? (
                             <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Joining...</>
@@ -355,7 +355,7 @@ export default function InvitePageClient() {
                     {!currentUser && (
                         <Link
                             href={`/auth/user/login?redirect=/invite/${params.code}`}
-                            className="block w-full py-3 text-sm font-bold uppercase tracking-wider text-center text-neutral-600 border-2 border-neutral-300 hover:border-black hover:bg-neutral-100 transition-all"
+                            className="block w-full py-3 text-sm font-bold text-center text-neutral-600 border border-neutral-300 hover:border-neutral-400 hover:bg-neutral-100 transition-all"
                         >
                             Already have an account? Log in
                         </Link>
@@ -363,7 +363,7 @@ export default function InvitePageClient() {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-300 text-center">
+                <div className="mt-8 pt-6 border-t border-dashed border-neutral-300 text-center">
                     <p className="text-xs text-neutral-500">
                         By joining, you agree to our{' '}
                         <Link href="/terms" className="underline hover:text-black">Terms of Service</Link>

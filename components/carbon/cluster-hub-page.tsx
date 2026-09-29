@@ -36,7 +36,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
     const renderAppIcon = (page: typeof pages[number], sizeClasses = "w-7 h-7") => {
         const iconUrl = getIconUrl(page);
         return iconUrl.startsWith("fallback:") ? (
-            <span className="font-bold text-[10px] uppercase text-black">{getFallbackIconLabel(page.app_name)}</span>
+            <span className="font-bold text-[10px] text-black">{getFallbackIconLabel(page.app_name)}</span>
         ) : (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={iconUrl} alt="" className={sizeClasses} />
@@ -88,7 +88,7 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
     };
 
     return (
-        <div className="min-h-screen bg-brand-gray pb-12 font-inter">
+        <div className="min-h-screen bg-[#F7F7F2] pb-12 font-inter">
             <Navigation />
             <script
                 type="application/ld+json"
@@ -113,11 +113,11 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     <span className="text-black">{hub.title}</span>
                 </div>
 
-                <section className="border-2 border-black bg-white p-8 md:p-12 shadow-none mb-10">
-                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-4">
+                <section className="border border-neutral-200 bg-white p-8 md:p-12 mb-10 rounded-2xl">
+                    <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-4">
                         {hub.eyebrow}
                     </p>
-                    <h1 className="font-candu text-[42px] sm:text-6xl md:text-7xl leading-[0.95] uppercase text-black mb-6">
+                    <h1 className="text-[42px] sm:text-6xl md:text-5xl leading-[0.95] text-black mb-6">
                         {hub.title}
                     </h1>
                     <p className="text-lg md:text-xl text-neutral-800 leading-relaxed max-w-4xl mb-8">
@@ -127,8 +127,8 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {hub.sections.map((section) => (
-                            <div key={section.title} className="border-2 border-black bg-brand-yellow/20 p-5">
-                                <h2 className="font-rethink-sans text-2xl font-extrabold text-black mb-3">
+                            <div key={section.title} className="border border-neutral-200 bg-brand-yellow/20 p-5 rounded-2xl">
+                                <h2 className="text-2xl font-extrabold text-black mb-3">
                                     {section.title}
                                 </h2>
                                 <p className="text-neutral-800 leading-relaxed">{section.body}</p>
@@ -138,23 +138,23 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                 </section>
 
                 <section className="mb-12">
-                    <div className="border-2 border-black bg-white p-6 shadow-none">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_top_emitters_eyebrow")}</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-5">{t("page.hub_top_emitters_title")}</h2>
+                    <div className="border border-neutral-200 bg-white p-6 rounded-2xl">
+                        <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_top_emitters_eyebrow")}</p>
+                        <h2 className="text-3xl font-extrabold text-black mb-5">{t("page.hub_top_emitters_title")}</h2>
                         <div className="space-y-4">
                             {topEmitters.map((page, index) => (
                                 <Link
                                     key={page.slug}
                                     href={`/carbon-footprint/${page.slug}`}
-                                    className="flex items-center justify-between gap-4 rounded-lg border border-black/10 bg-brand-gray p-4 hover:border-black"
+                                    className="flex items-center justify-between gap-4 rounded-lg border border-black/10 bg-neutral-100 p-4 hover:border-neutral-400"
                                 >
                                     <div className="flex min-w-0 items-center gap-4">
-                                        <div className="h-12 w-12 shrink-0 border-2 border-black bg-white flex items-center justify-center">
+                                        <div className="h-12 w-12 shrink-0 border border-neutral-200 bg-white flex items-center justify-center rounded-2xl">
                                             {renderAppIcon(page)}
                                         </div>
                                         <div className="min-w-0">
-                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500 mb-1">#{index + 1}</div>
-                                            <div className="font-rethink-sans text-xl font-extrabold text-black truncate">{page.app_name}</div>
+                                            <div className="text-xs font-bold text-neutral-500 mb-1">#{index + 1}</div>
+                                            <div className="text-xl font-extrabold text-black truncate">{page.app_name}</div>
                                             <div className="text-sm text-neutral-600">{page.co2_per_hour_grams}{t("page.g_co2_hour")}</div>
                                         </div>
                                     </div>
@@ -167,8 +167,8 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
 
                 <section className="mb-12">
                     <div className="mb-6">
-                        <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">{t("page.recommended_pages")}</p>
-                        <h2 className="font-rethink-sans text-3xl font-extrabold text-black">{t("page.explore_related_guides")}</h2>
+                        <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-2">{t("page.recommended_pages")}</p>
+                        <h2 className="text-3xl font-extrabold text-black">{t("page.explore_related_guides")}</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -178,22 +178,22 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                 <Link
                                     key={page.slug}
                                     href={`/carbon-footprint/${page.slug}`}
-                                    className="group border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
+                                    className="group border border-neutral-200 bg-white p-6 hover:-translate-y-1 transition-all rounded-2xl"
                                 >
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-12 h-12 border-2 border-black bg-brand-gray flex items-center justify-center">
+                                        <div className="w-12 h-12 border border-neutral-200 bg-neutral-100 flex items-center justify-center rounded-2xl">
                                             {iconUrl.startsWith("fallback:") ? (
-                                                <span className="font-bold text-xs uppercase text-black">{page.category}</span>
+                                                <span className="font-bold text-xs text-black">{page.category}</span>
                                             ) : (
                                                 // eslint-disable-next-line @next/next/no-img-element
                                                 <img src={iconUrl} alt="" className="w-7 h-7" />
                                             )}
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                                            <div className="text-xs font-bold text-neutral-500">
                                                 {t(`categories.${page.category}`)}
                                             </div>
-                                            <h3 className="font-rethink-sans text-xl font-extrabold text-black group-hover:text-brand-green transition-colors">
+                                            <h3 className="text-xl font-extrabold text-black group-hover:text-brand-green transition-colors">
                                                 {page.app_name}
                                             </h3>
                                         </div>
@@ -216,8 +216,8 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                 {featuredComparisons.length ? (
                     <section className="mb-12">
                         <div className="mb-6">
-                            <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-2">{t("page.hub_comparisons_eyebrow")}</p>
-                            <h2 className="font-rethink-sans text-3xl font-extrabold text-black">{t("page.hub_comparisons_title")}</h2>
+                            <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-2">{t("page.hub_comparisons_eyebrow")}</p>
+                            <h2 className="text-3xl font-extrabold text-black">{t("page.hub_comparisons_title")}</h2>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -225,18 +225,18 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                                 <Link
                                     key={href}
                                     href={href}
-                                    className="border-2 border-black bg-white p-6 hover:-translate-y-1 hover:shadow-none transition-all"
+                                    className="border border-neutral-200 bg-white p-6 hover:-translate-y-1 transition-all rounded-2xl"
                                 >
                                     <div className="flex items-center gap-4 mb-4">
                                         <div className="flex -space-x-2">
-                                            <div className="h-12 w-12 border-2 border-black bg-brand-gray flex items-center justify-center">
+                                            <div className="h-12 w-12 border border-neutral-200 bg-neutral-100 flex items-center justify-center rounded-2xl">
                                                 {renderAppIcon(pageA)}
                                             </div>
-                                            <div className="h-12 w-12 border-2 border-black bg-brand-yellow flex items-center justify-center">
+                                            <div className="h-12 w-12 border border-neutral-200 bg-brand-yellow flex items-center justify-center rounded-2xl">
                                                 {renderAppIcon(pageB)}
                                             </div>
                                         </div>
-                                        <h3 className="font-rethink-sans text-2xl font-extrabold text-black">
+                                        <h3 className="text-2xl font-extrabold text-black">
                                             {pageA.app_name} vs {pageB.app_name}
                                         </h3>
                                     </div>
@@ -253,13 +253,13 @@ export async function CarbonHubPageTemplate({ hub, locale }: CarbonHubPageProps)
                     </section>
                 ) : null}
 
-                <section className="mb-12 border-2 border-black bg-white p-6 shadow-none">
-                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_faq_eyebrow")}</p>
-                    <h2 className="font-rethink-sans text-3xl font-extrabold text-black mb-6">{t("page.hub_faq_title")}</h2>
+                <section className="mb-12 border border-neutral-200 bg-white p-6 rounded-2xl">
+                    <p className="text-xs font-bold tracking-[0.24em] text-neutral-500 mb-3">{t("page.hub_faq_eyebrow")}</p>
+                    <h2 className="text-3xl font-extrabold text-black mb-6">{t("page.hub_faq_title")}</h2>
                     <div className="space-y-4">
                         {hub.faq.map((item) => (
-                            <div key={item.question} className="rounded-lg border border-black/10 bg-brand-gray p-5">
-                                <h3 className="font-rethink-sans text-xl font-extrabold text-black mb-2">{item.question}</h3>
+                            <div key={item.question} className="rounded-lg border border-black/10 bg-neutral-100 p-5">
+                                <h3 className="text-xl font-extrabold text-black mb-2">{item.question}</h3>
                                 <p className="text-neutral-700 leading-relaxed">{item.answer}</p>
                             </div>
                         ))}
