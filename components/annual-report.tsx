@@ -69,9 +69,9 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
   return (
     <div className="w-full">
       <div className="space-y-6">
-        <Card className="bg-white border-2 border-black shadow-none p-4 sm:p-6 rounded-none">
+        <Card className="bg-white border border-neutral-200 shadow-sm p-4 sm:p-6 rounded-3xl">
           <CardHeader className="px-0 pt-0">
-            <CardTitle className="flex items-center gap-3 text-2xl font-rethink-sans font-bold text-black">
+            <CardTitle className="flex items-center gap-3 text-2xl font-bold text-black">
               <Target className="h-8 w-8 text-black" />
               {t('progress_title')}
             </CardTitle>
@@ -81,36 +81,36 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
           </CardHeader>
           <CardContent className="px-0">
             <div className="space-y-8">
-              <section className="overflow-hidden border-2 border-black bg-white" aria-labelledby="impact-summary-title">
-                <div className="grid gap-5 bg-black p-5 text-white sm:grid-cols-[1fr_auto] sm:items-end sm:p-6">
+              <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white" aria-labelledby="impact-summary-title">
+                <div className="grid gap-5 bg-brand-navy p-5 text-white sm:grid-cols-[1fr_auto] sm:items-end sm:p-6">
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow">
+                    <p className="text-xs font-semibold text-brand-yellow">
                       {t('funding_pipeline_label')}
                     </p>
-                    <h3 id="impact-summary-title" className="mt-2 font-rethink-sans text-3xl font-black sm:text-4xl">
+                    <h3 id="impact-summary-title" className="mt-2 text-3xl font-black sm:text-4xl">
                       {totalTrees.toLocaleString()} <span className="text-xl font-bold text-neutral-300 sm:text-2xl">{t('trees_planted_progress')}</span>
                     </h3>
                   </div>
                   <div className="sm:text-right">
-                    <div className="font-rethink-sans text-2xl font-black tabular-nums text-brand-yellow">
+                    <div className="text-2xl font-black tabular-nums text-brand-yellow">
                       {fundedTreesTotal.toLocaleString()}
                     </div>
-                    <div className="text-xs font-bold uppercase tracking-wide text-neutral-300">{t('funded_total')}</div>
+                    <div className="text-xs font-medium text-neutral-300">{t('funded_total')}</div>
                   </div>
                 </div>
 
                 <div className="space-y-4 p-5 sm:p-6">
                   <div
-                    className="flex h-7 overflow-hidden border-2 border-black bg-white"
+                    className="flex h-7 overflow-hidden rounded-2xl border border-neutral-200 bg-white"
                     role="img"
                     aria-label={t('funding_pipeline_aria', {
                       planted: totalTrees.toLocaleString(),
                       awaiting: fundedAwaitingPlanting.toLocaleString(),
                     })}
                   >
-                    <div className="h-full bg-black" style={{ width: `${plantedShare}%` }} />
+                    <div className="h-full bg-brand-navy" style={{ width: `${plantedShare}%` }} />
                     <div
-                      className="h-full border-l-2 border-black bg-brand-yellow"
+                      className="h-full bg-brand-yellow"
                       style={{
                         width: `${fundedShare}%`,
                         backgroundImage: "repeating-linear-gradient(135deg, rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 6px, transparent 6px, transparent 12px)",
@@ -129,7 +129,7 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-black/15 pt-4 text-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200 pt-4 text-sm">
                     <span className="font-medium text-neutral-600">{t('next_funding_goal')}</span>
                     <span className="font-bold tabular-nums text-black">${totalDonations.toFixed(0)} / ${goalDonation.toLocaleString()}</span>
                   </div>
@@ -138,7 +138,7 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
               </section>
 
               <section aria-labelledby="roadmap-title">
-                <h3 id="roadmap-title" className="mb-3 font-rethink-sans text-xl font-extrabold text-black">
+                <h3 id="roadmap-title" className="mb-3 text-xl font-extrabold text-black">
                   {t('roadmap_title')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -149,13 +149,13 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
                     return (
                       <div
                         key={goal}
-                        className={`flex items-center gap-2 border-2 border-black px-3 py-2 ${
-                          reached ? 'bg-black text-white' : isNext ? 'bg-brand-yellow text-black' : 'bg-white text-black'
+                        className={`flex items-center gap-2 rounded-full border border-neutral-200 px-3.5 py-2 ${
+                          reached ? 'bg-brand-navy text-white' : isNext ? 'bg-brand-yellow text-brand-navy border-brand-yellow' : 'bg-white text-brand-navy'
                         }`}
                       >
                         {reached && <Check className="h-4 w-4 shrink-0 text-brand-yellow" />}
-                        <span className="font-rethink-sans text-lg font-black tabular-nums">{goal / 1000}K</span>
-                        {isNext && <span className="border-l border-black/30 pl-2 text-[10px] font-extrabold uppercase tracking-wide">{t('goal_next')}</span>}
+                        <span className="text-lg font-black tabular-nums">{goal / 1000}K</span>
+                        {isNext && <span className="border-l border-black/20 pl-2 text-[10px] font-bold">{t('goal_next')}</span>}
                       </div>
                     )
                   })}
@@ -163,26 +163,26 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
               </section>
 
               <div className="space-y-4">
-                <h3 className="text-xl font-bold font-rethink-sans text-black mb-6">{t('impact_milestones')}</h3>
+                <h3 className="text-xl font-bold text-black mb-6">{t('impact_milestones')}</h3>
                 <div className="space-y-6">
                   {milestones.map((milestone, index) => (
-                    <div key={index} className="group border-2 border-black bg-white p-6 hover:shadow-none transition-all duration-200 hover:-translate-y-1">
+                    <div key={index} className="group rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-4">
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <h4 className="font-bold text-black text-lg">{milestone.description}</h4>
-                            {index === 0 && <span className="px-2 py-0.5 border border-black bg-brand-yellow text-black text-xs font-bold uppercase tracking-wider">{t('latest')}</span>}
+                            {index === 0 && <span className="px-2.5 py-0.5 rounded-full bg-brand-yellow text-brand-navy text-xs font-bold">{t('latest')}</span>}
                           </div>
                           <p className="text-sm font-medium text-neutral-600">{new Date(milestone.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                         </div>
-                        <div className="flex items-center bg-brand-green/20 px-3 py-1.5 border border-black self-start">
+                        <div className="flex items-center rounded-full bg-green-100 px-3 py-1.5 self-start">
                           <Trees className="h-4 w-4 mr-2 text-black" />
                           <span className="text-sm font-bold text-black">{milestone.trees} {t('trees')}</span>
                         </div>
                       </div>
 
                       {milestone.image && (
-                        <div className="mb-6 border-2 border-black overflow-hidden relative">
+                        <div className="mb-6 rounded-xl overflow-hidden relative">
                           <img
                             src={milestone.image}
                             alt={milestone.description}
@@ -198,7 +198,7 @@ export default function CharityCommitments({ liveEarnings }: CharityCommitmentsP
                               key={i}
                               variant="outline"
                               size="sm"
-                              className="bg-white text-black border-2 border-black hover:bg-black hover:text-brand-yellow rounded-none font-bold transition-colors"
+                              className="bg-white text-brand-navy border border-neutral-300 hover:bg-brand-navy hover:text-white rounded-full font-semibold transition-colors"
                               asChild
                             >
                               <a

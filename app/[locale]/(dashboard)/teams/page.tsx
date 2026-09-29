@@ -387,80 +387,109 @@ export default function TeamsPage() {
 		}
 	}
 
-	return (
-		<div className="min-h-screen bg-brand-gray p-4 font-rethink-sans">
-			<div className="max-w-7xl mx-auto space-y-6">
-				{/* Top 3 Daily Banner - MOVED TO LAYOUT */}
+	const pill = (active: boolean) =>
+		`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${active
+			? 'bg-brand-navy text-white'
+			: 'bg-white text-neutral-600 ring-1 ring-neutral-200 hover:bg-neutral-100'
+		}`
 
+	const Avatar = ({ src, alt }: { src?: string | null; alt?: string }) =>
+		src ? (
+			// eslint-disable-next-line @next/next/no-img-element
+			<img src={src} alt={alt || ''} className="h-9 w-9 shrink-0 rounded-xl object-cover" />
+		) : (
+			<span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-brand-navy">
+				<Users className="h-4 w-4" aria-hidden="true" />
+			</span>
+		)
+
+	const RankRow = ({ href, rank, title, subtitle, image, showAvatar, label, value, valueClass }: {
+		href: string
+		rank: number
+		title: string
+		subtitle?: string
+		image?: string | null
+		showAvatar?: boolean
+		label: string
+		value: string
+		valueClass?: string
+	}) => (
+		<Link href={href} className="flex items-center justify-between gap-4 px-4 py-3.5 transition-colors hover:bg-neutral-50 sm:px-6">
+			<div className="flex min-w-0 items-center gap-3">
+				<span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold tabular-nums ${rank === 1 ? 'bg-brand-yellow text-brand-navy' : rank <= 3 ? 'bg-neutral-200 text-brand-navy' : 'text-neutral-500'}`}>
+					{rank}
+				</span>
+				{showAvatar && <Avatar src={image} alt={title} />}
+				<div className="min-w-0">
+					<h3 className="truncate text-base font-semibold text-brand-navy">{title}</h3>
+					{subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
+				</div>
+			</div>
+			<div className="shrink-0 text-right">
+				<p className="text-[11px] font-medium text-neutral-500">{label}</p>
+				<p className={`text-base font-bold tabular-nums ${valueClass || 'text-brand-navy'}`}>{value}</p>
+			</div>
+		</Link>
+	)
+
+	const listCard = 'overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm divide-y divide-neutral-100'
+	const emptyRow = (text: string) => <p className="p-8 text-center text-sm font-medium text-neutral-500">{text}</p>
+	const listTitle = (text: string) => <p className="text-center text-sm font-semibold text-neutral-500">{text}</p>
+
+	return (
+		<div className="min-h-screen bg-[#F7F7F2] px-4 py-8 text-brand-navy sm:py-12">
+			<div className="mx-auto max-w-5xl space-y-8">
 				{/* Header */}
-				<section className="bg-white border-2 border-black shadow-none p-6 md:p-8">
+				<section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-10">
 					<div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-						<div className="max-w-3xl">
-							<div className="mb-3 inline-flex items-center gap-2 border-2 border-black bg-brand-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-black">
-								<Users className="h-4 w-4" />
+						<div className="max-w-2xl">
+							<span className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3 py-1 text-xs font-bold text-brand-navy">
+								<Users className="h-3.5 w-3.5" aria-hidden="true" />
 								{t('hero_badge')}
-							</div>
-							<h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-black">
-								{t('hero_title')}
-							</h1>
-							<p className="mt-3 max-w-2xl text-base md:text-lg font-medium text-neutral-700">
-								{t('hero_description')}
-							</p>
+							</span>
+							<h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">{t('hero_title')}</h1>
+							<p className="mt-3 text-base text-neutral-600">{t('hero_description')}</p>
 						</div>
-						<div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+						<div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
 							<Link
 								href="/create-team"
-								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-yellow border-2 border-black font-extrabold uppercase text-sm text-black shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+								className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-6 py-3 text-sm font-bold text-brand-navy transition-colors hover:brightness-95"
 							>
-								<Plus className="h-5 w-5" />
+								<Plus className="h-4 w-4" aria-hidden="true" />
 								{t('create_team_cta')}
 							</Link>
 							<button
 								onClick={() => setActiveTab('teams')}
-								className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black border-2 border-black font-extrabold uppercase text-sm text-white shadow-none hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all"
+								className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-navy px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-black"
 							>
 								{t('find_team_cta')}
-								<ArrowRight className="h-5 w-5" />
+								<ArrowRight className="h-4 w-4" aria-hidden="true" />
 							</button>
 						</div>
 					</div>
-					<div className="mt-6 grid gap-3 sm:grid-cols-3">
-						<div className="border-2 border-black bg-brand-gray p-3">
-							<p className="text-2xl font-black text-black">{teams.length.toLocaleString()}</p>
-							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('active_teams')}</p>
-						</div>
-						<div className="border-2 border-black bg-green-50 p-3">
-							<p className="text-2xl font-black text-black">{periodTopTeams.length.toLocaleString()}</p>
-							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('teams_active_today')}</p>
-						</div>
-						<div className="border-2 border-black bg-blue-50 p-3">
-							<p className="text-2xl font-black text-black">{fastestGrowingTeams.length.toLocaleString()}</p>
-							<p className="text-xs font-extrabold uppercase tracking-wide text-neutral-600">{t('growing_this_period')}</p>
-						</div>
-					</div>
+					<dl className="mt-8 grid gap-3 sm:grid-cols-3">
+						{[
+							{ value: teams.length, label: t('active_teams') },
+							{ value: periodTopTeams.length, label: t('teams_active_today') },
+							{ value: fastestGrowingTeams.length, label: t('growing_this_period') },
+						].map(stat => (
+							<div key={stat.label} className="rounded-2xl bg-neutral-50 p-4">
+								<dd className="text-2xl font-extrabold tabular-nums">{stat.value.toLocaleString()}</dd>
+								<dt className="mt-0.5 text-xs font-medium text-neutral-500">{stat.label}</dt>
+							</div>
+						))}
+					</dl>
 				</section>
 
 				{/* Tabs */}
 				<div className="flex justify-center">
-					<div className="inline-flex bg-white border-2 border-black shadow-none p-1 gap-1">
-						<button
-							onClick={() => setActiveTab('rankings')}
-							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'rankings'
-								? 'bg-brand-yellow text-black border-2 border-black shadow-none'
-								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
-								}`}
-						>
-							<Award className="inline-block mr-2 h-4 w-4" />
+					<div className="inline-flex gap-1 rounded-full bg-white p-1 ring-1 ring-neutral-200" role="tablist">
+						<button role="tab" aria-selected={activeTab === 'rankings'} onClick={() => setActiveTab('rankings')} className={pill(activeTab === 'rankings')}>
+							<Award className="h-4 w-4" aria-hidden="true" />
 							Rankings
 						</button>
-						<button
-							onClick={() => setActiveTab('teams')}
-							className={`px-6 py-3 font-bold uppercase text-sm transition-all ${activeTab === 'teams'
-								? 'bg-brand-yellow text-black border-2 border-black shadow-none'
-								: 'text-neutral-600 hover:text-black hover:bg-gray-100'
-								}`}
-						>
-							<Users className="inline-block mr-2 h-4 w-4" />
+						<button role="tab" aria-selected={activeTab === 'teams'} onClick={() => setActiveTab('teams')} className={pill(activeTab === 'teams')}>
+							<Users className="h-4 w-4" aria-hidden="true" />
 							Teams
 						</button>
 					</div>
@@ -469,70 +498,52 @@ export default function TeamsPage() {
 				{/* Teams Tab */}
 				{activeTab === 'teams' && (
 					<>
-						{/* Search */}
 						<div className="flex justify-center">
 							<div className="relative w-full max-w-xl">
-								<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+								<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} aria-hidden="true" />
 								<input
 									placeholder={t('placeholder_search')}
+									aria-label={t('placeholder_search')}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
-									className="w-full pl-10 pr-4 py-4 border-2 border-black bg-white text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-offset-2"
+									className="w-full rounded-full border border-neutral-200 bg-white py-3.5 pl-11 pr-4 text-brand-navy placeholder:text-neutral-400 focus:border-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-yellow"
 								/>
 							</div>
 						</div>
 
-						{/* Grid */}
 						{isLoading ? (
-							<div className="flex justify-center items-center min-h-[200px]">
-								<p className="text-neutral-500 font-bold">{t('loading_teams')}</p>
+							<div className="flex min-h-[200px] items-center justify-center">
+								<p className="text-sm font-medium text-neutral-500">{t('loading_teams')}</p>
 							</div>
 						) : filteredTeams.length > 0 ? (
 							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 								{filteredTeams.map((team) => (
-									<Link href={`/teams/${team.slug}`} key={team.id} className="block min-w-0">
-										<div className="bg-white border-2 border-black shadow-none p-5 hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all cursor-pointer">
-											<div className="flex items-center gap-4 w-full">
-												{/* Team Image */}
-												{team.image_url ? (
-													<img
-														src={team.image_url}
-														alt={team.name}
-														className="w-12 h-12 object-cover border-2 border-black flex-shrink-0"
-													/>
-												) : (
-													<div className="w-12 h-12 bg-brand-yellow border-2 border-black flex items-center justify-center flex-shrink-0">
-														<Users className="w-6 h-6 text-black" />
-													</div>
-												)}
-												<div className="flex-1 min-w-0">
-													<div className="flex items-center gap-2 min-w-0">
-														<h2 className="text-lg font-bold truncate text-black">{team.name}</h2>
-														{team.discord_guild_id && (
-															<span
-																title="Discord team"
-																aria-label="Discord team"
-																className="inline-flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-[#5865F2] text-white"
-															>
-																<MessageSquare className="h-3.5 w-3.5" />
-															</span>
-														)}
-													</div>
-													<p className="mt-1 text-xs text-neutral-500">{t('created')} {formatCreated(team.created_at)}</p>
+									<Link href={`/teams/${team.slug}`} key={team.id} className="block min-w-0 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+										<div className="flex w-full items-center gap-3">
+											<Avatar src={team.image_url} alt={team.name} />
+											<div className="min-w-0 flex-1">
+												<div className="flex min-w-0 items-center gap-2">
+													<h2 className="truncate text-base font-bold">{team.name}</h2>
+													{team.discord_guild_id && (
+														<span title="Discord team" aria-label="Discord team" className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#5865F2] text-white">
+															<MessageSquare className="h-3 w-3" aria-hidden="true" />
+														</span>
+													)}
 												</div>
-												<div className="flex items-center bg-brand-yellow border-2 border-black px-2 py-1 flex-shrink-0">
-													<Trophy size={14} className="mr-1 text-black" />
-													<span className="tabular-nums font-bold text-sm text-black">{formatPoints(team.total_points)}</span>
-												</div>
+												<p className="mt-0.5 text-xs text-neutral-500">{t('created')} {formatCreated(team.created_at)}</p>
 											</div>
+											<span className="flex shrink-0 items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-sm font-bold tabular-nums">
+												<Trophy size={13} aria-hidden="true" />
+												{formatPoints(team.total_points)}
+											</span>
 										</div>
 									</Link>
 								))}
 							</div>
 						) : (
-							<div className="bg-white border-2 border-black shadow-none p-6">
-								<h2 className="text-xl font-bold mb-2 text-black">{t('no_teams')}</h2>
-								<p className="text-neutral-500">
+							<div className="rounded-3xl border border-neutral-200 bg-white p-8 text-center shadow-sm">
+								<h2 className="mb-1 text-lg font-bold">{t('no_teams')}</h2>
+								<p className="text-sm text-neutral-500">
 									{searchQuery ? t('no_teams_search') : t('create_team_prompt')}
 								</p>
 							</div>
@@ -542,38 +553,25 @@ export default function TeamsPage() {
 
 				{/* Rankings Tab */}
 				{activeTab === 'rankings' && (
-					<div className="max-w-3xl mx-auto space-y-6">
-						{/* Filters Bar */}
-						<div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-							{/* Ranking Category Selector */}
-							<div className="flex flex-wrap justify-center lg:justify-start gap-2">
+					<div className="mx-auto max-w-3xl space-y-5">
+						<div className="flex flex-col items-center justify-between gap-3 lg:flex-row">
+							<div className="flex flex-wrap justify-center gap-2 lg:justify-start">
 								{rankingCategories.map(({ key, label, icon: Icon }) => (
-									<button
-										key={key}
-										onClick={() => setRankingCategory(key)}
-										className={`flex items-center gap-2 px-3 py-2 font-bold text-xs md:text-sm uppercase transition-all ${rankingCategory === key
-											? 'bg-brand-yellow text-black border-2 border-black shadow-none'
-											: 'bg-white text-neutral-600 border-2 border-black hover:bg-gray-100'
-											}`}
-									>
-										<Icon className="w-4 h-4" />
+									<button key={key} onClick={() => setRankingCategory(key)} className={pill(rankingCategory === key)}>
+										<Icon className="h-4 w-4" aria-hidden="true" />
 										{label}
 									</button>
 								))}
 							</div>
 
-							{/* Time Period Selector */}
 							{rankingCategory !== 'allTime' && (
-								<div className="inline-flex items-center gap-1 bg-white border-2 border-black shadow-none p-1 flex-shrink-0">
-									<Calendar className="w-4 h-4 text-neutral-500 ml-2" />
+								<div className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white p-1 ring-1 ring-neutral-200">
+									<Calendar className="ml-2 h-4 w-4 text-neutral-400" aria-hidden="true" />
 									{timePeriods.map(({ key, label }) => (
 										<button
 											key={key}
 											onClick={() => setTimePeriod(key)}
-											className={`px-3 py-1.5 text-xs md:text-sm font-bold uppercase transition-all ${timePeriod === key
-												? 'bg-black text-white'
-												: 'text-neutral-600 hover:text-black'
-												}`}
+											className={`rounded-full px-3 py-1.5 text-sm font-semibold transition-colors ${timePeriod === key ? 'bg-brand-yellow text-brand-navy' : 'text-neutral-600 hover:text-brand-navy'}`}
 										>
 											{label}
 										</button>
@@ -583,154 +581,55 @@ export default function TeamsPage() {
 						</div>
 
 						{isLoading ? (
-							<div className="flex justify-center items-center min-h-[200px]">
-								<p className="text-neutral-500 font-bold">{t('loading_rankings')}</p>
+							<div className="flex min-h-[200px] items-center justify-center">
+								<p className="text-sm font-medium text-neutral-500">{t('loading_rankings')}</p>
 							</div>
 						) : (
 							<>
-								{/* All Time User Rankings */}
 								{rankingCategory === 'allTime' && (
 									<>
-										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('all_time_rankings_label')}</p>
-										</div>
-										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
-											{profiles.map((profile, idx) => (
-												<Link
-													key={profile.user_id}
-													href={`/profile/${profile.display_name}`}
-													className="block"
-												>
-													<div className={`flex items-center justify-between px-6 py-4 ${idx < profiles.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
-														<div className="flex items-center gap-4 min-w-0">
-															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{profile.rank}</span>
-															<h3 className="text-base md:text-lg font-bold truncate text-black">{profile.display_name}</h3>
-														</div>
-														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{t('points')}</p>
-															<p className="text-base md:text-lg font-extrabold text-black tabular-nums">{formatPoints(profile.total_points)}</p>
-														</div>
-													</div>
-												</Link>
+										{listTitle(t('all_time_rankings_label'))}
+										<div className={listCard}>
+											{profiles.map(profile => (
+												<RankRow key={profile.user_id} href={`/profile/${profile.display_name}`} rank={profile.rank} title={profile.display_name} label={t('points')} value={formatPoints(profile.total_points)} />
 											))}
-											{profiles.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_users')}</p>
-											)}
+											{profiles.length === 0 && emptyRow(t('no_users'))}
 										</div>
 									</>
 								)}
 
-								{/* Period User Rankings */}
 								{rankingCategory === 'users' && (
 									<>
-										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_earners_label')} - {getPeriodLabel()}</p>
-										</div>
-										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
+										{listTitle(`${t('top_earners_label')} - ${getPeriodLabel()}`)}
+										<div className={listCard}>
 											{periodTopUsers.map((user, idx) => (
-												<Link
-													key={user.user_id}
-													href={`/profile/${user.display_name}`}
-													className="block"
-												>
-													<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopUsers.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
-														<div className="flex items-center gap-4 min-w-0">
-															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
-															<h3 className="text-base md:text-lg font-bold truncate text-black">{user.display_name}</h3>
-														</div>
-														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{getPeriodLabel()}</p>
-															<p className="text-base md:text-lg font-extrabold text-green-600 tabular-nums">+{formatPoints(user.points_gained)}</p>
-														</div>
-													</div>
-												</Link>
+												<RankRow key={user.user_id} href={`/profile/${user.display_name}`} rank={idx + 1} title={user.display_name || ''} label={getPeriodLabel()} value={`+${formatPoints(user.points_gained)}`} valueClass="text-green-600" />
 											))}
-											{periodTopUsers.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_data')}</p>
-											)}
+											{periodTopUsers.length === 0 && emptyRow(t('no_data'))}
 										</div>
 									</>
 								)}
 
-								{/* Period Team Rankings */}
 								{rankingCategory === 'teams' && (
 									<>
-										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('top_teams_label')} - {getPeriodLabel()}</p>
-										</div>
-										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
+										{listTitle(`${t('top_teams_label')} - ${getPeriodLabel()}`)}
+										<div className={listCard}>
 											{periodTopTeams.map((team, idx) => (
-												<Link
-													key={team.team_id}
-													href={`/teams/${team.team_slug}`}
-													className="block"
-												>
-													<div className={`flex items-center justify-between px-6 py-4 ${idx < periodTopTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
-														<div className="flex items-center gap-4 min-w-0">
-															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
-															{team.team_image ? (
-																<img src={team.team_image} alt={team.team_name} className="w-8 h-8 object-cover border-2 border-black" />
-															) : (
-																<div className="w-8 h-8 bg-brand-yellow border-2 border-black flex items-center justify-center">
-																	<Users className="w-4 h-4 text-black" />
-																</div>
-															)}
-															<h3 className="text-base md:text-lg font-bold truncate text-black">{team.team_name}</h3>
-														</div>
-														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{getPeriodLabel()}</p>
-															<p className="text-base md:text-lg font-extrabold text-green-600 tabular-nums">+{formatPoints(team.points_gained)}</p>
-														</div>
-													</div>
-												</Link>
+												<RankRow key={team.team_id} href={`/teams/${team.team_slug}`} rank={idx + 1} title={team.team_name || ''} image={team.team_image} showAvatar label={getPeriodLabel()} value={`+${formatPoints(team.points_gained)}`} valueClass="text-green-600" />
 											))}
-											{periodTopTeams.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_data')}</p>
-											)}
+											{periodTopTeams.length === 0 && emptyRow(t('no_data'))}
 										</div>
 									</>
 								)}
 
-								{/* Fastest Growing Teams */}
 								{rankingCategory === 'fastestGrowing' && (
 									<>
-										<div className="text-center">
-											<p className="text-sm font-bold uppercase tracking-wider text-neutral-500">{t('fastest_growing_label')} - {getPeriodLabel()}</p>
-										</div>
-										<div className="bg-white border-2 border-black shadow-none overflow-hidden">
+										{listTitle(`${t('fastest_growing_label')} - ${getPeriodLabel()}`)}
+										<div className={listCard}>
 											{fastestGrowingTeams.map((team, idx) => (
-												<Link
-													key={team.team_id}
-													href={`/teams/${team.team_slug}`}
-													className="block"
-												>
-													<div className={`flex items-center justify-between px-6 py-4 ${idx < fastestGrowingTeams.length - 1 ? 'border-b-2 border-black' : ''} hover:bg-brand-yellow/10 transition-colors`}>
-														<div className="flex items-center gap-4 min-w-0">
-															<span className="text-lg font-extrabold text-black bg-brand-yellow border-2 border-black px-2 py-0.5 shrink-0">#{idx + 1}</span>
-															{team.team_image ? (
-																<img src={team.team_image} alt={team.team_name} className="w-8 h-8 object-cover border-2 border-black" />
-															) : (
-																<div className="w-8 h-8 bg-brand-yellow border-2 border-black flex items-center justify-center">
-																	<Users className="w-4 h-4 text-black" />
-																</div>
-															)}
-															<div className="min-w-0">
-																<h3 className="text-base md:text-lg font-bold truncate text-black">{team.team_name}</h3>
-																<p className="text-xs text-neutral-500 font-medium">{team.member_count} {t('members_total')}</p>
-															</div>
-														</div>
-														<div className="text-right shrink-0">
-															<p className="text-[10px] uppercase tracking-wide font-bold text-neutral-500">{t('new_members')}</p>
-															<p className="text-base md:text-lg font-extrabold text-purple-600 tabular-nums">
-																+{team.member_growth || 0}
-															</p>
-														</div>
-													</div>
-												</Link>
+												<RankRow key={team.team_id} href={`/teams/${team.team_slug}`} rank={idx + 1} title={team.team_name || ''} subtitle={`${team.member_count} ${t('members_total')}`} image={team.team_image} showAvatar label={t('new_members')} value={`+${team.member_growth || 0}`} valueClass="text-purple-600" />
 											))}
-											{fastestGrowingTeams.length === 0 && (
-												<p className="text-neutral-500 text-center p-6 font-bold">{t('no_teams_gained')}</p>
-											)}
+											{fastestGrowingTeams.length === 0 && emptyRow(t('no_teams_gained'))}
 										</div>
 									</>
 								)}

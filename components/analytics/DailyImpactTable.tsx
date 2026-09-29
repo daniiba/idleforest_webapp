@@ -223,10 +223,10 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
   })
 
   return (
-    <section className="overflow-hidden border-2 border-black bg-white shadow-none">
-      <div className="flex flex-col gap-4 border-b-2 border-black bg-brand-yellow p-5 lg:flex-row lg:items-start lg:justify-between">
+    <section className="overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
+      <div className="flex flex-col gap-4 border-b border-neutral-200 bg-brand-yellow/40 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-black">
+          <div className="flex items-center gap-2 text-sm font-semibold text-black">
             <Radio className="h-4 w-4" />
             {t("daily_pulse_label")}
           </div>
@@ -238,57 +238,57 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
           </p>
         </div>
 
-        <div className="min-w-[210px] border-2 border-black bg-white p-3">
+        <div className="min-w-[210px] rounded-2xl bg-white p-3">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-black">
+            <div className="flex items-center gap-2 text-xs font-semibold text-black">
               <Clock3 className="h-4 w-4" />
               {t("next_update")}
             </div>
-            <Badge className="rounded-none border border-black bg-brand-gray px-2 py-0.5 text-black hover:bg-brand-gray">
+            <Badge className="rounded-full border-0 bg-neutral-100 px-2 py-0.5 text-brand-navy hover:bg-neutral-100">
               {t("daily_table_days", { count: snapshotDayCount })}
             </Badge>
           </div>
           <div className="mt-3 font-mono text-2xl font-black text-black">{formatDuration(timeUntilUpdate)}</div>
           <Progress
             value={updateProgress}
-            className="mt-3 h-2 rounded-none border border-black bg-brand-gray [&>div]:bg-brand-green"
+            className="mt-3 h-2 rounded-full bg-neutral-100 [&>div]:bg-brand-green"
           />
         </div>
       </div>
 
       <div className="space-y-4 p-4 sm:p-5">
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="border-2 border-black bg-brand-yellow/20 p-5">
+          <div className="rounded-2xl bg-brand-yellow/30 p-5">
             <Sprout className="mb-4 h-6 w-6 text-black" />
             <div className="text-4xl font-black text-black">{formatTrees(latestRow?.estimatedTrees ?? null)}</div>
-            <div className="mt-1 text-sm font-extrabold uppercase tracking-wide text-neutral-700">{t("daily_estimated_trees")}</div>
+            <div className="mt-1 text-sm font-semibold text-neutral-700">{t("daily_estimated_trees")}</div>
             <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-800">
               {t("daily_estimated_trees_desc")}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            <div className="border border-black/20 bg-white p-3">
+            <div className="rounded-xl bg-neutral-50 p-3">
               <TrendingUp className="mb-2 h-4 w-4 text-black" />
               <div className="text-xl font-extrabold text-black">{formatNumber(latestRow?.requests ?? null)}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_requests")}</div>
+              <div className="mt-1 text-xs font-medium text-neutral-600">{t("daily_requests")}</div>
             </div>
-            <div className="border border-black/20 bg-white p-3">
+            <div className="rounded-xl bg-neutral-50 p-3">
               <DollarSign className="mb-2 h-4 w-4 text-black" />
               <div className="text-xl font-extrabold text-black">{formatCurrency(latestRow?.earnings ?? null)}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_earnings")}</div>
+              <div className="mt-1 text-xs font-medium text-neutral-600">{t("daily_earnings")}</div>
             </div>
-            <div className="border border-black/20 bg-white p-3">
+            <div className="rounded-xl bg-neutral-50 p-3">
               <Users className="mb-2 h-4 w-4 text-black" />
               <div className="text-xl font-extrabold text-black">{(latestRow?.totalUsers ?? 0).toLocaleString()}</div>
-              <div className="mt-1 text-xs font-bold uppercase tracking-wide text-neutral-600">{t("daily_total_users")}</div>
+              <div className="mt-1 text-xs font-medium text-neutral-600">{t("daily_total_users")}</div>
             </div>
           </div>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="border border-black/20 bg-brand-gray/30 p-4">
-            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
+          <div className="rounded-xl bg-neutral-50 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600">
               <CalendarDays className="h-4 w-4 text-black" />
               {t("best_recent_day")}
             </div>
@@ -301,8 +301,8 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
                 : t("daily_table_empty")}
             </p>
           </div>
-          <div className="border border-black/20 bg-brand-gray/30 p-4">
-            <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-neutral-600">
+          <div className="rounded-xl bg-neutral-50 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600">
               <Sprout className="h-4 w-4 text-black" />
               {t("daily_actual_trees")}
             </div>
@@ -317,13 +317,13 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
           </div>
         </div>
 
-        <div className="overflow-hidden border-2 border-black bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-black bg-brand-gray/40 px-4 py-3">
+        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-3">
           <div>
             <h3 className="font-rethink-sans text-xl font-extrabold text-black">{t("daily_table_title")}</h3>
             <p className="text-sm font-medium text-neutral-700">{t("daily_table_desc")}</p>
           </div>
-          <Badge variant="outline" className="rounded-none border-2 border-black bg-white text-black">
+          <Badge variant="outline" className="rounded-full border border-neutral-300 bg-white text-brand-navy">
             {t("daily_table_recent", { count: recentRows.length })}
           </Badge>
         </div>
@@ -331,7 +331,7 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
         {recentRows.length > 0 ? (
           <Table>
             <TableHeader>
-              <TableRow className="border-b-2 border-black hover:bg-transparent">
+              <TableRow className="border-b border-neutral-200 hover:bg-transparent">
                 <TableHead className="font-extrabold text-black">{t("daily_table_date")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_requests")}</TableHead>
                 <TableHead className="text-right font-extrabold text-black">{t("daily_earnings")}</TableHead>
@@ -345,7 +345,7 @@ export function DailyImpactTable({ data, userHistory = [] }: { data: HistoricalD
                   <TableCell className="font-bold text-black">
                     <div className="flex flex-col">
                       <span>{formatDate(row.date)}</span>
-                      {index === 0 && <span className="text-xs font-extrabold uppercase text-neutral-500">{t("latest")}</span>}
+                      {index === 0 && <span className="text-xs font-semibold text-neutral-500">{t("latest")}</span>}
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-bold text-black">{formatNumber(row.requests)}</TableCell>

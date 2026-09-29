@@ -13,11 +13,11 @@ import {
     Monitor,
     CheckCircle2,
     ArrowRight,
-    Sparkles,
-    Info,
     RefreshCw
 } from 'lucide-react'
 import { trackOnboardingEvent } from '@/lib/onboarding-events'
+import TeamForestPanel from '@/components/forest/TeamForestPanel'
+import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
 
 interface TeamData {
     id: string
@@ -177,14 +177,23 @@ export default function TeamWelcomePage() {
         }
     }
 
+    const shell = (children: React.ReactNode) => (
+        <main className="min-h-screen bg-[#F7F7F2] px-4 py-10 text-brand-navy sm:py-16">
+            <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
+                <Link href="/" className="mx-auto">
+                    <Image src="/logo.png" alt="IdleForest" width={121} height={33} priority className="h-auto w-[121px]" />
+                </Link>
+                {children}
+            </div>
+        </main>
+    )
+
     if (loading) {
-        return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
-                    <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
-                </div>
-            </main>
+        return shell(
+            <section className="rounded-3xl border border-neutral-200 bg-white p-8 text-center text-neutral-600 shadow-sm">
+                <Loader2 className="mx-auto h-6 w-6 animate-spin" />
+                <p className="mt-3 text-sm font-semibold">Loading...</p>
+            </section>
         )
     }
 
@@ -192,213 +201,149 @@ export default function TeamWelcomePage() {
         return null
     }
 
-    // If user already has the desktop app connected, show completion and reward state.
+    const teamHeader = (
+        <div className="flex items-center gap-4">
+            {team.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={team.image_url} alt="" className="h-14 w-14 rounded-2xl object-cover" />
+            ) : (
+                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-yellow text-brand-navy">
+                    <Users className="h-7 w-7" aria-hidden="true" />
+                </span>
+            )}
+            <div className="min-w-0">
+                <h2 className="truncate text-lg font-extrabold">{team.name}</h2>
+                <p className="flex flex-wrap gap-x-4 text-sm text-neutral-600">
+                    <span className="flex items-center gap-1"><Users className="h-4 w-4" aria-hidden="true" /> {memberCount} {memberCount === 1 ? 'member' : 'members'}</span>
+                    <span className="flex items-center gap-1"><TreePine className="h-4 w-4 text-green-600" aria-hidden="true" /> {team.total_points.toLocaleString()} points</span>
+                </p>
+            </div>
+        </div>
+    )
+
+    // Desktop already connected: show completion and reward state.
     if (nodeStatus?.hasDesktopNode) {
-        return (
-            <main className="flex items-center justify-center min-h-screen bg-brand-gray p-4 font-rethink-sans">
-                <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 border-2 border-black mb-4">
-                        <CheckCircle2 className="w-8 h-8 text-white" />
+        return shell(
+            <>
+                <section className="rounded-3xl border border-neutral-200 bg-white p-6 text-center shadow-sm sm:p-8">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+                        <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
                     </div>
-                    <h1 className="text-3xl font-extrabold font-candu uppercase mb-2">
-                        You&apos;re All Set!
-                    </h1>
-                    <p className="text-neutral-600 mb-6">
-                        You have the IdleForest desktop app connected. You&apos;re now part of{' '}
-                        <span className="font-bold text-black">{team.name}</span> and earning points for the team!
+                    <h1 className="text-2xl font-extrabold">You&apos;re all set!</h1>
+                    <p className="mt-2 text-sm text-neutral-600">
+                        Your desktop app is connected. You&apos;re part of <span className="font-bold text-brand-navy">{team.name}</span> and earning points for the team.
                     </p>
-                    <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
+                    <div className="mt-6 rounded-2xl bg-brand-yellow/60 p-4 text-sm font-bold" aria-live="polite">
                         {isClaimingReward ? 'Awarding your desktop bonus trees...' : rewardMessage || 'Checking desktop bonus...'}
                     </div>
                     <Link
                         href={`/teams/${team.slug}`}
-                        className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+                        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-black"
                     >
-                        View Your Team <ArrowRight className="w-5 h-5" />
+                        View your team <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
-                </div>
-            </main>
+                </section>
+                <TeamForestPanel teamSlug={team.slug} teamName={team.name} />
+            </>
         )
     }
 
-    return (
-        <main className="min-h-screen bg-brand-gray p-4 py-16 font-rethink-sans">
-            {/* Yellow background shape */}
-            <Image
-                src="/yellow-shape.svg"
-                alt=""
-                fill
-                sizes="150vw"
-                className="absolute -bottom-20 -left-10 object-cover pointer-events-none select-none opacity-100"
-            />
+    const platformLabel = detectedPlatform === 'windows' ? 'Windows' : detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'linux' ? 'Linux' : 'your computer'
+    const downloadHref = detectedPlatform === 'mac'
+        ? '/download/mac/installer'
+        : detectedPlatform === 'windows'
+            ? '/download/windows/installer'
+            : detectedPlatform === 'linux'
+                ? '/download/linux/installer'
+                : '/downloads#desktop-apps'
+    const steps = ['Join team', 'Download', 'Log in & sync']
+    const currentStep = hasClickedDownload ? 3 : 2
 
-            <div className="w-full max-w-2xl mx-auto relative z-10 space-y-6">
-                {/* Welcome Header */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-yellow border-2 border-black shadow-none mb-4">
-                        <Sparkles className="w-10 h-10 text-black" />
-                    </div>
-                    <h1 className="text-4xl font-extrabold font-candu uppercase mb-2">
-                        Welcome to {team.name}!
-                    </h1>
-                    <p className="text-neutral-600 text-lg">
-                        You&apos;re now part of the team. Let&apos;s start planting trees together!
-                    </p>
-                </div>
+    return shell(
+        <>
+            <header className="text-center">
+                <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">Welcome to {team.name}</h1>
+                <p className="mx-auto mt-3 max-w-md text-base text-neutral-600">
+                    Install the desktop app and log in to start planting trees with your team. You&apos;ll get 5 bonus trees once it syncs.
+                </p>
+            </header>
 
-                {/* Team Stats Card */}
-                <div className="bg-white border-2 border-black shadow-none p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                        {team.image_url ? (
-                            <img
-                                src={team.image_url}
-                                alt={team.name}
-                                className="w-16 h-16 object-cover border-2 border-black"
-                            />
-                        ) : (
-                            <div className="w-16 h-16 bg-brand-yellow border-2 border-black flex items-center justify-center">
-                                <Users className="w-8 h-8 text-black" />
-                            </div>
-                        )}
-                        <div>
-                            <h2 className="text-xl font-bold font-candu uppercase">{team.name}</h2>
-                            <div className="flex gap-4 text-sm text-neutral-600">
-                                <span className="flex items-center gap-1">
-                                    <Users className="w-4 h-4" /> {memberCount} members
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <TreePine className="w-4 h-4 text-green-600" /> {team.total_points.toLocaleString()} points
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Progress Indicator */}
-                    <div className="bg-orange-100 border-2 border-orange-400 p-4">
-                        <p className="font-bold text-orange-800 flex items-center gap-2">
-                            <TreePine className="w-5 h-5" />
-                            Your contribution: 0 points
-                        </p>
-                        <p className="text-sm text-orange-700 mt-1">
-                            Install IdleForest to start earning points and help your team plant more trees!
-                        </p>
-                    </div>
-                </div>
-
-                <div className="bg-white border-2 border-black shadow-none p-6">
-                    <h3 className="text-xl font-bold font-candu uppercase mb-4">Desktop Bonus Checklist</h3>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="border-2 border-black bg-green-50 p-4">
-                            <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" />
-                            <p className="font-bold">Joined team</p>
-                            <p className="text-xs text-neutral-600">You&apos;re in {team.name}.</p>
-                        </div>
-                        <div className={`border-2 border-black p-4 ${hasClickedDownload ? 'bg-green-50' : 'bg-white'}`}>
-                            {hasClickedDownload ? <CheckCircle2 className="mb-2 h-6 w-6 text-green-600" /> : <Download className="mb-2 h-6 w-6 text-brand-navy" />}
-                            <p className="font-bold">Download desktop</p>
-                            <p className="text-xs text-neutral-600">Install the app on this computer.</p>
-                        </div>
-                        <div className="border-2 border-black bg-white p-4">
-                            <Monitor className="mb-2 h-6 w-6 text-brand-navy" />
-                            <p className="font-bold">Log in and sync</p>
-                            <p className="text-xs text-neutral-600">We&apos;ll award 5 trees automatically.</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Install Options */}
-                <div className="bg-white border-2 border-black shadow-none p-6">
-                    <h3 className="text-xl font-bold font-candu uppercase mb-4 flex items-center gap-2">
-                        <Download className="w-5 h-5" /> Get IdleForest
-                    </h3>
-                    <p className="text-neutral-600 mb-6">
-                        Install the desktop app first. It earns more impact for {team.name} and unlocks your 5 bonus trees after sync.
-                    </p>
-
-                    <div className="space-y-4">
-                        <Link
-                            href={detectedPlatform === 'mac'
-                                ? '/download/mac/installer'
-                                : detectedPlatform === 'windows'
-                                    ? '/download/windows/installer'
-                                    : detectedPlatform === 'linux'
-                                        ? '/download/linux/installer'
-                                        : '/downloads#desktop-apps'
-                            }
-                            target="_blank"
-                            onClick={() => {
-                                setHasClickedDownload(true)
-                                trackOnboardingEvent('desktop_download_clicked', {
-                                    source: 'team_welcome',
-                                    metadata: { teamSlug: params.slug, platform: detectedPlatform }
-                                })
-                            }}
-                            className="flex items-center gap-4 p-4 bg-brand-navy text-white border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
-                        >
-                            <div className="bg-brand-yellow text-black p-3 border-2 border-black">
-                                <Monitor className="w-6 h-6" />
-                            </div>
-                            <div className="flex-1">
-                                <p className="font-bold text-lg">Desktop App</p>
-                                <p className="text-sm text-gray-300">
-                                    {detectedPlatform === 'windows' ? 'For Windows' : detectedPlatform === 'mac' ? 'For Mac' : detectedPlatform === 'linux' ? 'For Linux' : 'Windows, Mac, or Linux'} • Unlocks 5 bonus trees
-                                </p>
-                            </div>
-                            <span className="bg-brand-yellow text-black px-2 py-1 text-xs font-bold border border-black">
-                                RECOMMENDED
+            <ol className="flex items-center justify-center gap-2 text-xs font-semibold sm:text-sm" aria-label="Progress">
+                {steps.map((label, index) => {
+                    const step = index + 1
+                    const done = step < currentStep
+                    const active = step === currentStep
+                    return (
+                        <li key={label} className="flex items-center gap-2">
+                            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                                done ? 'bg-brand-navy text-brand-yellow' : active ? 'bg-brand-yellow text-brand-navy ring-2 ring-brand-navy' : 'bg-neutral-200 text-neutral-500'
+                            }`}>
+                                {done ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : step}
                             </span>
-                        </Link>
-                        <p className="text-center text-xs text-neutral-500">
-                            Need the browser extension too? Add it later from the downloads page after desktop is connected.
+                            <span className={active || done ? 'text-brand-navy' : 'text-neutral-500'}>{label}</span>
+                            {step < steps.length && <span className="mx-1 h-px w-6 bg-neutral-300 sm:w-10" aria-hidden="true" />}
+                        </li>
+                    )
+                })}
+            </ol>
+
+            <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+                {teamHeader}
+
+                <Link
+                    href={downloadHref}
+                    target="_blank"
+                    onClick={() => {
+                        setHasClickedDownload(true)
+                        trackOnboardingEvent('desktop_download_clicked', {
+                            source: 'team_welcome',
+                            metadata: { teamSlug: params.slug, platform: detectedPlatform }
+                        })
+                    }}
+                    className="mt-6 flex items-center gap-4 rounded-2xl bg-brand-navy p-4 text-white transition-colors hover:bg-black"
+                >
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-brand-navy">
+                        <OsLogo os={detectedPlatform === 'mac' ? 'mac' : detectedPlatform === 'linux' ? 'linux' : 'windows'} className="h-6 w-6" />
+                    </span>
+                    <span className="flex-1">
+                        <span className="block text-base font-bold">Download for {platformLabel}</span>
+                        <span className="block text-sm text-neutral-300">Log in after installing to claim 5 trees</span>
+                    </span>
+                    <Download className="h-5 w-5 shrink-0 text-brand-yellow" aria-hidden="true" />
+                </Link>
+
+                <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl bg-neutral-50 p-4">
+                    <div className="text-sm">
+                        <p className="flex items-center gap-2 font-bold">
+                            <span className="relative flex h-2 w-2">
+                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-60" />
+                                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                            </span>
+                            Waiting for desktop sync
                         </p>
+                        <p className="mt-1 text-neutral-600">Open the app and log in with your account. This page updates automatically.</p>
+                        {nodeStatus?.hasNode && !nodeStatus.hasDesktopNode && (
+                            <p className="mt-2 font-semibold text-orange-700">We found the browser extension. Log in to the desktop app to unlock the bonus.</p>
+                        )}
                     </div>
-                </div>
-
-                {/* Connection Status Info */}
-                <div className="bg-blue-50 border-2 border-blue-400 p-5">
-                    <div className="flex items-start gap-3 mb-3">
-                        <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <p className="font-bold text-blue-800">
-                                Important: Log in after installing
-                            </p>
-                            <p className="text-sm text-blue-700 mt-1">
-                                After installing, open the desktop app and <strong>log in with your account</strong>.
-                                We'll automatically detect when your desktop app is connected.
-                            </p>
-                            {nodeStatus?.hasNode && !nodeStatus.hasDesktopNode && (
-                                <p className="text-sm font-bold text-orange-700 mt-2">
-                                    We detected the browser extension. Connect the desktop app to unlock bonus trees.
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-blue-300">
-                        <div className="flex items-center gap-2 text-sm text-blue-600">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                            Waiting for connection...
-                        </div>
-                        <button
-                            onClick={refetchNodeStatus}
-                            disabled={isCheckingConnection}
-                            className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-white border-2 border-blue-400 hover:bg-blue-100 disabled:opacity-50 transition-all"
-                        >
-                            <RefreshCw className={`w-4 h-4 ${isCheckingConnection ? 'animate-spin' : ''}`} />
-                            Check Connection
-                        </button>
-                    </div>
-                </div>
-
-                {/* Skip Link */}
-                <div className="text-center">
-                    <Link
-                        href={`/teams/${team.slug}`}
-                        className="text-sm font-bold text-neutral-500 underline decoration-1 hover:text-black hover:decoration-brand-yellow hover:decoration-2 transition-all"
+                    <button
+                        onClick={refetchNodeStatus}
+                        disabled={isCheckingConnection}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-bold transition-colors hover:bg-neutral-100 disabled:opacity-50"
                     >
-                        Skip for now → View team page
-                    </Link>
+                        <RefreshCw className={`h-4 w-4 ${isCheckingConnection ? 'animate-spin' : ''}`} aria-hidden="true" />
+                        Check
+                    </button>
                 </div>
-            </div>
-        </main>
+            </section>
+
+            <TeamForestPanel teamSlug={team.slug} teamName={team.name} />
+
+            <p className="text-center">
+                <Link href={`/teams/${team.slug}`} className="text-sm font-semibold text-neutral-500 underline hover:text-brand-navy">
+                    Skip for now: view team page
+                </Link>
+            </p>
+        </>
     )
 }

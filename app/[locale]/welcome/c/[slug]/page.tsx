@@ -17,11 +17,13 @@ import {
 import { trackOnboardingEvent } from '@/lib/onboarding-events'
 import CompanyMemberPanel from '@/components/partner/CompanyMemberPanel'
 import Navigation from '@/components/navigation'
+import ForestImpactPanel from '@/components/forest/ForestImpactPanel'
 import {
     isMossyEarthCompanySlug,
     isPlanetwildCompanySlug,
     isWastefreeCompanySlug,
 } from '@/lib/company-partners'
+import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
 
 interface CompanyData {
     id: string
@@ -175,17 +177,21 @@ export default function CompanyWelcomePage() {
         }
     }
 
+    const shell = (children: React.ReactNode) => (
+        <>
+            <Navigation />
+            <main className="min-h-screen bg-[#F7F7F2] px-4 py-10 text-brand-navy sm:py-14">
+                <div className="mx-auto flex w-full max-w-xl flex-col gap-6">{children}</div>
+            </main>
+        </>
+    )
+
     if (loading) {
-        return (
-            <>
-                <Navigation />
-                <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
-                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
-                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-black" />
-                        <p className="mt-4 text-neutral-600 font-bold">Loading...</p>
-                    </div>
-                </main>
-            </>
+        return shell(
+            <section className="rounded-3xl border border-neutral-200 bg-white p-8 text-center text-neutral-600 shadow-sm">
+                <Loader2 className="mx-auto h-6 w-6 animate-spin" />
+                <p className="mt-3 text-sm font-semibold">Loading...</p>
+            </section>
         )
     }
 
@@ -193,44 +199,36 @@ export default function CompanyWelcomePage() {
         return null
     }
 
-    // If user already has the desktop app connected, show completion state.
+    // Desktop already connected: show completion state.
     if (nodeStatus?.hasDesktopNode) {
-        return (
+        return shell(
             <>
-                <Navigation />
-                <main className="flex min-h-screen items-center justify-center bg-brand-gray p-4 font-rethink-sans">
-                    <div className="w-full max-w-lg bg-white border-2 border-black shadow-none p-8 text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 border-2 border-black mb-4">
-                            <CheckCircle2 className="w-8 h-8 text-white" />
-                        </div>
-                        <h1 className="text-3xl font-extrabold font-candu uppercase mb-2">
-                            You&apos;re All Set!
-                        </h1>
-                        <p className="text-neutral-600 mb-6">
-                            You have the IdleForest desktop app connected. Your future activity is linked to{' '}
-                            <span className="font-bold text-black">{company.name}</span>.
-                        </p>
-                        <CompanyMemberPanel
-                            companyName={company.name}
-                            portalHref={`/portal/c/${company.slug}`}
-                            logoUrl={getCompanyLogoUrl(company)}
-                            impactLabel={getCompanyImpactLabel(company)}
-                            portalLabel="Open member portal"
-                            description={getCompanyImpactDescription(company)}
-                            leaveRedirectHref="/welcome"
-                            className="mb-6 text-left"
-                        />
-                        <div className="mb-6 border-2 border-black bg-brand-yellow p-4 font-bold">
-                            Desktop connected. Your idle activity now counts toward {company.name}.
-                        </div>
-                        <Link
-                            href={`/portal/c/${company.slug}`}
-                            className="inline-flex items-center gap-2 px-6 py-4 text-lg font-bold uppercase tracking-wider bg-brand-yellow border-2 border-black shadow-none hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
-                        >
-                            View Member Portal <ArrowRight className="w-5 h-5" />
-                        </Link>
+                <section className="rounded-3xl border border-neutral-200 bg-white p-6 text-center shadow-sm sm:p-8">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+                        <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
                     </div>
-                </main>
+                    <h1 className="text-2xl font-extrabold">You&apos;re all set!</h1>
+                    <p className="mt-2 text-sm text-neutral-600">
+                        Your desktop app is connected. Your idle activity now counts toward <span className="font-bold text-brand-navy">{company.name}</span>.
+                    </p>
+                    <CompanyMemberPanel
+                        companyName={company.name}
+                        portalHref={`/portal/c/${company.slug}`}
+                        logoUrl={getCompanyLogoUrl(company)}
+                        impactLabel={getCompanyImpactLabel(company)}
+                        portalLabel="Open member portal"
+                        description={getCompanyImpactDescription(company)}
+                        leaveRedirectHref="/welcome"
+                        className="mt-6 text-left"
+                    />
+                    <Link
+                        href={`/portal/c/${company.slug}`}
+                        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-navy px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-black"
+                    >
+                        View member portal <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                </section>
+                <ForestImpactPanel mode="self" />
             </>
         )
     }
@@ -243,64 +241,118 @@ export default function CompanyWelcomePage() {
             ? '/download/windows/installer'
             : detectedPlatform === 'linux' ? '/download/linux/installer' : '/downloads#desktop-apps'
     const platformLabel = detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'windows' ? 'Windows' : detectedPlatform === 'linux' ? 'Linux' : 'your computer'
+    const logoUrl = getCompanyLogoUrl(company)
+    const steps = ['Join', 'Download', 'Log in & sync']
+    const currentStep = hasClickedDownload ? 3 : 2
 
-    return (
+    return shell(
         <>
-            <Navigation />
-            <main className="min-h-screen bg-brand-gray px-4 py-10 font-rethink-sans">
-                <div className="mx-auto w-full max-w-2xl space-y-6">
-                    <header>
-                        <p className="mb-3 flex items-center gap-2 text-sm font-bold"><CheckCircle2 className="h-5 w-5 text-green-700" /> Joined {company.name}</p>
-                        <h1 className="font-candu text-3xl font-extrabold uppercase sm:text-4xl">
-                            {isMobile ? 'Finish setup on your computer' : isWastefree ? 'Connect your computer to help fund cleanup' : 'Connect your computer to start contributing'}
-                        </h1>
-                        <p className="mt-3 text-neutral-700">{isWastefree
-                            ? 'Your account is ready. Connect the desktop app to help fund ocean-bound plastic removal with Waste Free Planet.'
-                            : `Your account is ready. Connect the desktop app so your future activity supports ${company.name}.`}</p>
-                    </header>
+            <header className="text-center">
+                <p className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold shadow-sm ring-1 ring-neutral-200">
+                    {logoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={logoUrl} alt="" className="h-4 w-4 rounded-full object-cover" />
+                    ) : (
+                        <CheckCircle2 className="h-4 w-4 text-green-600" aria-hidden="true" />
+                    )}
+                    Joined {company.name}
+                </p>
+                <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">
+                    {isMobile ? 'Finish setup on your computer' : isWastefree ? 'Connect your computer to help fund cleanup' : 'Connect your computer to start contributing'}
+                </h1>
+                <p className="mx-auto mt-3 max-w-md text-base text-neutral-600">
+                    {isWastefree
+                        ? 'Your account is ready. Connect the desktop app to help fund ocean-bound plastic removal with Waste Free Planet.'
+                        : `Your account is ready. Connect the desktop app so your future activity supports ${company.name}.`}
+                </p>
+            </header>
 
-                    <section className="border-2 border-black bg-white p-5 sm:p-7" aria-label="Computer setup">
-                        {isMobile ? (
-                            <>
-                                <h2 className="mb-3 flex items-center gap-2 text-xl font-bold"><Monitor className="h-5 w-5" /> Keep your place</h2>
-                                <p className="mb-5 text-neutral-700">IdleForest runs on Windows, Mac, and Linux computers. Email yourself the setup link, then open it on your computer when you’re ready.</p>
-                                <DesktopSetupEmail companySlug={company.slug} locale={String(params.locale)} />
-                            </>
-                        ) : (
-                            <>
-                                <h2 className="mb-4 text-xl font-bold">1. Download and install IdleForest</h2>
-                                <a href={downloadHref} onClick={() => {
-                                    setHasClickedDownload(true)
-                                    trackOnboardingEvent('desktop_download_clicked', { source: 'company_welcome', metadata: { companySlug: company.slug, platform: detectedPlatform } })
-                                }} className="flex items-center justify-center gap-3 border-2 border-black bg-brand-navy px-5 py-4 text-center text-lg font-bold text-white hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
-                                    <Download className="h-6 w-6 shrink-0" /> Download for {platformLabel}
-                                </a>
-                                <p className="mt-3 text-sm text-neutral-600">Free to install. Share unused bandwidth while it runs. You can pause anytime.</p>
-                                <a href="/downloads#desktop-apps" className="mt-2 inline-block text-sm font-bold underline">Choose another operating system</a>
-                                <div className="mt-6 border-t border-neutral-300 pt-5">
-                                    <h2 className="text-xl font-bold">2. Open the app and log in</h2>
-                                    <p className="mt-2 text-neutral-700">Use the same account you just joined with. We’ll detect your desktop once it connects.</p>
-                                    {hasClickedDownload && <p role="status" className="mt-2 text-sm font-bold">Download requested. Open the installer from your downloads folder, then log in inside IdleForest.</p>}
-                                    {nodeStatus?.hasNode && <p className="mt-3 text-sm font-bold">Your browser extension is linked. Connect the desktop app to finish this setup.</p>}
-                                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                                        <p className="text-sm text-neutral-600">Waiting for your desktop to connect…</p>
-                                        <button type="button" onClick={refetchNodeStatus} disabled={isCheckingConnection}
-                                            className="inline-flex items-center gap-2 border-2 border-black px-3 py-2 text-sm font-bold hover:bg-brand-yellow disabled:opacity-50">
-                                            <RefreshCw className={`h-4 w-4 ${isCheckingConnection ? 'animate-spin' : ''}`} /> Check connection
-                                        </button>
-                                    </div>
-                                </div>
-                                <details className="mt-6 border-t border-neutral-300 pt-4">
-                                    <summary className="cursor-pointer font-bold">Finish on another computer</summary>
-                                    <div className="mt-4"><DesktopSetupEmail companySlug={company.slug} locale={String(params.locale)} /></div>
-                                </details>
-                            </>
-                        )}
-                    </section>
-                    <p className="text-sm text-neutral-600">{getCompanyImpactDescription(company)}</p>
-                    <p className="text-center text-sm"><Link href={`/portal/c/${company.slug}`} className="font-bold text-neutral-600 underline">Finish later — open member portal</Link></p>
-                </div>
-            </main>
+            {!isMobile && (
+                <ol className="flex items-center justify-center gap-2 text-xs font-semibold sm:text-sm" aria-label="Progress">
+                    {steps.map((label, index) => {
+                        const step = index + 1
+                        const done = step < currentStep
+                        const active = step === currentStep
+                        return (
+                            <li key={label} className="flex items-center gap-2">
+                                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                                    done ? 'bg-brand-navy text-brand-yellow' : active ? 'bg-brand-yellow text-brand-navy ring-2 ring-brand-navy' : 'bg-neutral-200 text-neutral-500'
+                                }`}>
+                                    {done ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : step}
+                                </span>
+                                <span className={active || done ? 'text-brand-navy' : 'text-neutral-500'}>{label}</span>
+                                {step < steps.length && <span className="mx-1 h-px w-6 bg-neutral-300 sm:w-10" aria-hidden="true" />}
+                            </li>
+                        )
+                    })}
+                </ol>
+            )}
+
+            <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8" aria-label="Computer setup">
+                {isMobile ? (
+                    <>
+                        <h2 className="flex items-center gap-2 text-xl font-extrabold"><Monitor className="h-5 w-5" aria-hidden="true" /> Keep your place</h2>
+                        <p className="mb-5 mt-2 text-sm text-neutral-600">IdleForest runs on Windows, Mac, and Linux computers. Email yourself the setup link, then open it on your computer when you&apos;re ready.</p>
+                        <DesktopSetupEmail companySlug={company.slug} locale={String(params.locale)} />
+                    </>
+                ) : (
+                    <>
+                        <h2 className="text-xl font-extrabold">Download and install IdleForest</h2>
+                        <a
+                            href={downloadHref}
+                            onClick={() => {
+                                setHasClickedDownload(true)
+                                trackOnboardingEvent('desktop_download_clicked', { source: 'company_welcome', metadata: { companySlug: company.slug, platform: detectedPlatform } })
+                            }}
+                            className="mt-5 flex items-center gap-4 rounded-2xl bg-brand-navy p-4 text-white transition-colors hover:bg-black"
+                        >
+                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-brand-navy">
+                                <OsLogo os={detectedPlatform === 'mac' ? 'mac' : detectedPlatform === 'linux' ? 'linux' : 'windows'} className="h-6 w-6" />
+                            </span>
+                            <span className="flex-1">
+                                <span className="block text-base font-bold">Download for {platformLabel}</span>
+                                <span className="block text-sm text-neutral-300">Free. Shares unused bandwidth. Pause anytime.</span>
+                            </span>
+                            <Download className="h-5 w-5 shrink-0 text-brand-yellow" aria-hidden="true" />
+                        </a>
+                        <a href="/downloads#desktop-apps" className="mt-3 inline-block text-sm font-semibold text-neutral-600 underline">Choose another operating system</a>
+
+                        <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl bg-neutral-50 p-4">
+                            <div className="text-sm">
+                                <p className="flex items-center gap-2 font-bold">
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-60" />
+                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                                    </span>
+                                    Waiting for your desktop
+                                </p>
+                                <p className="mt-1 text-neutral-600">Open the app and log in with the account you just joined with.</p>
+                                {hasClickedDownload && <p role="status" className="mt-2 font-semibold">Download requested. Open the installer, then log in inside IdleForest.</p>}
+                                {nodeStatus?.hasNode && <p className="mt-2 font-semibold text-orange-700">Your browser extension is linked. Connect the desktop app to finish.</p>}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={refetchNodeStatus}
+                                disabled={isCheckingConnection}
+                                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-bold transition-colors hover:bg-neutral-100 disabled:opacity-50"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${isCheckingConnection ? 'animate-spin' : ''}`} aria-hidden="true" />
+                                Check
+                            </button>
+                        </div>
+
+                        <details className="mt-6 border-t border-neutral-200 pt-4">
+                            <summary className="cursor-pointer text-sm font-bold">Finish on another computer</summary>
+                            <div className="mt-4"><DesktopSetupEmail companySlug={company.slug} locale={String(params.locale)} /></div>
+                        </details>
+                    </>
+                )}
+            </section>
+
+            <ForestImpactPanel mode="self" />
+
+            <p className="text-center text-sm text-neutral-600">{getCompanyImpactDescription(company)}</p>
+            <p className="text-center text-sm"><Link href={`/portal/c/${company.slug}`} className="font-semibold text-neutral-500 underline hover:text-brand-navy">Finish later: open member portal</Link></p>
         </>
     )
 }

@@ -412,8 +412,8 @@ export const HistoricalDataChart = ({ data, userHistory = [] }: HistoricalDataPr
         {isMobile && visibleChartData.length > 0 && (
           <div className="mt-3 grid grid-cols-2 gap-2">
             {visibleChartData.slice(-4).map((day) => (
-              <div key={day.key} className="border border-brand-navy/15 bg-brand-gray/30 p-2">
-                <div className="text-[11px] font-bold uppercase text-brand-navy/60">{day.compactPeriod}</div>
+              <div key={day.key} className="rounded-lg bg-neutral-50 p-2">
+                <div className="text-[11px] font-medium text-brand-navy/60">{day.compactPeriod}</div>
                 <div className="mt-1 text-sm font-extrabold text-brand-navy">{Math.round(day.trees).toLocaleString()} {t("trees")}</div>
                 <div className="text-xs font-medium text-brand-navy/70">
                   ${(day.earnings || 0).toFixed(2)} · {Math.round(day.nodes).toLocaleString()} {t("total_users")}
