@@ -115,26 +115,24 @@ export default function ReportPage() {
               )}
 
               {activeTab === 'analytics' && (
-                <div className="bg-white border border-neutral-200 rounded-3xl shadow-sm p-6 sm:p-8">
-                  {loading ? (
-                    <div className="h-[240px] w-full flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-navy"></div>
-                    </div>
-                  ) : (
-                    <div className="w-full space-y-6 sm:space-y-8">
-                      <h2 className="text-2xl font-extrabold">{t('historical_data')}</h2>
-                      <DailyImpactTable data={data} userHistory={userHistory} />
-                      <HistoricalDataChart data={data} userHistory={userHistory} />
-                    </div>
-                  )}
-                </div>
+                loading ? (
+                  <div className="flex h-[240px] w-full items-center justify-center rounded-3xl border border-neutral-200 bg-white">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-navy"></div>
+                  </div>
+                ) : (
+                  <DailyImpactTable
+                    data={data}
+                    userHistory={userHistory}
+                    middle={<HistoricalDataChart data={data} userHistory={userHistory} />}
+                  />
+                )
               )}
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <div className="bg-brand-yellow rounded-3xl p-7 sticky top-24">
+            <div className="bg-white border border-neutral-200 shadow-sm rounded-3xl p-7 sticky top-24">
               <h3 className="text-xl font-extrabold text-brand-navy mb-3">
                 {t('about_title')}
               </h3>

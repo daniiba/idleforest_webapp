@@ -1,10 +1,7 @@
 "use client"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Legend, Tooltip } from "recharts"
-import { useEffect, useMemo, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer } from "@/components/ui/chart"
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { useMemo, useState } from "react"
 import { plantingsData } from "@/lib/plantings"
-import { useIsMobile } from "@/hooks/use-mobile"
 import { useTranslations } from "next-intl"
 
 interface HistoricalDataProps {
@@ -21,23 +18,33 @@ interface HistoricalDataProps {
   }[];
 }
 
+type MetricKey = "requests" | "nodes" | "earnings" | "trees"
+type Granularity = "daily" | "weekly" | "monthly"
+
+// One validated categorical slot per metric. Each metric gets its own chart and
+// its own scale, so identity never depends on color alone (the title names it).
+const COLORS: Record<MetricKey, string> = {
+  requests: "#2a78d6",
+  nodes: "#4a3aa7",
+  earnings: "#1baf7a",
+  trees: "#008300",
+}
+
+const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 })
+
+function formatMetric(key: MetricKey, value: number) {
+  if (key === "earnings") return `$${compact.format(value)}`
+  return compact.format(Math.round(value))
+}
+
+function formatMetricExact(key: MetricKey, value: number) {
+  if (key === "earnings") return `$${value.toFixed(2)}`
+  return Math.round(value).toLocaleString()
+}
+
 export const HistoricalDataChart = ({ data, userHistory = [] }: HistoricalDataProps) => {
   const t = useTranslations('Report')
-  const isMobile = useIsMobile()
-  const [visibleMetrics, setVisibleMetrics] = useState({
-    requests: true,
-    nodes: true,
-    earnings: true,
-    trees: true,
-  });
-  const [granularity, setGranularity] = useState<"daily" | "weekly" | "monthly">("weekly")
-  // Mobile-only: allow a single tap to persist the tooltip
-  const [isTooltipPinned, setIsTooltipPinned] = useState(false)
-  const [pinnedIndex, setPinnedIndex] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (isMobile) setGranularity("daily")
-  }, [isMobile])
+  const [granularity, setGranularity] = useState<Granularity>("weekly")
 
   // Helpers to build stable YYYY-MM-DD keys WITHOUT timezone jumps
   const dateKeyFromDate = (dt: Date) => {
@@ -49,12 +56,10 @@ export const HistoricalDataChart = ({ data, userHistory = [] }: HistoricalDataPr
 
   const toDateKey = (d: string) => dateKeyFromDate(new Date(d))
 
-  // Helpers for bucketing
   const toWeekKey = (d: string) => {
     const dt = new Date(d)
-    // Normalize to local midnight to avoid DST surprises when adjusting days
     dt.setHours(0, 0, 0, 0)
-    const day = dt.getDay() || 7 // 1..7 (Mon..Sun with Sun=7)
+    const day = dt.getDay() || 7
     const monday = new Date(dt)
     monday.setDate(dt.getDate() - (day - 1))
     monday.setHours(0, 0, 0, 0)
@@ -90,339 +95,178 @@ export const HistoricalDataChart = ({ data, userHistory = [] }: HistoricalDataPr
     return matchingKey ? totalUsersByDate.get(matchingKey) ?? fallback : fallback
   }
 
-  // Aggregate donations (trees) by chosen bucket
-  const treesByDate = plantingsData.events.reduce<Record<string, number>>((acc, evt) => {
-    const key = keyFor(evt.date);
-    acc[key] = (acc[key] ?? 0) + (evt.trees ?? 0);
-    return acc;
-  }, {});
+  const chartData = useMemo(() => {
+    // Aggregate donations (trees) by chosen bucket
+    const treesByDate = plantingsData.events.reduce<Record<string, number>>((acc, evt) => {
+      const key = keyFor(evt.date)
+      acc[key] = (acc[key] ?? 0) + (evt.trees ?? 0)
+      return acc
+    }, {})
 
-  // Merge KPI data and donations by date key
-  const byDate = new Map<string, { requests: number; nodesSum: number; nodesCount: number; earnings: number; trees: number }>();
+    const byDate = new Map<string, { requests: number; nodesSum: number; nodesCount: number; earnings: number; trees: number }>()
 
-  for (const entry of data) {
-    const key = keyFor(entry.created_at);
-    const prev = byDate.get(key) ?? { requests: 0, nodesSum: 0, nodesCount: 0, earnings: 0, trees: 0 };
-    prev.requests += entry.requests_total;
-    prev.nodesSum += getTotalUsersForDate(entry.created_at, entry.total_users ?? entry.active_nodes ?? 0);
-    prev.nodesCount += 1;
-    prev.earnings += entry.earnings;
-    byDate.set(key, prev);
-  }
-
-  for (const [key, trees] of Object.entries(treesByDate)) {
-    const prev = byDate.get(key) ?? { requests: 0, nodesSum: 0, nodesCount: 0, earnings: 0, trees: 0 };
-    prev.trees += trees;
-    byDate.set(key, prev);
-  }
-
-  // Build chart array, sorted by date
-  const sortedEntries = Array.from(byDate.entries()).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  // Compute cumulative trees (independent of visibility)
-  let runningTrees = 0;
-  const chartData = sortedEntries.map(([key, vals]) => {
-    runningTrees += vals.trees;
-    // For weekly/monthly, average daily values within the bucket to avoid inflated sums
-    const divisor = vals.nodesCount || 1; // nodesCount represents number of daily records in this bucket
-    const requestsValue = granularity === "daily" ? vals.requests : vals.requests / divisor;
-    const earningsValue = granularity === "daily" ? vals.earnings : vals.earnings / divisor;
-    return {
-      key,
-      period: granularity === "monthly"
-        ? new Date(key).toLocaleDateString(undefined, { month: "short", year: "numeric" })
-        : granularity === "weekly"
-          ? new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" })
-          : new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-      compactPeriod: granularity === "monthly"
-        ? new Date(key).toLocaleDateString(undefined, { month: "short" })
-        : new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-      requests: visibleMetrics.requests ? requestsValue : 0,
-      nodes: visibleMetrics.nodes ? (vals.nodesCount ? vals.nodesSum / vals.nodesCount : 0) : 0,
-      earnings: visibleMetrics.earnings ? earningsValue : 0,
-      trees: visibleMetrics.trees ? runningTrees : 0,
-    };
-  });
-
-  const visibleChartData = useMemo(() => {
-    if (!isMobile) return chartData
-    if (granularity === "monthly") return chartData.slice(-6)
-    if (granularity === "weekly") return chartData.slice(-8)
-    return chartData.slice(-10)
-  }, [chartData, granularity, isMobile])
-
-  const config = {
-    requests: {
-      label: t('total_requests'),
-      color: "#0B101F", // brand-navy for line
-      description: "Number of total requests"
-    },
-    nodes: {
-      label: t('total_users'),
-      color: "#3A4563", // navy variant for better contrast on gray
-      description: "Total users"
-    },
-    earnings: {
-      label: t('total_earnings'),
-      color: "#B8C33C", // even darker brand yellow for earnings
-      description: "Cumulative earnings"
-    },
-    trees: {
-      label: t('trees_planted_chart'),
-      color: "#8C9931", // darkest yellow variant to clearly differ from earnings
-      description: "Number of trees planted (donations)"
+    for (const entry of data) {
+      const key = keyFor(entry.created_at)
+      const prev = byDate.get(key) ?? { requests: 0, nodesSum: 0, nodesCount: 0, earnings: 0, trees: 0 }
+      prev.requests += entry.requests_total
+      prev.nodesSum += getTotalUsersForDate(entry.created_at, entry.total_users ?? entry.active_nodes ?? 0)
+      prev.nodesCount += 1
+      prev.earnings += entry.earnings
+      byDate.set(key, prev)
     }
-  };
 
-  type ConfigKey = keyof typeof config;
-
-  const toggleMetric = (key: ConfigKey) => {
-    setVisibleMetrics((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleLegendClick = (entry: any) => {
-    const dataKey = Object.keys(config).find((key) => config[key as ConfigKey].label === entry.value) as ConfigKey | undefined;
-    if (dataKey) toggleMetric(dataKey);
-  };
-
-  // Custom tooltip to show a colored dot next to each label
-  const CustomTooltip = ({ active, label, payload }: any) => {
-    if (!active || !payload || payload.length === 0) return null;
-
-    const formatValue = (key: keyof typeof config, value: number) => {
-      if (key === "earnings") return `$${Number(value).toFixed(2)}`;
-      if (key === "requests") return `${(Number(value) / 1000).toFixed(1)}k`;
-      return `${Math.round(Number(value))}`;
-    };
-
-    return (
-      <div style={{ backgroundColor: "#FFFFFF", border: "1px solid rgba(11,16,31,0.15)", borderRadius: 6, padding: 8 }}>
-        <div style={{ color: "#0B101F", fontWeight: 600, marginBottom: 6 }}>{label}</div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          {payload.map((item: any) => {
-            const key = item.dataKey as keyof typeof config;
-            // Skip hidden series (value 0 when toggled off)
-            if (item.value === 0) return null;
-            const color = item.color || config[key]?.color;
-            const name = config[key]?.label ?? String(key);
-            return (
-              <div key={key} style={{ display: "flex", alignItems: "center", gap: 8, color: "#0B101F" }}>
-                <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", backgroundColor: color }} />
-                <span style={{ minWidth: 140 }}>{name}</span>
-                <strong>{formatValue(key, item.value)}</strong>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  // Build a payload compatible with Recharts Tooltip from a datum at index
-  const buildPayloadForIndex = (index: number | null) => {
-    if (index == null || index < 0 || index >= visibleChartData.length) return undefined;
-    const d = visibleChartData[index] as any;
-    // Order should match the rendered series
-    const series: Array<{ key: ConfigKey }> = [
-      { key: "requests" },
-      { key: "nodes" },
-      { key: "earnings" },
-      { key: "trees" },
-    ];
-    return series.map(({ key }) => ({
-      dataKey: key,
-      value: d[key],
-      color: (config as any)[key]?.color,
-      name: (config as any)[key]?.label,
-    }));
-  };
-
-  // On mobile, a tap should pin the tooltip at the tapped index. Tap empty area to unpin.
-  const handleChartClick = (e: any) => {
-    if (!isMobile) return;
-    if (e && typeof e.activeTooltipIndex === "number") {
-      setPinnedIndex(e.activeTooltipIndex);
-      setIsTooltipPinned(true);
-    } else {
-      setPinnedIndex(null);
-      setIsTooltipPinned(false);
+    for (const [key, trees] of Object.entries(treesByDate)) {
+      const prev = byDate.get(key) ?? { requests: 0, nodesSum: 0, nodesCount: 0, earnings: 0, trees: 0 }
+      prev.trees += trees
+      byDate.set(key, prev)
     }
-  };
+
+    const sorted = Array.from(byDate.entries()).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    let runningTrees = 0
+    return sorted.map(([key, vals]) => {
+      runningTrees += vals.trees
+      // requests_total and earnings are cumulative snapshots, so a bucket shows the average snapshot
+      const divisor = vals.nodesCount || 1
+      return {
+        key,
+        period:
+          granularity === "monthly"
+            ? new Date(key).toLocaleDateString(undefined, { month: "short", year: "numeric" })
+            : new Date(key).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "2-digit" }),
+        requests: granularity === "daily" ? vals.requests : vals.requests / divisor,
+        nodes: vals.nodesCount ? vals.nodesSum / vals.nodesCount : 0,
+        earnings: granularity === "daily" ? vals.earnings : vals.earnings / divisor,
+        trees: runningTrees,
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, granularity, totalUsersByDate])
+
+  const metrics: Array<{ key: MetricKey; label: string; note: string }> = [
+    { key: "requests", label: t('total_requests'), note: "cumulative" },
+    { key: "nodes", label: t('total_users'), note: "total" },
+    { key: "earnings", label: t('total_earnings'), note: "cumulative" },
+    { key: "trees", label: t('trees_planted_chart'), note: "cumulative" },
+  ]
 
   return (
-    <Card className="bg-white text-brand-navy border border-brand-navy/10 rounded-xl shadow-sm sm:shadow-md ring-1 ring-black/5">
-      <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="font-bold text-xl sm:text-2xl">{t('historical_title')}</CardTitle>
-        <div className="space-y-2">
-          <p className="text-brand-navy/80 text-sm sm:text-base">{t('historical_desc')}</p>
-          {/* Granularity controls */}
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-xs text-brand-navy/70">{t('granularity')}</span>
-            {(["daily", "weekly", "monthly"] as const).map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setGranularity(g)}
-                className={`px-2 py-1 rounded-full border text-xs bg-white hover:bg-gray-50 transition-colors ${granularity === g ? "opacity-100" : "opacity-60"}`}
-                aria-pressed={granularity === g}
-                style={{ borderColor: "#3A4563", color: "#3A4563" }}
-              >
-                {t(g)}
-              </button>
-            ))}
-          </div>
+    <section className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="history-title">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h3 id="history-title" className="text-xl font-extrabold tracking-tight text-brand-navy sm:text-2xl">{t('historical_title')}</h3>
+          <p className="mt-1 max-w-xl text-sm text-neutral-600">{t('historical_desc')}</p>
+        </div>
+        <div className="inline-flex shrink-0 rounded-full bg-neutral-100 p-1" role="group" aria-label={t('granularity')}>
+          {(["daily", "weekly", "monthly"] as const).map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setGranularity(g)}
+              aria-pressed={granularity === g}
+              className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                granularity === g ? "bg-brand-navy text-white" : "text-neutral-600 hover:text-brand-navy"
+              }`}
+            >
+              {t(g)}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          {/* Mobile compact toggles */}
-          <div className="sm:hidden flex flex-wrap gap-2 pt-1">
-            {Object.entries(config).map(([key, value]) => {
-              const k = key as ConfigKey;
-              const active = visibleMetrics[k];
-              return (
-                <button
-                  type="button"
-                  key={key}
-                  onClick={() => toggleMetric(k)}
-                  className={`px-2 py-1 rounded-full border text-xs bg-white hover:bg-gray-50 transition-colors ${active ? "opacity-100" : "opacity-60"}`}
-                  aria-pressed={active}
-                  style={{ borderColor: value.color, color: value.color }}
-                >
-                  {value.label}
-                </button>
-              );
-            })}
-          </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        {metrics.map(({ key, label, note }) => (
+          <MetricChart key={key} metricKey={key} label={label} note={note} data={chartData} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function MetricChart({
+  metricKey,
+  label,
+  note,
+  data,
+}: {
+  metricKey: MetricKey
+  label: string
+  note: string
+  data: Array<Record<string, any>>
+}) {
+  const color = COLORS[metricKey]
+  const gradientId = `fill-${metricKey}`
+  const last = data[data.length - 1]
+  const latest = last ? (last[metricKey] as number) : 0
+
+  return (
+    <figure className="rounded-2xl border border-neutral-200 p-4">
+      <figcaption className="flex items-start justify-between gap-3">
+        <div>
+          <p className="flex items-center gap-2 text-sm font-semibold text-neutral-600">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} aria-hidden />
+            {label}
+          </p>
+          <p className="mt-1 text-3xl font-extrabold tabular-nums tracking-tight text-brand-navy">{formatMetric(metricKey, latest)}</p>
         </div>
-      </CardHeader>
-      <CardContent className="pt-0 p-4 sm:p-6">
-        <div className="w-full overflow-x-auto">
-          <div className="min-w-[320px] w-full">
-            <ChartContainer config={config} className="aspect-auto h-[260px] sm:h-[420px]">
-              <AreaChart
-                data={visibleChartData}
-                margin={{ left: 0, right: 0, top: isMobile ? 10 : 20, bottom: isMobile ? 0 : 10 }}
-                className="w-full h-full"
-                onClick={handleChartClick}
-              >
-                <CartesianGrid vertical={false} horizontal={false} stroke="rgba(11,16,31,0.08)" />
-                <XAxis
-                  dataKey="period"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  interval={isMobile ? 0 : "preserveStartEnd"}
-                  minTickGap={isMobile ? 4 : 8}
-                  tick={{ fill: "rgba(11,16,31,0.8)", fontSize: isMobile ? 10 : 12 }}
-                />
-                <YAxis
-                  yAxisId="requests"
-                  orientation="left"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={false}
-                  width={0}
-                />
-                <YAxis
-                  yAxisId="nodes"
-                  orientation="left"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={false}
-                  width={0}
-                />
-                <YAxis
-                  yAxisId="earnings"
-                  orientation="right"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={false}
-                  width={0}
-                />
-                <YAxis
-                  yAxisId="trees"
-                  orientation="right"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={false}
-                  width={0}
-                />
-                {isMobile ? (
-                  <Tooltip
-                    content={<CustomTooltip />}
-                    active={isTooltipPinned}
-                    label={isTooltipPinned && pinnedIndex != null ? visibleChartData[pinnedIndex]?.period : undefined}
-                    payload={isTooltipPinned ? buildPayloadForIndex(pinnedIndex) : undefined}
-                  />
-                ) : (
-                  <Tooltip content={<CustomTooltip />} />
-                )}
-                {!isMobile && (
-                  <Legend
-                    onClick={handleLegendClick}
-                    iconType="circle"
-                    wrapperStyle={{ paddingTop: "1rem", color: "#0B101F", cursor: "pointer" }}
-                  />
-                )}
-                <Area
-                  yAxisId="requests"
-                  type="monotone"
-                  dataKey="requests"
-                  name={config.requests.label}
-                  stroke={config.requests.color}
-                  fill={config.requests.color}
-                  fillOpacity={visibleMetrics.requests ? 0.1 : 0}
-                  strokeOpacity={visibleMetrics.requests ? 1 : 0}
-                  strokeWidth={2}
-                />
-                <Area
-                  yAxisId="nodes"
-                  type="monotone"
-                  dataKey="nodes"
-                  name={config.nodes.label}
-                  stroke={config.nodes.color}
-                  fill={config.nodes.color}
-                  fillOpacity={visibleMetrics.nodes ? 0.12 : 0}
-                  strokeOpacity={visibleMetrics.nodes ? 1 : 0}
-                  strokeWidth={2.25}
-                />
-                <Area
-                  yAxisId="earnings"
-                  type="monotone"
-                  dataKey="earnings"
-                  name={config.earnings.label}
-                  stroke={config.earnings.color}
-                  fill={config.earnings.color}
-                  fillOpacity={visibleMetrics.earnings ? 0.1 : 0}
-                  strokeOpacity={visibleMetrics.earnings ? 1 : 0}
-                  strokeWidth={2}
-                />
-                <Area
-                  yAxisId="trees"
-                  type="monotone"
-                  dataKey="trees"
-                  name={config.trees.label}
-                  stroke={config.trees.color}
-                  fill={config.trees.color}
-                  fillOpacity={visibleMetrics.trees ? 0.12 : 0}
-                  strokeOpacity={visibleMetrics.trees ? 1 : 0}
-                  strokeWidth={2}
-                />
-              </AreaChart>
-            </ChartContainer>
-          </div>
-        </div>
-        {isMobile && visibleChartData.length > 0 && (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {visibleChartData.slice(-4).map((day) => (
-              <div key={day.key} className="rounded-lg bg-neutral-50 p-2">
-                <div className="text-[11px] font-medium text-brand-navy/60">{day.compactPeriod}</div>
-                <div className="mt-1 text-sm font-extrabold text-brand-navy">{Math.round(day.trees).toLocaleString()} {t("trees")}</div>
-                <div className="text-xs font-medium text-brand-navy/70">
-                  ${(day.earnings || 0).toFixed(2)} · {Math.round(day.nodes).toLocaleString()} {t("total_users")}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
+        <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-500">{note}</span>
+      </figcaption>
+
+      <div className="mt-3 h-[170px]" role="img" aria-label={`${label}: latest ${formatMetricExact(metricKey, latest)}`}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 6, right: 6, bottom: 0, left: 0 }}>
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.22} />
+                <stop offset="100%" stopColor={color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} stroke="rgba(11,16,31,0.07)" strokeDasharray="3 4" />
+            <XAxis
+              dataKey="period"
+              tickLine={false}
+              axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={48}
+              tickMargin={8}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              width={42}
+              tickCount={3}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tickFormatter={(v) => formatMetric(metricKey, Number(v))}
+              domain={[0, "auto"]}
+            />
+            <Tooltip
+              cursor={{ stroke: "rgba(11,16,31,0.25)", strokeWidth: 1 }}
+              content={({ active, payload, label: period }) => {
+                if (!active || !payload?.length) return null
+                return (
+                  <div className="rounded-xl border border-neutral-200 bg-white px-3 py-2 shadow-lg">
+                    <p className="text-xs font-medium text-neutral-500">{period}</p>
+                    <p className="mt-0.5 flex items-center gap-2 text-sm font-bold text-brand-navy">
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} aria-hidden />
+                      {formatMetricExact(metricKey, Number(payload[0].value))}
+                    </p>
+                  </div>
+                )
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey={metricKey}
+              stroke={color}
+              strokeWidth={2}
+              fill={`url(#${gradientId})`}
+              dot={false}
+              activeDot={{ r: 4.5, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </figure>
+  )
+}
