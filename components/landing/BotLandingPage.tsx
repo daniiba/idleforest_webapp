@@ -2,26 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-    CheckCircle2,
-    Users,
-    Trophy,
-    Zap,
-    MessageSquare,
-    Layout,
-    Bot,
-    ArrowRight,
-    TreePine,
-    Globe,
-    ShieldCheck
-} from "lucide-react";
+import { ArrowRight, MessageSquare } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { useEffect, useState } from "react";
-import { ReviewsSection } from "@/components/reviews-section";
 import { supabase } from "@/lib/supabase/client";
 import { useTranslations } from "next-intl";
+import { BotArt, BoltArt, MedalArt, TrophyArt } from "@/components/landing/DiscordArt";
+import { ForestArt } from "@/components/partner/SilveiraArt";
+import { CommunityArt } from "@/components/partner/WastefreeArt";
+import { FreeArt, HabitatArt, InstallArt, PrivacyArt } from "@/components/partner/MossyEarthArt";
 
 interface DiscordTeam {
     id: string;
@@ -32,12 +21,20 @@ interface DiscordTeam {
 // Replace with actual bot invitation link when available
 const BOT_INVITE_URL = "https://discord.com/oauth2/authorize?client_id=1471135568690806825";
 
+const discordButton =
+    "inline-flex items-center justify-center gap-2 rounded-full bg-[#5865F2] px-7 py-3.5 text-base font-bold text-white transition-colors hover:bg-[#4752C4]";
+const secondaryButton =
+    "inline-flex items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-base font-bold text-brand-navy transition-colors hover:bg-neutral-100";
+
+// Translation strings for these are uppercase in some locales, so normalise to sentence case.
+const sentence = "lowercase first-letter:uppercase";
+
 export default function BotLandingPage() {
     const t = useTranslations('DiscordBot');
     const [stats, setStats] = useState({
         totalServers: "0",
         treesPlanted: "0",
-        activeUsers: "0",
+        members: "0",
     });
     const [discordTeams, setDiscordTeams] = useState<DiscordTeam[]>([]);
 
@@ -56,7 +53,7 @@ export default function BotLandingPage() {
                 }
 
                 // 2. Fetch user count from Supabase profiles table
-                const { count: userCount, error: profilesError } = await supabase
+                const { count: userCount } = await supabase
                     .from('profiles')
                     .select('id', { count: 'exact', head: true });
 
@@ -80,7 +77,7 @@ export default function BotLandingPage() {
                 setStats({
                     totalServers: serverCount ? serverCount.toLocaleString() : "0",
                     treesPlanted: formatNumber(treesPlantedNum),
-                    activeUsers: formatNumber(userCount || 0),
+                    members: formatNumber(userCount || 0),
                 });
             } catch (error) {
                 console.error("Error fetching stats:", error);
@@ -98,343 +95,186 @@ export default function BotLandingPage() {
         return () => clearInterval(interval);
     }, []);
 
+    const features = [
+        { art: TrophyArt, title: t('feat_leaderboard_title'), body: t('feat_leaderboard_desc') },
+        { art: ForestArt, title: t('feat_forest_title'), body: t('feat_forest_desc') },
+        { art: BoltArt, title: t('feat_realtime_title'), body: t('feat_realtime_desc') },
+        { art: PrivacyArt, title: t('feat_privacy_title'), body: t('feat_privacy_desc') },
+        { art: MedalArt, title: t('feat_badges_title'), body: t('feat_badges_desc') },
+        { art: FreeArt, title: t('feat_free_title'), body: t('feat_free_desc') },
+    ];
+
+    const steps = [
+        { art: BotArt, title: t('step1_title'), body: t('step1_desc') },
+        { art: CommunityArt, title: t('step2_title'), body: t('step2_desc') },
+        { art: InstallArt, title: t('step3_title'), body: t('step3_desc'), cta: { label: t('step3_cta'), href: "/downloads#desktop-apps" } },
+        { art: HabitatArt, title: t('step4_title'), body: t('step4_desc') },
+    ];
+
+    const statCards = [
+        { value: stats.totalServers, label: t('stats_servers') },
+        { value: stats.treesPlanted, label: t('stats_trees') },
+        { value: stats.members, label: t('stats_members') },
+    ];
+
     return (
-        <div className="min-h-screen bg-brand-gray text-white selection:bg-brand-yellow selection:text-black">
+        <div className="min-h-screen bg-[#F7F7F2] text-brand-navy selection:bg-brand-yellow selection:text-black">
             <Navigation />
 
-            <main>
-                {/* HERO SECTION */}
-                <section className="relative pt-20 pb-32 overflow-hidden">
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
-
-                                <h1 className="font-candu text-black uppercase text-[42px] sm:text-6xl md:text-7xl leading-[1.05]">
-                                    <span className="font-extrabold block">{t('hero_title_line1')} </span>
-                                    <span className="font-extrabold text-brand-navy">{t('hero_title_line2')}</span>
-                                </h1>
-                                <p className="text-lg md:text-xl text-neutral-800 max-w-xl leading-relaxed">
-                                    {t('hero_desc')}
-                                </p>
-                                <div className="flex flex-wrap gap-4 pt-4">
-                                    <Button asChild size="lg" className="bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-black font-bold h-16 px-8 rounded-full shadow-none hover:shadow-none transition-all text-xl">
-                                        <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
-                                            <MessageSquare className="w-6 h-6 mr-2" />
-                                            {t('add_bot')}
-                                        </Link>
-                                    </Button>
-                                    <Button asChild variant="outline" size="lg" className="bg-white hover:bg-neutral-50 text-black border-2 border-black font-bold h-16 px-8 rounded-full shadow-none hover:shadow-none transition-all text-xl">
-                                        <Link href="#features">
-                                            Explore Features
-                                        </Link>
-                                    </Button>
-                                </div>
-                                <div className="flex items-center gap-6 pt-6">
-                                    <div className="flex -space-x-3">
-                                        {discordTeams.length > 0 ? (
-                                            discordTeams.map((team) => (
-                                                <div key={team.id} className="w-10 h-10 rounded-full border-2 border-white bg-neutral-200 overflow-hidden relative" title={team.name}>
-                                                    <img
-                                                        src={team.image_url || "/logo.png"}
-                                                        alt={team.name}
-                                                        className="object-cover"
-                                                    />
-                                                </div>
-                                            ))
-                                        ) : (
-                                            [1, 2, 3, 4].map(i => (
-                                                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-neutral-200 overflow-hidden">
-                                                    <Image src={`/reviews/avatar_${i}.jpg`} alt="" width={40} height={40} />
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                    <p className="text-sm text-neutral-600 font-medium">
-                                        Joined by <span className="text-black font-bold">{stats.totalServers}</span> servers this month
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="relative lg:h-[600px] flex items-center justify-center animate-in fade-in zoom-in duration-1000 delay-300">
-                                <div className="relative w-full max-w-md aspect-square bg-brand-yellow rounded-3xl border-4 border-black shadow-none overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
-                                    <div className="p-8 h-full flex flex-col justify-between relative z-10">
-                                        <div className="flex items-center justify-between">
-                                            <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-                                                <TreePine className="text-brand-yellow w-7 h-7" />
-                                            </div>
-                                            <div className="flex gap-1">
-                                                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                                                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                                                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <div className="bg-white/80 backdrop-blur-sm border-2 border-black p-4 rounded-xl shadow-none">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <span className="font-bold text-black text-sm uppercase">Server Ranking</span>
-                                                    <Trophy className="w-4 h-4 text-brand-yellow fill-brand-yellow stroke-black" />
-                                                </div>
-                                                <div className="text-2xl font-black text-brand-navy">#1 WORLDWIDE</div>
-                                            </div>
-
-                                            <div className="bg-brand-navy p-4 rounded-xl border-2 border-black shadow-none text-white">
-                                                <div className="text-xs uppercase font-bold text-brand-yellow mb-1">Impact Level</div>
-                                                <div className="flex items-end justify-between">
-                                                    <div className="text-3xl font-black">{stats.treesPlanted}</div>
-                                                    <div className="text-sm font-bold text-brand-yellow">TREES</div>
-                                                </div>
-                                                <div className="w-full h-2 bg-white/20 rounded-full mt-3 overflow-hidden">
-                                                    <div className="w-3/4 h-full bg-brand-yellow"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Lottie or Animation would go here */}
-                                    <div className="absolute bottom-[-20%] right-[-10%] opacity-20">
-                                        <Bot className="w-64 h-64 text-black" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Decorative Background Elements */}
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10 bg-[radial-gradient(circle_at_70%_20%,rgba(24ACC,204,0,0.15),transparent_40%)]"></div>
-                </section>
-
-                {/* STATS STRIP */}
-                <section className="bg-brand-navy border-y-4 border-black py-12 relative z-20">
-                    <div className="container mx-auto px-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
-                            <div className="text-center md:border-r-2 md:border-white/10">
-                                <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.totalServers}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_servers')}</div>
-                            </div>
-                            <div className="text-center md:border-r-2 md:border-white/10">
-                                <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.treesPlanted}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_trees')}</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-4xl md:text-5xl font-black text-brand-yellow mb-2">{stats.activeUsers}</div>
-                                <div className="text-sm uppercase tracking-widest font-bold text-white/60">{t('stats_messages')}</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* FEATURES SECTION */}
-                <section id="features" className="py-32 bg-white text-black">
-                    <div className="container mx-auto px-6">
-                        <div className="text-center max-w-3xl mx-auto mb-20">
-                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-6">{t('features_title')}</h2>
-                            <p className="text-xl text-neutral-600">{t('features_desc')}</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <FeatureCard
-                                icon={<Zap className="w-8 h-8" />}
-                                title="Instant Impact"
-                                description="Real-time tracking of trees planted by your server members through our app and extension."
-                                delay={0}
-                            />
-                            <FeatureCard
-                                icon={<Trophy className="w-8 h-8" />}
-                                title="Leaderboards"
-                                description="Compete against other Discord servers. See who has the greenest community on the platform."
-                                delay={100}
-                            />
-                            <FeatureCard
-                                icon={<Users className="w-8 h-8" />}
-                                title="Member Synergy"
-                                description="Connect your server members to a singular goal. Every member's contribution counts towards the total."
-                                delay={200}
-                            />
-                            <FeatureCard
-                                icon={<Layout className="w-8 h-8" />}
-                                title="Visual Forest"
-                                description="Generate beautiful forest maps and impact reports directly in your Discord channels."
-                                delay={300}
-                            />
-                            <FeatureCard
-                                icon={<MessageSquare className="w-8 h-8" />}
-                                title="Engagement Tips"
-                                description="Incentivize activity with unique ranks based on environmental contribution."
-                                delay={400}
-                            />
-                            <FeatureCard
-                                icon={<Globe className="w-8 h-8" />}
-                                title="Global Impact"
-                                description="We partner with verified reforestation heroes to ensure every tree counts."
-                                delay={500}
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* INTERFACE SHOWCASE SECTION */}
-                <section className="py-24 bg-neutral-100 overflow-hidden border-b-4 border-black">
-                    <div className="container mx-auto px-6">
-                        <div className="text-center max-w-3xl mx-auto mb-16">
-                            <h2 className="font-candu text-4xl text-brand-navy md:text-5xl font-extrabold uppercase mb-6">Experience the Integration</h2>
-                            <p className="text-xl text-neutral-600">See how IdleForest brings your server's impact to life with beautiful, interactive interfaces.</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 items-center">
-                            <div className="relative group animate-in fade-in slide-in-from-bottom duration-700">
-                                <div className="absolute -inset-2 bg-brand-yellow rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
-                                    <Image
-                                        src="/landing/discord/screenshot1.png"
-                                        alt="Discord Bot Interface 1"
-                                        width={600}
-                                        height={400}
-                                        className="rounded-2xl w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                            <div className="relative group animate-in fade-in slide-in-from-bottom duration-700 delay-100">
-                                <div className="absolute -inset-2 bg-brand-navy rounded-3xl blur opacity-10 group-hover:opacity-30 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
-                                    <Image
-                                        src="/landing/discord/screenshot2.png"
-                                        alt="Discord Bot Interface 2"
-                                        width={600}
-                                        height={400}
-                                        className="rounded-2xl w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                            <div className="relative group animate-in fade-in slide-in-from-bottom duration-700 delay-200">
-                                <div className="absolute -inset-2 bg-brand-yellow rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                                <div className="relative bg-white border-4 border-black rounded-3xl p-2 shadow-none overflow-hidden">
-                                    <Image
-                                        src="/landing/discord/screenshot3.png"
-                                        alt="Discord Bot Interface 3"
-                                        width={600}
-                                        height={400}
-                                        className="rounded-2xl w-full h-auto"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* HOW IT WORKS */}
-                <section className="py-32 bg-brand-yellow text-black border-y-4 border-black">
-                    <div className="container mx-auto px-6">
-                        <div className="max-w-4xl mx-auto">
-                            <h2 className="font-candu text-5xl md:text-6xl font-extrabold uppercase mb-16 text-center">{t('how_title')}</h2>
-
-                            <div className="space-y-12">
-                                <StepItem
-                                    number="01"
-                                    title={t('step1_title')}
-                                    description={t('step1_desc')}
-                                />
-                                <StepItem
-                                    number="02"
-                                    title={t('step2_title')}
-                                    description={t('step2_desc')}
-                                />
-                                <StepItem
-                                    number="03"
-                                    title={t('step3_title')}
-                                    description={t('step3_desc')}
-                                    ctaLabel={t('step3_cta')}
-                                    ctaHref="/downloads#desktop-apps"
-                                />
-                                <StepItem
-                                    number="04"
-                                    title={t('step4_title')}
-                                    description={t('step4_desc')}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* CTA SECTION */}
-                <section className="py-40 relative overflow-hidden bg-brand-navy text-white">
-                    <div className="absolute inset-0 opacity-10">
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(24ACC,204,0,0.4),transparent_70%)]"></div>
-                    </div>
-
-                    <div className="container mx-auto px-6 relative z-10 text-center">
-                        <h2 className="font-candu text-[42px] md:text-7xl font-extrabold uppercase mb-8 leading-tight">
-                            {t('cta_title')}
-                        </h2>
-                        <p className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto mb-12">
-                            {t('cta_desc')}
+            <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:space-y-8 sm:px-6 sm:py-12">
+                {/* Hero */}
+                <section className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+                    <div>
+                        <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 ring-1 ring-neutral-200">
+                            <span className="h-2 w-2 rounded-full bg-[#5865F2]" aria-hidden />
+                            Discord bot
                         </p>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <Button asChild size="lg" className="w-full sm:w-auto bg-[#5865F2] hover:bg-[#4752C4] text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-none hover:shadow-none transition-all text-xl">
-                                <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer">
-                                    <MessageSquare className="w-6 h-6 mr-2" />
-                                    {t('add_bot')}
-                                </Link>
-                            </Button>
-                            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold h-16 px-12 rounded-full shadow-none hover:shadow-none transition-all text-xl">
-                                <Link href="/">
-                                    Learn About IdleForest
-                                </Link>
-                            </Button>
+                        <h1 className={`mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl ${sentence}`}>
+                            {t('hero_title_line1')} {t('hero_title_line2')}
+                        </h1>
+                        <p className="mt-5 max-w-lg text-lg leading-7 text-neutral-600">{t('hero_desc')}</p>
+                        <div className="mt-7 flex flex-wrap gap-3">
+                            <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer" className={discordButton}>
+                                <MessageSquare className="h-5 w-5" aria-hidden />
+                                {t('add_bot')}
+                            </Link>
+                            <Link href="#features" className={secondaryButton}>
+                                Explore features
+                                <ArrowRight className="h-4 w-4" aria-hidden />
+                            </Link>
                         </div>
+                        <div className="mt-7 flex items-center gap-4">
+                            <div className="flex -space-x-3">
+                                {(discordTeams.length > 0 ? discordTeams : []).map((team) => (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        key={team.id}
+                                        src={team.image_url || "/logo.png"}
+                                        alt={team.name}
+                                        title={team.name}
+                                        className="h-10 w-10 rounded-full border-2 border-[#F7F7F2] bg-neutral-200 object-cover"
+                                    />
+                                ))}
+                            </div>
+                            <p className="text-sm text-neutral-600">
+                                Used by <span className="font-bold text-brand-navy">{stats.totalServers}</span> Discord servers
+                            </p>
+                        </div>
+                    </div>
 
+                    <figure className="relative">
+                        <div className="overflow-hidden rounded-3xl bg-[#1E1F22] p-2 shadow-xl ring-1 ring-black/10 sm:p-3">
+                            <Image
+                                src="/landing/discord/screenshot1.png"
+                                alt="The IdleForest bot posting a global server leaderboard in Discord"
+                                width={1490}
+                                height={744}
+                                priority
+                                sizes="(min-width: 1024px) 560px, 100vw"
+                                className="h-auto w-full rounded-2xl"
+                            />
+                        </div>
+                        <figcaption className="mt-3 text-center text-xs text-neutral-500">
+                            <code className="rounded-md bg-white px-1.5 py-0.5 font-mono text-[11px] text-neutral-700 ring-1 ring-neutral-200">/forest top</code>{" "}
+                            posts the global server leaderboard.
+                        </figcaption>
+                    </figure>
+                </section>
+
+                {/* Stats */}
+                <dl className="grid gap-3 sm:grid-cols-3">
+                    {statCards.map((stat) => (
+                        <div key={stat.label} className="rounded-2xl border border-neutral-200 bg-white p-5">
+                            <dd className="text-3xl font-extrabold tabular-nums tracking-tight">{stat.value}</dd>
+                            <dt className={`mt-1 text-sm text-neutral-500 ${sentence}`}>{stat.label}</dt>
+                        </div>
+                    ))}
+                </dl>
+
+                {/* Features */}
+                <section id="features" className="scroll-mt-24" aria-labelledby="features-heading">
+                    <div className="max-w-2xl">
+                        <h2 id="features-heading" className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t('features_title')}</h2>
+                        <p className="mt-1 text-neutral-600">{t('features_desc')}</p>
+                    </div>
+                    <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {features.map(({ art: Art, title, body }) => (
+                            <article key={title} className="rounded-3xl border border-neutral-200 bg-white p-6">
+                                <Art className="h-20 w-20" />
+                                <h3 className="mt-4 text-lg font-extrabold tracking-tight">{title}</h3>
+                                <p className="mt-1 text-sm leading-6 text-neutral-600">{body}</p>
+                            </article>
+                        ))}
                     </div>
                 </section>
 
-                <ReviewsSection />
+                {/* In Discord */}
+                <section aria-labelledby="see-heading" className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8">
+                    <h2 id="see-heading" className="text-2xl font-extrabold tracking-tight sm:text-3xl">See it in Discord</h2>
+                    <div className="mt-6 grid gap-4 md:grid-cols-2">
+                        <figure className="overflow-hidden rounded-2xl bg-[#1E1F22] p-3">
+                            <div className="flex h-full items-center justify-center rounded-xl bg-[#2B2D31] p-4">
+                                <Image
+                                    src="/landing/discord/screenshot2.png"
+                                    alt="The IdleForest bot showing a live tree counter as its Discord status"
+                                    width={518}
+                                    height={182}
+                                    className="h-auto w-full max-w-sm"
+                                />
+                            </div>
+                            <figcaption className="px-1 pb-1 pt-3 text-sm text-white/80">A live tree counter, right in the member list.</figcaption>
+                        </figure>
+                        <figure className="overflow-hidden rounded-2xl bg-[#1E1F22] p-3">
+                            <Image
+                                src="/landing/discord/screenshot3.png"
+                                alt="The IdleForest bot showing a member's stats with the stats user command"
+                                width={1490}
+                                height={392}
+                                className="h-auto w-full rounded-xl"
+                            />
+                            <figcaption className="px-1 pb-1 pt-3 text-sm text-white/80">
+                                <code className="font-mono text-xs text-white">/stats user</code> shows a member&apos;s points and trees.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </section>
+
+                {/* How it works */}
+                <section className="overflow-hidden rounded-3xl bg-[#232A5C] px-5 py-10 text-white sm:px-10 sm:py-14" aria-labelledby="how-heading">
+                    <h2 id="how-heading" className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">{t('how_title')}</h2>
+                    <p className="mx-auto mt-2 max-w-xl text-center text-white/75">{t('how_desc')}</p>
+                    <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                        {steps.map((step) => (
+                            <li key={step.title} className="flex flex-col items-center rounded-3xl bg-white/10 p-6 text-center">
+                                <step.art className="h-24 w-24" />
+                                <p className="mt-4 text-lg font-extrabold">{step.title}</p>
+                                <p className="mt-1 text-sm text-white/75">{step.body}</p>
+                                {step.cta && (
+                                    <Link href={step.cta.href} className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-yellow px-4 py-2 text-sm font-bold text-brand-navy transition hover:brightness-95">
+                                        {step.cta.label}
+                                        <ArrowRight className="h-4 w-4" aria-hidden />
+                                    </Link>
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+
+                {/* Final CTA */}
+                <section className="rounded-3xl bg-brand-navy px-6 py-14 text-center text-white sm:py-20">
+                    <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">{t('cta_title')}</h2>
+                    <p className="mx-auto mt-3 max-w-xl text-white/70">{t('cta_desc')}</p>
+                    <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+                        <Link href={BOT_INVITE_URL} target="_blank" rel="noopener noreferrer" className={discordButton}>
+                            <MessageSquare className="h-5 w-5" aria-hidden />
+                            {t('add_bot')}
+                        </Link>
+                        <Link href="/" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-base font-bold text-white transition hover:bg-white/10">
+                            Learn about IdleForest
+                        </Link>
+                    </div>
+                </section>
             </main>
-
-
-        </div>
-    );
-}
-
-function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNode, title: string, description: string, delay: number }) {
-    return (
-        <Card className="p-8 bg-neutral-50 border-2 border-black rounded-2xl shadow-none hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-            <div className="w-16 h-16 bg-brand-yellow border-2 border-black rounded-xl flex items-center justify-center mb-6 shadow-none">
-                {icon}
-            </div>
-            <h3 className="font-candu text-2xl font-extrabold uppercase mb-4">{title}</h3>
-            <p className="text-neutral-600 leading-relaxed">{description}</p>
-        </Card>
-    );
-}
-
-function StepItem({
-    number,
-    title,
-    description,
-    ctaLabel,
-    ctaHref
-}: {
-    number: string,
-    title: string,
-    description: string,
-    ctaLabel?: string,
-    ctaHref?: string
-}) {
-    return (
-        <div className="flex gap-8 group">
-            <div className="flex-shrink-0 text-5xl md:text-7xl font-black text-black/10 group-hover:text-black transition-colors duration-500 font-rethink-sans">
-                {number}
-            </div>
-            <div className="pt-2 md:pt-4">
-                <h3 className="font-candu text-3xl font-extrabold uppercase mb-3">{title}</h3>
-                <p className="text-lg text-neutral-800 leading-relaxed max-w-xl">{description}</p>
-                {ctaLabel && ctaHref && (
-                    <Button asChild className="mt-5 bg-black text-brand-yellow hover:bg-brand-navy rounded-full px-6 py-5 font-bold">
-                        <Link href={ctaHref}>{ctaLabel}</Link>
-                    </Button>
-                )}
-            </div>
         </div>
     );
 }

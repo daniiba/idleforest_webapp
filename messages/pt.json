@@ -387,6 +387,7 @@
         "stats_servers": "SERVIDORES",
         "stats_trees": "ÁRVORES PLANTADAS",
         "stats_messages": "MENSAGENS RASTREADAS",
+        "stats_members": "Membros do IdleForest",
         "how_title": "Como Funciona",
         "how_desc": "Faça a floresta do seu servidor crescer em quatro passos simples.",
         "step1_title": "Adicione o Bot",

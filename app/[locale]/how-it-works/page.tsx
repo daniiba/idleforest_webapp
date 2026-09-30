@@ -1,81 +1,35 @@
 import FreeTreeResources from "@/components/free-tree-resources";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { ArrowRight, BadgeCheck, Leaf, ShieldCheck, Sprout, Trees, Wifi } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Leaf } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { Link } from "@/navigation";
 import { getDeviceInfo, type DeviceDetection } from "@/lib/device-detection";
 import { SmartCTA } from "@/components/smart-cta";
+import IdleBandwidthArt from "@/components/landing/IdleBandwidthArt";
+import { FundingArt } from "@/components/partner/WastefreeArt";
+import { HabitatArt, InstallArt, RunArt } from "@/components/partner/MossyEarthArt";
 
 const pageTitle = "How IdleForest Works: Plant Trees With Idle Bandwidth";
 const pageDescription =
   "See how IdleForest works. Your idle internet bandwidth runs small data tasks in the background, and the revenue funds verified tree planting. No cost to you.";
 const canonicalUrl = "https://www.idleforest.com/how-it-works";
 
+const chain = [
+  { art: InstallArt, title: "You install the app", body: "One click for Chrome, or a small app for Mac, Windows or Linux. No account, no payment." },
+  { art: RunArt, title: "It runs small tasks", body: "Sessionless data tasks, like uptime checks, run on your spare bandwidth in the background." },
+  { art: FundingArt, title: "Companies pay for them", body: "Businesses pay to run tasks across many connections. Your share is small; together it adds up." },
+  { art: HabitatArt, title: "Verified trees get planted", body: "The money goes to Trees for the Future, Tree-Nation and 1ClickImpact, who plant and verify on the ground." },
+];
+
 const faqItems = [
-  {
-    question: "Is IdleForest really free?",
-    answer:
-      "Yes. There is no cost, no subscription, and no donation. You do not pay, and you are not asked to. The trees are funded by the revenue from idle bandwidth tasks, not by you.",
-  },
-  {
-    question: "Will it slow down my computer or internet?",
-    answer:
-      "No. The app uses only the bandwidth you are not using, and it steps aside the moment you need it. When you start a video call, open a heavy site, or download a file, IdleForest backs off. Your browsing keeps its full speed.",
-  },
-  {
-    question: "What data passes through my connection?",
-    answer:
-      "Automated data requests from paying clients, such as uptime checks and price lookups. None of it is yours. Your logins, files, and browsing history never enter the process, and the tasks carry no cookies or identifiers.",
-  },
-  {
-    question: "Is it safe to install?",
-    answer:
-      "Yes. IdleForest is featured on the Chrome Web Store and rated 4.8 stars from 33 reviews. The app runs in the background and touches only spare bandwidth, not your personal data.",
-  },
-  {
-    question: "Can I use it with Ecosia or another search engine?",
-    answer:
-      "Yes. IdleForest does not change your search engine, your browser, or any setting. It runs alongside whatever you already use, including Ecosia, Brave, Chrome, and Edge. You can stack the impact.",
-    link: {
-      href: "/blog/9-companies-like-ecosia-sustainable-search-engines-and-products-for-environmental-impact-2025",
-      text: "Can I use it with Ecosia",
-    },
-  },
-  {
-    question: "How much bandwidth does it use?",
-    answer:
-      "Only what is spare. The app reads how much capacity is free and uses a small part of it. When your connection gets busy, it backs off on its own, so you do not notice it running.",
-  },
-  {
-    question: "How do I know the trees are real?",
-    answer:
-      "The money goes to named reforestation partners who plant and verify the trees on the ground. You can see the running totals and the partners on the transparency page, with reports from each partner.",
-    richAnswer: (
-      <>
-        The money goes to named reforestation partners who plant and verify the trees on the ground. You can see the running
-        totals and the partners on the{" "}
-        <Link href="/transparency" className="font-bold underline underline-offset-4 hover:text-brand-navy">
-          transparency page
-        </Link>
-        , with{" "}
-        <Link href="/transparency" className="font-bold underline underline-offset-4 hover:text-brand-navy">
-          reports from each partner
-        </Link>
-        .
-      </>
-    ),
-  },
-  {
-    question: "Does it work on mobile?",
-    answer:
-      "Not yet. IdleForest runs as a Chrome extension and as a desktop app for Mac, Windows, and Linux. Mobile networks carry far less idle bandwidth than home connections, so a mobile version is on the roadmap but not live.",
-  },
-  {
-    question: "How do I pause or uninstall it?",
-    answer:
-      "You can pause it at any time from the extension menu, or remove it like any other extension or program. Once removed, no bandwidth is used and no data is collected. The trees you have already funded stay funded.",
-  },
+  { question: "Is IdleForest really free?", answer: "Yes. No cost, subscription or donation. Idle bandwidth tasks fund the trees, not you." },
+  { question: "Will it slow my computer or internet?", answer: "No. It only uses bandwidth you are not using and steps aside when you need it, like on a video call." },
+  { question: "Is it safe to install?", answer: "Yes. IdleForest is featured on the Chrome Web Store with 4.8 stars from 33 reviews, and it never touches your personal data." },
+  { question: "Can I use it with Ecosia or another search engine?", answer: "Yes. It changes no setting and works alongside Ecosia, Brave, Chrome and Edge, so the impact stacks." },
+  { question: "How do I know the trees are real?", answer: "Named partners plant and verify them, and the transparency page shows running totals and partner reports." },
+  { question: "Does it work on mobile?", answer: "Not yet. It runs as a Chrome extension and a desktop app for Mac, Windows and Linux. Mobile is on the roadmap." },
+  { question: "How do I pause or uninstall it?", answer: "Pause from the extension menu, or remove it like any program. Trees you already funded stay funded." },
 ];
 
 export const metadata: Metadata = {
@@ -115,182 +69,104 @@ export default function HowItWorksPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-[#F7F7F2] text-black">
-        <section className="relative overflow-hidden bg-brand-yellow">
-          <div className="container mx-auto px-6 py-16 md:py-24">
-            <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-center">
-              <div className="max-w-4xl">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-md bg-brand-navy px-4 py-2 text-sm font-bold text-brand-yellow">
-                  <Leaf className="h-4 w-4" />
-                  how does idleforest work
-                </div>
-                <h1 className="text-[44px] font-extrabold leading-[1.02] tracking-normal sm:text-6xl md:text-5xl">
-                  How IdleForest Works
-                </h1>
-                <p className="mt-6 max-w-3xl text-lg leading-8 text-neutral-800 md:text-xl">
-                  IdleForest runs in the background and uses the internet bandwidth you are not using. It routes small,
-                  paid data tasks through your spare connection, and it sends the money from those tasks to verified
-                  tree-planting partners. You pay nothing, and you never change how you browse. Install it once, and it
-                  plants trees while you go about your day.
-                </p>
-                <CtaGroup deviceInfo={deviceInfo} />
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-6">
-                <div className="grid gap-4">
-                  <Signal icon={<Wifi className="h-5 w-5" />} label="Spare bandwidth" />
-                  <Signal icon={<ShieldCheck className="h-5 w-5" />} label="Sessionless data tasks" />
-                  <Signal icon={<BadgeCheck className="h-5 w-5" />} label="Paid by companies" />
-                  <Signal icon={<Trees className="h-5 w-5" />} label="Funds verified trees" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <ContentBand title="What Idle Bandwidth Is">
-          <p>
-            Most of the time, your internet connection sits idle. Even with your browser open, you use only a small slice
-            of what your connection can carry. The rest goes to waste.
-          </p>
-          <p>
-            Idle bandwidth is that unused capacity. IdleForest borrows it, and only it. Your browsing, streaming, and
-            downloads always come first, so you keep the full speed you pay for. The moment you need the connection, the
-            app steps back.
-          </p>
-        </ContentBand>
-
-        <section className="bg-brand-navy text-white">
-          <div className="container mx-auto px-6 py-16 md:py-24">
-            <div className="max-w-4xl">
-              <h2 className="text-4xl font-extrabold tracking-normal text-brand-yellow md:text-5xl">
-                How the App Turns Bandwidth Into Trees
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-white/85">
-                Four things happen between the moment you install the app and the moment a tree goes in the ground. Here
-                is the full chain.
+      <main className="min-h-screen bg-[#F7F7F2] text-brand-navy">
+        <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:space-y-8 sm:px-6 sm:py-12">
+          {/* Hero */}
+          <section className="grid items-center gap-8 rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-3.5 py-1.5 text-sm font-bold">
+                <Leaf className="h-4 w-4" aria-hidden="true" />
+                How does IdleForest work?
               </p>
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">How IdleForest works</h1>
+              <p className="mt-4 max-w-lg text-lg leading-7 text-neutral-600">
+                Your spare bandwidth runs small paid data tasks. The money plants verified trees. You pay nothing and change nothing.
+              </p>
+              <CtaGroup deviceInfo={deviceInfo} />
             </div>
-
-            <div className="mt-12 grid gap-5 md:grid-cols-2">
-              <StepCard id="step-1" number="1." title="You Install the App">
-                Add the Chrome extension in one click, or install the small desktop app for Mac, Windows, or Linux. There is no
-                account to make, no form to fill, and no payment. The install takes about ten seconds.
-              </StepCard>
-              <StepCard id="step-2" number="2." title="It Runs Small Data Tasks in the Background">
-                The app sends small data tasks through your spare bandwidth, such as uptime checks and market-research
-                queries. These tasks are sessionless. They carry no cookies, no personal details, and no part of your
-                browsing history.
-              </StepCard>
-              <StepCard id="step-3" number="3." title="Companies Pay for Those Tasks">
-                Businesses pay to run these tasks across many connections at once. Your share is small on its own. Across
-                every user running the app, it adds up to real money each month.
-              </StepCard>
-              <StepCard id="step-4" number="4." title="The Money Funds Verified Tree Planting">
-                IdleForest passes that money to its reforestation partners, Trees for the Future, Tree-Nation, and
-                1ClickImpact, who plant the trees and verify them on the ground. You can watch the totals climb on the{" "}
-                <Link href="/transparency" className="font-bold underline underline-offset-4 hover:text-brand-navy">
-                  transparency page
-                </Link>
-                .
-              </StepCard>
+            <div className="rounded-2xl bg-[#F7F7F2] p-3 sm:p-5">
+              <IdleBandwidthArt className="h-auto w-full" />
             </div>
+          </section>
 
-            <Link
-              href="/impact"
-              className="mt-10 inline-flex items-center gap-2 text-lg font-bold text-brand-yellow underline underline-offset-4 hover:text-white"
-            >
-              See the live tree count <ArrowRight className="h-5 w-5" />
-            </Link>
-          </div>
-        </section>
+          {/* The chain */}
+          <section aria-labelledby="chain-heading" className="overflow-hidden rounded-3xl bg-brand-navy px-5 py-10 text-white sm:px-10 sm:py-14">
+            <h2 id="chain-heading" className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">From idle bandwidth to trees</h2>
+            <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {chain.map((step, index) => (
+                <li key={step.title} id={`step-${index + 1}`} className="flex flex-col items-center rounded-3xl bg-white/10 p-6 text-center">
+                  <step.art className="h-24 w-24" />
+                  <h3 className="mt-4 text-lg font-extrabold">{step.title}</h3>
+                  <p className="mt-1 text-sm text-white/75">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-center">
+              <Link href="/impact" className="inline-flex items-center gap-2 text-sm font-bold text-brand-yellow underline decoration-2 underline-offset-4">
+                See the live tree count <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </p>
+          </section>
 
-        <ContentBand title="What Data Moves Through Your Connection">
-          <p>
-            The tasks that run through your connection are automated data requests from paying clients. Think of them as
-            small lookups: is this website up, what does this product cost in this region. They have nothing to do with
-            you.
-          </p>
-          <p>
-            Your logins, your files, your accounts, and your browsing history never enter the process. Each task is
-            sessionless, so there are no cookies and no identifiers tied to it. The app does not read your tabs, your
-            bookmarks, or your search history.
-          </p>
-          <p>
-            Because the app uses only spare capacity, your own browsing always takes priority. You can see the full
-            breakdown of task types in our{" "}
-            <Link href="/transparency" className="font-bold underline underline-offset-4 hover:text-brand-navy">
-              transparency report
-            </Link>
-            , and how we handle data in our{" "}
-            <Link href="/privacy" className="font-bold underline underline-offset-4 hover:text-brand-navy">
-              privacy policy
-            </Link>
-            .
-          </p>
-          <Link
-            href="/privacy"
-            className="inline-flex items-center gap-2 text-lg font-bold underline underline-offset-4 hover:text-brand-navy"
-          >
-            Read our privacy policy <ArrowRight className="h-5 w-5" />
-          </Link>
-        </ContentBand>
+          {/* Idle bandwidth + data */}
+          <section className="grid gap-4 md:grid-cols-2">
+            <article className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8">
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">What is idle bandwidth?</h2>
+              <p className="mt-3 leading-7 text-neutral-600">
+                Even with your browser open, you use only a small slice of your connection. IdleForest borrows only the rest, and steps back the moment you need it.
+              </p>
+              <p className="mt-4 rounded-2xl bg-neutral-50 p-4 text-sm font-semibold text-neutral-700">
+                Your browsing, streaming and downloads always come first.
+              </p>
+            </article>
+            <article className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8">
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">What moves through your connection?</h2>
+              <p className="mt-3 leading-7 text-neutral-600">Automated requests from paying clients, like &ldquo;is this website up?&rdquo;. Nothing of yours.</p>
+              <ul className="mt-4 space-y-2">
+                {["Sessionless: no cookies or identifiers", "No logins, files or browsing history", "Spare capacity only"].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-sm font-medium">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-700">
+                      <Check className="h-3 w-3" aria-hidden="true" />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-neutral-600">
+                Details in the{" "}
+                <Link href="/transparency" className="font-bold underline decoration-brand-yellow decoration-2 underline-offset-4">transparency report</Link> and{" "}
+                <Link href="/privacy" className="font-bold underline decoration-brand-yellow decoration-2 underline-offset-4">privacy policy</Link>.
+              </p>
+            </article>
+          </section>
 
-        <ContentBand title="Why Fund Trees This Way" tinted>
-          <p>
-            Data tasks like these run across the internet every second of the day. The capacity to carry them already
-            exists, sitting idle on millions of connections. IdleForest channels a slice of that demand into
-            reforestation instead of letting it go to waste.
-          </p>
-          <p>
-            It also keeps some of this work off the large data centers that handle it today, which carry their own energy
-            cost. The result is the same trees, funded by capacity you were not using anyway, at no cost to you.
-          </p>
-        </ContentBand>
-
-        <section className="bg-neutral-100">
-          <div className="container mx-auto px-6 py-16 md:py-24">
-            <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">
-              Frequently Asked Questions
-            </h2>
-            <div className="mt-10 divide-y divide-neutral-200 border-y border-neutral-200">
+          {/* FAQ */}
+          <section className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8" aria-labelledby="faq-heading">
+            <h2 id="faq-heading" className="text-2xl font-extrabold tracking-tight sm:text-3xl">Quick answers</h2>
+            <div className="mt-4 divide-y divide-neutral-200">
               {faqItems.map((item) => (
-                <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[320px_1fr] md:gap-8">
-                  <h3 className="text-2xl font-extrabold">{item.question}</h3>
-                  <div className="space-y-3 text-lg leading-8 text-neutral-800">
-                    <p>{item.richAnswer ?? item.answer}</p>
-                    {item.link ? (
-                      <Link
-                        href={item.link.href}
-                        className="inline-flex items-center gap-2 font-bold underline underline-offset-4 hover:text-brand-navy"
-                      >
-                        {item.link.text} <ArrowRight className="h-5 w-5" />
-                      </Link>
-                    ) : null}
-                  </div>
-                </article>
+                <details key={item.question} className="group py-4 first:pt-2 last:pb-2">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold [&::-webkit-details-marker]:hidden">
+                    {item.question}
+                    <ChevronDown className="h-5 w-5 shrink-0 text-neutral-400 transition-transform group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <p className="mt-2 max-w-3xl leading-7 text-neutral-600">{item.answer}</p>
+                </details>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="bg-brand-yellow">
-          <div className="container mx-auto px-6 py-16 text-center md:py-24">
-            <div className="mx-auto max-w-3xl">
-              <Sprout className="mx-auto h-12 w-12 text-brand-navy" />
-              <h2 className="mt-5 text-4xl font-extrabold tracking-normal md:text-5xl">
-                Start Planting Trees in 10 Seconds
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-neutral-800 md:text-xl">
-                Install it once, change nothing, and let it run. Your spare bandwidth does the rest.
-              </p>
-              <div className="mt-8 flex justify-center">
-                <CtaGroup deviceInfo={deviceInfo} centered />
-              </div>
+          {/* Final CTA */}
+          <section className="rounded-3xl bg-brand-yellow px-6 py-12 text-center sm:py-16">
+            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">Start planting trees in 10 seconds</h2>
+            <p className="mx-auto mt-3 max-w-md text-neutral-800">Install it once, change nothing, and let it run.</p>
+            <div className="mt-7 flex justify-center">
+              <CtaGroup deviceInfo={deviceInfo} centered />
             </div>
-          </div>
-        </section>
-        <div className="container mx-auto px-6"><FreeTreeResources currentPath="/how-it-works" /></div>
+          </section>
+
+          <FreeTreeResources currentPath="/how-it-works" />
+        </div>
       </main>
     </>
   );
@@ -304,60 +180,12 @@ function CtaGroup({
   centered?: boolean;
 }) {
   return (
-    <div className={`mt-8 flex ${centered ? "justify-center" : ""}`}>
+    <div className={`mt-7 flex ${centered ? "justify-center" : ""}`}>
       <SmartCTA
         deviceInfo={deviceInfo}
         buttonVariant="inverse"
         className={centered ? "items-center" : undefined}
       />
     </div>
-  );
-}
-
-function Signal({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <div className="flex items-center gap-3 border-b border-neutral-200 pb-4 last:border-b-0 last:pb-0">
-      <div className="grid h-10 w-10 place-items-center rounded-md bg-brand-yellow text-black">{icon}</div>
-      <span className="font-bold">{label}</span>
-    </div>
-  );
-}
-
-function ContentBand({
-  title,
-  children,
-  tinted = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  tinted?: boolean;
-}) {
-  return (
-    <section className={tinted ? "bg-white" : "bg-brand-gray"}>
-      <div className="container mx-auto grid gap-8 px-6 py-16 md:grid-cols-[360px_1fr] md:py-24">
-        <h2 className="text-4xl font-extrabold tracking-normal md:text-5xl">{title}</h2>
-        <div className="max-w-3xl space-y-6 text-lg leading-8 text-neutral-800">{children}</div>
-      </div>
-    </section>
-  );
-}
-
-function StepCard({
-  id,
-  number,
-  title,
-  children,
-}: {
-  id: string;
-  number: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <article className="rounded-lg border border-brand-yellow bg-white p-6 text-black">
-      <div className="text-5xl font-extrabold text-brand-navy">{number}</div>
-      <h3 id={id} className="mt-4 text-2xl font-extrabold md:text-3xl">{title}</h3>
-      <p className="mt-4 text-base leading-7 text-neutral-800 md:text-lg">{children}</p>
-    </article>
   );
 }

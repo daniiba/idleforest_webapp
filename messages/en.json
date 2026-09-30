@@ -387,6 +387,7 @@
         "stats_servers": "SERVERS",
         "stats_trees": "TREES PLANTED",
         "stats_messages": "MESSAGES TRACKED",
+        "stats_members": "IdleForest members",
         "how_title": "How It Works",
         "how_desc": "Get your server's forest growing in four simple steps.",
         "step1_title": "Add the Bot",
