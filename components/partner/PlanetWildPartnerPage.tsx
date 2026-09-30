@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ArrowUpRight, ExternalLink, Leaf, MonitorDown, ShieldCheck, Sprout, Waves } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ExternalLink, Leaf } from 'lucide-react'
 import CompanySettingsPanel from '@/app/[locale]/c/[slug]/CompanySettingsPanel'
+import { HabitatArt, InstallArt, JoinArt, RunArt } from '@/components/partner/MossyEarthArt'
 
 const planetWildAssets = {
     idleForestLogo: '/logo.png',
@@ -71,27 +72,14 @@ const recentMissions = [
 const featuredMissions = [recentMissions[1], recentMissions[0], recentMissions[2]]
 
 const howItWorks = [
-    {
-        title: 'Join the fund',
-        body: 'Connect your IdleForest account to the public Planet Wild company forest.',
-        Icon: Sprout,
-    },
-    {
-        title: 'Install once',
-        body: 'Run the free desktop app or browser extension quietly in the background.',
-        Icon: MonitorDown,
-    },
-    {
-        title: 'Stay in control',
-        body: 'The app backs off when your device or connection needs priority.',
-        Icon: ShieldCheck,
-    },
-    {
-        title: 'Route support',
-        body: 'Generated funds are reserved for documented Planet Wild rewilding support.',
-        Icon: Waves,
-    },
+    { art: JoinArt, title: 'Join the fund', body: 'Connect your IdleForest account to the public Planet Wild forest.' },
+    { art: InstallArt, title: 'Install once', body: 'Run the free desktop app or browser extension in the background.' },
+    { art: RunArt, title: 'Stay in control', body: 'The app backs off when your device or connection needs priority.' },
+    { art: HabitatArt, title: 'Route support', body: 'Funds are reserved for documented Planet Wild rewilding support.' },
 ]
+
+const primaryButton =
+    'inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-6 py-3 text-sm font-bold text-brand-navy transition hover:brightness-95'
 
 function formatNumber(value: number, locale: string) {
     return new Intl.NumberFormat(locale).format(Math.max(0, value))
@@ -170,8 +158,10 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
         },
     ]
 
+    const canJoin = isValidInvite || isMember
+
     return (
-        <div className="pw-page">
+        <div className="min-h-screen bg-[#F7F7F2] text-brand-navy">
             {isValidInvite && invite && (
                 <script
                     dangerouslySetInnerHTML={{
@@ -182,173 +172,177 @@ export default function PlanetWildPartnerPage({ company, params, invite, isMembe
 
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-            <header className="pw-nav" aria-label="IdleForest and Planet Wild page navigation">
-                <a href="#planetwild-top" className="pw-wordmark" aria-label="IdleForest and Planet Wild">
-                    <span className="pw-wordmark__idle" aria-hidden>
-                        <Image src={planetWildAssets.idleForestLogo} alt="" fill sizes="132px" priority />
-                    </span>
-                    <span className="pw-wordmark__joiner">for</span>
-                    <span className="pw-wordmark__planet" aria-hidden>
-                        <Image src={planetWildAssets.logo} alt="" fill sizes="42px" priority />
-                    </span>
-                </a>
-                {isValidInvite || isMember ? (
-                    <Link href={joinHref} className="pw-chip pw-chip--solid">
-                        {isMember ? 'Portal' : 'Join'}
-                        <Leaf aria-hidden />
-                    </Link>
-                ) : null}
+            <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white/85 backdrop-blur-md" aria-label="IdleForest and Planet Wild page navigation">
+                <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+                    <a href="#planetwild-top" className="flex items-center gap-3" aria-label="IdleForest and Planet Wild">
+                        <Image src={planetWildAssets.idleForestLogo} alt="" width={121} height={33} priority className="h-auto w-[96px]" />
+                        <span className="text-sm font-bold text-neutral-400" aria-hidden>&times;</span>
+                        <Image src={planetWildAssets.logo} alt="" width={84} height={84} priority className="h-8 w-8 object-contain" />
+                    </a>
+                    {canJoin ? (
+                        <Link href={joinHref} className={`${primaryButton} !px-5 !py-2.5`}>
+                            {isMember ? 'Portal' : 'Join'}
+                            <Leaf className="h-4 w-4" aria-hidden />
+                        </Link>
+                    ) : null}
+                </div>
             </header>
 
-            <main id="planetwild-top">
-                <section className="pw-hero">
-                    <div className="pw-hero__bg" aria-hidden>
-                        <Image src={planetWildAssets.heroBackground} alt="" fill priority sizes="100vw" />
+            <main id="planetwild-top" className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:space-y-8 sm:px-6 sm:py-12">
+                {/* Hero */}
+                <section className="relative overflow-hidden rounded-3xl bg-[#0F241C] text-white">
+                    <Image src={planetWildAssets.heroBackground} alt="" fill priority sizes="(min-width: 1152px) 1120px, 100vw" className="object-cover opacity-55" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0F241C] via-[#0F241C]/75 to-[#0F241C]/25" aria-hidden />
+                    <div className="relative grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:p-14">
+                        <div>
+                            <Image src={planetWildAssets.partnerLabel} alt="Planet Wild rewilding partner" width={1116} height={444} priority sizes="(min-width: 960px) 14rem, 12rem" className="h-auto w-48 sm:w-56" />
+                            <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+                                Fund Planet Wild <span className="text-brand-yellow">for free.</span>
+                            </h1>
+                            <p className="mt-5 max-w-lg text-lg leading-7 text-white/80">
+                                Join the Planet Wild forest and install IdleForest once. The app can fund rewilding missions while your computer is already online.
+                            </p>
+                            <div className="mt-7 flex flex-wrap gap-3">
+                                {canJoin ? (
+                                    <Link href={joinHref} className={primaryButton}>
+                                        {primaryCta}
+                                        <ArrowRight className="h-4 w-4" aria-hidden />
+                                    </Link>
+                                ) : null}
+                                <a href="#planetwild-missions" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10">
+                                    View missions
+                                    <ArrowUpRight className="h-4 w-4" aria-hidden />
+                                </a>
+                            </div>
+                            <p className="mt-5 max-w-md text-xs leading-5 text-white/60">
+                                IdleForest is the free background app. Planet Wild runs its own website, membership, mission reports and community, separate from this page.
+                            </p>
+                        </div>
+                        <figure>
+                            <div className="relative aspect-video overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/15">
+                                <iframe
+                                    src={planetWildMissionVideoEmbedUrl}
+                                    title="Planet Wild mission videos"
+                                    loading="eager"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen
+                                    className="absolute inset-0 h-full w-full"
+                                />
+                            </div>
+                            <figcaption className="mt-3 text-xs text-white/70">
+                                <span className="mr-2 font-bold text-brand-yellow">Mission reports</span>
+                                Filmed and published by Planet Wild.
+                            </figcaption>
+                        </figure>
                     </div>
-                    <div className="pw-hero__copy">
-                        <div className="pw-partner-label" aria-label="Planet Wild rewilding partner">
-                            <Image src={planetWildAssets.partnerLabel} alt="Planet Wild rewilding partner" width={1116} height={444} priority sizes="(min-width: 960px) 27rem, 18rem" />
-                        </div>
-                        <h1>Fund Planet Wild for free.</h1>
-                        <p>
-                            Join the Planet Wild forest, install IdleForest once, and the app can generate passive funding for rewilding missions while your computer is already online. This
-                            IdleForest-run support page and free app are separate from Planet Wild&apos;s own website and membership.
-                        </p>
-                        <p className="pw-product-note">IdleForest is the free background app. Planet Wild is the rewilding organisation running its own membership, mission reports, and community.</p>
-                        <div className="pw-hero__actions">
-                            {isValidInvite || isMember ? (
-                                <Link href={joinHref} className="pw-chip pw-chip--solid">
-                                    {primaryCta}
-                                    <ArrowRight aria-hidden />
-                                </Link>
-                            ) : null}
-                            <a href="#planetwild-missions" className="pw-chip pw-chip--text">
-                                View missions
-                                <ArrowUpRight aria-hidden />
-                            </a>
-                        </div>
-                    </div>
-                    <figure className="pw-hero__proof">
-                        <div className="pw-video">
-                            <iframe
-                                src={planetWildMissionVideoEmbedUrl}
-                                title="Planet Wild mission videos"
-                                loading="eager"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                allowFullScreen
-                            />
-                        </div>
-                        <figcaption>
-                            <span>Mission reports</span>
-                            Filmed and published by Planet Wild.
-                        </figcaption>
-                    </figure>
                 </section>
 
-                <section className="pw-metrics" aria-label="IdleForest support metrics">
+                {/* Stats */}
+                <dl className="grid gap-3 sm:grid-cols-3" aria-label="IdleForest support metrics">
                     {impactStats.map((stat) => (
-                        <article key={stat.label}>
-                            <p>{stat.label}</p>
-                            <strong>{stat.value}</strong>
-                        </article>
+                        <div key={stat.label} className="rounded-2xl border border-neutral-200 bg-white p-5">
+                            <dd className="text-3xl font-extrabold tabular-nums tracking-tight">{stat.value}</dd>
+                            <dt className="mt-1 text-sm text-neutral-500">{stat.label}</dt>
+                        </div>
                     ))}
-                </section>
+                </dl>
 
-                <section className="pw-split" id="planetwild-missions">
-                    <div className="pw-split__copy">
-                        <h2>Monthly missions, visible work.</h2>
-                        <p>
-                            Planet Wild publishes mission reports for its rewilding work. IdleForest adds a separate free support layer for people who want to help alongside Planet Wild&apos;s own
-                            paid membership.
-                        </p>
-                        <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer" className="pw-inline-link">
-                            View all Planet Wild missions
-                            <ExternalLink aria-hidden />
+                {/* Missions */}
+                <section id="planetwild-missions" aria-labelledby="missions-heading">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 id="missions-heading" className="text-2xl font-extrabold tracking-tight sm:text-3xl">Monthly missions, visible work</h2>
+                            <p className="mt-1 max-w-xl text-neutral-600">Planet Wild publishes a report for each rewilding mission. IdleForest adds a free way to help alongside their own membership.</p>
+                        </div>
+                        <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm font-bold underline decoration-brand-yellow decoration-2 underline-offset-4">
+                            All missions
+                            <ExternalLink className="h-4 w-4" aria-hidden />
                         </a>
                     </div>
-                    <div className="pw-mission-grid">
-                        {featuredMissions.map((mission, index) => (
-                            <a key={mission.number} href={mission.href} target="_blank" rel="noreferrer" className="pw-mission">
-                                <Image src={mission.image} alt="" fill sizes={index === 1 ? '(min-width: 960px) 34vw, (min-width: 640px) 36vw, 100vw' : '(min-width: 960px) 24vw, (min-width: 640px) 28vw, 100vw'} />
-                                <span>Mission {mission.number}</span>
-                                <div>
-                                    <p>{mission.date}</p>
-                                    <h3>{mission.title}</h3>
-                                    <p>{mission.detail}</p>
+                    <div className="mt-5 grid gap-4 md:grid-cols-3">
+                        {featuredMissions.map((mission) => (
+                            <a key={mission.number} href={mission.href} target="_blank" rel="noreferrer" className="group overflow-hidden rounded-3xl border border-neutral-200 bg-white transition hover:-translate-y-0.5 hover:shadow-md">
+                                <div className="relative aspect-[16/10] bg-neutral-100">
+                                    <Image src={mission.image} alt="" fill sizes="(min-width: 768px) 360px, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                                    <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold shadow-sm">Mission {mission.number}</span>
+                                </div>
+                                <div className="p-5">
+                                    <p className="text-xs font-medium text-neutral-500">{mission.date}</p>
+                                    <h3 className="mt-1 text-lg font-extrabold leading-tight">{mission.title}</h3>
+                                    <p className="mt-1 text-sm text-neutral-600">{mission.detail}</p>
                                 </div>
                             </a>
                         ))}
                     </div>
                 </section>
 
-                <section className="pw-split pw-split--reverse" id="planetwild-how">
-                    <div className="pw-split__copy">
-                        <h2>Turn idle bandwidth into rewilding support.</h2>
-                        <p>
-                            Companies and researchers pay for sessionless public data tasks. IdleForest can direct this company forest’s revenue toward Planet Wild support, while your normal browsing
-                            and device use stay first.
-                        </p>
-                        <Link href={`/${params.locale}/how-it-works`} className="pw-inline-link">
-                            Learn how IdleForest works
-                            <ArrowRight aria-hidden />
-                        </Link>
-                    </div>
-                    <ol className="pw-steps">
-                        {howItWorks.map((item, index) => {
-                            const Icon = item.Icon
-
-                            return (
-                                <li key={item.title}>
-                                    <span>{String(index + 1).padStart(2, '0')}</span>
-                                    <Icon aria-hidden />
-                                    <div>
-                                        <h3>{item.title}</h3>
-                                        <p>{item.body}</p>
-                                    </div>
-                                </li>
-                            )
-                        })}
+                {/* How it works */}
+                <section id="planetwild-how" className="overflow-hidden rounded-3xl bg-[#16382D] px-5 py-10 text-white sm:px-10 sm:py-14" aria-labelledby="how-heading">
+                    <h2 id="how-heading" className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl">Idle bandwidth becomes rewilding support</h2>
+                    <p className="mx-auto mt-3 max-w-xl text-center text-white/75">
+                        Companies and researchers pay for sessionless public data tasks. Revenue from this forest goes toward Planet Wild support, and your normal browsing always comes first.
+                    </p>
+                    <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                        {howItWorks.map((item) => (
+                            <li key={item.title} className="flex flex-col items-center rounded-3xl bg-white/10 p-6 text-center">
+                                <item.art className="h-24 w-24" />
+                                <p className="mt-4 text-lg font-extrabold">{item.title}</p>
+                                <p className="mt-1 text-sm text-white/75">{item.body}</p>
+                            </li>
+                        ))}
                     </ol>
+                    <p className="mt-6 text-center">
+                        <Link href={`/${params.locale}/how-it-works`} className="inline-flex items-center gap-1.5 text-sm font-bold underline decoration-brand-yellow decoration-2 underline-offset-4">
+                            How IdleForest works
+                            <ArrowRight className="h-4 w-4" aria-hidden />
+                        </Link>
+                    </p>
                 </section>
 
-                <section className="pw-faq" aria-labelledby="planetwild-faq-heading">
-                    <h2 id="planetwild-faq-heading">Plain answers before you join.</h2>
-                    <div className="pw-faq__list">
+                {/* FAQ */}
+                <section className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8" aria-labelledby="planetwild-faq-heading">
+                    <h2 id="planetwild-faq-heading" className="text-xl font-extrabold tracking-tight">Plain answers before you join</h2>
+                    <div className="mt-4 divide-y divide-neutral-200">
                         {planetWildFaqs.map((faq) => (
-                            <article key={faq.question}>
-                                <h3>{faq.question}</h3>
-                                <p>{faq.answer}</p>
+                            <article key={faq.question} className="py-4 first:pt-0 last:pb-0">
+                                <h3 className="font-bold">{faq.question}</h3>
+                                <p className="mt-1 text-neutral-600">{faq.answer}</p>
                             </article>
                         ))}
                     </div>
                 </section>
 
-                <section className="pw-final" id="planetwild-join">
-                    <h2>Add free rewilding support to your computer.</h2>
-                    <div className="pw-final__actions">
-                        {isValidInvite || isMember ? (
-                            <Link href={joinHref} className="pw-chip pw-chip--solid">
-                                {primaryCta}
-                                <ArrowRight aria-hidden />
-                            </Link>
-                        ) : null}
-                        <a href={website.url} target="_blank" rel="noreferrer" className="pw-chip pw-chip--outline">
-                            Planet Wild
-                            <ExternalLink aria-hidden />
-                        </a>
+                {/* Final CTA */}
+                <section id="planetwild-join" className="relative overflow-hidden rounded-3xl bg-[#0F241C]">
+                    <Image src={planetWildAssets.heroBackground} alt="" fill sizes="(min-width: 1152px) 1120px, 100vw" className="object-cover opacity-35" />
+                    <div className="relative px-6 py-14 text-center text-white sm:py-20">
+                        <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+                            Add free rewilding support to your computer.
+                        </h2>
+                        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+                            {canJoin ? (
+                                <Link href={joinHref} className={primaryButton}>
+                                    {primaryCta}
+                                    <ArrowRight className="h-4 w-4" aria-hidden />
+                                </Link>
+                            ) : null}
+                            <a href={website.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10">
+                                Planet Wild
+                                <ExternalLink className="h-4 w-4" aria-hidden />
+                            </a>
+                        </div>
                     </div>
                 </section>
             </main>
 
-            <footer className="pw-footer">
-                <p>
-                    IdleForest runs this page and the free app as a separate product. Planet Wild runs its own website, membership, missions, transparency reports, and community. © 2026 IdleForest x
-                    Planet Wild.
+            <footer className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pb-10 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <p className="max-w-3xl">
+                    IdleForest runs this page and the free app as a separate product. Planet Wild runs its own website, membership, missions, transparency reports and community. © 2026 IdleForest x Planet Wild.
                 </p>
-                <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer">
+                <a href={planetWildMissionsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-bold text-neutral-700 underline underline-offset-4">
                     Mission reports
-                    <ArrowUpRight aria-hidden />
+                    <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
                 </a>
             </footer>
 
