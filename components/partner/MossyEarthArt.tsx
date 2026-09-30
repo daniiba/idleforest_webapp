@@ -140,3 +140,27 @@ export function RunArt(props: ArtProps) {
         </Frame>
     );
 }
+
+/** A heart with a leaf: free for members. */
+export function FreeArt(props: ArtProps) {
+    return (
+        <Frame {...props}>
+            <circle cx="48" cy="48" r="46" fill="#F6EBD6" />
+            <path d="M48 76 C24 60 16 46 22 34 C28 24 42 24 48 36 C54 24 68 24 74 34 C80 46 72 60 48 76Z" fill="#E2725B" />
+            <path d="M40 56 C40 46 50 40 60 41 C60 51 52 58 40 56Z" fill={GREEN_LIGHT} />
+            <path d="M40 56 C46 52 51 48 56 43" stroke={GREEN_DARK} strokeWidth="2" strokeLinecap="round" fill="none" />
+        </Frame>
+    )
+}
+
+/** A shield with a check: privacy first. */
+export function PrivacyArt(props: ArtProps) {
+    return (
+        <Frame {...props}>
+            <circle cx="48" cy="48" r="46" fill="#DCECF0" />
+            <path d="M48 14 L74 24 V46 C74 62 62 74 48 82 C34 74 22 62 22 46 V24Z" fill={NAVY} />
+            <path d="M48 22 L67 29 V46 C67 58 58 67 48 73 C38 67 29 58 29 46 V29Z" fill="#182036" />
+            <path d="M38 47 l7 8 l14 -17" fill="none" stroke={LIME} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+        </Frame>
+    )
+}
