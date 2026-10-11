@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, Users } from 'lucide-react';
 import { trackPinterestEvent } from '@/lib/pinterest/client';
@@ -13,7 +14,7 @@ import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
 interface InviteInfo {
   teamName: string;
-  inviterName: string;
+  imageUrl: string | null;
 }
 
 interface ReferralInfo {
@@ -59,6 +60,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null);
+  const [inviteLoading, setInviteLoading] = useState(Boolean(urlInviteCode));
   const [companyInfo, setCompanyInfo] = useState<{ name: string; slug: string } | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
@@ -71,32 +73,25 @@ function SignupForm() {
     try {
       const { data: invite } = await supabase
         .from('team_invites')
-        .select('team_id, created_by')
+        .select('team_id')
         .eq('invite_code', inviteCode)
         .single();
 
       if (invite) {
         const { data: team } = await supabase
           .from('teams')
-          .select('name')
+          .select('name, image_url')
           .eq('id', invite.team_id)
           .single();
 
-        const { data: inviter } = await supabase
-          .from('profiles')
-          .select('display_name')
-          .eq('user_id', invite.created_by)
-          .single();
-
         if (team) {
-          setInviteInfo({
-            teamName: team.name,
-            inviterName: inviter?.display_name || 'A team member'
-          });
+          setInviteInfo({ teamName: team.name, imageUrl: team.image_url });
         }
       }
     } catch (err) {
       console.error('Error fetching invite info:', err);
+    } finally {
+      setInviteLoading(false);
     }
   }, [inviteCode]);
 
@@ -292,67 +287,84 @@ function SignupForm() {
     setLoading(false);
   };
 
+  const isWastefree = Boolean(companySlug && isWastefreeCompanySlug(companySlug));
+
   return (
-    <div className="w-full max-w-md bg-white border border-neutral-200 p-8 rounded-2xl">
-      {/* Team Invite Banner */}
+    <div className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-sm">
       {inviteInfo && (
-        <div className="mb-6 p-4 bg-brand-navy text-white border border-neutral-200 rounded-2xl">
-          <div className="flex items-center gap-2 mb-1">
-            <Users className="w-4 h-4 text-brand-yellow" />
-            <span className="text-xs text-gray-300">Joining Team</span>
-          </div>
-          <p className="font-bold text-lg">{inviteInfo.teamName}</p>
-          <p className="text-sm text-gray-400">Invited by {inviteInfo.inviterName}</p>
-        </div>
-      )}
-
-      {companyInfo && !inviteInfo && (
-        <div className="mb-6 p-4 bg-brand-navy text-white border border-neutral-200 rounded-2xl">
-          <div className="flex items-center gap-2 mb-1">
-            <Users className="w-4 h-4 text-brand-yellow" />
-            <span className="text-xs text-gray-300">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Joining the clean-ocean fund' : 'Joining Company Forest'}</span>
-          </div>
-          <p className="font-bold text-lg">{companyInfo.name}</p>
-          <p className="text-sm text-gray-400">{companySlug && isWastefreeCompanySlug(companySlug) ? 'Create your account, then set up your computer or email yourself a setup link.' : 'No invite required'}</p>
-        </div>
-      )}
-
-      {referralInfo && !inviteInfo && !companyInfo && (
-        <div className="mb-6 border border-neutral-200 bg-brand-yellow p-4 text-black rounded-2xl">
-          <div className="mb-1 flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <span className="text-xs font-extrabold">Personal invite</span>
-          </div>
-          <p className="font-bold text-lg">{referralInfo.inviterName} invited you to grow IdleForest together.</p>
-          <p className="mt-1 text-sm font-semibold text-neutral-700">Free, runs quietly in the background, and plants real trees. Create your account, then connect the desktop app to join {referralInfo.inviterName}&apos;s forest.</p>
-          {referralInfo.reward && (
-            <p className="mt-2 border-t border-neutral-200 pt-2 text-sm font-extrabold">
-              Welcome gift: once your computer has contributed on {referralInfo.reward.minActiveDays} days, you and {referralInfo.inviterName} each get {formatTrees(referralInfo.reward.treesPerPerson)} planted.
-            </p>
+        <div className="flex h-36 items-center justify-center bg-forest-ground">
+          {inviteInfo.imageUrl ? (
+            <Image
+              src={inviteInfo.imageUrl}
+              alt={inviteInfo.teamName}
+              width={96}
+              height={96}
+              unoptimized
+              priority
+              className="h-24 w-24 rounded-2xl bg-white object-cover shadow-sm"
+            />
+          ) : (
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-yellow shadow-sm">
+              <Users className="h-10 w-10" />
+            </div>
           )}
         </div>
       )}
 
-      {validatingReferral && !inviteInfo && !companyInfo && (
-        <div className="mb-6 flex items-center gap-2 border border-neutral-200 bg-neutral-100 p-4 text-sm font-bold rounded-2xl">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Checking your invite…
-        </div>
-      )}
+      <div className="p-6 sm:p-10">
+        <div className="mb-8 text-center">
+          {inviteInfo ? (
+            <>
+              <p className="text-sm font-bold text-neutral-500">You&apos;ve been invited to join</p>
+              <h1 className="mt-1 text-4xl font-extrabold leading-tight tracking-tight text-brand-navy">{inviteInfo.teamName}</h1>
+            </>
+          ) : companyInfo ? (
+            <>
+              <p className="text-sm font-bold text-neutral-500">{isWastefree ? 'Joining the clean-ocean fund' : 'Joining Company Forest'}</p>
+              <h1 className="mt-1 text-4xl font-extrabold leading-tight tracking-tight text-brand-navy">{companyInfo.name}</h1>
+              {isWastefree && (
+                <p className="mx-auto mt-3 max-w-xs text-sm text-neutral-600">Create your account, then set up your computer or email yourself a setup link.</p>
+              )}
+            </>
+          ) : referralInfo ? (
+            <>
+              <p className="text-sm font-bold text-neutral-500">Personal invite</p>
+              <h1 className="mt-1 text-4xl font-extrabold leading-tight tracking-tight text-brand-navy">{referralInfo.inviterName} invited you</h1>
+              <p className="mx-auto mt-3 max-w-xs text-sm text-neutral-600">Free, runs quietly in the background, and plants real trees.</p>
+              {referralInfo.reward && (
+                <p className="mx-auto mt-4 rounded-2xl bg-brand-yellow px-4 py-3 text-sm font-bold text-black">
+                  Welcome gift: after {referralInfo.reward.minActiveDays} active days, you and {referralInfo.inviterName} each get {formatTrees(referralInfo.reward.treesPerPerson)} planted.
+                </p>
+              )}
+            </>
+          ) : inviteLoading ? (
+            <div className="animate-pulse" aria-hidden="true">
+              <div className="mx-auto h-4 w-40 rounded-full bg-neutral-200" />
+              <div className="mx-auto mt-3 h-9 w-56 rounded-full bg-neutral-200" />
+            </div>
+          ) : (
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight">
+              Join the <span className="rounded-lg bg-brand-yellow px-2">Forest</span>
+            </h1>
+          )}
 
-      {referralValidationError && !validatingReferral && (
-        <div className="mb-6 border border-amber-500 bg-amber-50 p-3 text-sm font-bold text-amber-900">
-          {referralValidationError}
-        </div>
-      )}
+          {validatingReferral && !inviteInfo && !companyInfo && (
+            <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold text-neutral-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Checking your invite…
+            </p>
+          )}
 
-      <h1 className="text-4xl font-extrabold text-center mb-8 leading-none">
-        {inviteInfo || companyInfo ? 'Create Account' : <>Join the <br /><span className="bg-brand-yellow px-2">Forest</span></>}
-      </h1>
+          {referralValidationError && !validatingReferral && (
+            <p className="mx-auto mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900">
+              {referralValidationError}
+            </p>
+          )}
+        </div>
 
       <form onSubmit={handleSignup} className="space-y-4">
         <div>
-          <label htmlFor="displayName" className="block text-sm font-bold text-neutral-600 mb-1">
+          <label htmlFor="displayName" className="mb-1.5 block text-sm font-bold text-neutral-700">
             Display Name
           </label>
           <input
@@ -362,12 +374,12 @@ function SignupForm() {
             required
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
+            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-base text-black transition-all placeholder:text-neutral-400 focus:border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
             placeholder="Your Name"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-bold text-neutral-600 mb-1">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-neutral-700">
             Email address
           </label>
           <input
@@ -378,12 +390,12 @@ function SignupForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
+            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-base text-black transition-all placeholder:text-neutral-400 focus:border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
             placeholder="you@example.com"
           />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-bold text-neutral-600 mb-1">
+          <label htmlFor="password" className="mb-1.5 block text-sm font-bold text-neutral-700">
             Password
           </label>
           <input
@@ -394,12 +406,12 @@ function SignupForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border border-neutral-200 focus:ring-0 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-current transition-all placeholder:text-neutral-400 bg-neutral-50 text-black rounded-xl"
+            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-base text-black transition-all placeholder:text-neutral-400 focus:border-black focus:outline-none focus:ring-2 focus:ring-brand-yellow"
             placeholder="••••••••"
           />
         </div>
-        {error && <div className="p-3 bg-red-100 border border-red-500 text-red-700 font-bold text-sm text-center">{error}</div>}
-        {message && <div className="p-3 bg-green-100 border border-green-500 text-green-700 font-bold text-sm text-center">{message}</div>}
+        {error && <div className="rounded-xl bg-red-50 p-3 text-center text-sm font-bold text-red-700">{error}</div>}
+        {message && <div className="rounded-xl bg-green-50 p-3 text-center text-sm font-bold text-green-700">{message}</div>}
 
         <div className="flex justify-center pt-2">
           <Turnstile
@@ -417,34 +429,40 @@ function SignupForm() {
           <button
             type="submit"
             disabled={loading || validatingReferral || !turnstileToken}
-            className="w-full py-4 text-lg font-bold bg-brand-yellow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rounded-full"
+            className="flex w-full items-center justify-center rounded-full bg-brand-yellow py-4 text-lg font-extrabold text-black transition-all disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? (
               <><Loader2 className="h-5 w-5 mr-2 animate-spin text-black" /> Creating...</>
             ) : (
-              'Create Account'
+              inviteInfo ? 'Create account & join' : 'Create Account'
             )}
           </button>
         </div>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-dashed border-neutral-300 text-center space-y-4">
-        <p className="text-sm text-neutral-600 font-bold">
-          Already have an account?{' '}
-          <Link href={companySlug ? `/auth/user/login?redirect=${encodeURIComponent(`/en/join/company/${companySlug}`)}` : "/auth/user/login"} className="text-black underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow transition-colors">
-            Log in here
-          </Link>
-        </p>
-        <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
-          By continuing, you agree to our{' '}
-          <Link href="/terms" className="underline hover:bg-brand-yellow transition-colors text-black">
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href="/privacy" className="underline hover:bg-brand-yellow transition-colors text-black">
-            Privacy Policy
-          </Link>.
-        </p>
+        <div className="mt-8 space-y-4 text-center">
+          <p className="text-sm font-bold text-neutral-600">
+            Already have an account?{' '}
+            <Link
+              href={
+                companySlug
+                  ? `/auth/user/login?redirect=${encodeURIComponent(`/en/join/company/${companySlug}`)}`
+                  : inviteCode
+                    ? `/auth/user/login?redirect=${encodeURIComponent(`/invite/${inviteCode}`)}`
+                    : '/auth/user/login'
+              }
+              className="text-black underline underline-offset-4"
+            >
+              Log in
+            </Link>
+          </p>
+          <p className="mx-auto max-w-xs text-xs leading-relaxed text-neutral-500">
+            By continuing, you agree to our{' '}
+            <Link href="/terms" className="underline hover:text-black">Terms of Service</Link>{' '}
+            and{' '}
+            <Link href="/privacy" className="underline hover:text-black">Privacy Policy</Link>.
+          </p>
+        </div>
       </div>
     </div>
   );
