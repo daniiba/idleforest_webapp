@@ -3,12 +3,16 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import { ArrowRight, Award, TreePine, Users } from 'lucide-react'
+import { ArrowRight, Award, Gift, TreePine, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { forestSeed, getForestData, type ForestData } from '@/lib/forest'
 import ForestIsland from '@/components/forest/ForestIsland'
+import { normalizeReferralCode, resolveReferralOwner } from '@/lib/referrals'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { Link } from '@/navigation'
+import NextLink from 'next/link'
+import JoinHint from '@/components/share/JoinHint'
 import ShareActions from '../../ShareActions'
 
 export const dynamic = 'force-dynamic'
@@ -17,6 +21,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
 
 type PageProps = {
     params: { locale: string; username: string }
+    searchParams?: { ref?: string }
 }
 
 // Shared by generateMetadata and the page within one request.
@@ -81,13 +86,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 }
 
-export default async function UserSharePage({ params }: PageProps) {
+export default async function UserSharePage({ params, searchParams }: PageProps) {
     const member = await loadMember(params.username)
     if (!member) notFound()
 
     const t = await getTranslations({ locale: params.locale, namespace: 'Share' })
+    const tReferral = await getTranslations({ locale: params.locale, namespace: 'ReferralInvite' })
     const { name, forest, trees, badgeCount, team } = member
     const showForest = Boolean(forest) && (forest!.totalTrees > 0 || forest!.friends.length > 0)
+
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // A personal link (?ref=CODE) credits the sharer and, when enabled, gives both a tree.
+    const refCode = normalizeReferralCode(searchParams?.ref)
+    const admin = createAdminClient()
+    const [referrer, referralReward] = refCode && !user
+        ? await Promise.all([resolveReferralOwner(admin, refCode), getReferralRewardSettings(admin)])
+        : [null, null]
+    const signupHref = referrer ? `/auth/user/signup?referral=${encodeURIComponent(referrer.code)}` : null
 
     const prefix = params.locale === 'en' ? '' : `/${params.locale}`
     const shareUrl = `${APP_URL}${prefix}/share/user/${params.username}`
@@ -144,24 +161,42 @@ export default async function UserSharePage({ params }: PageProps) {
 
                         <p className="mx-auto mt-6 max-w-sm text-base leading-relaxed text-neutral-600">{t('lead_user')}</p>
 
-                        <Link
-                            href="/"
-                            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
-                        >
-                            {t('cta_join')}
-                            <ArrowRight className="h-5 w-5" aria-hidden="true" />
-                        </Link>
+                        {referralReward?.enabled && signupHref ? (
+                            <p className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand-yellow px-4 py-3 text-sm font-bold">
+                                <Gift className="h-4 w-4 shrink-0" aria-hidden="true" />
+                                {tReferral('reward_title', { trees: referralReward.treesPerPerson })}
+                            </p>
+                        ) : null}
+                        {user ? null : signupHref ? (
+                            <NextLink
+                                href={signupHref}
+                                className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
+                            >
+                                {t('cta_join')}
+                                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                            </NextLink>
+                        ) : (
+                            <Link
+                                href="/"
+                                className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
+                            >
+                                {t('cta_join')}
+                                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                            </Link>
+                        )}
+                        {user ? null : <JoinHint />}
 
                         <div className="mt-6">
                             <ShareActions
                                 url={shareUrl}
                                 text={shareText}
+                                signedIn={Boolean(user)}
                                 labels={{
                                     share: t('share_title'),
                                     copyLink: t('copy_link'),
                                     copied: t('copied'),
+                                    shareOnWhatsapp: t('share_on_whatsapp'),
                                     shareOnX: t('share_on_x'),
-                                    shareOnFacebook: t('share_on_facebook'),
                                     shareOnLinkedin: t('share_on_linkedin'),
                                 }}
                             />

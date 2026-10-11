@@ -1113,7 +1113,11 @@
         "copy_link": "Link kopieren",
         "copied": "Kopiert",
         "share_on_x": "Auf X teilen",
-        "share_on_facebook": "Auf Facebook teilen",
-        "share_on_linkedin": "Auf LinkedIn teilen"
+        "share_on_linkedin": "Auf LinkedIn teilen",
+        "share_on_whatsapp": "Auf WhatsApp teilen"
+    },
+    "JoinHint": {
+        "desktop": "Nach der Anmeldung installierst du die Desktop-App. Das dauert etwa zwei Minuten.",
+        "mobile": "IdleForest läuft auf einem Computer. Erstelle hier dein Konto, wir helfen dir bei der Einrichtung dort."
     }
 }

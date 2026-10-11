@@ -9,6 +9,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { forestSeed, getPublicTeamForest } from '@/lib/forest'
 import ForestIsland from '@/components/forest/ForestIsland'
 import { Link } from '@/navigation'
+import JoinHint from '@/components/share/JoinHint'
 import InviteJoinButton from './InviteJoinButton'
 
 export const dynamic = 'force-dynamic'
@@ -82,10 +83,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const title = t('meta_title', { team: invite.team.name })
     const description = t('meta_description', { team: invite.team.name })
-    const image = `${APP_URL}/api/og/invite?${new URLSearchParams({
-        team: invite.team.name,
-        locale: params.locale,
-    }).toString()}`
+    // The team preview shows the team's own art; teams without a slug get the plain invite card.
+    const image = invite.team.slug
+        ? `${APP_URL}/api/og/team?${new URLSearchParams({ slug: invite.team.slug, locale: params.locale }).toString()}`
+        : `${APP_URL}/api/og/invite?${new URLSearchParams({ team: invite.team.name, locale: params.locale }).toString()}`
 
     return {
         title,
@@ -287,6 +288,7 @@ export default async function InvitePage({ params }: PageProps) {
                                         {t('cta_signup')}
                                         <ArrowRight className="h-5 w-5" aria-hidden="true" />
                                     </NextLink>
+                                    <JoinHint />
                                     <p className="mt-4 text-sm text-neutral-600">
                                         {t('login_prompt')}{' '}
                                         <NextLink href={loginHref} className="font-bold text-black underline underline-offset-4">

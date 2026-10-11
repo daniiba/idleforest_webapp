@@ -14,3 +14,8 @@ export function companySetupPath(slug: string, locale = 'en') {
     const safeLocale = ['en', 'es', 'de', 'pt', 'fr'].includes(locale) ? locale : 'en'
     return `/${safeLocale}/welcome/c/${encodeURIComponent(slug)}`
 }
+
+export function teamSetupPath(slug: string, locale = 'en') {
+    const safeLocale = ['en', 'es', 'de', 'pt', 'fr'].includes(locale) ? locale : 'en'
+    return `/${safeLocale}/welcome/team/${encodeURIComponent(slug)}`
+}

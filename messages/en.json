@@ -1168,7 +1168,11 @@
         "copy_link": "Copy link",
         "copied": "Copied",
         "share_on_x": "Share on X",
-        "share_on_facebook": "Share on Facebook",
-        "share_on_linkedin": "Share on LinkedIn"
+        "share_on_linkedin": "Share on LinkedIn",
+        "share_on_whatsapp": "Share on WhatsApp"
+    },
+    "JoinHint": {
+        "desktop": "After signing up you'll install the desktop app. It takes about two minutes.",
+        "mobile": "IdleForest runs on a computer. Create your account here and we'll help you set it up there."
     }
 }

@@ -18,6 +18,8 @@ import {
 import { trackOnboardingEvent } from '@/lib/onboarding-events'
 import TeamForestPanel from '@/components/forest/TeamForestPanel'
 import { WindowsLogo, AppleLogo, LinuxLogo, OsLogo } from "@/components/icons/os-logos";
+import DesktopSetupEmail from '@/components/partner/DesktopSetupEmail'
+import { detectDesktopPlatform } from '@/lib/desktop-setup'
 
 interface TeamData {
     id: string
@@ -44,7 +46,7 @@ export default function TeamWelcomePage() {
     const [nodeStatus, setNodeStatus] = useState<NodeStatus | null>(null)
     const [loading, setLoading] = useState(true)
     const [isCheckingConnection, setIsCheckingConnection] = useState(false)
-    const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'linux' | 'other'>('other')
+    const [detectedPlatform, setDetectedPlatform] = useState<'windows' | 'mac' | 'linux' | 'mobile' | 'other'>('other')
     const [rewardMessage, setRewardMessage] = useState<string | null>(null)
     const [isClaimingReward, setIsClaimingReward] = useState(false)
     const [hasClickedDownload, setHasClickedDownload] = useState(false)
@@ -53,14 +55,12 @@ export default function TeamWelcomePage() {
 
     useEffect(() => {
         // Detect user's platform
-        const platformString = navigator.platform.toLowerCase()
-        if (platformString.includes('win')) {
-            setDetectedPlatform('windows')
-        } else if (platformString.includes('mac')) {
-            setDetectedPlatform('mac')
-        } else if (platformString.includes('linux')) {
-            setDetectedPlatform('linux')
-        }
+        const platform = detectDesktopPlatform({
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            maxTouchPoints: navigator.maxTouchPoints,
+        })
+        setDetectedPlatform(platform)
 
         fetchData()
     }, [params.slug])
@@ -248,6 +248,7 @@ export default function TeamWelcomePage() {
         )
     }
 
+    const isMobile = detectedPlatform === 'mobile'
     const platformLabel = detectedPlatform === 'windows' ? 'Windows' : detectedPlatform === 'mac' ? 'Mac' : detectedPlatform === 'linux' ? 'Linux' : 'your computer'
     const downloadHref = detectedPlatform === 'mac'
         ? '/download/mac/installer'
@@ -262,12 +263,15 @@ export default function TeamWelcomePage() {
     return shell(
         <>
             <header className="text-center">
-                <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">Welcome to {team.name}</h1>
+                <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">{isMobile ? 'Finish setup on your computer' : `Welcome to ${team.name}`}</h1>
                 <p className="mx-auto mt-3 max-w-md text-base text-neutral-600">
-                    Install the desktop app and log in to start planting trees with your team. You&apos;ll get 5 bonus trees once it syncs.
+                    {isMobile
+                        ? `You're in ${team.name}. IdleForest runs on your computer, so email yourself the setup link and finish there. You'll get 5 bonus trees once it syncs.`
+                        : "Install the desktop app and log in to start planting trees with your team. You'll get 5 bonus trees once it syncs."}
                 </p>
             </header>
 
+            {!isMobile && (
             <ol className="flex items-center justify-center gap-2 text-xs font-semibold sm:text-sm" aria-label="Progress">
                 {steps.map((label, index) => {
                     const step = index + 1
@@ -286,9 +290,19 @@ export default function TeamWelcomePage() {
                     )
                 })}
             </ol>
+            )}
 
             <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
                 {teamHeader}
+
+                {isMobile ? (
+                    <div className="mt-6">
+                        <h2 className="flex items-center gap-2 text-xl font-extrabold"><Monitor className="h-5 w-5" aria-hidden="true" /> Keep your place</h2>
+                        <p className="mb-5 mt-2 text-sm text-neutral-600">IdleForest runs on Windows, Mac, and Linux computers. Email yourself the setup link, then open it on your computer when you&apos;re ready.</p>
+                        <DesktopSetupEmail teamSlug={team.slug} locale={String(params.locale || 'en')} />
+                    </div>
+                ) : (
+                    <>
 
                 <Link
                     href={downloadHref}
@@ -335,6 +349,8 @@ export default function TeamWelcomePage() {
                         Check
                     </button>
                 </div>
+                    </>
+                )}
             </section>
 
             <TeamForestPanel teamSlug={team.slug} teamName={team.name} />

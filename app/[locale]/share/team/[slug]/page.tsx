@@ -3,14 +3,18 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import { ArrowRight, Award, TreePine, Users } from 'lucide-react'
+import { ArrowRight, Award, Gift, TreePine, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { forestSeed, getPublicTeamForest } from '@/lib/forest'
 import { getTeamStats, type TeamStats } from '@/lib/team-stats'
 import { getFeaturedTeamMilestone } from '@/lib/team-milestones'
 import ForestIsland from '@/components/forest/ForestIsland'
+import { normalizeReferralCode, resolveReferralOwner } from '@/lib/referrals'
+import { getReferralRewardSettings } from '@/lib/referral-reward-settings'
 import { Link } from '@/navigation'
+import NextLink from 'next/link'
+import JoinHint from '@/components/share/JoinHint'
 import ShareActions from '../../ShareActions'
 
 export const dynamic = 'force-dynamic'
@@ -19,6 +23,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.idleforest.com'
 
 type PageProps = {
     params: { locale: string; slug: string }
+    searchParams?: { ref?: string }
 }
 
 // Shared by generateMetadata and the page within one request.
@@ -56,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const title = t('meta_team_title', { team: data.team.name })
     const description = t('meta_team_description', { count: data.memberCount, team: data.team.name })
-    const image = `${APP_URL}/api/og/invite?${new URLSearchParams({ team: data.team.name, locale: params.locale }).toString()}`
+    const image = `${APP_URL}/api/og/team?${new URLSearchParams({ slug: params.slug, locale: params.locale }).toString()}`
 
     return {
         title,
@@ -72,12 +77,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 }
 
-export default async function TeamSharePage({ params }: PageProps) {
+export default async function TeamSharePage({ params, searchParams }: PageProps) {
     const data = await loadTeam(params.slug)
     if (!data) notFound()
 
     const t = await getTranslations({ locale: params.locale, namespace: 'Share' })
     const tTeams = await getTranslations({ locale: params.locale, namespace: 'Teams' })
+    const tReferral = await getTranslations({ locale: params.locale, namespace: 'ReferralInvite' })
 
     const { team, memberCount, stats, forest } = data
     const trees = stats.actualTreesPlanted
@@ -89,6 +95,24 @@ export default async function TeamSharePage({ params }: PageProps) {
         desktopMembers: stats.activeDesktopMemberCount ?? stats.desktopMemberCount,
     })
     const reward = milestone ? tTeams(`milestones.${milestone.id}.reward`) : ''
+
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    const [{ data: membership }, { data: ownInvite }] = user
+        ? await Promise.all([
+            supabase.from('team_members').select('id').eq('team_id', team.id).eq('user_id', user.id).maybeSingle(),
+            supabase.from('team_invites').select('invite_code').eq('team_id', team.id).eq('created_by', user.id).limit(1).maybeSingle(),
+        ])
+        : [{ data: null }, { data: null }]
+    const isMember = Boolean(membership)
+
+    // A personal link (?ref=CODE) credits the sharer and, when enabled, gives both a tree.
+    const refCode = normalizeReferralCode(searchParams?.ref)
+    const admin = createAdminClient()
+    const [referrer, referralReward] = refCode && !user
+        ? await Promise.all([resolveReferralOwner(admin, refCode), getReferralRewardSettings(admin)])
+        : [null, null]
+    const signupHref = referrer ? `/auth/user/signup?referral=${encodeURIComponent(referrer.code)}` : null
 
     const prefix = params.locale === 'en' ? '' : `/${params.locale}`
     const shareUrl = `${APP_URL}${prefix}/share/team/${params.slug}`
@@ -183,24 +207,49 @@ export default async function TeamSharePage({ params }: PageProps) {
                             {t('lead_team', { team: team.name })}
                         </p>
 
-                        <Link
-                            href={`/teams/${team.slug || team.id}`}
-                            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
-                        >
-                            {t('cta_join_team', { team: team.name })}
-                            <ArrowRight className="h-5 w-5" aria-hidden="true" />
-                        </Link>
+                        {signupHref ? (
+                            <>
+                                {referralReward?.enabled ? (
+                                    <p className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand-yellow px-4 py-3 text-sm font-bold">
+                                        <Gift className="h-4 w-4 shrink-0" aria-hidden="true" />
+                                        {tReferral('reward_title', { trees: referralReward.treesPerPerson })}
+                                    </p>
+                                ) : null}
+                                <NextLink
+                                    href={signupHref}
+                                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
+                                >
+                                    {t('cta_join')}
+                                    <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                                </NextLink>
+                                <JoinHint />
+                            </>
+                        ) : isMember ? null : (
+                            <>
+                                <Link
+                                    href={`/teams/${team.slug || team.id}`}
+                                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-lg font-extrabold text-black"
+                                >
+                                    {t('cta_join_team', { team: team.name })}
+                                    <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                                </Link>
+                                <JoinHint />
+                            </>
+                        )}
 
                         <div className="mt-6">
                             <ShareActions
                                 url={shareUrl}
                                 text={shareText}
+                                signedIn={Boolean(user)}
+                                teamId={isMember ? team.id : undefined}
+                                inviteCode={ownInvite?.invite_code ?? null}
                                 labels={{
                                     share: t('share_title'),
                                     copyLink: t('copy_link'),
                                     copied: t('copied'),
+                                    shareOnWhatsapp: t('share_on_whatsapp'),
                                     shareOnX: t('share_on_x'),
-                                    shareOnFacebook: t('share_on_facebook'),
                                     shareOnLinkedin: t('share_on_linkedin'),
                                 }}
                             />

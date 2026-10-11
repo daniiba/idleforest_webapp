@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { CheckCircle2, Loader2, Mail } from 'lucide-react'
 
-export default function DesktopSetupEmail({ companySlug, locale }: { companySlug: string; locale: string }) {
+export default function DesktopSetupEmail({ companySlug, teamSlug, locale }: { companySlug?: string; teamSlug?: string; locale: string }) {
     const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
     const [message, setMessage] = useState('')
 
@@ -14,7 +14,7 @@ export default function DesktopSetupEmail({ companySlug, locale }: { companySlug
             const response = await fetch('/api/desktop-setup-link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ companySlug, locale }),
+                body: JSON.stringify(teamSlug ? { teamSlug, locale } : { companySlug, locale }),
             })
             const result = await response.json()
             if (!response.ok) throw new Error(result.error || 'Could not send the link. Please try again.')
@@ -34,7 +34,7 @@ export default function DesktopSetupEmail({ companySlug, locale }: { companySlug
                 {state === 'sending' ? 'Sending…' : state === 'sent' ? 'Setup link sent' : 'Email me a computer setup link'}
             </button>
             {message && <p role={state === 'error' ? 'alert' : 'status'} className={`text-sm ${state === 'error' ? 'text-red-700' : 'text-neutral-700'}`}>{message}</p>}
-            <p className="text-xs text-neutral-600">One requested setup email. Your community stays linked when you log in.</p>
+            <p className="text-xs text-neutral-600">One requested setup email. {teamSlug ? 'Your team' : 'Your community'} stays linked when you log in.</p>
         </div>
     )
 }
