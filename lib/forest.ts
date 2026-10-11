@@ -250,3 +250,17 @@ export async function getTeamForestData(
         memberCount: memberIds.length,
     }
 }
+
+/**
+ * A team's forest for public pages (invite and share). Member names are left
+ * out, and a failure returns null so the page still renders without the island.
+ */
+export async function getPublicTeamForest(supabase: SupabaseLike, teamId: string): Promise<TeamForestData | null> {
+    try {
+        const forest = await getTeamForestData(supabase, teamId)
+        return { ...forest, friends: forest.friends.map(friend => ({ ...friend, label: null })) }
+    } catch (error) {
+        console.error('Failed to load team forest:', error)
+        return null
+    }
+}

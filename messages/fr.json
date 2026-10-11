@@ -1091,5 +1091,29 @@
         "perk_free": "Gratuit",
         "perk_background": "Fonctionne en arrière-plan",
         "perk_pause": "Pause à tout moment"
+    },
+    "Share": {
+        "meta_team_title": "{team} sur IdleForest",
+        "meta_team_description": "{count, plural, one {# membre plante} other {# membres plantent}} de vrais arbres avec un internet inutilisé. Rejoignez {team} gratuitement.",
+        "meta_user_title": "La forêt de {name} sur IdleForest",
+        "meta_user_description": "{name} a planté {count, plural, one {# arbre} other {# arbres}} sur IdleForest. Rejoignez-nous gratuitement.",
+        "members": "{count, plural, one {Membre} other {Membres}}",
+        "trees": "{count, plural, one {Arbre} other {Arbres}}",
+        "badges": "{count, plural, one {Badge} other {Badges}}",
+        "in_team": "Dans l'équipe {team}",
+        "lead_team": "L'internet inutilisé de votre ordinateur plante de vrais arbres. Rejoignez {team} et faites pousser une forêt ensemble.",
+        "lead_user": "L'internet inutilisé de votre ordinateur plante de vrais arbres. Gratuit et en arrière-plan.",
+        "cta_join_team": "Rejoindre {team}",
+        "cta_join": "Rejoindre IdleForest",
+        "milestone_unlocked": "Débloqué",
+        "share_text_team": "Découvrez {team} sur IdleForest.",
+        "share_text_team_detail": "Découvrez {team} sur IdleForest : {detail}.",
+        "share_text_user": "Découvrez la forêt de {name} sur IdleForest : {count, plural, one {# arbre planté} other {# arbres plantés}}.",
+        "share_title": "Partager",
+        "copy_link": "Copier le lien",
+        "copied": "Copié",
+        "share_on_x": "Partager sur X",
+        "share_on_facebook": "Partager sur Facebook",
+        "share_on_linkedin": "Partager sur LinkedIn"
     }
 }

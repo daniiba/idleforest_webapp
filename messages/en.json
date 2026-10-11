@@ -1146,5 +1146,29 @@
         "perk_free": "Free",
         "perk_background": "Runs in the background",
         "perk_pause": "Pause anytime"
+    },
+    "Share": {
+        "meta_team_title": "{team} on IdleForest",
+        "meta_team_description": "{count, plural, one {# member} other {# members}} planting real trees with unused internet. Join {team} for free.",
+        "meta_user_title": "{name}'s forest on IdleForest",
+        "meta_user_description": "{name} has planted {count, plural, one {# tree} other {# trees}} on IdleForest. Join for free.",
+        "members": "{count, plural, one {Member} other {Members}}",
+        "trees": "{count, plural, one {Tree} other {Trees}}",
+        "badges": "{count, plural, one {Badge} other {Badges}}",
+        "in_team": "In team {team}",
+        "lead_team": "Your computer's unused internet plants real trees. Join {team} and grow a forest together.",
+        "lead_user": "Your computer's unused internet plants real trees. Free, and it runs in the background.",
+        "cta_join_team": "Join {team}",
+        "cta_join": "Join IdleForest",
+        "milestone_unlocked": "Unlocked",
+        "share_text_team": "Check out {team} on IdleForest.",
+        "share_text_team_detail": "Check out {team} on IdleForest: {detail}.",
+        "share_text_user": "Check out {name}'s forest on IdleForest: {count, plural, one {# tree} other {# trees}} planted.",
+        "share_title": "Share",
+        "copy_link": "Copy link",
+        "copied": "Copied",
+        "share_on_x": "Share on X",
+        "share_on_facebook": "Share on Facebook",
+        "share_on_linkedin": "Share on LinkedIn"
     }
 }

@@ -6,7 +6,7 @@ import { getTranslations } from 'next-intl/server'
 import { ArrowRight, AlertTriangle, LinkIcon, UserPlus, Users, TreePine, Check } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { forestSeed, getTeamForestData, type TeamForestData } from '@/lib/forest'
+import { forestSeed, getPublicTeamForest } from '@/lib/forest'
 import ForestIsland from '@/components/forest/ForestIsland'
 import { Link } from '@/navigation'
 import InviteJoinButton from './InviteJoinButton'
@@ -107,18 +107,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 }
 
-// Names stay out of the public invite page; the island only needs counts.
-async function loadTeamForest(teamId: string): Promise<TeamForestData | null> {
-    try {
-        const forest = await getTeamForestData(createAdminClient(), teamId)
-        return { ...forest, friends: forest.friends.map(friend => ({ ...friend, label: null })) }
-    } catch (error) {
-        // The invite still works without the forest.
-        console.error('Failed to load team forest:', error)
-        return null
-    }
-}
-
 type CurrentTeam = { id: string; name: string; slug: string | null; createdBy: string | null }
 
 async function getCurrentTeam(userId: string): Promise<CurrentTeam | null> {
@@ -174,7 +162,7 @@ export default async function InvitePage({ params }: PageProps) {
     const teamHref = `/teams/${team.slug || team.id}`
 
     const supabase = await createClient()
-    const [{ data: { user } }, forest] = await Promise.all([supabase.auth.getUser(), loadTeamForest(team.id)])
+    const [{ data: { user } }, forest] = await Promise.all([supabase.auth.getUser(), getPublicTeamForest(createAdminClient(), team.id)])
     const currentTeam = user ? await getCurrentTeam(user.id) : null
     const isMember = currentTeam?.id === team.id
     const otherTeam = currentTeam && !isMember ? currentTeam : null
