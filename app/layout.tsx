@@ -114,6 +114,7 @@ export default async function RootLayout({
     return (
         <html lang={locale}>
             <head>
+                <meta name="impact-site-verification" {...{ value: "41aa28a4-7e5b-42c5-993d-a2e22d90d5be" }} />
                 <link
                     rel="stylesheet"
                     href="https://unpkg.com/@maptiler/sdk@3.0.1/dist/maptiler.css"
